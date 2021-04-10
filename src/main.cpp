@@ -23,6 +23,11 @@
       #endif
     //
 //
+    #ifdef USE_LED_BLINK
+        msTimer ledT = msTimer(BLINKTIME_MS);
+        bool LED_ON = FALSE;
+      #endif
+
     #ifdef USE_DISP
         msTimer       dispT  = msTimer(DISP_CYCLE);
         uint32_t      ze     = 1;      // aktuelle Schreibzeile
@@ -35,6 +40,7 @@
       msTimer     statT  = msTimer(STAT_TIMEDEF);
       char        statOut[DISP1_MAXCOLS + 1] = "";
       bool        statOn = false;
+      bool        statDate = false;
       //char        timeOut[STAT_LINELEN + 1] = "";
       #endif
 
@@ -683,14 +689,18 @@
                   case 4:
                     break;
                   case 5:
-                    outStr = "";
-                    outStr = getDS18D20Str();
-                    dispText(outStr ,  0, 4, outStr.length());
+                    #ifdef USE_DS18B20_1W
+                        outStr = "";
+                        outStr = getDS18D20Str();
+                        dispText(outStr ,  0, 4, outStr.length());
+                      #endif
                     break;
                   case 6:
-                    outStr = getBME280Str();
-                            //SOUTLN(outStr);
-                    dispText(outStr ,  0, 3, outStr.length());
+                    #ifdef USE_BME280_I2C
+                        outStr = getBME280Str();
+                                //SOUTLN(outStr);
+                        dispText(outStr ,  0, 3, outStr.length());
+                      #endif
                     break;
                   default:
                     oledIdx = 0;

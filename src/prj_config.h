@@ -10,7 +10,9 @@
     #define SER_BAUDRATE  115200ul
     #define GEO_128_64    0
     #define GEO_128_32    1
-    #define GEO_RAWMODE   2
+    #define GEO_64_48     2
+    #define GEO_64_32     3
+    #define GEO_RAWMODE   4
 
   //
   // ******************************************
@@ -25,8 +27,8 @@
     //#define BOARD   MC_ESP32_D1_R32
     //#define BOARD   MC_AV_NANO_V3
     //#define BOARD   MC_AV_UNO_V3
-    #define BOARD    MC_ESP32_Node
-
+    //#define BOARD    MC_ESP32_Node     // AZ_ESP32_DevKit_C_V4
+    #define BOARD    MC_ESP32_D1_MINI
   //
   // ******************************************
   // --- board management
@@ -90,6 +92,106 @@
       //
       // --- memories
         #define USE_FRAM_I2C
+        #if defined( USE_FRAM_I2C )
+            #define ANZ_FRAM        1
+          #endif
+      //
+      // --- pins, connections
+        #define PIN_BOARD_LED         2
+
+        // --- user output
+          #ifdef USE_TFT
+              #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
+                  #define LCD_BL      5    // D10/SS  ARDUINO
+                  #define LCD_EN      13   // D9
+                  #define LCD_RS      12   // D8
+                  #define LCD_D7      14   // D7
+                  #define LCD_D6      27   // D6
+                  #define LCD_D5      16   // D5
+                  #define LCD_D4      17   // D4
+                #endif
+            #endif
+
+            //#define PIN_BUZZ            21
+        // --- sensors
+          #ifdef USE_DS18B20_1W
+              #define DS_ONEWIRE_PIN  27
+            #endif
+      #endif
+
+      // --- I2C
+        // --- board connection
+          #define ANZ_I2C           1
+          #define USE_I2C1          1
+          #define PIN_I2C1_SDA      21
+          #define PIN_I2C1_SCL      22
+          #if ( ANZ_I2C > 1 )
+              #define USE_I2C2      2
+              #define PIN_I2C2_SDA  25
+              #define PIN_I2C2_SCL  26
+            #endif
+    //
+    #if !(BOARD ^ MC_ESP32_D1_MINI)
+      // --- system
+        //#define USE_TASKING
+      //
+      // --- network
+        #define USE_WIFI
+        #define USE_WEBSERVER
+      //
+      // --- user output
+        // --- display
+            #define USE_DISP
+            #if defined(USE_DISP)
+                #define USE_OLED_I2C
+                #ifdef USE_OLED_I2C
+                    #define ANZ_OLED   1 // 2 are possible
+                        // select OLED device  GEO_RAWMODE?
+                        // OLEDx_  MC_UO_OLED_091_AZ   GEO_128_32
+                        // OLEDx_  MC_UO_OLED_096_AZ   GEO_128_64
+                        // OLEDx_  MC_UO_OLED_130_AZ   GEO_128_64
+                        // OLEDx_  MC_UO_OLED_066_AZ   GEO_64_48
+                    #define OLED1
+                    #define OLED1_MC_UO_OLED_130_AZ
+                    #define OLED1_GEO    GEO_128_64
+                    #if (ANZ_OLED > 1)
+                        #define OLED2
+                        #define OLED2_MC_UO_OLED_130_AZ
+                        #define OLED2_GEO    GEO_128_64
+                      #endif
+                  #endif //USE_OLED_I2C
+
+                //#define USE_TFT
+                #ifdef USE_TFT
+                    //#define DISP_TFT  MC_UO_TFT1602_GPIO_RO
+                    //#define DISP_TFT  MC_UO_TOUCHXPT2046_AZ
+                    //#define DISP_TFT  MC_UO_TFT1602_I2C_XA
+                  #endif
+              #endif
+        //
+        // --- acustic output
+          //#define AOUT AOUT_PAS_BUZZ_3V5V
+      //
+      // --- user input
+        //#define USE_TOUCHSCREEN
+        #ifdef  USE_TOUCHSCREEN
+            #define USE_TOUCHXPT2046_AZ_3V3
+            #define KEYS KEYS_TOUCHXPT2046_AZ_3V3
+          #endif // USE_TOUCHSCREEN
+
+      //
+      // --- sensors
+        #define USE_DS18B20_1W
+        #if defined(USE_DS18B20_1W)
+            #define ANZ_DS18B20     1
+          #endif
+        #define USE_BME280_I2C
+        #if defined(USE_BME280_I2C)
+            #define ANZ_BME280     1
+          #endif
+      //
+      // --- memories
+        //#define USE_FRAM_I2C
         #if defined( USE_FRAM_I2C )
             #define ANZ_FRAM        1
           #endif
@@ -207,7 +309,7 @@
     // --- I2C interface
       // --- address configuration
         #if defined( USE_OLED_I2C )
-            #define I2C_ADDR_OLED1      I2C_OLED
+            #define I2C_ADDR_OLED1      I2C_OLED_3C
             #define I2C_OLED1_USE_I2C1
             #if defined( I2C_OLED1_USE_I2C1 )
                 #define I2C_OLED1       I2C1
