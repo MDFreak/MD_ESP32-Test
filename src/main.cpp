@@ -4,31 +4,30 @@
 // --- declarations
   // ------ system -----------------------
     uint16_t     md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
-                             #ifdef USE_WIFI
+                             #if (USE_WIFI > OFF)
                                + ERRBIT_WIFI
-                               #ifdef USE_NTP_SERVER
+                               #if (USE_NTP_SERVER > OFF)
                                  + ERRBIT_NTPTIME
                                #endif
                              #endif
-                             #ifdef USE_WEBSERVER
+                             #if (USE_WEBSERVER > OFF)
                                + ERRBIT_SERVER
                              #endif
-                             #ifdef USE_TOUCHSCREEN
+                             #if (USE_TOUCHSCREEN > OFF)
                                + ERRBIT_TOUCH
                              #endif
                              ;
     TwoWire i2c1 = TwoWire(0);
-    #if ( ANZ_I2C > 1 )
+    #if ( USE_I2C > 1 )
         TwoWire i2c2 = TwoWire(1);
       #endif
-    //
-//
-    #ifdef USE_LED_BLINK
+
+    #if ( USE_LED_BLINK > 0 )
         msTimer ledT = msTimer(BLINKTIME_MS);
         bool LED_ON = FALSE;
       #endif
 
-    #ifdef USE_DISP
+    #if ( USE_DISP > 0 )
         msTimer       dispT  = msTimer(DISP_CYCLE);
         uint32_t      ze     = 1;      // aktuelle Schreibzeile
         char          outBuf[DISP1_MAXCOLS + 1] = "";
@@ -44,50 +43,55 @@
       //char        timeOut[STAT_LINELEN + 1] = "";
       #endif
 
-  //
   // ------ user interface ---------------
-    #ifdef USE_TOUCHSCREEN
+    #if (USE_TOUCHSCREEN > OFF)
         md_touch touch = md_touch();
       #endif
 
-    //
-    #ifdef USE_KEYPADSHIELD
+    #if (USE_KEYPADSHIELD > OFF)
         md_kpad kpad(KEYS_ADC);
         uint8_t key;
       #endif // USE_KEYPADSHIELD
 
-    //
     #ifdef USE_BUZZER
         md_buzzer     buzz       = md_buzzer();
       #endif // USE_BUZZER
 
-    //
-    #ifdef USE_OLED_I2C
+    #if (USE_OLED_I2C > OFF)
         #ifdef OLED1
-            md_oled oled1 = md_oled((uint8_t) I2C_ADDR_OLED1, (uint8_t) I2C_SDA_OLED1,
-                                    (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
+            #if !(OLED1_DRV ^ OLED_DRV_1106)
+                md_oled_1106 oled1 = md_oled_1106((uint8_t) I2C_ADDR_OLED1, (uint8_t) I2C_SDA_OLED1,
+                                        (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
+              #else
+                md_oled_1306 oled1 = md_oled_1306((uint8_t) I2C_ADDR_OLED1, (uint8_t) I2C_SDA_OLED1,
+                                        (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
+              #endif
           #endif
         #ifdef OLED2
-            md_oled oled2 = md_oled((uint8_t) I2C_ADDR_OLED2, (uint8_t) I2C_SDA_OLED2,
-                                    (uint8_t) I2C_SCL_OLED2, (OLEDDISPLAY_GEOMETRY) OLED2_GEO);
+            #if !(OLED2_DRV ^ OLED_DRV_1106)
+                md_oled_1106 oled2 = md_oled_1106((uint8_t) I2C_ADDR_OLED2, (uint8_t) I2C_SDA_OLED2,
+                                        (uint8_t) I2C_SCL_OLED2, (OLEDDISPLAY_GEOMETRY) OLED2_GEO);
+              #else
+                md_oled_1306 oled2 = md_oled_1306((uint8_t) I2C_ADDR_OLED2, (uint8_t) I2C_SDA_OLED2,
+                                        (uint8_t) I2C_SCL_OLED2, (OLEDDISPLAY_GEOMETRY) OLED2_GEO);
+              #endif
           #endif
         msTimer oledT   = msTimer(DISP_CYCLE);
         uint8_t oledIdx = 0;
       #endif //USE_OLED_I2C
 
-    //
     #if (defined(USE_TFT1602_GPIO_RO_3V3) || defined(USE_TFT1602_GPIO_RO_3V3))
         LiquidCrystal  lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
         void*          plcd = (void*) &lcd;
         md_lcd         mlcd(plcd);
       #endif
   // ------ network ----------------------
-    #ifdef USE_WIFI
+    #if (USE_WIFI > OFF)
         md_wifi wifi  = md_wifi();
         msTimer wifiT = msTimer(WIFI_CONN_CYCLE);
-        #if defined(USE_LOCAL_IP)
+        #if (USE_LOCAL_IP > OFF)
           #endif // USE_LOCAL_IP
-        #if defined(USE_NTP_SERVER)
+        #if (USE_NTP_SERVER > OFF)
             msTimer ntpT    = msTimer(NTPSERVER_CYCLE);
             time_t  ntpTime = 0;
             bool    ntpGet  = true;
@@ -95,27 +99,34 @@
       #endif
 
     //
-    #if defined(USE_WEBSERVER)
+    #if (USE_WEBSERVER > OFF)
         md_server webMD = md_server();
         msTimer servT = msTimer(WEBSERVER_CYCLE);
       #endif // USE_WEBSERVER
 
   // ------ sensors ----------------------
-    #if defined( USE_DS18B20_1W )
+    #if (USE_DS18B20_1W > OFF)
         OneWire dsOneWire(DS_ONEWIRE_PIN);
         DallasTemperature dsSensors(&dsOneWire);
         DeviceAddress     dsAddr[DS18B20_ANZ];
         float dsTemp[DS18B20_ANZ];
       #endif
-    //
-    #if defined( USE_BME280_I2C )
+
+    #if ( USE_BME280_I2C > OFF )
         Adafruit_BME280 bme;
         Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
         Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
         Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
       #endif
+
+    #if (USE_MQ135_GAS_ANA > OFF)
+        msTimer measT   = msTimer(MEASURE_CYCLE_MS);
+        filterValue valGas(MQ135_FILT);
+        int16_t gasValue;
+      #endif
+
   // ------ memories
-    #ifdef USE_FRAM_I2C
+    #if (USE_FRAM_I2C > OFF)
         md_FRAM fram = md_FRAM();
       #endif
 // --- private prototypes
@@ -124,7 +135,7 @@
       // standard outputs
         void clearDisp()
           {
-            #ifdef USE_DISP
+            #if (USE_DISP > 0)
                 #if defined(OLED1)
                   oled1.clear();
                   #endif
@@ -163,10 +174,10 @@
                 }
               if (doIt)
                 {
-                  #if defined(USE_TOUCHXPT2046_AZ_3V3)
+                  #if (USE_TOUCHSCREEN > OFF)
                     touch.wrStatus(msg);
                     #endif
-                  #if defined(USE_OLED_I2C)
+                  #if (USE_OLED_I2C > OFF)
                       #if defined( USE_STATUS1 )
                           oled1.wrStatus(msg);
                         #endif
@@ -175,7 +186,7 @@
                         #endif
                            //SOUT("  md_error="); SOUTLN(md_error);
                     #endif
-                  #if defined(USE_TFT)
+                  #if (USE_TFT > 0)
                       mlcd.wrStatus((char*) statOut);
                           #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                               SOUT("  md_error="); SOUTLN(md_error);
@@ -191,8 +202,8 @@
 
         void dispText(char* msg, uint8_t col, uint8_t row, uint8_t len)
           {
-            #ifdef USE_DISP
-                #if (defined(USE_TOUCHXPT2046_AZ_3V3))
+            #if (USE_DISP > 0)
+                #if (USE_TOUCHSCREEN > OFF)
                   touch.wrTouch(msg, col, row);
                   #endif
                 #if defined(OLED1)
@@ -207,15 +218,15 @@
                           SOUT("  md_error="); SOUTLN(md_error);
                         #endif
                   #endif
-                #if defined(USE_TFT)
+                #if (USE_TFT > 0)
                   mlcd.wrText(msg, row, col);
                   #endif
               #endif
           }
         void dispText(String msg, uint8_t col, uint8_t row, uint8_t len)
           {
-            #ifdef USE_DISP
-                #if (defined(USE_TOUCHXPT2046_AZ_3V3))
+            #if (USE_DISP > 0)
+                #if (USE_TOUCHSCREEN > OFF)
                   touch.wrTouch(msg, col, row);
                   #endif
                 #if defined(OLED1)
@@ -226,7 +237,7 @@
                   oled2.wrText(msg, col, row, len);
                             //SOUT((uint32_t) millis); SOUT(" dispText oled2 '"); SOUT(msg); SOUTLN("'");
                   #endif
-                #if defined(USE_TFT)
+                #if (USE_TFT > 0)
                   mlcd.wrText(msg, row, col);
                   #endif
               #endif
@@ -235,16 +246,16 @@
       // --- start display
         void startDisp()
           {
-            #ifdef USE_DISP
+            #if (USE_DISP > 0)
                 #ifdef USE_STATUS
                   statOut[DISP1_MAXCOLS] = 0;  // limit strlen
                   #endif
-                //
-                #if defined(USE_TFT)
+
+                #if (USE_TFT > 0)
                   mlcd.start(plcd);
                   #endif
-                //
-                #if defined(USE_TOUCHXPT2046_AZ_3V3)
+
+                #if (USE_TOUCHSCREEN > OFF)
                   bool ret = touch.startTouch();
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
                           SOUT("startTouch ret="); SOUT(ret);
@@ -254,11 +265,11 @@
                           SOUT("  md_error="); SOUTLN(md_error);
                         #endif
                   #endif
-                //
+
                 #if defined (OLED1)
                     oled1.begin((uint8_t) DISP1_MAXCOLS, (uint8_t) DISP1_MAXROWS);
                   #endif
-                //
+
                 #if defined (OLED2)
                     oled2.begin((uint8_t) DISP2_MAXCOLS, (uint8_t) DISP2_MAXROWS);
                   #endif
@@ -268,14 +279,14 @@
       // --- keypad
         void startKeys()
           {
-            #if defined(USE_KEYPADSHIELD)
+            #if (USE_KEYPADSHIELD > OFF)
                 kpad.init(KEYS_ADC);
               #endif // USE_KEYPADSHIELD
           }
-        //
+
         uint8_t getKey()
           {
-            #if defined(USE_KEYPADSHIELD)
+            #if (USE_KEYPADSHIELD > OFF)
                 return kpad.getKey();
               #else
                 return NOKEY;
@@ -283,11 +294,16 @@
           }
     // --- sensors
       // --- DS18B20
-        String getDS18D20Str();
+        #if (USE_DS18B20_1W > OFF)
+            String getDS18D20Str();
+          #endif
       // --- BME280
-        String getBME280Str();
+        #if ( USE_BME280_I2C > OFF )
+            String getBME280Str();
+          #endif
+
   // ------ WIFI -------------------------
-    #if defined(USE_WIFI)
+    #if (USE_WIFI > OFF)
       void startWIFI(bool startup)
         {
           bool ret = ISERR;
@@ -359,15 +375,15 @@
             else
               dispStatus("WIFI error");
 
-          #ifdef USE_NTP_SERVER
+          #if (USE_NTP_SERVER > OFF)
             if((md_error & ERRBIT_WIFI) == 0) // WiFi ok
                 if((md_error & ERRBIT_NTPTIME) != 0) // WiFi ok
                   wifi.initNTP(0);
             #endif
         }
       #endif // USE_WIFI
-    //
-    #ifdef USE_WEBSERVER
+
+    #if (USE_WEBSERVER > OFF)
       void startWebServer()
         {
           bool ret = ISERR;
@@ -398,9 +414,7 @@
         }
       #endif // USE_WEBSERVER
 
-
-  // ------ NTP server -------------------
-    #ifdef USE_NTP_SERVER
+    #if (USE_NTP_SERVER > OFF)
       void initNTPTime()
         {
           bool ret = wifi.initNTP(UTC_SEASONTIME);
@@ -424,24 +438,27 @@
 
   // ------ passive buzzer --------------
     #ifdef PLAY_MUSIC
-      tone_t test = {0,0,0};
-      void playSong(int8_t songIdx)
-        {
-          if (buzz.setSong(SONG0_LEN,(void*) SONG0_NOTES) == ISOK)
-            {
-              #ifndef USE_SONGTASK
-                buzz.playSong();
-              #endif
-            }
-        }
-      void playSong() { playSong(0); }
+        tone_t test = {0,0,0};
+        void playSong(int8_t songIdx)
+          {
+            if (buzz.setSong(SONG0_LEN,(void*) SONG0_NOTES) == ISOK)
+              {
+                #ifndef USE_SONGTASK
+                  buzz.playSong();
+                #endif
+              }
+          }
+        void playSong() { playSong(0); }
+      #endif
 
-    #endif
+  // ------ traffic Light of gas sensor --------------
+    #if (USE_MQ135_GAS_ANA > OFF)
+        void showTrafficLight(const int16_t inval);
+      #endif
 
 // --- system startup
   void setup()
     {
-      //uint8_t n   = 0;
       // --- system
         // start system
           Serial.begin(SER_BAUDRATE);
@@ -449,32 +466,67 @@
 
           #ifdef SCAN_I2C
               scanI2C(I2C1, 0, SCAN_I2C, PIN_I2C1_SDA, PIN_I2C1_SCL);
-              #if (ANZ_I2C > 1)
+              #if (USE_I2C > 1)
                   scanI2C(I2C2, 0, SCAN_I2C, PIN_I2C2_SDA, PIN_I2C2_SCL);
                 #endif
             #endif
-      //
+
+          #if (USE_LED_BLINK > 0)
+              pinMode(PIN_BOARD_LED, OUTPUT);
+            #endif
+
       // --- user interface
         // start display - output to user
+          #if (USE_TRAFFIC_LIGHT > 0)
+              pinMode(PIN_TL_GREEN, OUTPUT);
+              pinMode(PIN_TL_YELLOW, OUTPUT);
+              pinMode(PIN_TL_RED, OUTPUT);
+              digitalWrite(PIN_TL_GREEN, ON);
+              digitalWrite(PIN_TL_RED, ON);
+              digitalWrite(PIN_TL_YELLOW, ON);
+              usleep(500000);
+              digitalWrite(PIN_TL_GREEN, OFF);
+              digitalWrite(PIN_TL_RED, OFF);
+              digitalWrite(PIN_TL_YELLOW, OFF);
+              /*
+                ledcSetup(PIN_TL_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcSetup(PIN_TL_YELLOW, PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcSetup(PIN_TL_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcAttachPin(PIN_TL_GREEN,  PWM_TL_GREEN);
+                ledcAttachPin(PIN_TL_YELLOW, PWM_TL_YELLOW);
+                ledcAttachPin(PIN_TL_RED,    PWM_TL_RED);
+                ledcWrite(PIN_TL_GREEN, 255);
+                usleep(200000);
+                ledcWrite(PIN_TL_GREEN, 0);
+                ledcWrite(PIN_TL_YELLOW, 255);
+                usleep(200000);
+                ledcWrite(PIN_TL_YELLOW, 0);
+                ledcWrite(PIN_TL_RED, 255);
+              */
+              ledcWrite(PIN_TL_RED, 0);
+            #endif
           startDisp();
           dispStatus("setup start ...");
         // start input device
           startKeys();
         // start buzzer (task)
-          #ifdef USE_BUZZER
+          #if (USE_BUZZER > OFF)
               pinMode(PIN_BUZZ, OUTPUT);                                                                               // Setting pin 11 as output
               #ifdef PLAY_MUSIC
-                buzz.initMusic();
-                #ifdef PLAY_START_MUSIC
-                  playSong();
-                #endif
+                buzz.initMusic(PIN_BUZZ, PWM_BUZZ);
+                #if defined(PLAY_START_MUSIC)
+                    playSong();
+                  #endif
+                #if defined(PLAY_START_DINGDONG)
+                    buzz.playDingDong();
+                  #endif
               #endif
             #endif
 
-      //
+
       // --- network
         // start WIFI
-          #ifdef USE_WIFI
+          #if (USE_WIFI > OFF)
             startWIFI(true);
             if ((md_error & ERRBIT_WIFI) == 0)
                 dispStatus("WIFI connected");
@@ -489,18 +541,18 @@
                   dispStatus("WIFI error");
                 }
               #endif // USE_WIFI
-      //
+
       // --- sensors
         // temp. sensor DS18D20
-          #ifdef USE_DS18B20_1W
-                    SOUT(millis()); SOUT(" DS18D20 ... " );
-                dsSensors.begin();
-                String DS18Str = getDS18D20Str();
-                dispStatus(DS18Str);
-                    SOUTLN(DS18Str);
+          #if (USE_DS18B20_1W > OFF)
+                  SOUT(millis()); SOUT(" DS18D20 ... " );
+              dsSensors.begin();
+              String DS18Str = getDS18D20Str();
+              dispStatus(DS18Str);
+                  SOUTLN(DS18Str);
             #endif
         // BME280 temperature, pessure, humidity
-          #ifdef USE_BME280_I2C
+          #if ( USE_BME280_I2C > OFF )
                     SOUT(millis()); SOUT(" BME280 ... " );
                 bool bmeda = false;
                 #if defined( I2C_BME2801_USE_I2C1 )
@@ -525,10 +577,10 @@
                       SOUT(" nicht gefunden");
                     }
             #endif
-      //
+
       // --- memories
         // FRAM
-          #ifdef USE_FRAM_I2C  // NIO funktioniert nicht
+          #if (USE_FRAM_I2C > OFF) // NIO funktioniert nicht
             // Read the first byte
             SOUT("FRAM addr "); SOUTHEX(I2C_ADDR_FRAM1);
             bool ret = !fram.begin(I2C_SDA_FRAM1, I2C_SCL_FRAM1, I2C_ADDR_FRAM1);
@@ -542,7 +594,7 @@
                 SOUT(" FRAM selftest "); SOUT(fram.selftest());
               }
             #endif
-      //
+
       // --- finish setup
           #if (DEBUG_MODE >= CFG_DEBUG_STARTUP)
               SOUTLN();
@@ -555,49 +607,49 @@
   void loop()
     {
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
-      #ifdef USE_WIFI  // restart WIFI if offline
+      #if (USE_WIFI > OFF)  // restart WIFI if offline
           if(wifiT.TOut())
-          {
-            //Serial.print("WiFi md_error = "); Serial.println(md_error);
-            wifiT.startT();
-            if((md_error & ERRBIT_WIFI) > 0)
-              {
-                SOUTLN("WiFi startWIFI");
-                dispStatus("WiFi startWIFI");
-                startWIFI(false);
-              }
-          }
+            {
+              //Serial.print("WiFi md_error = "); Serial.println(md_error);
+              wifiT.startT();
+              if((md_error & ERRBIT_WIFI) > 0)
+                {
+                  SOUTLN("WiFi startWIFI");
+                  dispStatus("WiFi startWIFI");
+                  startWIFI(false);
+                }
+            }
         #endif // USE_WIFI
 
       // ----------------------
-      #ifdef USE_NTP_SERVER
+      #if (USE_NTP_SERVER > OFF)
         if (ntpT.TOut() == true)
-        {
-          setTime(++ntpTime);
-          if ((md_error & ERRBIT_WIFI) == 0)
-            { // WiFi online
-              if (((md_error & ERRBIT_NTPTIME) > 0) || (year() < 2000))   // time not initialized
-                {
-                  initNTPTime();
-                  ntpGet = true;
-                }
-              if (ntpGet == true)
-                {
-                  ntpGet = wifi.getNTPTime(&ntpTime);
-                  setTime(ntpTime);
-                }
-            }
-          ntpT.startT();
-                #if (DEBUG_MODE == CFG_DEBUG_DETAILS)
-                  //SOUT("Datum "); SOUT(day()); SOUT("."); SOUT(month()); SOUT("."); SOUT(year()); SOUT(" ");
-                  //SOUT("Zeit "); SOUT(hour()); SOUT("."); SOUT(minute()); SOUT(":"); SOUTLN(second());
-                #endif
-        }
+          {
+            setTime(++ntpTime);
+            if ((md_error & ERRBIT_WIFI) == 0)
+              { // WiFi online
+                if (((md_error & ERRBIT_NTPTIME) > 0) || (year() < 2000))   // time not initialized
+                  {
+                    initNTPTime();
+                    ntpGet = true;
+                  }
+                if (ntpGet == true)
+                  {
+                    ntpGet = wifi.getNTPTime(&ntpTime);
+                    setTime(ntpTime);
+                  }
+              }
+            ntpT.startT();
+                  #if (DEBUG_MODE == CFG_DEBUG_DETAILS)
+                    //SOUT("Datum "); SOUT(day()); SOUT("."); SOUT(month()); SOUT("."); SOUT(year()); SOUT(" ");
+                    //SOUT("Zeit "); SOUT(hour()); SOUT("."); SOUT(minute()); SOUT(":"); SOUTLN(second());
+                  #endif
+          }
         #endif // USE_NTP_SERVER
 
 
       // ----------------------
-      #ifdef USE_WEBSERVER
+      #if (USE_WEBSERVER > OFF)
         if (servT.TOut()) // run webserver - restart on error
           {
             servT.startT();
@@ -610,12 +662,12 @@
         #endif
 
       // ----------------------
-      #ifdef USE_TOUCHSCREEN
+      #if (USE_TOUCHSCREEN > OFF)
         touch.runTouch(outBuf);
         #endif // USE_TOUCHSCREEN
 
       // ----------------------
-      #ifdef USE_KEYPADSHIELD
+      #if (USE_KEYPADSHIELD > OFF)
         key = getKey();
         if (key)
           {
@@ -624,7 +676,19 @@
           }
         #endif
       // ----------------------
-      #if defined(USE_DISP)
+      #ifdef USE_MEASURE_CYCLE
+          if (measT.TOut())
+            {
+              measT.startT();
+              #if (USE_MQ135_GAS_ANA > OFF)
+                  gasValue = valGas.calcVal(analogRead(PIN_MQ135));
+                        //SOUT("gas measurment val = "); SOUT(analogRead(PIN_MQ135));
+                        //SOUT("    gasValue = "); SOUTLN(gasValue);
+                #endif
+            }
+        #endif
+      // ----------------------
+      #if (USE_DISP > 0)
         if (dispT.TOut())    // handle touch output
           {
             dispT.startT();
@@ -668,37 +732,48 @@
                 switch (oledIdx)
                   {
                   case 1:
+                    /*
                     outStr = "0-0-6";
                     dispText(outStr ,  0, 0, 6);
                     outStr = "";
                     dispText(outStr ,  7, 0, 6);
                     outStr = "15-0-6";
                     dispText(outStr , 14, 0, 6);
+                    */
                       //SOUT((uint32_t) millis()); SOUT(" SW1 '"); SOUT(outBuf); SOUTLN("'");
                     break;
                   case 2:
+                    /*
                     outStr = "";
                     dispText(outStr ,  0, 0, 6);
                     outStr = "7-1-6";
                     dispText(outStr ,  7, 0, 6);
                     outStr = "";
                     dispText(outStr , 14, 0, 6);
+                    */
                     break;
                   case 3:
                     break;
                   case 4:
+                    #if (USE_MQ135_GAS_ANA > OFF)
+                        outStr = "";
+                        outStr = gasValue;
+                        dispText(outStr ,  0, 1, outStr.length());
+                                SOUT(" CO2 "); SOUT(gasValue);
+                        showTrafficLight(gasValue);
+                      #endif
                     break;
                   case 5:
-                    #ifdef USE_DS18B20_1W
+                    #if (USE_DS18B20_1W > OFF)
                         outStr = "";
                         outStr = getDS18D20Str();
                         dispText(outStr ,  0, 4, outStr.length());
                       #endif
                     break;
                   case 6:
-                    #ifdef USE_BME280_I2C
+                    #if ( USE_BME280_I2C > OFF )
                         outStr = getBME280Str();
-                                //SOUTLN(outStr);
+                                SOUT("   "); SOUTLN(outStr);
                         dispText(outStr ,  0, 3, outStr.length());
                       #endif
                     break;
@@ -713,10 +788,27 @@
           }
         #endif // defined(DISP)
       // ----------------------
+      #if (USE_LED_BLINK > 0)
+        if (ledT.TOut())    // handle touch output
+          {
+            ledT.startT();
+            if (LED_ON == TRUE)
+                {
+                  digitalWrite(PIN_BOARD_LED, OFF);
+                  LED_ON = OFF;
+                }
+              else
+                {
+                  digitalWrite(PIN_BOARD_LED, ON);
+                  LED_ON = ON;
+                }
+          }
+        #endif
+      // ----------------------
       sleep(1);
     }
-// --- subroutines
-  #ifdef USE_DS18B20_1W
+// --- subroutine drivers
+  #if (USE_DS18B20_1W > OFF)
       String getDS18D20Str()
         {
           String outS = "";
@@ -733,8 +825,7 @@
         }
     #endif
 
-  //
-  #ifdef USE_BME280_I2C
+  #if ( USE_BME280_I2C > OFF )
       String getBME280Str()
         {
           String _outS = "";
@@ -752,11 +843,49 @@
         }
     #endif
 
+  #if (USE_MQ135_GAS_ANA > OFF)
+      void showTrafficLight(int16_t inval)
+        {
+          int16_t mytmp = inval - MQ135_EM_MID;
+                  //SOUT("  mytmp "); SOUTLN(mytmp);
+
+          if (mytmp <= -(int16_t) MQ135_EM_WIN)
+            {
+              digitalWrite(PIN_TL_GREEN, ON);
+              digitalWrite(PIN_TL_YELLOW, OFF);
+              digitalWrite(PIN_TL_RED,    OFF);
+            }
+          else if ( mytmp <= 0 )
+            {
+              digitalWrite(PIN_TL_GREEN, ON);
+              digitalWrite(PIN_TL_YELLOW, ON);
+              digitalWrite(PIN_TL_RED, OFF);
+            }
+          else if (mytmp < (int16_t) MQ135_EM_WIN )
+            {
+              digitalWrite(PIN_TL_GREEN, OFF);
+              digitalWrite(PIN_TL_YELLOW, ON);
+              digitalWrite(PIN_TL_RED,    ON);
+              #if defined(PLAY_START_DINGDONG)
+                  buzz.playDingDong(2);
+                #endif
+            }
+          else // ( mytmp >= MQ135_EM_WIN )
+            {
+              digitalWrite(PIN_TL_GREEN,  OFF);
+              digitalWrite(PIN_TL_YELLOW, OFF);
+              digitalWrite(PIN_TL_RED,    ON);
+              #if defined(PLAY_START_DINGDONG)
+                  buzz.playDingDong(5);
+                #endif
+            }
+        }
+    #endif
 // --- end of implementation
 //
 // --- templates
         // template websever
-          #ifdef USE_WEBSERVER
+          #if (USE_WEBSERVER > OFF)
             #ifdef DUMMY
             void drawGraph()
             {
@@ -834,7 +963,7 @@
 
         //
         // template touchscreen
-#ifdef USE_TOUCHSCREEN
+#if (USE_TOUCHSCREEN > OFF)
   #ifdef DUMMY
 
   #include "FS.h"
