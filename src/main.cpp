@@ -122,7 +122,9 @@
     #if (USE_MQ135_GAS_ANA > OFF)
         msTimer measT   = msTimer(MEASURE_CYCLE_MS);
         filterValue valGas(MQ135_FILT);
+        filterValue tholdGas(MQ135_FILT);
         int16_t gasValue;
+        int16_t gasThres;
       #endif
 
   // ------ memories
@@ -312,14 +314,14 @@
             {
               ip_list ipList = ip_list(); // temporary object
                         SOUT(millis()); SOUT(" setup startWIFI created ipList "); SOUTHEXLN((int) &ipList);
-                        //SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 0");
+                        SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 0");
               ipList.append(WIFI_FIXIP0, WIFI_GATEWAY0, WIFI_SUBNET, WIFI_SSID0, WIFI_SSID0_PW);
               #if (WIFI_ANZ_LOGIN > 1)
-                        //SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 1");
+                        SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 1");
                   ipList.append(WIFI_FIXIP1, WIFI_GATEWAY1, WIFI_SUBNET, WIFI_SSID1, WIFI_SSID1_PW);
                 #endif
               #if (WIFI_ANZ_LOGIN > 2)
-                        //SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 2");
+                        SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 2");
                   ipList.append(WIFI_FIXIP2, WIFI_GATEWAY2, WIFI_SUBNET, WIFI_SSID2, WIFI_SSID2_PW);
                 #endif
               #if (WIFI_ANZ_LOGIN > 3)
@@ -453,7 +455,7 @@
 
   // ------ traffic Light of gas sensor --------------
     #if (USE_MQ135_GAS_ANA > OFF)
-        void showTrafficLight(const int16_t inval);
+        int16_t showTrafficLight(int16_t inval, int16_t inthres);
       #endif
 
 // --- system startup
@@ -606,6 +608,7 @@
 // --- system run = endless loop
   void loop()
     {
+      int16_t _tmp = 0;
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
       #if (USE_WIFI > OFF)  // restart WIFI if offline
           if(wifiT.TOut())
@@ -684,6 +687,9 @@
                   gasValue = valGas.calcVal(analogRead(PIN_MQ135));
                         //SOUT("gas measurment val = "); SOUT(analogRead(PIN_MQ135));
                         //SOUT("    gasValue = "); SOUTLN(gasValue);
+                  gasThres = tholdGas.calcVal(analogRead(PIN_CO2_THOLD));
+                        //SOUT("gas threshold val = "); SOUT(analogRead(PIN_CO2_THOLD));
+                        //SOUT("    gasThres = "); SOUTLN(gasThres);
                 #endif
             }
         #endif
@@ -757,10 +763,14 @@
                   case 4:
                     #if (USE_MQ135_GAS_ANA > OFF)
                         outStr = "";
-                        outStr = gasValue;
+                        _tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
+                        outStr = "CO2 ";
+                        outStr.concat(gasValue);
+                        outStr.concat(" (");
+                        outStr.concat(_tmp);
+                        outStr.concat(")");
                         dispText(outStr ,  0, 1, outStr.length());
-                                SOUT(" CO2 "); SOUT(gasValue);
-                        showTrafficLight(gasValue);
+                                SOUT(outStr);
                       #endif
                     break;
                   case 5:
@@ -773,11 +783,11 @@
                   case 6:
                     #if ( USE_BME280_I2C > OFF )
                         outStr = getBME280Str();
-                                SOUT("   "); SOUTLN(outStr);
+                                SOUT("  "); SOUTLN(outStr);
                         dispText(outStr ,  0, 3, outStr.length());
                       #endif
                     break;
-                  default:
+                   default:
                     oledIdx = 0;
                     break;
                   }
@@ -844,9 +854,9 @@
     #endif
 
   #if (USE_MQ135_GAS_ANA > OFF)
-      void showTrafficLight(int16_t inval)
+      int16_t showTrafficLight(int16_t inval, int16_t inthres)
         {
-          int16_t mytmp = inval - MQ135_EM_MID;
+          int16_t mytmp = inval - inthres;
                   //SOUT("  mytmp "); SOUTLN(mytmp);
 
           if (mytmp <= -(int16_t) MQ135_EM_WIN)
@@ -867,7 +877,7 @@
               digitalWrite(PIN_TL_YELLOW, ON);
               digitalWrite(PIN_TL_RED,    ON);
               #if defined(PLAY_START_DINGDONG)
-                  buzz.playDingDong(2);
+                  //buzz.playDingDong(2);
                 #endif
             }
           else // ( mytmp >= MQ135_EM_WIN )
@@ -876,9 +886,10 @@
               digitalWrite(PIN_TL_YELLOW, OFF);
               digitalWrite(PIN_TL_RED,    ON);
               #if defined(PLAY_START_DINGDONG)
-                  buzz.playDingDong(5);
+                  //buzz.playDingDong(5);
                 #endif
             }
+          return mytmp;
         }
     #endif
 // --- end of implementation

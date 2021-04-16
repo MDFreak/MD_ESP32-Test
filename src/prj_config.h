@@ -282,7 +282,8 @@
               #define DS_ONEWIRE_PIN 27
             #endif
           #if (USE_MQ135_GAS_ANA > OFF)
-              #define PIN_MQ135     35
+              #define PIN_MQ135     34
+              #define PIN_CO2_THOLD 35     // analog threshold for evaluation
             #endif
 
         // --- PWM
@@ -302,7 +303,7 @@
                 #define PIN_I2C2_SDA  25
                 #define PIN_I2C2_SCL  26
               #endif
-        #endif
+      #endif
 
     #if !(BOARD ^ MC_AV_NANO_V3)
       #endif
@@ -416,7 +417,7 @@
 
     // --- user interface
       // --- display output
-        #define DISP_CYCLE       1000ul   // Intervallzeit [us]
+        #define DISP_CYCLE       500ul   // Intervallzeit [us]
         // output status line
         #define STAT_TIMEDEF     5000u    // default time to clear status
 
@@ -436,7 +437,13 @@
             #define NTPSERVER_CYCLE 1000ul   // Intervallzeit [us]
 
             #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
-            #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20   lowest first
+            #if !(BOARD ^ MC_ESP32_Node)
+                #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20   lowest first
+            #elif !(BOARD ^ MC_ESP32_D1_MINI)
+                #define WIFI_FIXIP0     0x1600000Aul // 10.0.0.22   lowest first
+            #elif !(BOARD ^ MC_ESP32_D1_R32)
+                #define WIFI_FIXIP0     0x1A00000Aul // 10.0.0.26   lowest first
+              #endif
             #define WIFI_GATEWAY0   0x8B00000Aul // 10.0.0.139
             #define WIFI_FIXIP1     0x1400000Aul // 10.0.0.20
             #define WIFI_GATEWAY1   0x8B00000Aul // 10.0.0.139
@@ -616,13 +623,14 @@
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
-          #define MQ135_FILT      5       // floating mesure filtering
-          #define MQ135_EM_WIN    50      // window for traffic light
-          #define MQ135_EM_MID    1450    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
+          #define MQ135_FILT      10       // floating  measure filtering
+          #define MQ135_ThresFilt 25      // threshold measure filtering
+          #define MQ135_EM_WIN    100     // window for traffic light
+          //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
         #endif
 
       #ifdef USE_MEASURE_CYCLE
-          #define MEASURE_CYCLE_MS    200u
+          #define MEASURE_CYCLE_MS    20u
         #endif
 
 
