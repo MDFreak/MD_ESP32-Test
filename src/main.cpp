@@ -858,7 +858,8 @@
   #if (USE_MQ135_GAS_ANA > OFF)
       int16_t showTrafficLight(int16_t inval, int16_t inthres)
         {
-          int16_t mytmp = inval - inthres;
+          // int16_t mytmp = inval - inthres;
+          int16_t mytmp = inthres;
                   //SOUT("  mytmp "); SOUTLN(mytmp);
 
           if (mytmp <= -(int16_t) MQ135_EM_WIN)
