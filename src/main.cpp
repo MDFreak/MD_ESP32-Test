@@ -121,8 +121,8 @@
 
     #if (USE_MQ135_GAS_ANA > OFF)
         msTimer measT   = msTimer(MEASURE_CYCLE_MS);
-        filterValue valGas(MQ135_FILT);
-        filterValue tholdGas(MQ135_FILT);
+        filterValue valGas(MQ135_FILT, 1);
+        filterValue tholdGas(MQ135_ThresFilt,1);
         int16_t gasValue;
         int16_t gasThres;
       #endif
@@ -684,12 +684,14 @@
             {
               measT.startT();
               #if (USE_MQ135_GAS_ANA > OFF)
-                  gasValue = valGas.calcVal(analogRead(PIN_MQ135));
-                        //SOUT("gas measurment val = "); SOUT(analogRead(PIN_MQ135));
-                        //SOUT("    gasValue = "); SOUTLN(gasValue);
-                  gasThres = tholdGas.calcVal(analogRead(PIN_CO2_THOLD));
-                        //SOUT("gas threshold val = "); SOUT(analogRead(PIN_CO2_THOLD));
-                        //SOUT("    gasThres = "); SOUTLN(gasThres);
+                  gasValue = analogRead(PIN_MQ135);
+                        //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
+                  gasValue = (int16_t) valGas.value((double) gasValue);
+                        //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
+                  gasThres = analogRead(PIN_CO2_THOLD);
+                        //SOUT(millis()); SOUT(" gas threshold val = "); SOUTLN(gasThres);
+                  gasThres = (int16_t) tholdGas.value((double) gasThres);
+                        //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
                 #endif
             }
         #endif

@@ -10,7 +10,8 @@
   #include <prj_config.h>
   #include <md_util.h>
   #include <md_defines.h>
-    #include <ip_list.hpp>
+  #include <ip_list.hpp>
+  #include <md_filter.hpp>
 
   // --- user interface
     #if (USE_TOUCHSCREEN > OFF)

@@ -623,9 +623,9 @@
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
-          #define MQ135_FILT      10       // floating  measure filtering
-          #define MQ135_ThresFilt 25      // threshold measure filtering
-          #define MQ135_EM_WIN    100     // window for traffic light
+          #define MQ135_FILT      15       // floating  measure filtering
+          #define MQ135_ThresFilt 25       // threshold measure filtering
+          #define MQ135_EM_WIN    100      // window for traffic light
           //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
         #endif
 
