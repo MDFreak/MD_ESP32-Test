@@ -24,16 +24,16 @@
       //#define DEBUG_MODE      CFG_DEBUG_DETAILS
 
     // --- board
-      #define BOARD   MC_ESP32_D1_R32     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+      //#define BOARD   MC_ESP32_D1_R32     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
       //#define BOARD   MC_AV_NANO_V3
       //#define BOARD   MC_AV_UNO_V3
-      //#define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+      #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
       //#define BOARD   MC_ESP32_D1_MINI  // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
 
     // --- components
       // --- system
-        #define USE_TASKING           FALSE
-        #define USE_LED_BLINK         TRUE
+        #define USE_TASKING           OFF
+        #define USE_LED_BLINK         OFF
         #define USE_I2C                1     // [0, 1, 2] limited by board
 
       // --- network
@@ -43,7 +43,8 @@
         #define USE_WEBSERVER         TRUE
       // --- user output
         #define USE_LEDS               3
-        #define USE_TRAFFIC_LIGHT      1
+        #define USE_TRAFFIC_LIGHT      0
+        #define USE_RGBLED             1
         #define USE_DISP               1
           #if (USE_DISP > 0)
             // --- displays
@@ -51,7 +52,7 @@
                   // OLEDs     MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
                             // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
                   #if (USE_OLED_I2C > OFF)
-                      #define OLED1   MC_UO_OLED_130_AZ
+                      #define OLED1   MC_UO_OLED_096_AZ
 
                     #endif
                   #if (USE_OLED_I2C > 1)
@@ -94,7 +95,7 @@
       // --- sensors
         #define USE_DS18B20_1W        0   // [0, 1, ....] limited by 1W connections
         #define USE_BME280_I2C        1   // [0, 1, ....] limited by I2C channels/addr
-        #define USE_MQ135_GAS_ANA     1   // [0, 1, ....] limited by analog inputs
+        //#define USE_MQ135_GAS_ANA     1   // [0, 1, ....] limited by analog inputs
 
       // --- memories
         #define USE_FRAM_I2C        1  // [0, 1, ...] limited by I2C channel/addr
@@ -120,9 +121,16 @@
         // --- user output
           #if (USE_LEDS > 0)
               // traffic lamp
-              #define PIN_TL_RED    26
-              #define PIN_TL_YELLOW 25
-              #define PIN_TL_GREEN  33
+              #if (USE_TRAFFIC_LIGHT > 0)
+                  #define PIN_TL_RED    26   // RGB red
+                  #define PIN_TL_YELLOW 25   // RGB green
+                  #define PIN_TL_GREEN  33   // RGB blue
+                #endif
+              #if (USE_RGBLED > 0)
+                  #define PIN_TL_RED    26   // RGB red
+                  #define PIN_TL_GREEN  25   // RGB blue
+                  #define PIN_TL_BLUE   33   // RGB blue
+                #endif
             #endif
           #if (USE_TFT > 0)
               #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)

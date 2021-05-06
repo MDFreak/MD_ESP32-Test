@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+  ],
+  "settings": {
+    "files.associations": {
+      "string": "cpp",
+      "cstring": "cpp",
+      "typeinfo": "cpp",
+      "ledc_struct.h": "c"
+    }
+  }
+}
