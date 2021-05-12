@@ -105,6 +105,9 @@
       #endif // USE_WEBSERVER
 
   // ------ sensors ----------------------
+    #ifdef USE_MEASURE_CYCLE
+        msTimer measT   = msTimer(MEASURE_CYCLE_MS);
+      #endif
     #if (USE_DS18B20_1W > OFF)
         OneWire dsOneWire(DS_ONEWIRE_PIN);
         DallasTemperature dsSensors(&dsOneWire);
@@ -120,11 +123,18 @@
       #endif
 
     #if (USE_MQ135_GAS_ANA > OFF)
-        msTimer measT   = msTimer(MEASURE_CYCLE_MS);
         filterValue valGas(MQ135_FILT, 1);
         filterValue tholdGas(MQ135_ThresFilt,1);
         int16_t gasValue;
         int16_t gasThres;
+      #endif
+
+    #if ( USE_TYPE_K > 0)
+        Adafruit_MAX31855 TypeK1(TYPEK_CLK_PIN, TYPEK_CS_PIN, TYPEK_DATA_PIN);
+        filterValue valTK1(TYPEK_FILT, TYPEK_DROP_PEEK);
+        filterValue valTK1ref(TYPEK_FILT, TYPEK_DROP_PEEK);
+        double_t    tk1Val;
+        double_t    tk1ValRef;
       #endif
 
   // ------ memories
@@ -303,7 +313,7 @@
         #if ( USE_BME280_I2C > OFF )
             String getBME280Str();
           #endif
-
+      // --- T-element type K
   // ------ WIFI -------------------------
     #if (USE_WIFI > OFF)
       void startWIFI(bool startup)
@@ -313,23 +323,33 @@
           if (startup)
             {
               ip_list ipList = ip_list(); // temporary object
-                        SOUT(millis()); SOUT(" setup startWIFI created ipList "); SOUTHEXLN((int) &ipList);
-                        SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 0");
+                        #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                            SOUT(millis()); SOUT(" setup startWIFI created ipList "); SOUTHEXLN((int) &ipList);
+                            SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 0");
+                          #endif
               ipList.append(WIFI_FIXIP0, WIFI_GATEWAY0, WIFI_SUBNET, WIFI_SSID0, WIFI_SSID0_PW);
               #if (WIFI_ANZ_LOGIN > 1)
-                        SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 1");
+                        #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                            SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 1");
+                          #endif
                   ipList.append(WIFI_FIXIP1, WIFI_GATEWAY1, WIFI_SUBNET, WIFI_SSID1, WIFI_SSID1_PW);
                 #endif
               #if (WIFI_ANZ_LOGIN > 2)
-                        SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 2");
+                        #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                            SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 2");
+                          #endif
                   ipList.append(WIFI_FIXIP2, WIFI_GATEWAY2, WIFI_SUBNET, WIFI_SSID2, WIFI_SSID2_PW);
                 #endif
               #if (WIFI_ANZ_LOGIN > 3)
-                        //SOUT(millis()); SOUTLN(" setup add WIFI 3");
+                        #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                            SOUT(millis()); SOUTLN(" setup add WIFI 3");
+                          #endif
                   ipList.append(WIFI_FIXIP3, WIFI_GATEWAY3, WIFI_SUBNET, WIFI_SSID3, WIFI_SSID3_PW);
                 #endif
               #if (WIFI_ANZ_LOGIN > 4)
-                        //SOUT(millis()); SOUTLN(" setup add WIFI 4");
+                        #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                            SOUT(millis()); SOUTLN(" setup add WIFI 4");
+                          #endif
                   ipList.append(WIFI_FIXIP3, WIFI_GATEWAY4, WIFI_SUBNET, WIFI_SSID4, WIFI_SSID4_PW);
                 #endif
                         SOUT(millis()); SOUTLN(" setup startWIFI locWIFI fertig");
@@ -363,7 +383,6 @@
 
               ret = wifi.scanWIFI(&ipList);
                         SOUT(millis()); SOUT(" scanWIFI ret="); SOUTLN(ret);
-              //ipList.~ip_list();
             }
           ret = wifi.startWIFI(USE_LOCAL_IP);
                       SOUT("startWIFI ret="); SOUT(ret);
@@ -490,22 +509,29 @@
               digitalWrite(PIN_TL_GREEN, OFF);
               digitalWrite(PIN_TL_RED, OFF);
               digitalWrite(PIN_TL_YELLOW, OFF);
-              /*
-                ledcSetup(PIN_TL_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcSetup(PIN_TL_YELLOW, PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcSetup(PIN_TL_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcAttachPin(PIN_TL_GREEN,  PWM_TL_GREEN);
-                ledcAttachPin(PIN_TL_YELLOW, PWM_TL_YELLOW);
-                ledcAttachPin(PIN_TL_RED,    PWM_TL_RED);
-                ledcWrite(PIN_TL_GREEN, 255);
+            #endif
+          #if (USE_RGBLED > 0)
+                pinMode(PIN_RGB_RED, OUTPUT);
+                pinMode(PIN_RGB_GREEN, OUTPUT);
+                pinMode(PIN_RGB_BLUE, OUTPUT);
+                ledcSetup(PWM_RGB_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcSetup(PWM_RGB_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcSetup(PWM_RGB_BLUE,   PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcAttachPin(PIN_RGB_RED,   PWM_RGB_RED);
+                ledcAttachPin(PIN_RGB_GREEN, PWM_RGB_GREEN);
+                ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
+                ledcWrite(PWM_RGB_GREEN, 255);
+                SOUTLN("LED gruen");
                 usleep(200000);
-                ledcWrite(PIN_TL_GREEN, 0);
-                ledcWrite(PIN_TL_YELLOW, 255);
+                ledcWrite(PWM_RGB_GREEN, 0);
+                ledcWrite(PWM_RGB_BLUE, 255);
+                SOUTLN("LED blau");
                 usleep(200000);
-                ledcWrite(PIN_TL_YELLOW, 0);
-                ledcWrite(PIN_TL_RED, 255);
-              */
-              ledcWrite(PIN_TL_RED, 0);
+                ledcWrite(PWM_RGB_BLUE, 0);
+                ledcWrite(PWM_RGB_RED, 255);
+                SOUTLN("LED rot");
+                usleep(200000);
+                ledcWrite(PWM_RGB_RED, 0);
             #endif
           startDisp();
           dispStatus("setup start ...");
@@ -543,6 +569,14 @@
                   dispStatus("WIFI error");
                 }
               #endif // USE_WIFI
+        // start Webserer
+          #if (USE_WEBSERVER > OFF)
+              {
+                servT.startT();
+                startWebServer();
+                //md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
+              }
+            #endif
 
       // --- sensors
         // temp. sensor DS18D20
@@ -580,6 +614,24 @@
                     }
             #endif
 
+          #if ( USE_TYPE_K > 0)
+                    SOUT(millis()); SOUT(" Tcouple1 ... " );
+                bool tkda = false;
+                tkda = TypeK1.begin();
+                if (tkda)
+                    {
+                            SOUT(" gefunden T ");
+                      double dTmp = TypeK1.readCelsius();
+                            SOUT(dTmp); SOUT(" Tcold ");
+                      dTmp = TypeK1.readInternal();
+                            SOUTLN(dTmp);
+                    }
+                  else
+                    {
+                      SOUT(" nicht gefunden");
+                    }
+            #endif
+
       // --- memories
         // FRAM
           #if (USE_FRAM_I2C > OFF) // NIO funktioniert nicht
@@ -606,9 +658,9 @@
     }
 
 // --- system run = endless loop
+  int16_t _tmp = 0;
   void loop()
     {
-      int16_t _tmp = 0;
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
       #if (USE_WIFI > OFF)  // restart WIFI if offline
           if(wifiT.TOut())
@@ -653,15 +705,18 @@
 
       // ----------------------
       #if (USE_WEBSERVER > OFF)
-        if (servT.TOut()) // run webserver - restart on error
-          {
-            servT.startT();
-            if ((md_error & ERRBIT_SERVER) != 0)
-              startWebServer();
-            else
-              //bool ret = webMD.md_handleClient();
-              md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
-          }
+          if (servT.TOut()) // run webserver - restart on error
+            {
+              servT.startT();
+              /*
+              if ((md_error & ERRBIT_SERVER) != 0)
+                {;}//startWebServer();
+              else
+                //bool ret = webMD.md_handleClient();
+                md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
+              */
+            }
+
         #endif
 
       // ----------------------
@@ -692,6 +747,27 @@
                         //SOUT(millis()); SOUT(" gas threshold val = "); SOUTLN(gasThres);
                   gasThres = (int16_t) tholdGas.value((double) gasThres);
                         //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
+                #endif
+              #if (USE_RGBLED > OFF)
+                  {
+                    _tmp += 4;
+                    if (_tmp > 50)
+                      { _tmp = 0; }
+                    //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
+                    ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(1));
+                    ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(2));
+                    ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(3));
+                  }
+                #endif
+              #if (USE_TYPE_K > OFF)
+                  tk1Val    = TypeK1.readCelsius();
+                        SOUT(millis()); SOUT(" typeK raw = "); SOUTLN(tk1Val);
+                  tk1Val    = valTK1.value(tk1Val);
+                        SOUT(millis()); SOUT(" typeK val = "); SOUTLN(tk1Val);
+                  tk1ValRef = TypeK1.readCelsius();
+                        SOUT(millis()); SOUT(" typeK ref raw = "); SOUTLN(tk1ValRef);
+                  tk1ValRef = valTK1ref.value(tk1ValRef);
+                        SOUT(millis()); SOUT(" typeK ref val = "); SOUTLN(tk1ValRef);
                 #endif
             }
         #endif
@@ -761,6 +837,16 @@
                     */
                     break;
                   case 3:
+                    #if (USE_TYPE_K > OFF)
+                        outStr = "";
+                        outStr = "TK1 ";
+                        outStr.concat(tk1Val);
+                        outStr.concat("° (");
+                        outStr.concat(tk1ValRef);
+                        outStr.concat("°)");
+                        dispText(outStr ,  0, 2, outStr.length());
+                                SOUTLN(outStr);
+                      #endif
                     break;
                   case 4:
                     #if (USE_MQ135_GAS_ANA > OFF)

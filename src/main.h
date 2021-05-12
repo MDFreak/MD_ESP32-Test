@@ -4,7 +4,7 @@
   #include <Arduino.h>
   #include <unity.h>
   #include <Wire.h>
-  #include <TimeLib.h>
+  #include <md_time.hpp>
   //#include <Print.h>
   //#include <SPI.h>
   #include <prj_config.h>
@@ -66,6 +66,10 @@
         #include <Adafruit_Sensor.h>
         #include <Adafruit_BME280.h>
       #endif
+    #if ( USE_TYPE_K > OFF)
+        #include  <Adafruit_MAX31855.h>
+      #endif
+
   //
   // -------------------------
 

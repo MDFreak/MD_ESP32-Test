@@ -19,8 +19,8 @@
   // --- configuration selections
     // --- debugging
       //#define DEBUG_MODE      CFG_DEBUG_NONE
-      //#define DEBUG_MODE      CFG_DEBUG_STARTUP
-      #define DEBUG_MODE      CFG_DEBUG_ACTIONS
+      #define DEBUG_MODE      CFG_DEBUG_STARTUP
+      //#define DEBUG_MODE      CFG_DEBUG_ACTIONS
       //#define DEBUG_MODE      CFG_DEBUG_DETAILS
 
     // --- board
@@ -32,10 +32,9 @@
 
     // --- components
       // --- system
-        #define USE_TASKING           OFF
-        #define USE_LED_BLINK         OFF
+        #define USE_TASKING           ON
+        #define USE_LED_BLINK         ON
         #define USE_I2C                1     // [0, 1, 2] limited by board
-
       // --- network
         #define USE_WIFI              TRUE
         #define USE_NTP_SERVER        TRUE
@@ -43,7 +42,7 @@
         #define USE_WEBSERVER         TRUE
       // --- user output
         #define USE_LEDS               3
-        #define USE_TRAFFIC_LIGHT      0
+        #define USE_TRAFFIC_LIGHT     OFF
         #define USE_RGBLED             1
         #define USE_DISP               1
           #if (USE_DISP > 0)
@@ -69,7 +68,7 @@
                       //#define DISP_TFT  MC_UO_TFT1602_I2C_XA
                     #endif
               #endif
-        #define USE_AOUT               1
+        #define USE_AOUT              OFF
           #if (USE_AOUT > OFF)
             // --- speakers ...
                 #define USE_BUZZER     1     // [0, 1, ...] limited by PWM outputs
@@ -93,9 +92,10 @@
             #endif // USE_KEYPADSHIELD
 
       // --- sensors
-        #define USE_DS18B20_1W        0   // [0, 1, ....] limited by 1W connections
+        #define USE_DS18B20_1W        1   // [0, 1, ....] limited by 1W connections
         #define USE_BME280_I2C        1   // [0, 1, ....] limited by I2C channels/addr
-        //#define USE_MQ135_GAS_ANA     1   // [0, 1, ....] limited by analog inputs
+        #define USE_TYPE_K            1   // [0, 1, ....] limited by Pins
+        #define USE_MQ135_GAS_ANA    OFF   // [0, 1, ....] limited by analog inputs
 
       // --- memories
         #define USE_FRAM_I2C        1  // [0, 1, ...] limited by I2C channel/addr
@@ -117,7 +117,6 @@
           #if (USE_LED_BLINK > 0)
               #define PIN_BOARD_LED   1
             #endif
-
         // --- user output
           #if (USE_LEDS > 0)
               // traffic lamp
@@ -127,9 +126,9 @@
                   #define PIN_TL_GREEN  33   // RGB blue
                 #endif
               #if (USE_RGBLED > 0)
-                  #define PIN_TL_RED    26   // RGB red
-                  #define PIN_TL_GREEN  25   // RGB blue
-                  #define PIN_TL_BLUE   33   // RGB blue
+                  #define PIN_RGB_RED    26   // RGB red
+                  #define PIN_RGB_GREEN  25   // RGB blue
+                  #define PIN_RGB_BLUE   33   // RGB blue
                 #endif
             #endif
           #if (USE_TFT > 0)
@@ -150,6 +149,11 @@
           #if (USE_DS18B20_1W > OFF)
               #define DS_ONEWIRE_PIN 27
             #endif
+          #if (USE_TYPE_K > 0)
+              #define TYPEK_DATA_PIN 19   // SPI MISO
+              #define TYPEK_CLK_PIN  18   // SPI CLK
+              #define TYPEK_CS_PIN   32
+            #endif
           #if (USE_MQ135_GAS_ANA > OFF)
               #define PIN_MQ135     36
             #endif
@@ -157,10 +161,16 @@
         // --- PWM
           // --- channels
             #define PWM_BUZZ          0
-            #define PWM_TL_GREEN      1
-            #define PWM_TL_YELLOW     2
-            #define PWM_TL_RED        3
-
+            #if (USE_TRAFFIC_LIGHT > 0)
+                #define PWM_TL_GREEN      1
+                #define PWM_TL_YELLOW     2
+                #define PWM_TL_RED        3
+              #endif
+            #if(USE_RGBLED >0)
+                #define PWM_RGB_RED       4
+                #define PWM_RGB_GREEN     5
+                #define PWM_RGB_BLUE      6
+              #endif
         // --- I2C
           // --- board connection
             #define USE_I2C1          1
@@ -471,7 +481,6 @@
             #define PWM_LEDS_FREQ      5000u
             #define PWM_LEDS_RES       8
           #endif
-
       // --- display
         #if (USE_DISP > 0)
             #define USE_STATUS
@@ -620,13 +629,14 @@
       #if (USE_FRAM_I2C > OFF)
           #define SIZE_FRAM     0x8000
         #endif
-
     // --- sensors
       #if (USE_DS18B20_1W > OFF)
           #define DS_T_PRECISION  9
           #define DS18B20_ANZ     1
+          #ifndef USE_MEASURE_CYCLE
+              //#define USE_MEASURE_CYCLE
+            #endif
         #endif
-
       #if (USE_MQ135_GAS_ANA > OFF)
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
@@ -637,8 +647,16 @@
           //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
         #endif
 
+      #if (USE_TYPE_K > OFF)
+          #ifndef USE_MEASURE_CYCLE
+              #define USE_MEASURE_CYCLE
+            #endif
+          #define TYPEK_FILT      15       // floating  measure filtering
+          #define TYPEK_DROP_PEEK 2        // drop biggest / lowest
+        #endif
+
       #ifdef USE_MEASURE_CYCLE
-          #define MEASURE_CYCLE_MS    20u
+          #define MEASURE_CYCLE_MS  100u
         #endif
 
 
