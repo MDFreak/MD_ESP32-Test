@@ -35,6 +35,7 @@
         #define USE_TASKING           ON
         #define USE_LED_BLINK         ON
         #define USE_I2C                1     // [0, 1, 2] limited by board
+        #define USE_SPI                1
       // --- network
         #define USE_WIFI              TRUE
         #define USE_NTP_SERVER        TRUE
@@ -94,7 +95,7 @@
       // --- sensors
         #define USE_DS18B20_1W        1   // [0, 1, ....] limited by 1W connections
         #define USE_BME280_I2C        1   // [0, 1, ....] limited by I2C channels/addr
-        #define USE_TYPE_K            1   // [0, 1, ....] limited by Pins
+        #define USE_TYPE_K            2   // [0, 1, ....] limited by Pins
         #define USE_MQ135_GAS_ANA    OFF   // [0, 1, ....] limited by analog inputs
 
       // --- memories
@@ -152,7 +153,8 @@
           #if (USE_TYPE_K > 0)
               #define TYPEK_DATA_PIN 19   // SPI MISO
               #define TYPEK_CLK_PIN  18   // SPI CLK
-              #define TYPEK_CS_PIN   32
+              #define TYPEK1_CS_PIN  16
+              #define TYPEK2_CS_PIN  17
             #endif
           #if (USE_MQ135_GAS_ANA > OFF)
               #define PIN_MQ135     36
@@ -651,14 +653,17 @@
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
-          #define TYPEK_FILT      15       // floating  measure filtering
+          #define TYPEK_FILT      11       // floating  measure filtering
           #define TYPEK_DROP_PEEK 2        // drop biggest / lowest
+          #define TYPEK1_OFFSET   0.       // offset unit °C
+          #define TYPEK1_GAIN     1.       // result = (measure * gain) + offset
+          #define TYPEK2_OFFSET   0.       // offset unit °C
+          #define TYPEK2_GAIN     1.       // result = (measure * gain) + offset
         #endif
 
       #ifdef USE_MEASURE_CYCLE
-          #define MEASURE_CYCLE_MS  100u
+          #define MEASURE_CYCLE_MS  500u
         #endif
-
 
   // ******************************************
 #endif // _PRJ_CONFIG_H_

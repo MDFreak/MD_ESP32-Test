@@ -130,11 +130,21 @@
       #endif
 
     #if ( USE_TYPE_K > 0)
-        Adafruit_MAX31855 TypeK1(TYPEK_CLK_PIN, TYPEK_CS_PIN, TYPEK_DATA_PIN);
-        filterValue valTK1(TYPEK_FILT, TYPEK_DROP_PEEK);
-        filterValue valTK1ref(TYPEK_FILT, TYPEK_DROP_PEEK);
-        double_t    tk1Val;
-        double_t    tk1ValRef;
+        //SPIClass* tkSPI = new SPIClass();
+        //md_31855_ktype TypeK1(TYPEK1_CS_PIN, tkSPI);
+        md_31855_ktype TypeK1(TYPEK1_CS_PIN, TYPEK_CLK_PIN, TYPEK_DATA_PIN);
+        filterValue valTK1(TYPEK_FILT, TYPEK_DROP_PEEK, TYPEK1_OFFSET, TYPEK1_GAIN);
+        filterValue valTK1ref(TYPEK_FILT, TYPEK_DROP_PEEK, TYPEK1_OFFSET, TYPEK1_GAIN);
+        int16_t     tk1Val;
+        int16_t     tk1ValRef;
+        #if ( USE_TYPE_K > 1)
+            //md_31855_ktype TypeK2(TYPEK2_CS_PIN, tkSPI);
+            md_31855_ktype TypeK2(TYPEK2_CS_PIN, TYPEK_CLK_PIN, TYPEK_DATA_PIN);
+            filterValue valTK2(TYPEK_FILT, TYPEK_DROP_PEEK, TYPEK2_OFFSET, TYPEK2_GAIN);
+            filterValue valTK2ref(TYPEK_FILT, TYPEK_DROP_PEEK, TYPEK2_OFFSET, TYPEK2_GAIN);
+            int16_t     tk2Val;
+            int16_t     tk2ValRef;
+          #endif
       #endif
 
   // ------ memories
@@ -413,7 +423,7 @@
               dispStatus("start webserver");
               if ((md_error & ERRBIT_WIFI) == 0)
                 {
-                  ret = webMD.md_startServer();
+                  ret = webMD.md_startServer(0, 3, 0);
                       #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
                         // SOUT("startServer ret="); SOUT(ret);
                       #endif
@@ -614,22 +624,39 @@
                     }
             #endif
 
+        // K-type thermoelementation
           #if ( USE_TYPE_K > 0)
                     SOUT(millis()); SOUT(" Tcouple1 ... " );
-                bool tkda = false;
-                tkda = TypeK1.begin();
-                if (tkda)
+                uint8_t tkerr = TypeK1.begin();
+                if (!tkerr)
                     {
-                            SOUT(" gefunden T ");
-                      double dTmp = TypeK1.readCelsius();
-                            SOUT(dTmp); SOUT(" Tcold ");
-                      dTmp = TypeK1.readInternal();
-                            SOUTLN(dTmp);
+                            SOUT(" gefunden TK1 ");
+                      int16_t itmp = TypeK1.actT();
+                            SOUT(itmp); SOUT(" TK1cold ");
+                      itmp = TypeK1.refT();
+                            SOUTLN(itmp);
                     }
                   else
                     {
-                      SOUT(" nicht gefunden");
+                      SOUTLN(" nicht gefunden");
                     }
+                #if ( USE_TYPE_K > 1)
+                          SOUT(millis()); SOUT(" Tcouple2 ... " );
+                      int16_t itmp = 0;
+                      tkerr = TypeK2.begin();
+                      if (!tkerr)
+                          {
+                                  SOUT(" gefunden TK2 ");
+                            itmp = TypeK2.actT();
+                                  SOUT(itmp); SOUT(" TK2cold ");
+                            itmp = TypeK2.refT();
+                                  SOUTLN(itmp);
+                          }
+                        else
+                          {
+                            SOUTLN(" nicht gefunden");
+                          }
+                  #endif
             #endif
 
       // --- memories
@@ -677,7 +704,7 @@
         #endif // USE_WIFI
 
       // ----------------------
-      #if (USE_NTP_SERVER > OFF)
+      #if (USE_NTP_SERVER > OFF)   // get time from NTP server
         if (ntpT.TOut() == true)
           {
             setTime(++ntpTime);
@@ -704,8 +731,8 @@
 
 
       // ----------------------
-      #if (USE_WEBSERVER > OFF)
-          if (servT.TOut()) // run webserver - restart on error
+      #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
+          if (servT.TOut())
             {
               servT.startT();
               /*
@@ -754,20 +781,45 @@
                     if (_tmp > 50)
                       { _tmp = 0; }
                     //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
-                    ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(1));
-                    ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(2));
-                    ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(3));
+                    ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
+                    ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
+                    ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
                   }
                 #endif
               #if (USE_TYPE_K > OFF)
-                  tk1Val    = TypeK1.readCelsius();
-                        SOUT(millis()); SOUT(" typeK raw = "); SOUTLN(tk1Val);
-                  tk1Val    = valTK1.value(tk1Val);
-                        SOUT(millis()); SOUT(" typeK val = "); SOUTLN(tk1Val);
-                  tk1ValRef = TypeK1.readCelsius();
-                        SOUT(millis()); SOUT(" typeK ref raw = "); SOUTLN(tk1ValRef);
-                  tk1ValRef = valTK1ref.value(tk1ValRef);
-                        SOUT(millis()); SOUT(" typeK ref val = "); SOUTLN(tk1ValRef);
+                  int8_t  tkerr = (int8_t) ISOK;
+                  int16_t ival = TypeK1.actT();
+                  tkerr = TypeK1.readErr();
+                        //SOUT(" typeK1 err "); SOUT(tkerr);
+                        //SOUT(" val "); SOUT( ival);
+                  if (!tkerr)
+                    {
+                      tk1Val    = valTK1.value((double) ival);
+                        //SOUT(" / "); SOUT(tk1Val);
+                      ival      = TypeK1.refT();
+                            //SOUT(millis()); SOUT(" ref raw = "); SOUT((int) ival);
+                      tk1ValRef = valTK1ref.value((double) ival);
+                        //SOUT(millis()); SOUT(" ival = "); SOUT((int) tk1ValRef);
+                    }
+                        //SOUTLN();
+                  #if (USE_TYPE_K > 1)
+                      ival    = TypeK2.actT();
+                      tkerr     = TypeK2.readErr() % 8;
+                            //SOUT(" typeK2 err "); SOUT(tkerr);
+                            //SOUT(" val "); SOUT(ival);
+                      if (!tkerr)
+                        {
+                          tk2Val    = valTK2.value((double) ival);
+                            //SOUT(" / "); SOUT((int) tk2Val);
+                          ival      = TypeK2.refT();
+                            //SOUT(millis()); SOUT(" ref raw = "); SOUT(ival);
+                          tk2ValRef = valTK2ref.value((double) ival);
+                            //SOUT(millis()); SOUT(" ival = "); SOUT(tk2ValRef);
+                        }
+                            //SOUTLN();
+                  #else
+                            SOUTLN();
+                    #endif
                 #endif
             }
         #endif
@@ -841,10 +893,22 @@
                         outStr = "";
                         outStr = "TK1 ";
                         outStr.concat(tk1Val);
-                        outStr.concat("° (");
-                        outStr.concat(tk1ValRef);
-                        outStr.concat("°)");
+                        outStr.concat("°");
+                        //dispText(outStr ,  0, 1, outStr.length());
+                        #if (USE_TYPE_K > 1)
+                            //outStr = "";
+                            outStr.concat(" TK2 ");
+                            outStr.concat(tk2Val);
+                            outStr.concat("° ");
+                          #endif
                         dispText(outStr ,  0, 2, outStr.length());
+                        outStr.concat(" (");
+                        outStr.concat(tk1ValRef);
+                        #if (USE_TYPE_K > 1)
+                            outStr.concat("° / ");
+                            outStr.concat(tk2ValRef);
+                          #endif
+                        outStr.concat("°)");
                                 SOUTLN(outStr);
                       #endif
                     break;

@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="MDFreak Test">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="Martin Dorfner">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Martins ESP</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -14,25 +18,28 @@
     <div class="content">
       <div class="card-grid">
         <div class="card">
-          <p class="card-title"> LED red</p>
-          <p class="switch">
-            <input type="range" oninput="updateSliderPWM1(this)" id="pwmSlider1" min="0" max="100" step="1" value ="0" class="slider">
+          <p class="card-title">
+            LED red - <span id="textSliderValue_a"></span> &percnt;
           </p>
-          <p class="state">Brightness: <span id="^112dedtextSliderValue1"></span> &percnt;</p>
+          <p class="switch">
+            <input type="range" oninput="updateSliderPWM_a(this)" id="pwmSlider_a" min="0" max="100" step="1" value ="0" class="slider">
+          </p>
         </div>
         <div class="card">
-          <p class="card-title"><i class="fas fa-lightbulb"></i> LED green</p>
-          <p class="switch">
-            <input type="range" oninput="updateSliderPWM2(this)" id="pwmSlider2" min="0" max="100" step="1" value ="0" class="slider">
+          <p class="card-title">
+            LED green - <span id="textSliderValue_b"></span> &percnt;
           </p>
-          <p class="state">Brightness: <span id="textSliderValue2"></span> &percnt;</p>
+          <p class="switch">
+            <input type="range" oninput="updateSliderPWM_b(this)" id="pwmSlider_b" min="0" max="100" step="1" value ="0" class="slider">
+          </p>
         </div>
         <div class="card">
-          <p class="card-title"><i class="fas fa-lightbulb"></i> LED blue</p>
-          <p class="switch">
-            <input type="range" oninput="updateSliderPWM3(this)" id="pwmSlider3" min="0" max="100" step="1" value ="0" class="slider">
+          <p class="card-title">
+            LED blue - <span id="textSliderValue_c"></span> &percnt;
           </p>
-          <p class="state">Brightness: <span id="textSliderValue3"></span> &percnt;</p>
+          <p class="switch">
+            <input type="range" oninput="updateSliderPWM_c(this)" id="pwmSlider_c" min="0" max="100" step="1" value ="0" class="slider">
+          </p>
         </div>
       </div>
     </div>

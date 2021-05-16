@@ -5,6 +5,7 @@
   #include <unity.h>
   #include <Wire.h>
   #include <md_time.hpp>
+  #include <string.h>
   //#include <Print.h>
   //#include <SPI.h>
   #include <prj_config.h>
@@ -67,7 +68,8 @@
         #include <Adafruit_BME280.h>
       #endif
     #if ( USE_TYPE_K > OFF)
-        #include  <Adafruit_MAX31855.h>
+        #include <SPI.h>
+        #include <md_31855_ktype.h>
       #endif
 
   //
