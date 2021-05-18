@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="MDFreak Test">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="Martin Dorfner">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Martins ESP</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <div class="topnav">
+      <h1>ESP WEB SERVER</h1>
+    </div>
+    <div class="content">
+      <div class="card-grid">
+        <div class="card">
+          <p class="card-title">
+            LED red - <span id="textSliderValue_a"></span> &percnt;
+          </p>
+          <p class="switch">
+            <input type="range" oninput="updateSliderPWM_a(this)" id="pwmSlider_a" min="0" max="100" step="1" value ="0" class="slider">
+          </p>
+        </div>
+        <div class="card">
+          <p class="card-title">
+            LED green - <span id="textSliderValue_b"></span> &percnt;
+          </p>
+          <p class="switch">
+            <input type="range" oninput="updateSliderPWM_b(this)" id="pwmSlider_b" min="0" max="100" step="1" value ="0" class="slider">
+          </p>
+        </div>
+        <div class="card">
+          <p class="card-title">
+            LED blue - <span id="textSliderValue_c"></span> &percnt;
+          </p>
+          <p class="switch">
+            <input type="range" oninput="updateSliderPWM_c(this)" id="pwmSlider_c" min="0" max="100" step="1" value ="0" class="slider">
+          </p>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <p>
+            <i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
+            <span class="dht-labels">Temperature</span>
+            <span id="temperature">%TEMPERATURE%</span>
+            <sup class="units">&deg;C</sup>
+          </p>
+        </div>
+        <div class="card">
+          <p>
+          <i class="fas fa-tint" style="color:#00add6;"></i>
+          <span class="dht-labels">Humidity</span>
+          <span id="humidity">%HUMIDITY%</span>
+          <sup class="units">%</sup>
+          </p>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO 2
+            <span id="2s"> 2 </span>
+          </p>
+          <label class="switch">
+            <input type="checkbox" onchange="toggleCheckbox(this)" id="2">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card">
+          <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO 4
+            <span id="4s"> 4 </span>
+          </p>
+          <label class="switch">
+            <input type="checkbox" onchange="toggleCheckbox(this)" id="4">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card">
+          <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO 14
+            <span id="14s"> 14</span>
+          </p>
+          <label class="switch">
+            <input type="checkbox" onchange="toggleCheckbox(this)" id="14">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="card">
+          <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO 12
+             <span id="12s">12</span>
+          </p>
+          <label class="switch">
+            <input type="checkbox" onchange="toggleCheckbox(this)" id="12">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
+

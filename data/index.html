@@ -15,6 +15,124 @@
     <div class="topnav">
       <h1>ESP WEB SERVER</h1>
     </div>
+
+    <section class="main">
+        <div id="logo">
+            <label for="nav-toggle-cb" id="nav-toggle">&#9776;&nbsp;&nbsp;Toggle settings</label>
+        </div>
+        <div id="content">
+            <div id="sidebar">
+                <input type="checkbox" id="nav-toggle-cb" checked="checked">
+                <nav id="menu">
+                    <div class="input-group" id="option-group">
+                        <label for="framesize">Options </label>
+                        <select id="framesize" class="default-action">
+                            <option value="3" selected="selected">Option 4</option>
+                            <option value="2">Option 3</option>
+                            <option value="1">Option 2</option>
+                            <option value="0">Option 1</option>
+                        </select>
+                    </div>
+                    <div class="input-group" id="slider_1">
+                        <label for="Slider1"><span id="nameSlider1"></span>
+                                             [<span id="unitSlider1"></span>]</label>
+                        <input type="range" oninput="sendSlider_1()" id="Slider1"
+                               min="0" max="100" value="10" class="default-action">
+                        <div class="range-max"><span id="valSlider1"></span></div>
+                    </div>
+                    <div class="input-group" id="slider_2">
+                        <label for="Slider2"><span id="nameSlider2"></span>
+                                             [<span id="unitSlider2"></span>]</label>
+                        <input type="range" oninput="sendSlider_2()" id="Slider2"
+                               min="0" max="100" value="10" class="default-action">
+                        <div class="range-max"><span id="valSlider2"></span></div>
+                    </div>
+                    <div class="input-group" id="slider_3">
+                        <label for="Slider3"><span id="nameSlider3"></span>
+                                             [<span id="unitSlider3"></span>]</label>
+                        <input type="range" oninput="sendSlider_3()" id="Slider3"
+                               min="0" max="100" value="10" class="default-action">
+                        <div class="range-max"><span id="valSlider3"></span></div>
+                    </div>
+                    <div class="input-group" id="slider_4">
+                        <label for="Slider4"><span id="nameSlider4"></span>
+                                             [<span id="unitSlider4"></span>]</label>
+                        <input type="range" oninput="sendSlider_4()" id="Slider4"
+                               min="0" max="100" value="10" class="default-action">
+                        <div class="range-max"><span id="valSlider4"></span></div>
+                    </div>
+                    <div class="input-group" id="switch_1">
+                        <label for="Sw1">Switch 1</label>
+                        <div class="switch">
+                            <input type="checkbox" oninput="sendSwitch_a()" id="Sw1"
+                                   class="default-action" checked="checked">
+                            <label class="slider" for="Sw1"></label>
+                            <input type="checkbox" id="Sw1i"
+                                   class="default-action" checked="checked">
+                            <label class="slider" for="Sw1i"></label>
+                        </div>
+                    </div>
+                    <div class="input-group" id="switch_2">
+                        <label for="Sw2">Switch 2</label>
+                        <div class="switch">
+                            <input type="checkbox" oninput="sendSwitch_b()" id="Sw2"
+                                   class="default-action" checked="checked">
+                            <label class="slider" for="Sw2"></label>
+                            <input type="checkbox" id="Sw2i"
+                                   class="default-action" checked="checked">
+                            <label class="slider" for="Sw2i"></label>
+                        </div>
+                    </div>
+                    <div class="input-group" id="switch_3">
+                        <label for="Sw3">Switch 3</label>
+                        <div class="switch">
+                            <input type="checkbox" oninput="sendSwitch_c()" id="Sw3"
+                                   class="default-action" checked="checked">
+                            <label class="slider" for="Sw3"></label>
+                            <input type="checkbox" id="Sw3i"
+                                   class="default-action" checked="checked">
+                            <label class="slider" for="Sw3i"></label>
+
+                        </div>
+                    </div>
+                    <div class="input-group" id="analog_1">
+                        <label for="Ana1">Value 1<span id="valAna1"></span> ? </label>
+                        <input type="number" oninput="sendAnalog_a()" id="Ana1"
+                               value="0" class="default-action">
+                        <sup class="units"> ? </sup>
+                    </div>
+                    <div class="input-group" id="analog_2">
+                        <label for="Ana2">Value 2<span id="valAna2"></span> ? </label>
+                        <input type="number" oninput="sendAnalog_a()" id="Ana2"
+                               value="0" class="default-action">
+                        <sup class="units"> ? </sup>
+                    </div>
+                    <div class="input-group" id="analog_3">
+                        <label for="Ana3">Value 1<span id="valAna3"></span> ? </label>
+                        <input type="number" oninput="sendAnalog_a()" id="Ana3"
+                               value="0" class="default-action">
+                        <sup class="units"> ? </sup>
+                    </div>
+
+
+                    <section id="buttons">
+                        <button id="get-still">Get Still</button>
+                        <button id="toggle-stream">Start Stream</button>
+                        <button id="face_enroll" class="disabled" disabled="disabled">Enroll Face</button>
+                    </section>
+                </nav>
+            </div>
+            <figure>
+                <div id="stream-container" class="image-container hidden">
+                    <div class="close" id="close-stream">×</div>
+                    <img id="stream" src="">
+                </div>
+            </figure>
+        </div>
+    </section>
+
+
+
     <div class="content">
       <div class="card-grid">
         <div class="card">
@@ -42,7 +160,28 @@
           </p>
         </div>
       </div>
+      <div class="card-grid">
+        <div class="card">
+          <p>
+            <i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
+            <span class="dht-labels">Temperature</span>
+            <span id="temperature">%TEMPERATURE%</span>
+            <sup class="units">&deg;C</sup>
+          </p>
+        </div>
+        <div class="card">
+          <p>
+          <i class="fas fa-tint" style="color:#00add6;"></i>
+          <span class="dht-labels">Humidity</span>
+          <span id="humidity">%HUMIDITY%</span>
+          <sup class="units">%</sup>
+          </p>
+        </div>
+      </div>
+
+
     </div>
     <script src="script.js"></script>
   </body>
 </html>
+
