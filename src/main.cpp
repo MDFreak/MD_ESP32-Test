@@ -101,7 +101,7 @@
     //
     #if (USE_WEBSERVER > OFF)
         md_server webMD = md_server();
-        msTimer servT = msTimer(WEBSERVER_CYCLE);
+        msTimer   servT = msTimer(WEBSERVER_CYCLE);
       #endif // USE_WEBSERVER
 
   // ------ sensors ----------------------
@@ -124,7 +124,7 @@
 
     #if (USE_MQ135_GAS_ANA > OFF)
         filterValue valGas(MQ135_FILT, 1);
-        filterValue tholdGas(MQ135_ThresFilt,1);
+        //filterValue tholdGas(MQ135_ThresFilt,1);
         int16_t gasValue;
         int16_t gasThres;
       #endif
@@ -153,6 +153,10 @@
       #endif
 // --- private prototypes
   // ------ user interface -----------------
+    // --- website
+      #if (USE_WEBSERVER > OFF)
+          void configWebsite();
+        #endif
     // --- user output
       // standard outputs
         void clearDisp()
@@ -585,6 +589,7 @@
                 servT.startT();
                 startWebServer();
                 //md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
+
               }
             #endif
 
@@ -686,6 +691,7 @@
 
 // --- system run = endless loop
   int16_t _tmp = 0;
+  bool firstrun = true;
   void loop()
     {
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
@@ -770,9 +776,9 @@
                         //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
                   gasValue = (int16_t) valGas.value((double) gasValue);
                         //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
-                  gasThres = analogRead(PIN_CO2_THOLD);
+                  //gasThres = analogRead(PIN_CO2_THOLD);
                         //SOUT(millis()); SOUT(" gas threshold val = "); SOUTLN(gasThres);
-                  gasThres = (int16_t) tholdGas.value((double) gasThres);
+                  //gasThres = (int16_t) tholdGas.value((double) gasThres);
                         //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
                 #endif
               #if (USE_RGBLED > OFF)
@@ -868,25 +874,25 @@
                 switch (oledIdx)
                   {
                   case 1:
-                    /*
-                    outStr = "0-0-6";
-                    dispText(outStr ,  0, 0, 6);
-                    outStr = "";
-                    dispText(outStr ,  7, 0, 6);
-                    outStr = "15-0-6";
-                    dispText(outStr , 14, 0, 6);
-                    */
-                      //SOUT((uint32_t) millis()); SOUT(" SW1 '"); SOUT(outBuf); SOUTLN("'");
+                      /*
+                      outStr = "0-0-6";
+                      dispText(outStr ,  0, 0, 6);
+                      outStr = "";
+                      dispText(outStr ,  7, 0, 6);
+                      outStr = "15-0-6";
+                      dispText(outStr , 14, 0, 6);
+                      */
+                          //SOUT((uint32_t) millis()); SOUT(" SW1 '"); SOUT(outBuf); SOUTLN("'");
                     break;
                   case 2:
-                    /*
-                    outStr = "";
-                    dispText(outStr ,  0, 0, 6);
-                    outStr = "7-1-6";
-                    dispText(outStr ,  7, 0, 6);
-                    outStr = "";
-                    dispText(outStr , 14, 0, 6);
-                    */
+                      /*
+                      outStr = "";
+                      dispText(outStr ,  0, 0, 6);
+                      outStr = "7-1-6";
+                      dispText(outStr ,  7, 0, 6);
+                      outStr = "";
+                      dispText(outStr , 14, 0, 6);
+                      */
                     break;
                   case 3:
                     #if (USE_TYPE_K > OFF)
@@ -915,14 +921,14 @@
                   case 4:
                     #if (USE_MQ135_GAS_ANA > OFF)
                         outStr = "";
-                        _tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
+                        //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
                         outStr = "CO2 ";
                         outStr.concat(gasValue);
-                        outStr.concat(" (");
-                        outStr.concat(_tmp);
-                        outStr.concat(")");
+                        //outStr.concat(" (");
+                        //outStr.concat(_tmp);
+                        //outStr.concat(")");
                         dispText(outStr ,  0, 1, outStr.length());
-                                SOUT(outStr);
+                                SOUT(outStr); SOUT("  ");
                       #endif
                     break;
                   case 5:
@@ -935,7 +941,7 @@
                   case 6:
                     #if ( USE_BME280_I2C > OFF )
                         outStr = getBME280Str();
-                                SOUT("  "); SOUTLN(outStr);
+                                SOUT("  "); SOUT(outStr); SOUT("  ");
                         dispText(outStr ,  0, 3, outStr.length());
                       #endif
                     break;
@@ -967,9 +973,32 @@
           }
         #endif
       // ----------------------
+      if (firstrun == true)
+        {
+          String taskMessage = "loop task running on core ";
+          taskMessage = taskMessage + xPortGetCoreID();
+          SOUTLN(taskMessage);
+          firstrun = false;
+        }
       sleep(1);
     }
 // --- subroutine drivers
+  #if (USE_WEBSERVER > OFF)
+      void configWebsite()
+        {
+          webMD.createElement(EL_TYPE_SLIDER, "LED red", "%");
+          webMD.createElement(EL_TYPE_SLIDER, "LED green", "%");
+          webMD.createElement(EL_TYPE_SLIDER, "LED blue", "%");
+
+          webMD.createElement(EL_TYPE_ANALOG, "DS18B20 Temp", "°C");
+          webMD.createElement(EL_TYPE_ANALOG, "Type-K Temp", "°C");
+          webMD.createElement(EL_TYPE_ANALOG, "BME_Temp", "°C");
+          webMD.createElement(EL_TYPE_ANALOG, "BME_Humidity", "%");
+          webMD.createElement(EL_TYPE_ANALOG, "BME_Pressure", "mb");
+          webMD.createElement(EL_TYPE_ANALOG, "Gaswert", "");
+
+        }
+    #endif
   #if (USE_DS18B20_1W > OFF)
       String getDS18D20Str()
         {
@@ -1005,6 +1034,7 @@
         }
     #endif
 
+/*
   #if (USE_MQ135_GAS_ANA > OFF)
       int16_t showTrafficLight(int16_t inval, int16_t inthres)
         {
@@ -1045,6 +1075,7 @@
           return mytmp;
         }
     #endif
+*/
 // --- end of implementation
 //
 // --- templates

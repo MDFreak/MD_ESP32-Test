@@ -96,7 +96,7 @@
         #define USE_DS18B20_1W        1   // [0, 1, ....] limited by 1W connections
         #define USE_BME280_I2C        1   // [0, 1, ....] limited by I2C channels/addr
         #define USE_TYPE_K            2   // [0, 1, ....] limited by Pins
-        #define USE_MQ135_GAS_ANA    OFF   // [0, 1, ....] limited by analog inputs
+        #define USE_MQ135_GAS_ANA     1   // [0, 1, ....] limited by analog inputs
 
       // --- memories
         #define USE_FRAM_I2C        1  // [0, 1, ...] limited by I2C channel/addr
@@ -342,8 +342,8 @@
       // --- generic
         #define SCAN_I2C   128
         #define CHECK_I2C_DEVICES
-        #define UTC_SEASONTIME UTC_WINTERTIME
-        //#define UTC_SEASONTIME UTC_SUMMERTIME
+        //#define UTC_SEASONTIME UTC_WINTERTIME
+        #define UTC_SEASONTIME UTC_SUMMERTIME
         #if (USE_TASKING > 0)
             #define USE_SONGTASK
             #define TASK_SLICE_T  5000ul   // task beat [us]
@@ -633,18 +633,22 @@
         #endif
     // --- sensors
       #if (USE_DS18B20_1W > OFF)
-          #define DS_T_PRECISION  9
-          #define DS18B20_ANZ     1
+          #define DS_T_PRECISION   9
+          #define DS18B20_ANZ      1
           #ifndef USE_MEASURE_CYCLE
               //#define USE_MEASURE_CYCLE
             #endif
         #endif
+
+      #if (USE_BME280_I2C > OFF)
+        #endif
+
       #if (USE_MQ135_GAS_ANA > OFF)
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
           #define MQ135_FILT      15       // floating  measure filtering
-          #define MQ135_ThresFilt 25       // threshold measure filtering
+          //#define MQ135_ThresFilt 25       // threshold measure filtering
           #define MQ135_EM_WIN    100      // window for traffic light
           //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
         #endif
