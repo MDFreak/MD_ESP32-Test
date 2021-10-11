@@ -398,7 +398,7 @@
               ret = wifi.scanWIFI(&ipList);
                         SOUT(millis()); SOUT(" scanWIFI ret="); SOUTLN(ret);
             }
-          ret = wifi.startWIFI(USE_LOCAL_IP);
+          ret = wifi.startWIFI();
                       SOUT("startWIFI ret="); SOUT(ret);
           md_error = setBit(md_error, ERRBIT_WIFI, ret);
                 #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
@@ -413,7 +413,7 @@
           #if (USE_NTP_SERVER > OFF)
             if((md_error & ERRBIT_WIFI) == 0) // WiFi ok
                 if((md_error & ERRBIT_NTPTIME) != 0) // WiFi ok
-                  wifi.initNTP(0);
+                  wifi.initNTP();
             #endif
         }
       #endif // USE_WIFI
@@ -452,7 +452,7 @@
     #if (USE_NTP_SERVER > OFF)
       void initNTPTime()
         {
-          bool ret = wifi.initNTP(UTC_SEASONTIME);
+          bool ret = wifi.initNTP();
                 #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
                   Serial.print("initNTPTime ret="); Serial.print(ret);
                 #endif

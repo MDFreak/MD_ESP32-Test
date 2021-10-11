@@ -33,7 +33,7 @@
     // --- components
       // --- system
         #define USE_TASKING           ON
-        #define USE_LED_BLINK         ON
+        #define USE_LED_BLINK         OFF //ON
         #define USE_I2C                1     // [0, 1, 2] limited by board
         #define USE_SPI                1
       // --- network
@@ -44,7 +44,7 @@
       // --- user output
         #define USE_LEDS               3
         #define USE_TRAFFIC_LIGHT     OFF
-        #define USE_RGBLED             1
+        #define USE_RGBLED             0
         #define USE_DISP               1
           #if (USE_DISP > 0)
             // --- displays
@@ -52,8 +52,7 @@
                   // OLEDs     MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
                             // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
                   #if (USE_OLED_I2C > OFF)
-                      #define OLED1   MC_UO_OLED_096_AZ
-
+                      #define OLED1   MC_UO_OLED_130_AZ
                     #endif
                   #if (USE_OLED_I2C > 1)
                       #define OLED2   TRUE
@@ -93,13 +92,13 @@
             #endif // USE_KEYPADSHIELD
 
       // --- sensors
-        #define USE_DS18B20_1W        1   // [0, 1, ....] limited by 1W connections
+        #define USE_DS18B20_1W        0   // [0, 1, ....] limited by 1W connections
         #define USE_BME280_I2C        1   // [0, 1, ....] limited by I2C channels/addr
-        #define USE_TYPE_K            2   // [0, 1, ....] limited by Pins
-        #define USE_MQ135_GAS_ANA     1   // [0, 1, ....] limited by analog inputs
+        #define USE_TYPE_K            0   // [0, 1, ....] limited by Pins
+        #define USE_MQ135_GAS_ANA     0   // [0, 1, ....] limited by analog inputs
 
       // --- memories
-        #define USE_FRAM_I2C        1  // [0, 1, ...] limited by I2C channel/addr
+        #define USE_FRAM_I2C          0   // [0, 1, ...] limited by I2C channel/addr
 
   // ******************************************
   // --- board management
