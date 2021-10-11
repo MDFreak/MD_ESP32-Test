@@ -4,15 +4,14 @@
   #include <Arduino.h>
   #include <unity.h>
   #include <Wire.h>
-  #include <md_time.hpp>
   #include <string.h>
-  //#include <Print.h>
-  //#include <SPI.h>
-  #include <prj_config.h>
-  #include <md_util.h>
+  #include <md_time.hpp>
   #include <md_defines.h>
+  #include <md_util.h>
   #include <ip_list.hpp>
   #include <md_filter.hpp>
+  #include <project.h>
+  #include <prj_config.h>
 
   // --- user interface
     #if (USE_TOUCHSCREEN > OFF)
@@ -72,7 +71,56 @@
         #include <md_31855_ktype.h>
       #endif
 
-  //
-  // -------------------------
+  // ---------------------------------------
+  // --- prototypes
+    // ------ user interface -----------------
+      // --- user output
+        // --- display
+          void clearDisp();
+          void dispStatus(String msg);
+          void dispStatus(const char* msg);
+          void dispText(char* msg, uint8_t col, uint8_t row, uint8_t len);
+          void dispText(String msg, uint8_t col, uint8_t row, uint8_t len);
+          void startDisp();
+
+        // --- passive buzzer
+          #ifdef PLAY_MUSIC
+              void playSong(int8_t songIdx);
+              void playSong();
+            #endif
+
+        // --- traffic Light of gas sensor
+          #if (USE_MQ135_GAS_ANA > OFF)
+              int16_t showTrafficLight(int16_t inval, int16_t inthres);
+            #endif
+
+      // --- user input
+        // --- keypad
+          void startKeys();
+          uint8_t getKey();
+      // --- sensors
+        // --- DS18B20
+          #if (USE_DS18B20_1W > OFF)
+              String getDS18D20Str();
+            #endif
+        // --- BME280
+          #if ( USE_BME280_I2C > OFF )
+              String getBME280Str();
+            #endif
+        // --- T-element type K
+    // ------ network -------------------------
+      // --- WIFI
+        #if (USE_WIFI > OFF)
+            void startWIFI(bool startup);
+            void initNTPTime();
+          #endif
+
+      // --- webserver
+        #if (USE_WEBSERVER > OFF)
+            void configWebsite();
+            void startWebServer();
+          #endif
+
+    // -------------------------
 
 #endif // MAIN_H
