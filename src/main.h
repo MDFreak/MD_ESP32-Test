@@ -39,6 +39,10 @@
         #endif
     #endif // USE_OLED_I2C
 
+    #if (USE_WS2812_LINE >OFF)
+        #include <FastLED.h>
+      #endif
+
     #if (USE_KEYPADSHIELD > OFF)
       #include "md_keypadshield.h"
     #endif // USE_KEYPADSHIELD
@@ -92,6 +96,15 @@
         // --- traffic Light of gas sensor
           #if (USE_MQ135_GAS_ANA > OFF)
               int16_t showTrafficLight(int16_t inval, int16_t inthres);
+            #endif
+
+        // WS2812 LEDs
+          #if (USE_WS2812_LINE > OFF)
+              void FillLEDsFromPaletteColors( uint8_t colorIndex);
+              void ChangePalettePeriodically();
+              void SetupTotallyRandomPalette();
+              void SetupBlackAndWhiteStripedPalette();
+              void SetupPurpleAndGreenPalette();
             #endif
 
       // --- user input

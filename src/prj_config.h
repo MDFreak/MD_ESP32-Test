@@ -37,6 +37,12 @@
                   #define PIN_RGB_BLUE   33   // RGB blue
                 #endif
             #endif
+          #if (USE_WS2812_LINE > OFF)
+              #define     PIN_WS2812_D1  5
+                //#define     PIN_WS2812_D2  5
+                //#define     PIN_WS2812_D3  5
+                //#define     PIN_WS2812_D4  5
+            #endif
           #if (USE_TFT > 0)
               #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                   #define LCD_BL      5    // D10/SS  ARDUINO
@@ -345,6 +351,33 @@
         #define DISP_CYCLE       500ul   // Intervallzeit [us]
         // output status line
         #define STAT_TIMEDEF     5000u    // default time to clear status
+
+        // WS2812 LEDs
+          #if (USE_WS2812_LINE > OFF)
+              #define UPDATE_2812_S 100
+              #define LEDS_2812_1   30
+              #define BRIGHT_2812_1 12
+              #define TYPE_2812_1   WS2812
+              #define COLORD_2812_1 GRB
+              #if (USE_WS2812_LINE > 1)
+                  #define LEDS_2812_1   30
+                  #define BRIGHT_2812_1 12
+                  #define TYPE_2812_1   WS2812
+                  #define COLORD_2812_1 GRB
+                  #if (USE_WS2812_LINE > 2)
+                      #define LEDS_2812_1   30
+                      #define BRIGHT_2812_1 12
+                      #define TYPE_2812_1   WS2812
+                      #define COLORD_2812_1 GRB
+                      #if (USE_WS2812_LINE > 3)
+                          #define LEDS_2812_1   30
+                          #define BRIGHT_2812_1 12
+                          #define TYPE_2812_1   WS2812
+                          #define COLORD_2812_1 GRB
+                        #endif
+                    #endif
+                #endif
+            #endif
 
     // --- network
       // --- WIFI
