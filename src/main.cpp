@@ -59,6 +59,11 @@
         extern CRGBPalette16 myRedWhiteBluePalette;
         extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
         CRGB leds[LEDS_2812_1];
+        msTimer ws2812T   = msTimer(10);
+        static uint8_t startIndex = 0;
+        unsigned long ws2812_alt = 0;
+        uint32_t ws2812_cnt = 0;
+        uint32_t ws2812_v = 0;
       #endif
 
     #ifdef USE_BUZZER
@@ -432,6 +437,19 @@
             }
 
         #endif
+      // ----------------------
+      #if (USE_WS2812_LINE > OFF)
+          if (ws2812T.TOut())
+            {
+              ws2812T.startT();
+              ChangePalettePeriodically();
+              startIndex = startIndex + 1; /* motion speed */
+              ws2812_cnt++;
+                    //SOUT(millis()); SOUT(" "); SOUTLN(ws2812_cnt);
+              FillLEDsFromPaletteColors( startIndex);
+              FastLED.show();
+            }
+        #endif
 
       // ----------------------
       #if (USE_TOUCHSCREEN > OFF)
@@ -566,14 +584,22 @@
                           //SOUT((uint32_t) millis()); SOUT(" SW1 '"); SOUT(outBuf); SOUTLN("'");
                     break;
                   case 2:
-                      /*
-                      outStr = "";
-                      dispText(outStr ,  0, 0, 6);
-                      outStr = "7-1-6";
-                      dispText(outStr ,  7, 0, 6);
-                      outStr = "";
-                      dispText(outStr , 14, 0, 6);
-                      */
+                      outStr = "              ";
+                      dispText(outStr ,  0, 0, outStr.length());
+                      outStr = "LED ";
+                          //outStr += (String) ws2812_cnt; outStr += " ";
+                      ws2812_v = millis() - ws2812_alt; // dispT.getTout();
+                      ws2812_alt = millis();
+                      if (ws2812_cnt > 0)
+                        {
+                          ws2812_v = ws2812_v / ws2812_cnt;
+                          ws2812_cnt = 0;
+                        }
+                      outStr += (String) ws2812_v;
+                      outStr += (" ms");
+                            //SOUT((uint32_t) millis()); SOUT(" ");
+                                SOUT(" "); SOUT(outStr);
+                      dispText(outStr ,  0, 0, outStr.length());
                     break;
                   case 3:
                     #if (USE_TYPE_K > OFF)
@@ -622,11 +648,12 @@
                   case 6:
                     #if ( USE_BME280_I2C > OFF )
                         outStr = getBME280Str();
-                                SOUT("  "); SOUT(outStr); SOUT("  ");
+                                SOUT(" "); SOUT(outStr);
                         dispText(outStr ,  0, 3, outStr.length());
                       #endif
                     break;
                    default:
+                    SOUTLN();
                     oledIdx = 0;
                     break;
                   }
@@ -661,7 +688,7 @@
           SOUTLN(taskMessage);
           firstrun = false;
         }
-      sleep(1);
+      usleep(1000);
     }
 //
 // --- subroutine and drivers ----------------
