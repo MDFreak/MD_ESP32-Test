@@ -20,30 +20,53 @@
       // --- memories
       // --- pins, connections
         // --- system
-          #if (USE_LED_BLINK > 0)
-              #define PIN_BOARD_LED   1
+          #if (USE_LED_BLINK_OUT > OFF)
+              #define PIN_BOARD_LED 2
             #endif
+        // --- user input
+          #if (USE_CTRL_POTI_ADC > OFF)
+              #define PIN_INP_POTI_1 35   // ADC 1-5
+            #endif
+
+          #if (USE_CTRL_SW_INP > OFF)
+              #define PIN_INP_SW_1  32   // INPUT_PULLUP
+            #endif
+
+          #if (USE_FAN_CNT_INP > OFF)
+              #define PIN_CNT_FAN_1 36
+              #define PIN_CNT_FAN_2 34
+            #endif
+
         // --- user output
-          #if (USE_LEDS > 0)
-              // traffic lamp
-              #if (USE_TRAFFIC_LIGHT > 0)
-                  #define PIN_TL_RED    26   // RGB red
-                  #define PIN_TL_YELLOW 25   // RGB green
-                  #define PIN_TL_GREEN  33   // RGB blue
-                #endif
-              #if (USE_RGBLED > 0)
-                  #define PIN_RGB_RED    26   // RGB red
-                  #define PIN_RGB_GREEN  25   // RGB blue
-                  #define PIN_RGB_BLUE   33   // RGB blue
-                #endif
+          #if (USE_TRAFFIC_LED_OUT > OFF)
+              #define PIN_TL_RED    26   // RGB red
+              #define PIN_TL_YELLOW 25   // RGB green
+              #define PIN_TL_GREEN  33   // RGB blue
             #endif
-          #if (USE_WS2812_LINE > OFF)
-              #define     PIN_WS2812_D1  5
-                //#define     PIN_WS2812_D2  5
-                //#define     PIN_WS2812_D3  5
-                //#define     PIN_WS2812_D4  5
+
+          #if (USE_RGBLED > OFF)
+              #define PIN_RGB_RED   33 //26   // RGB red
+              #define PIN_RGB_GREEN 26   // RGB blue
+              #define PIN_RGB_BLUE  14 //33   // RGB blue
             #endif
-          #if (USE_TFT > 0)
+
+          #if (USE_OUT_FAN_PWM > OFF)
+              #define PIN_OUT_FAN_1 0
+              #define PIN_OUT_FAN_2 4
+            #endif
+
+          #if (USE_OUT_FREQ_PWM > OFF)
+              #define PIN_FREQ_1    26
+            #endif
+
+          #if (USE_WS2812_LINE_OUT > OFF)
+              #define PIN_WS2812_D1  5
+                //#define PIN_WS2812_D2  x
+                //#define PIN_WS2812_D3  x
+                //#define PIN_WS2812_D4  x
+            #endif
+
+          #if (USE_TFT > OFF)
               #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                   #define LCD_BL      5    // D10/SS  ARDUINO
                   #define LCD_EN      13   // D9
@@ -54,6 +77,7 @@
                   #define LCD_D4      17   // D4
                 #endif
             #endif
+
           #if (USE_BUZZER > OFF)
               #define PIN_BUZZ      32
             #endif
@@ -61,29 +85,55 @@
           #if (USE_DS18B20_1W > OFF)
               #define DS_ONEWIRE_PIN 27
             #endif
-          #if (USE_TYPE_K > 0)
+          #if (USE_TYPE_K > OFF)
               #define TYPEK_DATA_PIN 19   // SPI MISO
               #define TYPEK_CLK_PIN  18   // SPI CLK
               #define TYPEK1_CS_PIN  16
               #define TYPEK2_CS_PIN  17
             #endif
-          #if (USE_MQ135_GAS_ANA > OFF)
+          #if (USE_MQ135_GAS_ADC > OFF)
               #define PIN_MQ135     36
             #endif
 
-        // --- PWM
-          // --- channels
-            #define PWM_BUZZ          0
-            #if (USE_TRAFFIC_LIGHT > 0)
-                #define PWM_TL_GREEN      1
-                #define PWM_TL_YELLOW     2
-                #define PWM_TL_RED        3
-              #endif
-            #if(USE_RGBLED >0)
-                #define PWM_RGB_RED       4
-                #define PWM_RGB_GREEN     5
-                #define PWM_RGB_BLUE      6
-              #endif
+        // --- PWM channels   0..15
+          #if (USE_PWM_OUT > OFF)
+              #if (USE_AOUT > OFF)
+                  #if (USE_BUZZER > OFF)
+                      #define PWM_BUZZ  0
+                    #endif
+                #endif
+
+              #if (USE_TRAFFIC_LED_OUT > OFF)
+                  #define PWM_TL_GREEN  1
+                  #define PWM_TL_YELLOW 2
+                  #define PWM_TL_RED    3
+                #endif
+
+              #if (USE_RGBLED > OFF)
+                  #define PWM_RGB_RED   1
+                  #define PWM_RGB_GREEN 2
+                  #define PWM_RGB_BLUE  3
+                #endif
+
+              #if (USE_OUT_FAN_PWM > OFF)
+                  #define PWM_OUT_FAN_1 4
+                  #define PWM_OUT_FAN_2 5
+                #endif
+
+              #if (USE_OUT_FREQ_PWM > OFF)
+                  #define PWM_FREQ_1    6
+                #endif
+            #endif
+
+        // --- counter channels  0..3
+          #if (USE_CNT_INP > OFF)
+              #if (USE_FAN > OFF)
+                  #define CNT_FAN_1     0
+                  #define CNT_FAN_2     1
+                #endif
+
+            #endif
+
         // --- I2C
           // --- board connection
             #define USE_I2C1          1
@@ -95,16 +145,6 @@
                 #define PIN_I2C2_SCL  26
               #endif
 
-      // --- I2C
-        // --- board connection
-          #define USE_I2C1          1
-          #define PIN_I2C1_SDA      21
-          #define PIN_I2C1_SCL      22
-          #if ( USE_I2C > 1 )
-              #define USE_I2C2      2
-              #define PIN_I2C2_SDA  25
-              #define PIN_I2C2_SCL  26
-            #endif
       #endif
 
     #if !(BOARD ^ MC_ESP32_D1_MINI)
@@ -119,12 +159,12 @@
       // --- memories
       // --- pins, connections
         // --- system
-          #if (USE_LED_BLINK > 0)
+          #if (USE_LED_BLINK_OUT > 0)
               #define PIN_BOARD_LED   1
             #endif
 
         // --- user output
-          #if (USE_LEDS > 0)
+          #if (USE_TRAFFIC_LED_OUT > 0)
               // traffic lamp
               #define PIN_TL_RED    26
               #define PIN_TL_YELLOW 25
@@ -148,7 +188,7 @@
           #if (USE_DS18B20_1W > OFF)
               #define DS_ONEWIRE_PIN 27
             #endif
-          #if (USE_MQ135_GAS_ANA > OFF)
+          #if (USE_MQ135_GAS_ADC > OFF)
               #define PIN_MQ135     36
             #endif
 
@@ -183,12 +223,12 @@
       // --- memories
       // --- pins, connections
         // --- system
-          #if (USE_LED_BLINK > 0)
+          #if (USE_LED_BLINK_OUT > 0)
               #define PIN_BOARD_LED   2
             #endif
 
         // --- user output
-          #if (USE_LEDS > 0)
+          #if (USE_TRAFFIC_LED_OUT > 0)
               // traffic lamp
               #define PIN_TL_RED    17
               #define PIN_TL_YELLOW 25
@@ -212,7 +252,7 @@
           #if (USE_DS18B20_1W > OFF)
               #define DS_ONEWIRE_PIN 27
             #endif
-          #if (USE_MQ135_GAS_ANA > OFF)
+          #if (USE_MQ135_GAS_ADC > OFF)
               #define PIN_MQ135     34
               #define PIN_CO2_THOLD 35     // analog threshold for evaluation
             #endif
@@ -259,8 +299,8 @@
             #define USE_SONGTASK
             #define TASK_SLICE_T  5000ul   // task beat [us]
           #endif // USE_TASKING
-        #if (USE_LED_BLINK > 0)
-            #define BLINKTIME_MS  1500ul
+        #if (USE_LED_BLINK_OUT > 0)
+            #define BLINKTIME_MS  1200ul
           #endif
 
     // --- I2C interface
@@ -353,23 +393,23 @@
         #define STAT_TIMEDEF     5000u    // default time to clear status
 
         // WS2812 LEDs
-          #if (USE_WS2812_LINE > OFF)
+          #if (USE_WS2812_LINE_OUT > OFF)
               #define UPDATE_2812_S 100
-              #define LEDS_2812_1   30
-              #define BRIGHT_2812_1 12
+              #define LEDS_2812_1   20
+              #define BRIGHT_2812_1 4
               #define TYPE_2812_1   WS2812
               #define COLORD_2812_1 GRB
-              #if (USE_WS2812_LINE > 1)
+              #if (USE_WS2812_LINE_OUT > 1)
                   #define LEDS_2812_1   30
                   #define BRIGHT_2812_1 12
                   #define TYPE_2812_1   WS2812
                   #define COLORD_2812_1 GRB
-                  #if (USE_WS2812_LINE > 2)
+                  #if (USE_WS2812_LINE_OUT > 2)
                       #define LEDS_2812_1   30
                       #define BRIGHT_2812_1 12
                       #define TYPE_2812_1   WS2812
                       #define COLORD_2812_1 GRB
-                      #if (USE_WS2812_LINE > 3)
+                      #if (USE_WS2812_LINE_OUT > 3)
                           #define LEDS_2812_1   30
                           #define BRIGHT_2812_1 12
                           #define TYPE_2812_1   WS2812
@@ -417,10 +457,8 @@
 
     // --- user output
       // --- system
-        #if (USE_LEDS > 0)
-            #define PWM_LEDS_FREQ      5000u
-            #define PWM_LEDS_RES       8
-          #endif
+        #define PWM_LEDS_FREQ      5000u
+        #define PWM_LEDS_RES       8
       // --- display
         #if (USE_DISP > 0)
             #define USE_STATUS
@@ -536,34 +574,83 @@
           #endif // USE_BUZZER
 
     // --- user input
-      #if defined(KEYS)
-        // --- keypad
-          #if !(KEYS ^ MC_UI_Keypad_ANA0_RO)
-              #define USE_KEYPADSHIELD
-              #define KEYS_ADC        34   // ADC Pin GPIO02
-              #define ADC_STD_RES     12   // default resolution 12 Bit
-              #define ADC_RES         12   // active resolution
-              #define KP_NUM_KEYS     5
-              #define KP_KEY_VAL_1    200  // max ADC value of button 0
-              #define KP_KEY_VAL_2    750
-              #define KP_KEY_VAL_3    1470
-              #define KP_KEY_VAL_4    2330
-              #define KP_KEY_VAL_5    3200
-            #endif // keypad
+      // --- keypads
+        #if defined(KEYS)
+            #if !(KEYS ^ MC_UI_Keypad_ANA0_RO)
+                #define USE_KEYPADSHIELD
+                #define KEYS_ADC        34   // ADC Pin GPIO02
+                #define ADC_STD_RES     12   // default resolution 12 Bit
+                #define ADC_RES         12   // active resolution
+                #define KP_NUM_KEYS     5
+                #define KP_KEY_VAL_1    200  // max ADC value of button 0
+                #define KP_KEY_VAL_2    750
+                #define KP_KEY_VAL_3    1470
+                #define KP_KEY_VAL_4    2330
+                #define KP_KEY_VAL_5    3200
+              #endif // keypad
 
-        // --- touchpad
-          #if !(KEYS ^ MC_UI_TOUCHXPT2046_AZ)
-              // Keypad start position, key sizes and spacing
-              #define KEY_X          40 // Centre of key
-              #define KEY_Y          287
-              #define KEY_W          62 // Width and height
-              #define KEY_H          26
-              #define KEY_SPACING_X  18 // X and Y gap
-              #define KEY_SPACING_Y  20
-              #define KEY_TEXTSIZE   1   // Font size multiplier
-              #define KEY_NUM_LEN    3 // Anzahl der Tasten
-            #endif // touchpad
-        #endif
+            #if !(KEYS ^ MC_UI_TOUCHXPT2046_AZ)
+                // Keypad start position, key sizes and spacing
+                #define KEY_X          40 // Centre of key
+                #define KEY_Y          287
+                #define KEY_W          62 // Width and height
+                #define KEY_H          26
+                #define KEY_SPACING_X  18 // X and Y gap
+                #define KEY_SPACING_Y  20
+                #define KEY_TEXTSIZE   1   // Font size multiplier
+                #define KEY_NUM_LEN    3 // Anzahl der Tasten
+              #endif // touchpad
+
+          #endif
+
+      // --- counter
+        #if (USE_CNT_INP > OFF)
+            #ifndef USE_MEASURE_CYCLE
+                #define USE_MEASURE_CYCLE
+              #endif
+            const uint8_t PIN_INP_CNT[8] =
+              {
+                PIN_CNT_FAN_1,  PIN_CNT_FAN_2,
+                NO_PIN,         NO_PIN,
+                NO_PIN,         NO_PIN,
+                NO_PIN,         NO_PIN
+              };
+          #endif
+
+        #if (USE_ADC1 > OFF)
+            #ifndef USE_MEASURE_CYCLE
+                #define USE_MEASURE_CYCLE
+              #endif
+            typedef struct
+              {
+                uint8_t  pin;
+                uint8_t  channel;
+                uint8_t  atten;
+              } md_adc_conf_t;
+
+            const md_adc_conf_t PIN_ADC_CONF[4] =
+              {
+                { PIN_INP_POTI_1, 7, 3 },
+                { NO_PIN,         0, 0 },
+                { NO_PIN,         0, 0 },
+                { NO_PIN,         0, 0 }
+              };
+            // #define INP_POTI_CTRL  0
+          #endif
+
+        #if (USE_CTRL_SW_INP > OFF)
+            #ifndef USE_MEASURE_CYCLE
+                #define USE_MEASURE_CYCLE
+              #endif
+            const uint8_t PIN_INP_SW[8] =
+              {
+                PIN_INP_SW_1,   NO_PIN,
+                NO_PIN,         NO_PIN,
+                NO_PIN,         NO_PIN,
+                NO_PIN,         NO_PIN
+              };
+            #define INP_SW_CTRL  0
+          #endif
 
     // --- memories
       #if (USE_FRAM_I2C > OFF)
@@ -581,7 +668,7 @@
       #if (USE_BME280_I2C > OFF)
         #endif
 
-      #if (USE_MQ135_GAS_ANA > OFF)
+      #if (USE_MQ135_GAS_ADC > OFF)
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
@@ -606,6 +693,13 @@
       #ifdef USE_MEASURE_CYCLE
           #define MEASURE_CYCLE_MS  500u
         #endif
+
+    // --- test features --------------------------------
+      #define USE_POTICTRL_RGB      TRUE
+      #define USE_POTICTRL_FAN      TRUE
+      #define USE_SWCTRL_RGB        TRUE
+      #define USE_SWCTRL_FAN        TRUE
+      #define USE_SWCTRL_1812       1
 
   // ******************************************
 #endif // _PRJ_CONFIG_H_

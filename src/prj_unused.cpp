@@ -150,7 +150,7 @@
       }
 
 /*
-  #if (USE_MQ135_GAS_ANA > OFF)
+  #if (USE_MQ135_GAS_ADC > OFF)
       int16_t showTrafficLight(int16_t inval, int16_t inthres)
         {
           // int16_t mytmp = inval - inthres;

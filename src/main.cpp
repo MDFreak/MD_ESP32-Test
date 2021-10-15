@@ -1,4 +1,5 @@
-#include "main.h"
+#include <main.h>
+#include <prj_config.h>
 
 // ---------------------------------------
 // --- declarations
@@ -22,7 +23,7 @@
         TwoWire i2c2 = TwoWire(1);
       #endif
 
-    #if ( USE_LED_BLINK > 0 )
+    #if ( USE_LED_BLINK_OUT > 0 )
         msTimer ledT = msTimer(BLINKTIME_MS);
         bool LED_ON = FALSE;
       #endif
@@ -36,14 +37,18 @@
 
         //
     #ifdef USE_STATUS
-      msTimer     statT  = msTimer(STAT_TIMEDEF);
-      char        statOut[DISP1_MAXCOLS + 1] = "";
-      bool        statOn = false;
-      bool        statDate = false;
-      //char        timeOut[STAT_LINELEN + 1] = "";
+        msTimer     statT  = msTimer(STAT_TIMEDEF);
+        char        statOut[DISP1_MAXCOLS + 1] = "";
+        bool        statOn = false;
+        bool        statDate = false;
+        //char        timeOut[STAT_LINELEN + 1] = "";
       #endif
 
-  // ------ user interface ---------------
+  // ------ user input ---------------
+    #if (USE_CNT_INP > OFF)
+
+      #endif
+
     #if (USE_TOUCHSCREEN > OFF)
         md_touch touch = md_touch();
       #endif
@@ -53,7 +58,7 @@
         uint8_t key;
       #endif // USE_KEYPADSHIELD
 
-    #if (USE_WS2812_LINE >OFF)
+    #if (USE_WS2812_LINE_OUT >OFF)
         CRGBPalette16 currentPalette;
         TBlendType    currentBlending;
         extern CRGBPalette16 myRedWhiteBluePalette;
@@ -64,6 +69,19 @@
         unsigned long ws2812_alt = 0;
         uint32_t ws2812_cnt = 0;
         uint32_t ws2812_v = 0;
+      #endif
+
+    #if (USE_CTRL_POTI_ADC > OFF)
+        uint16_t inpValPoti[USE_CTRL_POTI_ADC];
+      #endif
+
+    #if (USE_CTRL_SW_INP > OFF)
+        uint8_t  inpValSW[USE_CTRL_SW_INP];
+      #endif
+
+  // ------ user output ---------------
+    #if (USE_RGBLED > OFF)
+        outRGBVal_t outValRGB[USE_RGBLED];
       #endif
 
     #ifdef USE_BUZZER
@@ -138,7 +156,7 @@
         Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
       #endif
 
-    #if (USE_MQ135_GAS_ANA > OFF)
+    #if (USE_MQ135_GAS_ADC > OFF)
         filterValue valGas(MQ135_FILT, 1);
         //filterValue tholdGas(MQ135_ThresFilt,1);
         int16_t gasValue;
@@ -183,13 +201,15 @@
                 #endif
             #endif
 
-          #if (USE_LED_BLINK > 0)
+          #if (USE_LED_BLINK_OUT > 0)
               pinMode(PIN_BOARD_LED, OUTPUT);
+              digitalWrite(PIN_BOARD_LED, ON);
+              LED_ON = ON;
             #endif
 
-      // --- user interface
+      // --- user output
         // start display - output to user
-          #if (USE_TRAFFIC_LIGHT > 0)
+          #if (USE_TRAFFIC_LED_OUT > 0)
               pinMode(PIN_TL_GREEN, OUTPUT);
               pinMode(PIN_TL_YELLOW, OUTPUT);
               pinMode(PIN_TL_RED, OUTPUT);
@@ -213,28 +233,26 @@
                 ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
                 ledcWrite(PWM_RGB_GREEN, 255);
                 SOUTLN("LED gruen");
-                usleep(200000);
+                usleep(500000);
                 ledcWrite(PWM_RGB_GREEN, 0);
                 ledcWrite(PWM_RGB_BLUE, 255);
                 SOUTLN("LED blau");
-                usleep(200000);
+                usleep(500000);
                 ledcWrite(PWM_RGB_BLUE, 0);
                 ledcWrite(PWM_RGB_RED, 255);
                 SOUTLN("LED rot");
-                usleep(200000);
+                usleep(500000);
                 ledcWrite(PWM_RGB_RED, 0);
             #endif
           startDisp();
           dispStatus("setup start ...");
         // WS2812 LEDs
-          #if (USE_WS2812_LINE > OFF)
+          #if (USE_WS2812_LINE_OUT > OFF)
               FastLED.addLeds<TYPE_2812_1, PIN_WS2812_D1, COLORD_2812_1>(leds, LEDS_2812_1).setCorrection(TypicalLEDStrip);
               FastLED.setBrightness(BRIGHT_2812_1);
               currentPalette = RainbowColors_p;
               currentBlending = LINEARBLEND;
             #endif
-        // start input device
-          startKeys();
         // start buzzer (task)
           #if (USE_BUZZER > OFF)
               pinMode(PIN_BUZZ, OUTPUT);                                                                               // Setting pin 11 as output
@@ -248,8 +266,52 @@
                   #endif
               #endif
             #endif
+        // start key device
+          #if defined(KEYS)
+              startKeys();
+            #endif
+        // start fans
+          #if (USE_OUT_FAN_PWM > OFF)
 
+            #endif
+        // start freq generator
+          #if (USE_BUZZER > OFF)
 
+            #endif
+      // --- user input
+        // start digital inputs
+          #if (USE_DIG_INP > OFF)
+              SOUT("config digSW Pins " );
+              for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
+                {
+                  pinMode(PIN_INP_SW[i], INPUT_PULLUP);
+                  SOUT(PIN_INP_SW[i]); SOUT(" ");
+                }
+              SOUTLN();
+            #endif
+        // start poti inputs
+          #if (USE_ADC1 > OFF)
+              SOUT("config ADCs Pins " );
+              for (uint8_t i = 0 ; i < USE_CTRL_POTI_ADC ; i++ )
+                {
+                  pinMode(PIN_ADC_CONF[i].pin, INPUT);
+                  adc1_config_channel_atten((adc1_channel_t) PIN_ADC_CONF[i].channel,
+                                            (adc_atten_t)   PIN_ADC_CONF[i].atten);
+                  SOUT(PIN_ADC_CONF[i].pin); SOUT(" (");
+                  SOUT(PIN_ADC_CONF[i].channel); SOUT(", ");
+                  SOUT(PIN_ADC_CONF[i].atten) ; SOUT(") ");
+                }
+              SOUTLN();
+            #endif
+        // start counter
+          #if (USE_CNT_INP > OFF)
+              SOUT("config counter Pins " );
+              for (uint8_t i = 0 ; i < USE_CTRL_POTI_ADC ; i++ )
+                {
+                  pinMode(PIN_INP_CNT[i], INPUT_PULLUP);
+                  SOUT(PIN_INP_CNT[i]); SOUT(" ");
+                }
+            #endif
       // --- network
         // start WIFI
           #if (USE_WIFI > OFF)
@@ -367,17 +429,21 @@
 
       // --- finish setup
           #if (DEBUG_MODE >= CFG_DEBUG_STARTUP)
+              #if (USE_LED_BLINK_OUT > 0)
+                  digitalWrite(PIN_BOARD_LED, OFF);
+                  LED_ON = OFF;
+                #endif
               SOUTLN();
               SOUT("... end setup -- error="); SOUTLN(md_error);
               SOUTLN();
             #endif
     }
 
+// ---------------------------------------
 // --- system run = endless loop
   int16_t _tmp = 0;
   bool firstrun = true;
-//
-// ---------------------------------------
+
   void loop()
     {
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
@@ -438,7 +504,7 @@
 
         #endif
       // ----------------------
-      #if (USE_WS2812_LINE > OFF)
+      #if (USE_WS2812_LINE_OUT > OFF)
           if (ws2812T.TOut())
             {
               ws2812T.startT();
@@ -470,7 +536,7 @@
           if (measT.TOut())
             {
               measT.startT();
-              #if (USE_MQ135_GAS_ANA > OFF)
+              #if (USE_MQ135_GAS_ADC > OFF)
                   gasValue = analogRead(PIN_MQ135);
                         //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
                   gasValue = (int16_t) valGas.value((double) gasValue);
@@ -482,13 +548,23 @@
                 #endif
               #if (USE_RGBLED > OFF)
                   {
-                    _tmp += 4;
-                    if (_tmp > 50)
-                      { _tmp = 0; }
-                    //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
-                    ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
-                    ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
-                    ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
+                    #if (USE_RGB_WEBCTRL > OFF)
+                        _tmp += 4;
+                        if (_tmp > 50)
+                          { _tmp = 0; }
+                        //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
+                        ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
+                        ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
+                        ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
+                      #endif
+
+                    #if (USE_POTICTRL_RGB > OFF)
+                        getPotiIn();
+                      #endif
+
+                    #if (USE_SWCTRL_RGB > OFF)
+                        getSWIn();
+                      #endif
                   }
                 #endif
               #if (USE_TYPE_K > OFF)
@@ -533,7 +609,7 @@
         if (dispT.TOut())    // handle touch output
           {
             dispT.startT();
-              #ifdef RUN_OLED_TEST
+            #ifdef RUN_OLED_TEST
                 oled.clearBuffer();
                 switch (oledIdx)
                   {
@@ -567,104 +643,99 @@
                   }
                 if (++oledIdx > 6) { oledIdx = 0; }
                 oled.sendBuffer();
-              #endif
-              //#ifdef OLED_NOTEST
-                oledIdx++;
-                switch (oledIdx)
-                  {
-                  case 1:
-                      /*
-                      outStr = "0-0-6";
-                      dispText(outStr ,  0, 0, 6);
-                      outStr = "";
-                      dispText(outStr ,  7, 0, 6);
-                      outStr = "15-0-6";
-                      dispText(outStr , 14, 0, 6);
-                      */
-                          //SOUT((uint32_t) millis()); SOUT(" SW1 '"); SOUT(outBuf); SOUTLN("'");
-                    break;
-                  case 2:
-                      outStr = "              ";
-                      dispText(outStr ,  0, 0, outStr.length());
-                      outStr = "LED ";
-                          //outStr += (String) ws2812_cnt; outStr += " ";
-                      ws2812_v = millis() - ws2812_alt; // dispT.getTout();
-                      ws2812_alt = millis();
-                      if (ws2812_cnt > 0)
-                        {
-                          ws2812_v = ws2812_v / ws2812_cnt;
-                          ws2812_cnt = 0;
-                        }
-                      outStr += (String) ws2812_v;
-                      outStr += (" ms");
-                            //SOUT((uint32_t) millis()); SOUT(" ");
-                                SOUT(" "); SOUT(outStr);
-                      dispText(outStr ,  0, 0, outStr.length());
-                    break;
-                  case 3:
-                    #if (USE_TYPE_K > OFF)
-                        outStr = "";
-                        outStr = "TK1 ";
-                        outStr.concat(tk1Val);
-                        outStr.concat("°");
-                        //dispText(outStr ,  0, 1, outStr.length());
-                        #if (USE_TYPE_K > 1)
-                            //outStr = "";
-                            outStr.concat(" TK2 ");
-                            outStr.concat(tk2Val);
-                            outStr.concat("° ");
-                          #endif
-                        dispText(outStr ,  0, 2, outStr.length());
-                        outStr.concat(" (");
-                        outStr.concat(tk1ValRef);
-                        #if (USE_TYPE_K > 1)
-                            outStr.concat("° / ");
-                            outStr.concat(tk2ValRef);
-                          #endif
-                        outStr.concat("°)");
-                                SOUTLN(outStr);
+              #endif // RUN_OLED_TEST
+            oledIdx++;
+            switch (oledIdx)
+              {
+              case 1:
+                SOUT((uint32_t) millis());
+                SOUT(" SW1 "); SOUT(inpValSW[0]); SOUT(" ");
+                SOUT(" POT "); SOUT(inpValPoti[0]); SOUT(" ");
+                  break;
+              case 2:
+                #if (USE_WEBSERVER > OFF)
+                    outStr = "              ";
+                    dispText(outStr ,  0, 0, outStr.length());
+                    //outStr = "LED ";
+                    outStr = "";
+                        //outStr += (String) ws2812_cnt; outStr += " ";
+                    ws2812_v = millis() - ws2812_alt; // dispT.getTout();
+                    ws2812_alt = millis();
+                    if (ws2812_cnt > 0)
+                      {
+                        ws2812_v = ws2812_v / ws2812_cnt;
+                        ws2812_cnt = 0;
+                      }
+                    outStr += (String) ws2812_v;
+                    outStr += ("ms");
+                          //SOUT((uint32_t) millis()); SOUT(" ");
+                              SOUT(outStr);
+                    dispText(outStr ,  0, 0, outStr.length());
+                  #endif
+                  break;
+              case 3:
+                #if (USE_TYPE_K > OFF)
+                    outStr = "";
+                    outStr = "TK1 ";
+                    outStr.concat(tk1Val);
+                    outStr.concat("°");
+                    //dispText(outStr ,  0, 1, outStr.length());
+                    #if (USE_TYPE_K > 1)
+                        //outStr = "";
+                        outStr.concat(" TK2 ");
+                        outStr.concat(tk2Val);
+                        outStr.concat("° ");
                       #endif
-                    break;
-                  case 4:
-                    #if (USE_MQ135_GAS_ANA > OFF)
-                        outStr = "";
-                        //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
-                        outStr = "CO2 ";
-                        outStr.concat(gasValue);
-                        //outStr.concat(" (");
-                        //outStr.concat(_tmp);
-                        //outStr.concat(")");
-                        dispText(outStr ,  0, 1, outStr.length());
-                                SOUT(outStr); SOUT("  ");
+                    dispText(outStr ,  0, 2, outStr.length());
+                    outStr.concat(" (");
+                    outStr.concat(tk1ValRef);
+                    #if (USE_TYPE_K > 1)
+                        outStr.concat("° / ");
+                        outStr.concat(tk2ValRef);
                       #endif
-                    break;
-                  case 5:
-                    #if (USE_DS18B20_1W > OFF)
-                        outStr = "";
-                        outStr = getDS18D20Str();
-                        dispText(outStr ,  0, 4, outStr.length());
-                      #endif
-                    break;
-                  case 6:
-                    #if ( USE_BME280_I2C > OFF )
-                        outStr = getBME280Str();
-                                SOUT(" "); SOUT(outStr);
-                        dispText(outStr ,  0, 3, outStr.length());
-                      #endif
-                    break;
-                   default:
-                    SOUTLN();
-                    oledIdx = 0;
-                    break;
-                  }
-              //#endif
+                    outStr.concat("°)");
+                            SOUTLN(outStr);
+                  #endif
+                  break;
+              case 4:
+                #if (USE_MQ135_GAS_ADC > OFF)
+                    outStr = "";
+                    //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
+                    outStr = "CO2 ";
+                    outStr.concat(gasValue);
+                    //outStr.concat(" (");
+                    //outStr.concat(_tmp);
+                    //outStr.concat(")");
+                    dispText(outStr ,  0, 1, outStr.length());
+                            SOUT(outStr); SOUT("  ");
+                  #endif
+                  break;
+              case 5:
+                #if (USE_DS18B20_1W > OFF)
+                    outStr = "";
+                    outStr = getDS18D20Str();
+                    dispText(outStr ,  0, 4, outStr.length());
+                  #endif
+                  break;
+              case 6:
+                #if ( USE_BME280_I2C > OFF )
+                    outStr = getBME280Str();
+                            SOUT(" "); SOUT(outStr);
+                    dispText(outStr ,  0, 3, outStr.length());
+                  #endif
+                  break;
+              default:
+                SOUTLN();
+                oledIdx = 0;
+                break;
+              }
             #ifdef USE_STATUS
-              dispStatus("");
+                dispStatus("");
               #endif
           }
         #endif // defined(DISP)
       // ----------------------
-      #if (USE_LED_BLINK > 0)
+      #if (USE_LED_BLINK_OUT > 0)
         if (ledT.TOut())    // handle touch output
           {
             ledT.startT();
@@ -836,7 +907,7 @@
             #endif
         }
     // --- WS2812 lines
-      #if (USE_WS2812_LINE > OFF)
+      #if (USE_WS2812_LINE_OUT > OFF)
           void FillLEDsFromPaletteColors( uint8_t colorIndex)
             {
               uint8_t brightness = 255;
@@ -969,38 +1040,144 @@
         #endif
 
     // --- passive buzzer
-      void playSong(int8_t songIdx)
-        {
-          #ifdef PLAY_MUSIC
-            if (buzz.setSong(SONG0_LEN,(void*) SONG0_NOTES) == ISOK)
-              {
-                #ifndef USE_SONGTASK
-                  buzz.playSong();
-                #endif
-              }
-            #endif
-        }
+      #ifdef PLAY_MUSIC
+          void playSong(int8_t songIdx)
+            {
+              if (buzz.setSong(SONG0_LEN,(void*) SONG0_NOTES) == ISOK)
+                {
+                  #ifndef USE_SONGTASK
+                    buzz.playSong();
+                  #endif
+                }
+            }
 
-      void playSong()
-        { playSong(0); }
+          void playSong()
+            { playSong(0); }
 
+        #endif
+
+    // --- frequency generator
+      #if (_USE_OUT_FREQ_PWM > OFF)
+          void init_oscillator ()                                              // Inicializa gerador de pulsos
+            {
+              resolucao = (log (80000000 / oscilador)  / log(2)) / 2 ;                // Calculo da resolucao para o oscilador
+              if (resolucao < 1) resolucao = 1;                                       // Resolu�ao m�nima
+              // Serial.println(resolucao);                                           // Print
+              mDuty = (pow(2, resolucao)) / 2;                                        // Calculo do ciclo de carga 50% do pulso
+              // Serial.println(mDuty);                                               // Print
+
+              ledc_timer_config_t ledc_timer = {};                                    // Instancia a configuracao do timer do LEDC
+
+              ledc_timer.duty_resolution =  ledc_timer_bit_t(resolucao);              // Configura resolucao
+              ledc_timer.freq_hz    = oscilador;                                      // Configura a frequencia do oscilador
+              ledc_timer.speed_mode = LEDC_HIGH_SPEED_MODE;                           // Modo de operacao em alta velocidade
+              ledc_timer.timer_num = LEDC_TIMER_0;                                    // Usar timer0 do LEDC
+              ledc_timer_config(&ledc_timer);                                         // Configura o timer do LEDC
+
+              ledc_channel_config_t ledc_channel = {};                                // Instancia a configuracao canal do LEDC
+
+              ledc_channel.channel    = LEDC_CHANNEL_0;                               // Configura canal 0
+              ledc_channel.duty       = mDuty;                                        // Configura o ciclo de carga
+              ledc_channel.gpio_num   = LEDC_HS_CH0_GPIO;                             // Configura GPIO da saida do LEDC - oscilador
+              ledc_channel.intr_type  = LEDC_INTR_DISABLE;                            // Desabilita interrup��o do LEDC
+              ledc_channel.speed_mode = LEDC_HIGH_SPEED_MODE;                         // Modo de operacao do canal em alta velocidade
+              ledc_channel.timer_sel  = LEDC_TIMER_0;                                 // Seleciona timer 0 do LEDC
+              ledc_channel_config(&ledc_channel);                                     // Configura o canal do LEDC
+            }
+        #endif
   // --- user input
     // --- keypad
-      void startKeys()
-        {
-          #if (USE_KEYPADSHIELD > OFF)
-              kpad.init(KEYS_ADC);
-            #endif // USE_KEYPADSHIELD
-        }
+      #if defined(KEYS)
+          void startKeys()
+            {
+              #if (USE_KEYPADSHIELD > OFF)
+                  kpad.init(KEYS_ADC);
+                #endif // USE_KEYPADSHIELD
+            }
 
-      uint8_t getKey()
-        {
-          #if (USE_KEYPADSHIELD > OFF)
-              return kpad.getKey();
-            #else
-              return NOKEY;
-            #endif // USE_KEYPADSHIELD
-        }
+          uint8_t getKey()
+            {
+              #if (USE_KEYPADSHIELD > OFF)
+                  return kpad.getKey();
+                #else
+                  return NOKEY;
+                #endif // USE_KEYPADSHIELD
+            }
+        #endif
+
+      #if (USE_CTRL_SW_INP > OFF)
+          uint8_t getSWIn()
+            {
+              for (uint8_t i = 0 ; i < USE_CTRL_SW_INP ; i++ )
+                {
+                  inpValSW[i] = digitalRead(PIN_INP_SW[i]);
+                }
+            }
+        #endif
+
+      #if (USE_CTRL_POTI_ADC > OFF)
+          uint16_t getPotiIn()
+            {
+              for (uint8_t i = 0 ; i < USE_CTRL_SW_INP ; i++ )
+                {
+                  inpValPoti[i] = analogRead(PIN_ADC_CONF[i].pin);
+                }
+            }
+        #endif
+    // --- counter
+
+    // --- frequency counter
+      #if (_USE_CNT_INPUT > OFF)
+          void inicializa_contador(void)                                            // Inicializacao do contador de pulsos
+            {
+              pcnt_config_t pcnt_config = { };                                        // Instancia PCNT config
+
+              pcnt_config.pulse_gpio_num = PCNT_INPUT_SIG_IO;                         // Configura GPIO para entrada dos pulsos
+              pcnt_config.ctrl_gpio_num = PCNT_INPUT_CTRL_IO;                         // Configura GPIO para controle da contagem
+              pcnt_config.unit = PCNT_COUNT_UNIT;                                     // Unidade de contagem PCNT - 0
+              pcnt_config.channel = PCNT_COUNT_CHANNEL;                               // Canal de contagem PCNT - 0
+              pcnt_config.counter_h_lim = PCNT_H_LIM_VAL;                             // Limite maximo de contagem - 20000
+              pcnt_config.pos_mode = PCNT_COUNT_INC;                                  // Incrementa contagem na subida do pulso
+              pcnt_config.neg_mode = PCNT_COUNT_INC;                                  // Incrementa contagem na descida do pulso
+              pcnt_config.lctrl_mode = PCNT_MODE_DISABLE;                             // PCNT - modo lctrl desabilitado
+              pcnt_config.hctrl_mode = PCNT_MODE_KEEP;                                // PCNT - modo hctrl - se HIGH conta incrementando
+              pcnt_unit_config(&pcnt_config);                                         // Configura o contador PCNT
+
+              pcnt_counter_pause(PCNT_COUNT_UNIT);                                    // Pausa o contador PCNT
+              pcnt_counter_clear(PCNT_COUNT_UNIT);                                    // Zera o contador PCNT
+
+              pcnt_event_enable(PCNT_COUNT_UNIT, PCNT_EVT_H_LIM);                     // Configura limite superior de contagem
+              pcnt_isr_register(pcnt_intr_handler, NULL, 0, NULL);                    // Conigura rotina de interrup��o do PCNT
+              pcnt_intr_enable(PCNT_COUNT_UNIT);                                      // Habilita interrup��es do PCNT
+
+              pcnt_counter_resume(PCNT_COUNT_UNIT);                                   // Reinicia a contagem no contador PCNT
+            }
+
+          void tempo_controle(void *p)                                              // Fim de tempo de leitura de pulsos
+            {
+              gpio_set_level(OUTPUT_CONTROL_GPIO, 0);                                 // Controle do PCNT - para o contador
+              pcnt_get_counter_value(PCNT_COUNT_UNIT, &pulses);                       // Obtem o valor contado no PCNT
+              flag = true;                                                            // Informa que ocorreu interrup��o de controle
+            }
+
+          void inicializa_frequencimetro()
+            {
+              inicializa_oscilador ();                                                // Inicia a gera��o de pulsos no oscilador
+              inicializa_contador();                                                  // Inicializa o contador de pulsos PCNT
+
+              gpio_pad_select_gpio(OUTPUT_CONTROL_GPIO);                              // Define o port decontrole
+              gpio_set_direction(OUTPUT_CONTROL_GPIO, GPIO_MODE_OUTPUT);              // Define o port de controle como saida
+
+              create_args.callback = tempo_controle;                                  // Instancia o tempo de controle
+              esp_timer_create(&create_args, &timer_handle);                          // Cria parametros do timer
+
+              gpio_set_direction(IN_BOARD_LED, GPIO_MODE_OUTPUT);                     // Port LED como saida
+
+              gpio_matrix_in(PCNT_INPUT_SIG_IO, SIG_IN_FUNC226_IDX, false);           // Direciona a entrada de pulsos
+              gpio_matrix_out(IN_BOARD_LED, SIG_IN_FUNC226_IDX, false, false);        // Para o LED do ESP32
+            }
+        #endif
+
   // --- sensors
     // --- DS18B20
       String getDS18D20Str()
