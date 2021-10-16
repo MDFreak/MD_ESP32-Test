@@ -40,14 +40,6 @@
 
     #if (USE_CNT_INP > OFF)
         #include <driver\pcnt.h>
-
-        #define PCNT_COUNT_UNIT       PCNT_UNIT_0                                 // Unidade 0 do Contador de pulso PCNT do ESP32
-        #define PCNT_COUNT_CHANNEL    PCNT_CHANNEL_0                              // Canal 0 do Contador de pulso PCNT do ESP32
-        //#define PCNT_INPUT_SIG_IO     GPIO_NUM_34                                 // Entrada do Frequencimetro -  GPIO 34
-        //#define LEDC_HS_CH0_GPIO      GPIO_NUM_33                                 // Saida do LEDC - gerador de pulsos - GPIO_33
-        //#define PCNT_INPUT_CTRL_IO    GPIO_NUM_35                                 // Pino de controle do PCNT - HIGH = count up, LOW = count down
-        //#define OUTPUT_CONTROL_GPIO   GPIO_NUM_32                                 // Saida do timer - Controla a contagem - GPIO_32
-        #define PCNT_H_LIM_VAL        overflow                                    // Limite superior de contagem
       #endif
 
     #if ((USE_ADC1 > OFF) || (USE_ADC2 > OFF))
@@ -55,7 +47,7 @@
       #endif
 
   // --- user outputs
-    #if (USE_RGBLED > OFF)
+    #if (USE_RGBLED_PWM > OFF)
         typedef struct
           {
             uint16_t red;
@@ -63,9 +55,9 @@
             uint16_t blue;
           } outRGBVal_t;
       #endif
-    #if (USE_BUZZER > OFF)
+    #if (USE_BUZZER_PWM > OFF)
         #include "md_buzzer.h"
-      #endif // USE_BUZZER
+      #endif // USE_BUZZER_PWM
 
     #if (USE_OLED_I2C > OFF)
         #ifdef OLED1
@@ -101,7 +93,7 @@
       #include <md_webserver.h>
     #endif
   // --- sensors
-    #if (USE_DS18B20_1W > OFF)
+    #if (USE_DS18B20_1W_IO > OFF)
         #include <OneWire.h>
         #include <DallasTemperature.h>
       #endif
@@ -110,7 +102,7 @@
         #include <Adafruit_Sensor.h>
         #include <Adafruit_BME280.h>
       #endif
-    #if ( USE_TYPE_K > OFF)
+    #if ( USE_TYPE_K_SPI > OFF)
         #include <SPI.h>
         #include <md_31855_ktype.h>
       #endif
@@ -155,18 +147,18 @@
             #endif
         // --- digital input
           #if (USE_CTRL_SW_INP > OFF)
-              uint8_t getSWIn();
+              void getDIGIn();
             #endif
           #if (USE_CTRL_POTI_ADC > OFF)
-              uint16_t getPotiIn();
+              void getADCIn();
             #endif
         // --- counter input
           #if (USE_CNT_INP > OFF)
-              int16_t getCntValue();
+              void getCNTIn();
             #endif
       // --- sensors
         // --- DS18B20
-          #if (USE_DS18B20_1W > OFF)
+          #if (USE_DS18B20_1W_IO > OFF)
               String getDS18D20Str();
             #endif
         // --- BME280

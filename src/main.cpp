@@ -4,6 +4,8 @@
 // ---------------------------------------
 // --- declarations
   // ------ system -----------------------
+    int16_t _tmp = 0;
+    bool firstrun = true;
     uint16_t     md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
                              #if (USE_WIFI > OFF)
                                + ERRBIT_WIFI
@@ -19,6 +21,14 @@
                              #endif
                              ;
     TwoWire i2c1 = TwoWire(0);
+    // cycletime measurement
+    uint64_t anzUsCycles = 0;
+    uint64_t usLast = 0;
+    uint64_t usPerCycle = 0;
+    uint64_t anzMsCycles = 0;
+    uint64_t msLast = 0;
+    uint64_t msPerCycle = 0;
+
     #if ( USE_I2C > 1 )
         TwoWire i2c2 = TwoWire(1);
       #endif
@@ -46,7 +56,6 @@
 
   // ------ user input ---------------
     #if (USE_CNT_INP > OFF)
-
       #endif
 
     #if (USE_TOUCHSCREEN > OFF)
@@ -72,24 +81,37 @@
       #endif
 
     #if (USE_CTRL_POTI_ADC > OFF)
-        uint16_t inpValPoti[USE_CTRL_POTI_ADC];
+        uint16_t inpValADC[USE_CTRL_POTI_ADC];
       #endif
 
-    #if (USE_CTRL_SW_INP > OFF)
-        uint8_t  inpValSW[USE_CTRL_SW_INP];
+    #if (USE_DIG_INP > OFF)
+        uint8_t  inpValDig[USE_DIG_INP];
       #endif
 
   // ------ user output ---------------
-    #if (USE_RGBLED > OFF)
-        outRGBVal_t outValRGB[USE_RGBLED];
+    #if (USE_RGBLED_PWM > OFF)
+        outRGBVal_t outValRGB[USE_RGBLED_PWM];
+        #if (TEST_RGBLED_PWM > OFF)
+            uint8_t  colRGBLED = 0;
+            uint16_t incRGBLED = 10;
+            uint32_t RGBLED_gr = 0;
+            uint32_t RGBLED_bl = 0;
+            uint32_t RGBLED_rt = 0;
+          #endif
       #endif
 
-    #ifdef USE_BUZZER
+    #if (USE_BUZZER_PWM > OFF)
         md_buzzer     buzz       = md_buzzer();
         #ifdef PLAY_MUSIC
             tone_t test = {0,0,0};
           #endif
-      #endif // USE_BUZZER
+      #endif // USE_BUZZER_PWM
+
+    #if (USE_FAN_PWM > OFF)
+        #if (USE_POTICTRL_FAN > OFF)
+            uint8_t valFan[USE_FAN_PWM] = { 0, 0 };
+          #endif
+      #endif
 
     #if (USE_OLED_I2C > OFF)
         #ifdef OLED1
@@ -132,7 +154,6 @@
           #endif // USE_WEBSERVER
       #endif
 
-    //
     #if (USE_WEBSERVER > OFF)
         md_server webMD = md_server();
         msTimer   servT = msTimer(WEBSERVER_CYCLE);
@@ -142,14 +163,14 @@
     #ifdef USE_MEASURE_CYCLE
         msTimer measT   = msTimer(MEASURE_CYCLE_MS);
       #endif
-    #if (USE_DS18B20_1W > OFF)
+    #if (USE_DS18B20_1W_IO > OFF)
         OneWire dsOneWire(DS_ONEWIRE_PIN);
         DallasTemperature dsSensors(&dsOneWire);
         DeviceAddress     dsAddr[DS18B20_ANZ];
         float dsTemp[DS18B20_ANZ];
       #endif
 
-    #if ( USE_BME280_I2C > OFF )
+    #if (USE_BME280_I2C > OFF)
         Adafruit_BME280 bme;
         Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
         Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
@@ -163,7 +184,7 @@
         int16_t gasThres;
       #endif
 
-    #if ( USE_TYPE_K > 0)
+    #if (USE_TYPE_K_SPI > 0)
         //SPIClass* tkSPI = new SPIClass();
         //md_31855_ktype TypeK1(TYPEK1_CS_PIN, tkSPI);
         md_31855_ktype TypeK1(TYPEK1_CS_PIN, TYPEK_CLK_PIN, TYPEK_DATA_PIN);
@@ -171,7 +192,7 @@
         filterValue valTK1ref(TYPEK_FILT, TYPEK_DROP_PEEK, TYPEK1_OFFSET, TYPEK1_GAIN);
         int16_t     tk1Val;
         int16_t     tk1ValRef;
-        #if ( USE_TYPE_K > 1)
+        #if ( USE_TYPE_K_SPI > 1)
             //md_31855_ktype TypeK2(TYPEK2_CS_PIN, tkSPI);
             md_31855_ktype TypeK2(TYPEK2_CS_PIN, TYPEK_CLK_PIN, TYPEK_DATA_PIN);
             filterValue valTK2(TYPEK_FILT, TYPEK_DROP_PEEK, TYPEK2_OFFSET, TYPEK2_GAIN);
@@ -185,8 +206,7 @@
     #if (USE_FRAM_I2C > OFF)
         md_FRAM fram = md_FRAM();
       #endif
-//
-// ---------------------------------------
+// --- system setup -----------------------------------
   void setup()
     {
       // --- system
@@ -221,31 +241,37 @@
               digitalWrite(PIN_TL_RED, OFF);
               digitalWrite(PIN_TL_YELLOW, OFF);
             #endif
-          #if (USE_RGBLED > 0)
+          #if (USE_RGBLED_PWM > 0)
+              // RGB red
                 pinMode(PIN_RGB_RED, OUTPUT);
-                pinMode(PIN_RGB_GREEN, OUTPUT);
-                pinMode(PIN_RGB_BLUE, OUTPUT);
                 ledcSetup(PWM_RGB_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcSetup(PWM_RGB_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcSetup(PWM_RGB_BLUE,   PWM_LEDS_FREQ, PWM_LEDS_RES);
                 ledcAttachPin(PIN_RGB_RED,   PWM_RGB_RED);
+                ledcWrite(PWM_RGB_RED, 255);
+                SOUTLN("LED rot");
+                usleep(300000);
+                ledcWrite(PWM_RGB_RED, 0);
+
+              // RGB green
+                pinMode(PIN_RGB_GREEN, OUTPUT);
+                ledcSetup(PWM_RGB_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
                 ledcAttachPin(PIN_RGB_GREEN, PWM_RGB_GREEN);
-                ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
                 ledcWrite(PWM_RGB_GREEN, 255);
                 SOUTLN("LED gruen");
                 usleep(500000);
                 ledcWrite(PWM_RGB_GREEN, 0);
+
+              // RGB blue
+                pinMode(PIN_RGB_BLUE, OUTPUT);
+                ledcSetup(PWM_RGB_BLUE,   PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
                 ledcWrite(PWM_RGB_BLUE, 255);
                 SOUTLN("LED blau");
                 usleep(500000);
                 ledcWrite(PWM_RGB_BLUE, 0);
-                ledcWrite(PWM_RGB_RED, 255);
-                SOUTLN("LED rot");
-                usleep(500000);
-                ledcWrite(PWM_RGB_RED, 0);
             #endif
           startDisp();
           dispStatus("setup start ...");
+
         // WS2812 LEDs
           #if (USE_WS2812_LINE_OUT > OFF)
               FastLED.addLeds<TYPE_2812_1, PIN_WS2812_D1, COLORD_2812_1>(leds, LEDS_2812_1).setCorrection(TypicalLEDStrip);
@@ -253,8 +279,9 @@
               currentPalette = RainbowColors_p;
               currentBlending = LINEARBLEND;
             #endif
+
         // start buzzer (task)
-          #if (USE_BUZZER > OFF)
+          #if (USE_BUZZER_PWM > OFF)
               pinMode(PIN_BUZZ, OUTPUT);                                                                               // Setting pin 11 as output
               #ifdef PLAY_MUSIC
                 buzz.initMusic(PIN_BUZZ, PWM_BUZZ);
@@ -271,11 +298,29 @@
               startKeys();
             #endif
         // start fans
-          #if (USE_OUT_FAN_PWM > OFF)
+          #if (USE_FAN_PWM > OFF)
+              // Fan 1
+                pinMode(PIN_PWM_FAN_1, OUTPUT);
+                ledcSetup(PWM_FAN_1, PWM_FAN_FREQ, PWM_FAN_RES);
+                ledcAttachPin(PIN_PWM_FAN_1, PWM_FAN_1);
+                ledcWrite(PWM_FAN_1, 255);
+                SOUTLN("Test Fan 1");
+                sleep(1);
+                ledcWrite(PWM_FAN_1, 0);
+
+              // Fan 2
+                pinMode(PIN_PWM_FAN_2, OUTPUT);
+                ledcSetup(PWM_FAN_2, PWM_FAN_FREQ, PWM_FAN_RES);
+                ledcAttachPin(PIN_PWM_FAN_2, PWM_FAN_2);
+                ledcWrite(PWM_FAN_2, 255);
+                SOUTLN("Test Fan 2");
+                sleep(1);
+                ledcWrite(PWM_FAN_2, 0);
 
             #endif
+
         // start freq generator
-          #if (USE_BUZZER > OFF)
+          #if (USE_BUZZER_PWM > OFF)
 
             #endif
       // --- user input
@@ -284,8 +329,8 @@
               SOUT("config digSW Pins " );
               for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
                 {
-                  pinMode(PIN_INP_SW[i], INPUT_PULLUP);
-                  SOUT(PIN_INP_SW[i]); SOUT(" ");
+                  pinMode(PIN_DIG_INP[i], INPUT_PULLUP);
+                  SOUT(PIN_DIG_INP[i]); SOUT(" ");
                 }
               SOUTLN();
             #endif
@@ -341,7 +386,7 @@
 
       // --- sensors
         // temp. sensor DS18D20
-          #if (USE_DS18B20_1W > OFF)
+          #if (USE_DS18B20_1W_IO > OFF)
                   SOUT(millis()); SOUT(" DS18D20 ... " );
               dsSensors.begin();
               String DS18Str = getDS18D20Str();
@@ -376,7 +421,7 @@
             #endif
 
         // K-type thermoelementation
-          #if ( USE_TYPE_K > 0)
+          #if ( USE_TYPE_K_SPI > 0)
                     SOUT(millis()); SOUT(" Tcouple1 ... " );
                 uint8_t tkerr = TypeK1.begin();
                 if (!tkerr)
@@ -391,7 +436,7 @@
                     {
                       SOUTLN(" nicht gefunden");
                     }
-                #if ( USE_TYPE_K > 1)
+                #if ( USE_TYPE_K_SPI > 1)
                           SOUT(millis()); SOUT(" Tcouple2 ... " );
                       int16_t itmp = 0;
                       tkerr = TypeK2.begin();
@@ -441,9 +486,6 @@
 
 // ---------------------------------------
 // --- system run = endless loop
-  int16_t _tmp = 0;
-  bool firstrun = true;
-
   void loop()
     {
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
@@ -546,28 +588,83 @@
                   //gasThres = (int16_t) tholdGas.value((double) gasThres);
                         //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
                 #endif
-              #if (USE_RGBLED > OFF)
+              #if (USE_RGBLED_PWM > OFF)
                   {
-                    #if (USE_RGB_WEBCTRL > OFF)
-                        _tmp += 4;
-                        if (_tmp > 50)
-                          { _tmp = 0; }
-                        //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
-                        ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
-                        ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
-                        ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
+                    #if (TEST_RGBLED_PWM > OFF)
+                        switch (colRGBLED)
+                          {
+                            case 0:
+                              if (RGBLED_rt >= 254)
+                                {
+                                  RGBLED_rt = 0;
+                                  RGBLED_gr += incRGBLED;
+                                  colRGBLED++;
+                                }
+                                else
+                                { RGBLED_rt += incRGBLED; }
+                              break;
+                            case 1:
+                              if (RGBLED_gr >= 254)
+                                {
+                                  RGBLED_gr = 0;
+                                  RGBLED_bl += incRGBLED;
+                                  colRGBLED++;
+                                }
+                                else
+                                { RGBLED_gr += incRGBLED; }
+                              break;
+                            case 2:
+                              if (RGBLED_bl >= 254)
+                                {
+                                  RGBLED_bl = 0;
+                                  RGBLED_rt += incRGBLED;
+                                  colRGBLED = 0;
+                                }
+                                else
+                                { RGBLED_bl += incRGBLED; }
+                              break;
+                            default:
+                              break;
+                          }
+
+                        #if (USE_WEBCTRL_RGB > OFF)
+                            _tmp += 4;
+                            if (_tmp > 50)
+                              { _tmp = 0; }
+                            //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
+                            ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
+                            ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
+                            ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
+                          #endif
+
+                        ledcWrite(PWM_RGB_RED,   RGBLED_rt);
+                        ledcWrite(PWM_RGB_GREEN, RGBLED_gr);
+                        ledcWrite(PWM_RGB_BLUE,  RGBLED_bl);
+
                       #endif
 
-                    #if (USE_POTICTRL_RGB > OFF)
-                        getPotiIn();
+                    #if (USE_ADC1 > OFF)
+                        getADCIn();
                       #endif
 
-                    #if (USE_SWCTRL_RGB > OFF)
-                        getSWIn();
+                    #if (USE_DIG_INP > OFF)
+                        getDIGIn();
+                      #endif
+
+                    #if (USE_CNT_INP > OFF)
+                        getCNTIn();
+                      #endif
+
+                    #if (USE_POTICTRL_FAN > 0)
+                        valFan[INP_CNT_FAN_1] = (uint8_t) map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 100);
+                        valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                        //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
+                        ledcWrite(PWM_FAN_1, valFan[INP_CNT_FAN_1]);
+                        ledcWrite(PWM_FAN_2, valFan[INP_CNT_FAN_2]);
                       #endif
                   }
                 #endif
-              #if (USE_TYPE_K > OFF)
+              #if (USE_TYPE_K_SPI > OFF)
                   int8_t  tkerr = (int8_t) ISOK;
                   int16_t ival = TypeK1.actT();
                   tkerr = TypeK1.readErr();
@@ -583,7 +680,7 @@
                         //SOUT(millis()); SOUT(" ival = "); SOUT((int) tk1ValRef);
                     }
                         //SOUTLN();
-                  #if (USE_TYPE_K > 1)
+                  #if (USE_TYPE_K_SPI > 1)
                       ival    = TypeK2.actT();
                       tkerr     = TypeK2.readErr() % 8;
                             //SOUT(" typeK2 err "); SOUT(tkerr);
@@ -647,83 +744,97 @@
             oledIdx++;
             switch (oledIdx)
               {
-              case 1:
-                SOUT((uint32_t) millis());
-                SOUT(" SW1 "); SOUT(inpValSW[0]); SOUT(" ");
-                SOUT(" POT "); SOUT(inpValPoti[0]); SOUT(" ");
-                  break;
-              case 2:
+              case 1: // system output
+                SOUTLN(); SOUT(millis()); SOUT(" us/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
+                break;
+
+              case 2: // webserver nu
                 #if (USE_WEBSERVER > OFF)
-                    outStr = "              ";
-                    dispText(outStr ,  0, 0, outStr.length());
-                    //outStr = "LED ";
-                    outStr = "";
-                        //outStr += (String) ws2812_cnt; outStr += " ";
-                    ws2812_v = millis() - ws2812_alt; // dispT.getTout();
-                    ws2812_alt = millis();
-                    if (ws2812_cnt > 0)
-                      {
-                        ws2812_v = ws2812_v / ws2812_cnt;
-                        ws2812_cnt = 0;
-                      }
-                    outStr += (String) ws2812_v;
-                    outStr += ("ms");
-                          //SOUT((uint32_t) millis()); SOUT(" ");
-                              SOUT(outStr);
-                    dispText(outStr ,  0, 0, outStr.length());
                   #endif
-                  break;
-              case 3:
-                #if (USE_TYPE_K > OFF)
-                    outStr = "";
-                    outStr = "TK1 ";
-                    outStr.concat(tk1Val);
-                    outStr.concat("°");
-                    //dispText(outStr ,  0, 1, outStr.length());
-                    #if (USE_TYPE_K > 1)
-                        //outStr = "";
-                        outStr.concat(" TK2 ");
-                        outStr.concat(tk2Val);
-                        outStr.concat("° ");
-                      #endif
-                    dispText(outStr ,  0, 2, outStr.length());
-                    outStr.concat(" (");
-                    outStr.concat(tk1ValRef);
-                    #if (USE_TYPE_K > 1)
-                        outStr.concat("° / ");
-                        outStr.concat(tk2ValRef);
-                      #endif
-                    outStr.concat("°)");
-                            SOUTLN(outStr);
+                break;
+
+              case 3: // k-type sensor
+                #if (USE_TYPE_K_SPI > OFF)
+                  outStr = "";
+                  outStr = "TK1 ";
+                  outStr.concat(tk1Val);
+                  outStr.concat("°");
+                  //dispText(outStr ,  0, 1, outStr.length());
+                  #if (USE_TYPE_K_SPI > 1)
+                      //outStr = "";
+                      outStr.concat(" TK2 ");
+                      outStr.concat(tk2Val);
+                      outStr.concat("° ");
+                    #endif
+                  dispText(outStr ,  0, 2, outStr.length());
+                  outStr.concat(" (");
+                  outStr.concat(tk1ValRef);
+                  #if (USE_TYPE_K > 1)
+                      outStr.concat("° / ");
+                      outStr.concat(tk2ValRef);
+                    #endif
+                  outStr.concat("°)");
+                          SOUTLN(outStr); SOUT(" ");
                   #endif
-                  break;
-              case 4:
+                break;
+
+              case 4: // gas sensor
                 #if (USE_MQ135_GAS_ADC > OFF)
-                    outStr = "";
-                    //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
-                    outStr = "CO2 ";
-                    outStr.concat(gasValue);
-                    //outStr.concat(" (");
-                    //outStr.concat(_tmp);
-                    //outStr.concat(")");
-                    dispText(outStr ,  0, 1, outStr.length());
-                            SOUT(outStr); SOUT("  ");
+                  outStr = "";
+                  //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
+                  outStr = "CO2 ";
+                  outStr.concat(gasValue);
+                  //outStr.concat(" (");
+                  //outStr.concat(_tmp);
+                  //outStr.concat(")");
+                  dispText(outStr ,  0, 1, outStr.length());
+                          SOUT(outStr); SOUT("  ");
                   #endif
-                  break;
-              case 5:
-                #if (USE_DS18B20_1W > OFF)
-                    outStr = "";
-                    outStr = getDS18D20Str();
-                    dispText(outStr ,  0, 4, outStr.length());
+                break;
+
+              case 5: // temp sesor
+                #if (USE_DS18B20_1W_IO > OFF)
+                  outStr = "";
+                  outStr = getDS18D20Str();
+                  dispText(outStr ,  0, 4, outStr.length());
                   #endif
-                  break;
-              case 6:
+                break;
+
+              case 6: // BME 280 temp, humidity, pressure
                 #if ( USE_BME280_I2C > OFF )
-                    outStr = getBME280Str();
-                            SOUT(" "); SOUT(outStr);
-                    dispText(outStr ,  0, 3, outStr.length());
+                  outStr = getBME280Str();
+                          SOUT(outStr); SOUT(" ");
+                  dispText(outStr , 0, 3, outStr.length());
                   #endif
-                  break;
+                break;
+
+              case 7: // test values
+                SOUT("SW1 "); SOUT(inpValDig[INP_SW_CTRL]); SOUT(" ");
+                SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
+                break;
+
+              case 8: // WS2812 lines
+                #if (USE_WS2812_LINE_OUT > OFF)
+                  outStr = "              ";
+                  dispText(outStr ,  0, 0, outStr.length());
+                  //outStr = "LED ";
+                  outStr = "";
+                      //outStr += (String) ws2812_cnt; outStr += " ";
+                  ws2812_v = millis() - ws2812_alt; // dispT.getTout();
+                  ws2812_alt = millis();
+                  if (ws2812_cnt > 0)
+                    {
+                      ws2812_v = ws2812_v / ws2812_cnt;
+                      ws2812_cnt = 0;
+                    }
+                  outStr += (String) ws2812_v;
+                  outStr += ("ms");
+                        //SOUT((uint32_t) millis()); SOUT(" ");
+                            SOUT(outStr); SOUT(" ");
+                  dispText(outStr ,  0, 0, outStr.length());
+                  #endif
+                break;
+
               default:
                 SOUTLN();
                 oledIdx = 0;
@@ -734,32 +845,48 @@
               #endif
           }
         #endif // defined(DISP)
-      // ----------------------
-      #if (USE_LED_BLINK_OUT > 0)
-        if (ledT.TOut())    // handle touch output
+
+      // --- system control --------------------------------
+        #if (USE_LED_BLINK_OUT > 0)
+          if (ledT.TOut())    // handle touch output
+            {
+              ledT.startT();
+              if (LED_ON == TRUE)
+                  {
+                    digitalWrite(PIN_BOARD_LED, OFF);
+                    LED_ON = OFF;
+                  }
+                else
+                  {
+                    digitalWrite(PIN_BOARD_LED, ON);
+                    LED_ON = ON;
+                  }
+            }
+          #endif
+
+        if (!firstrun)
           {
-            ledT.startT();
-            if (LED_ON == TRUE)
-                {
-                  digitalWrite(PIN_BOARD_LED, OFF);
-                  LED_ON = OFF;
-                }
-              else
-                {
-                  digitalWrite(PIN_BOARD_LED, ON);
-                  LED_ON = ON;
-                }
+            anzUsCycles++;
+            if (anzUsCycles > 10000)
+              {
+                usPerCycle = (micros() - usLast) / anzUsCycles;
+                anzUsCycles = 0;
+                usLast = micros();
+              }
+            anzMsCycles++;
+
           }
-        #endif
-      // ----------------------
-      if (firstrun == true)
-        {
-          String taskMessage = "loop task running on core ";
-          taskMessage = taskMessage + xPortGetCoreID();
-          SOUTLN(taskMessage);
-          firstrun = false;
-        }
-      usleep(1000);
+
+
+        else
+          {
+            String taskMessage = "loop task running on core ";
+            taskMessage = taskMessage + xPortGetCoreID();
+            SOUTLN(taskMessage);
+            usLast = micros();
+            firstrun = false;
+          }
+      usleep(14);
     }
 //
 // --- subroutine and drivers ----------------
@@ -1105,76 +1232,31 @@
             }
         #endif
 
-      #if (USE_CTRL_SW_INP > OFF)
-          uint8_t getSWIn()
+    // --- counter
+      #if (USE_CNT_INP > OFF)
+          void getCNTIn()
             {
-              for (uint8_t i = 0 ; i < USE_CTRL_SW_INP ; i++ )
+
+            }
+        #endif
+
+      #if (USE_DIG_INP > OFF)
+          void getDIGIn()
+            {
+              for ( uint8_t i=0 ; i < USE_DIG_INP ; i++ )
                 {
-                  inpValSW[i] = digitalRead(PIN_INP_SW[i]);
+                  inpValDig[i] = digitalRead(PIN_DIG_INP[i]);
                 }
             }
         #endif
 
       #if (USE_CTRL_POTI_ADC > OFF)
-          uint16_t getPotiIn()
+          void getADCIn()
             {
               for (uint8_t i = 0 ; i < USE_CTRL_SW_INP ; i++ )
                 {
-                  inpValPoti[i] = analogRead(PIN_ADC_CONF[i].pin);
+                  inpValADC[i] = analogRead(PIN_ADC_CONF[i].pin);
                 }
-            }
-        #endif
-    // --- counter
-
-    // --- frequency counter
-      #if (_USE_CNT_INPUT > OFF)
-          void inicializa_contador(void)                                            // Inicializacao do contador de pulsos
-            {
-              pcnt_config_t pcnt_config = { };                                        // Instancia PCNT config
-
-              pcnt_config.pulse_gpio_num = PCNT_INPUT_SIG_IO;                         // Configura GPIO para entrada dos pulsos
-              pcnt_config.ctrl_gpio_num = PCNT_INPUT_CTRL_IO;                         // Configura GPIO para controle da contagem
-              pcnt_config.unit = PCNT_COUNT_UNIT;                                     // Unidade de contagem PCNT - 0
-              pcnt_config.channel = PCNT_COUNT_CHANNEL;                               // Canal de contagem PCNT - 0
-              pcnt_config.counter_h_lim = PCNT_H_LIM_VAL;                             // Limite maximo de contagem - 20000
-              pcnt_config.pos_mode = PCNT_COUNT_INC;                                  // Incrementa contagem na subida do pulso
-              pcnt_config.neg_mode = PCNT_COUNT_INC;                                  // Incrementa contagem na descida do pulso
-              pcnt_config.lctrl_mode = PCNT_MODE_DISABLE;                             // PCNT - modo lctrl desabilitado
-              pcnt_config.hctrl_mode = PCNT_MODE_KEEP;                                // PCNT - modo hctrl - se HIGH conta incrementando
-              pcnt_unit_config(&pcnt_config);                                         // Configura o contador PCNT
-
-              pcnt_counter_pause(PCNT_COUNT_UNIT);                                    // Pausa o contador PCNT
-              pcnt_counter_clear(PCNT_COUNT_UNIT);                                    // Zera o contador PCNT
-
-              pcnt_event_enable(PCNT_COUNT_UNIT, PCNT_EVT_H_LIM);                     // Configura limite superior de contagem
-              pcnt_isr_register(pcnt_intr_handler, NULL, 0, NULL);                    // Conigura rotina de interrup��o do PCNT
-              pcnt_intr_enable(PCNT_COUNT_UNIT);                                      // Habilita interrup��es do PCNT
-
-              pcnt_counter_resume(PCNT_COUNT_UNIT);                                   // Reinicia a contagem no contador PCNT
-            }
-
-          void tempo_controle(void *p)                                              // Fim de tempo de leitura de pulsos
-            {
-              gpio_set_level(OUTPUT_CONTROL_GPIO, 0);                                 // Controle do PCNT - para o contador
-              pcnt_get_counter_value(PCNT_COUNT_UNIT, &pulses);                       // Obtem o valor contado no PCNT
-              flag = true;                                                            // Informa que ocorreu interrup��o de controle
-            }
-
-          void inicializa_frequencimetro()
-            {
-              inicializa_oscilador ();                                                // Inicia a gera��o de pulsos no oscilador
-              inicializa_contador();                                                  // Inicializa o contador de pulsos PCNT
-
-              gpio_pad_select_gpio(OUTPUT_CONTROL_GPIO);                              // Define o port decontrole
-              gpio_set_direction(OUTPUT_CONTROL_GPIO, GPIO_MODE_OUTPUT);              // Define o port de controle como saida
-
-              create_args.callback = tempo_controle;                                  // Instancia o tempo de controle
-              esp_timer_create(&create_args, &timer_handle);                          // Cria parametros do timer
-
-              gpio_set_direction(IN_BOARD_LED, GPIO_MODE_OUTPUT);                     // Port LED como saida
-
-              gpio_matrix_in(PCNT_INPUT_SIG_IO, SIG_IN_FUNC226_IDX, false);           // Direciona a entrada de pulsos
-              gpio_matrix_out(IN_BOARD_LED, SIG_IN_FUNC226_IDX, false, false);        // Para o LED do ESP32
             }
         #endif
 
@@ -1183,7 +1265,7 @@
       String getDS18D20Str()
         {
           String outS = "";
-          #if (USE_DS18B20_1W > OFF)
+          #if (USE_DS18B20_1W_IO > OFF)
               dsSensors.requestTemperatures(); // Send the command to get temperatures
               for (uint8_t i = 0 ; i < DS18B20_ANZ ; i++ )
                 {
@@ -1376,6 +1458,4 @@
           #endif // USE_WEBSERVER
         }
 
-
-
-
+// --- end of code --------------------------

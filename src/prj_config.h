@@ -10,14 +10,14 @@
     #if !(BOARD ^ MC_ESP32_Node)
       // --- system
         #define SER_BAUDRATE ESP_SER_BAUD
-      // --- network
-      // --- user output
-        // --- LEDs
-        // --- display
-        // --- acustic output
-      // --- user input
-      // --- sensors
-      // --- memories
+        // --- network
+        // --- user output
+          // --- LEDs
+          // --- display
+          // --- acustic output
+        // --- user input
+        // --- sensors
+        // --- memories
       // --- pins, connections
         // --- system
           #if (USE_LED_BLINK_OUT > OFF)
@@ -44,15 +44,15 @@
               #define PIN_TL_GREEN  33   // RGB blue
             #endif
 
-          #if (USE_RGBLED > OFF)
+          #if (USE_RGBLED_PWM > OFF)
               #define PIN_RGB_RED   33 //26   // RGB red
               #define PIN_RGB_GREEN 26   // RGB blue
               #define PIN_RGB_BLUE  14 //33   // RGB blue
             #endif
 
-          #if (USE_OUT_FAN_PWM > OFF)
-              #define PIN_OUT_FAN_1 0
-              #define PIN_OUT_FAN_2 4
+          #if (USE_FAN_PWM > OFF)
+              #define PIN_PWM_FAN_1 0
+              #define PIN_PWM_FAN_2 4
             #endif
 
           #if (USE_OUT_FREQ_PWM > OFF)
@@ -78,14 +78,14 @@
                 #endif
             #endif
 
-          #if (USE_BUZZER > OFF)
+          #if (USE_BUZZER_PWM > OFF)
               #define PIN_BUZZ      32
             #endif
         // --- sensors
-          #if (USE_DS18B20_1W > OFF)
+          #if (USE_DS18B20_1W_IO > OFF)
               #define DS_ONEWIRE_PIN 27
             #endif
-          #if (USE_TYPE_K > OFF)
+          #if (USE_TYPE_K_SPI > OFF)
               #define TYPEK_DATA_PIN 19   // SPI MISO
               #define TYPEK_CLK_PIN  18   // SPI CLK
               #define TYPEK1_CS_PIN  16
@@ -98,7 +98,7 @@
         // --- PWM channels   0..15
           #if (USE_PWM_OUT > OFF)
               #if (USE_AOUT > OFF)
-                  #if (USE_BUZZER > OFF)
+                  #if (USE_BUZZER_PWM > OFF)
                       #define PWM_BUZZ  0
                     #endif
                 #endif
@@ -109,15 +109,15 @@
                   #define PWM_TL_RED    3
                 #endif
 
-              #if (USE_RGBLED > OFF)
+              #if (USE_RGBLED_PWM > OFF)
                   #define PWM_RGB_RED   1
                   #define PWM_RGB_GREEN 2
                   #define PWM_RGB_BLUE  3
                 #endif
 
-              #if (USE_OUT_FAN_PWM > OFF)
-                  #define PWM_OUT_FAN_1 4
-                  #define PWM_OUT_FAN_2 5
+              #if (USE_FAN_PWM > OFF)
+                  #define PWM_FAN_1     4
+                  #define PWM_FAN_2     5
                 #endif
 
               #if (USE_OUT_FREQ_PWM > OFF)
@@ -125,13 +125,24 @@
                 #endif
             #endif
 
+        // --- ADC channels
+          #if (USE_ADC1 > 0)
+              #if (USE_MQ135_GAS_ADC > OFF)
+                  #define ADC_MQ135       3   // ADC 1-3
+                #endif
+
+              #if (USE_CTRL_POTI_ADC > OFF)
+                  #define ADC_INP_POTI_1  5   // ADC 1-5
+                #endif
+
+            #endif
+
         // --- counter channels  0..3
           #if (USE_CNT_INP > OFF)
-              #if (USE_FAN > OFF)
+              #if (USE_FAN_CNT_INP > OFF)
                   #define CNT_FAN_1     0
                   #define CNT_FAN_2     1
                 #endif
-
             #endif
 
         // --- I2C
@@ -181,11 +192,11 @@
                   #define LCD_D4      17   // D4
                 #endif
             #endif
-          #if (USE_BUZZER > OFF)
+          #if (USE_BUZZER_PWM > OFF)
               #define PIN_BUZZ      32
             #endif
         // --- sensors
-          #if (USE_DS18B20_1W > OFF)
+          #if (USE_DS18B20_1W_IO > OFF)
               #define DS_ONEWIRE_PIN 27
             #endif
           #if (USE_MQ135_GAS_ADC > OFF)
@@ -245,11 +256,11 @@
                   #define LCD_D4      17   // D4
                 #endif
             #endif
-          #if defined(USE_BUZZER)
+          #if defined(USE_BUZZER_PWM)
               #define PIN_BUZZ      27
             #endif
         // --- sensors
-          #if (USE_DS18B20_1W > OFF)
+          #if (USE_DS18B20_1W_IO > OFF)
               #define DS_ONEWIRE_PIN 27
             #endif
           #if (USE_MQ135_GAS_ADC > OFF)
@@ -392,32 +403,32 @@
         // output status line
         #define STAT_TIMEDEF     5000u    // default time to clear status
 
-        // WS2812 LEDs
-          #if (USE_WS2812_LINE_OUT > OFF)
-              #define UPDATE_2812_S 100
-              #define LEDS_2812_1   20
-              #define BRIGHT_2812_1 4
-              #define TYPE_2812_1   WS2812
-              #define COLORD_2812_1 GRB
-              #if (USE_WS2812_LINE_OUT > 1)
-                  #define LEDS_2812_1   30
-                  #define BRIGHT_2812_1 12
-                  #define TYPE_2812_1   WS2812
-                  #define COLORD_2812_1 GRB
-                  #if (USE_WS2812_LINE_OUT > 2)
-                      #define LEDS_2812_1   30
-                      #define BRIGHT_2812_1 12
-                      #define TYPE_2812_1   WS2812
-                      #define COLORD_2812_1 GRB
-                      #if (USE_WS2812_LINE_OUT > 3)
-                          #define LEDS_2812_1   30
-                          #define BRIGHT_2812_1 12
-                          #define TYPE_2812_1   WS2812
-                          #define COLORD_2812_1 GRB
-                        #endif
-                    #endif
-                #endif
-            #endif
+      // WS2812 LEDs
+        #if (USE_WS2812_LINE_OUT > OFF)
+            #define UPDATE_2812_S 100
+            #define LEDS_2812_1   20
+            #define BRIGHT_2812_1 4
+            #define TYPE_2812_1   WS2812
+            #define COLORD_2812_1 GRB
+            #if (USE_WS2812_LINE_OUT > 1)
+                #define LEDS_2812_1   30
+                #define BRIGHT_2812_1 12
+                #define TYPE_2812_1   WS2812
+                #define COLORD_2812_1 GRB
+                #if (USE_WS2812_LINE_OUT > 2)
+                    #define LEDS_2812_1   30
+                    #define BRIGHT_2812_1 12
+                    #define TYPE_2812_1   WS2812
+                    #define COLORD_2812_1 GRB
+                    #if (USE_WS2812_LINE_OUT > 3)
+                        #define LEDS_2812_1   30
+                        #define BRIGHT_2812_1 12
+                        #define TYPE_2812_1   WS2812
+                        #define COLORD_2812_1 GRB
+                      #endif
+                  #endif
+              #endif
+          #endif
 
     // --- network
       // --- WIFI
@@ -456,9 +467,17 @@
           #endif
 
     // --- user output
-      // --- system
-        #define PWM_LEDS_FREQ      5000u
-        #define PWM_LEDS_RES       8
+      // --- PWM
+        #if (USE_RGBLED_PWM > OFF)
+            #define PWM_LEDS_FREQ      5000u
+            #define PWM_LEDS_RES       8
+          #endif
+
+        #if (USE_FAN_PWM > OFF)
+            #define PWM_FAN_FREQ      4500u
+            #define PWM_FAN_RES       8
+          #endif
+
       // --- display
         #if (USE_DISP > 0)
             #define USE_STATUS
@@ -564,14 +583,14 @@
           #endif // DISP
 
       // --- acoustic output
-        #if (USE_BUZZER > OFF)
+        #if (USE_BUZZER_PWM > OFF)
             #if !(BUZZER1 ^ AOUT_PAS_BUZZ_3V5V)
                 #define PLAY_MUSIC
                 #define MUSIC_BASE_OCTA 5        // base oktave for musik
                 //#define PLAY_START_MUSIC
                 #define PLAY_START_DINGDONG
               #endif
-          #endif // USE_BUZZER
+          #endif // USE_BUZZER_PWM
 
     // --- user input
       // --- keypads
@@ -615,6 +634,8 @@
                 NO_PIN,         NO_PIN,
                 NO_PIN,         NO_PIN
               };
+            #define INP_CNT_FAN_1  0
+            #define INP_CNT_FAN_2  1
           #endif
 
         #if (USE_ADC1 > OFF)
@@ -630,19 +651,19 @@
 
             const md_adc_conf_t PIN_ADC_CONF[4] =
               {
-                { PIN_INP_POTI_1, 7, 3 },
+                { PIN_INP_POTI_1, 7, 1 },
                 { NO_PIN,         0, 0 },
                 { NO_PIN,         0, 0 },
                 { NO_PIN,         0, 0 }
               };
-            // #define INP_POTI_CTRL  0
+            #define INP_POTI_CTRL  0
           #endif
 
-        #if (USE_CTRL_SW_INP > OFF)
+        #if (USE_DIG_INP > OFF)
             #ifndef USE_MEASURE_CYCLE
                 #define USE_MEASURE_CYCLE
               #endif
-            const uint8_t PIN_INP_SW[8] =
+            const uint8_t PIN_DIG_INP[8] =
               {
                 PIN_INP_SW_1,   NO_PIN,
                 NO_PIN,         NO_PIN,
@@ -657,7 +678,7 @@
           #define SIZE_FRAM     0x8000
         #endif
     // --- sensors
-      #if (USE_DS18B20_1W > OFF)
+      #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION   9
           #define DS18B20_ANZ      1
           #ifndef USE_MEASURE_CYCLE
@@ -678,7 +699,7 @@
           //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
         #endif
 
-      #if (USE_TYPE_K > OFF)
+      #if (USE_TYPE_K_SPI > OFF)
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
@@ -695,11 +716,13 @@
         #endif
 
     // --- test features --------------------------------
-      #define USE_POTICTRL_RGB      TRUE
-      #define USE_POTICTRL_FAN      TRUE
-      #define USE_SWCTRL_RGB        TRUE
-      #define USE_SWCTRL_FAN        TRUE
-      #define USE_SWCTRL_1812       1
-
-  // ******************************************
+      #define TEST_RGBLED_PWM       ON
+      #define USE_WEBCTRL_RGB       OFF
+      #define USE_WEBCTRL_FAN       OFF
+      #define USE_POTICTRL_RGB      OFF
+      #define USE_POTICTRL_FAN      ON
+      #define USE_SWCTRL_RGB        ON
+      #define USE_SWCTRL_FAN        ON
+      #define USE_SWCTRL_1812       ON
+    // ******************************************
 #endif // _PRJ_CONFIG_H_
