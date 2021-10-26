@@ -30,7 +30,7 @@
       #define USE_DISP_I2C2         OFF
       #define USE_DISP_SPI          OFF
       #define USE_BUZZER_PWM        OFF
-      #define USE_FAN_PWM       2
+      #define USE_FAN_PWM           2
       #define USE_OUT_FREQ_PWM      1
       #define USE_WS2812_LINE_OUT   1   // [0, 1..4]
     // --- user input components
@@ -51,7 +51,7 @@
     // --- memory components
       #define USE_FRAM_I2C          1   // [0, 1, ...] limited by I2C channel/addr
     // --- test components
-      #define USE_CTRL_POTI_ADC     1   // [0, 1, ....] limited by analog inputs
+      #define USE_CTRL_POTI_ADC     OFF   // [0, 1, ....] limited by analog inputs
       #define USE_CTRL_SW_INP       1   // [0, 1, ....] limited by digital pins
     // --- system components
       #define USE_TASKING           ON
@@ -60,7 +60,7 @@
       #define USE_I2C             USE_DISP_I2C
       #define USE_SPI             USE_DISP_SPI + USE_TOUCHSCREEN_SPI + USE_TYPE_K_SPI
       #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_FAN_PWM + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
-      #define USE_CNT_INP         USE_FAN_CNT_INP     // max 4
+      #define USE_CNT_INP         USE_FAN_CNT_INP     // max 2 * 8 independent
       #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC
       #define USE_ADC2            OFF // not to use
       #define USE_DIG_INP         USE_CTRL_SW_INP     //

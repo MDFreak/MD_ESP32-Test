@@ -88,6 +88,108 @@
         uint8_t  inpValDig[USE_DIG_INP];
       #endif
 
+    #if (USE_CNT_INP > OFF)
+        const pcnt_config_t config_cnt[USE_CNT_INP] =
+          {
+            {
+              PCNT1_INP_SIG_IO,      // Pulse input GPIO number, if you want to use GPIO16, enter pulse_gpio_num = 16, a negative value will be ignored
+              PCNT_PIN_NOT_USED,     // Control signal input GPIO number, a negative value will be ignored
+              PCNT_MODE_KEEP,        // PCNT low control mode
+              PCNT_MODE_KEEP,        // PCNT high control mode
+              PCNT_COUNT_DIS,        // PCNT positive edge count mode
+              PCNT_COUNT_INC,        // PCNT negative edge count mode
+              PCNT_H_LIM_VAL,        // Maximum counter value
+              PCNT_L_LIM_VAL,        // Minimum counter value
+              (pcnt_unit_t)    PCNT1_UNIT,  // PCNT unit number
+              (pcnt_channel_t) PCNT1_CHAN  // the PCNT channel
+            },
+            #if (USE_CNT_INP > 1)
+                {
+                  PCNT2_INP_SIG_IO,   //< Pulse input GPIO number, if you want to use GPIO16, enter pulse_gpio_num = 16, a negative value will be ignored
+                  PCNT_PIN_NOT_USED,  //< Control signal input GPIO number, a negative value will be ignored
+                  PCNT_MODE_KEEP,     //< PCNT low control mode
+                  PCNT_MODE_KEEP,     // PCNT high control mode
+                  PCNT_COUNT_DIS,     // PCNT positive edge count mode
+                  PCNT_COUNT_INC,     // PCNT negative edge count mode
+                  PCNT_H_LIM_VAL,     // Maximum counter value
+                  PCNT_L_LIM_VAL,     // Minimum counter value
+                  (pcnt_unit_t)    PCNT2_UNIT, // PCNT unit number
+                  (pcnt_channel_t) PCNT2_CHAN  // the PCNT channel
+                },
+              #endif
+          };
+        //typedef intr_handle_t pcnt_isr_handle_t;
+
+
+        /* A sample structure to pass events from the PCNT
+         * interrupt handler to the main program.
+         */
+        typedef struct
+          {
+            int16_t  pulsCnt;   // the PCNT unit that originated an interrupt
+            uint16_t tres;
+            uint32_t freq;   // information on the event type that caused the interrupt
+            uint64_t usCnt;
+          } pcnt_evt_t;
+
+        static xQueueHandle pcnt_evt_queue[USE_CNT_INP];   // A queue to handle pulse counter events
+        static pcnt_evt_t cntErg[USE_CNT_INP];
+        static pcnt_evt_t tmpErg;
+          //static uint64_t oldClk[USE_CNT_INP] = {NULL};
+        static uint64_t oldUs[USE_CNT_INP];
+          //static uint16_t intCnt[USE_CNT_INP];
+          //static uint16_t anzNoCnt[2] = {0, 0};
+          //static uint64_t utmp64 = 0;
+          //uint32_t cntLowPulse[8];
+          //uint32_t cntHighPulse[8];
+
+        /* Decode what PCNT's unit originated an interrupt
+         * and pass this information together with the event type
+         * the main program using a queue.
+         */
+
+        #ifndef USE_INT_EVTHDL
+            #define USE_INT_EVTHDL
+          #endif
+        //pcnt_unit_t pcnt_unit = PCNT_UNIT_0;
+          //int16_t count = 0;
+          //uint32_t pcnt_cnt[2] = {0, 0};
+          //pcnt_evt_t evt;
+          //pcnt_evt_t pcnt_evt;
+          //portBASE_TYPE res;
+        portBASE_TYPE pcnt_res;
+        //static const char *PCNTTAG = "pcnt_int ";
+
+        static void IRAM_ATTR pcnt1_intr_hdl(void *arg)
+          {
+            //SOUTLN(" _int_1_ ");
+            BaseType_t port_status = pdFALSE;
+            pcnt_evt_t event;
+            port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT1_UNIT, &(event.pulsCnt));
+            event.usCnt  = micros();
+            //event.intCnt = intCnt[PCNT1_UNIT];
+            xQueueSendFromISR(pcnt_evt_queue[PCNT1_UNIT], &event, &port_status);
+            //xQueueOverwriteFromISR(pcnt_evt_queue[PCNT1_UNIT], &event, &port_status);
+            port_status = pcnt_counter_clear((pcnt_unit_t) PCNT1_UNIT);
+            //intCnt[0] = 0;
+          }
+
+        #if (USE_CNT_INP > 1)
+            static void IRAM_ATTR pcnt2_intr_hdl(void *arg)
+              {
+                //SOUTLN(" _int_2_ ");
+                BaseType_t port_status = pdFALSE;
+                pcnt_evt_t event;
+                port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT2_UNIT, &(event.pulsCnt));
+                event.usCnt  = micros();
+                //event.intCnt = intCnt[PCNT2_UNIT];
+                xQueueSendFromISR(pcnt_evt_queue[PCNT2_UNIT], &event, &port_status);
+                //xQueueOverwriteFromISR(pcnt_evt_queue[PCNT2_UNIT], &event, &port_status);
+                port_status = pcnt_counter_clear((pcnt_unit_t) PCNT2_UNIT);
+                //intCnt[0] = 0;
+              }
+          #endif
+      #endif
   // ------ user output ---------------
     #if (USE_RGBLED_PWM > OFF)
         outRGBVal_t outValRGB[USE_RGBLED_PWM];
@@ -109,8 +211,8 @@
 
     #if (USE_FAN_PWM > OFF)
         #if (USE_POTICTRL_FAN > OFF)
-            uint8_t valFan[USE_FAN_PWM] = { 0, 0 };
           #endif
+        uint32_t valFanPWM[USE_FAN_PWM];
       #endif
 
     #if (USE_OLED_I2C > OFF)
@@ -162,6 +264,9 @@
   // ------ sensors ----------------------
     #ifdef USE_MEASURE_CYCLE
         msTimer measT   = msTimer(MEASURE_CYCLE_MS);
+      #endif
+    #ifdef USE_OUTPUT_CYCLE
+        msTimer outpT   = msTimer(OUTPUT_CYCLE_MS);
       #endif
     #if (USE_DS18B20_1W_IO > OFF)
         OneWire dsOneWire(DS_ONEWIRE_PIN);
@@ -348,15 +453,6 @@
                 }
               SOUTLN();
             #endif
-        // start counter
-          #if (USE_CNT_INP > OFF)
-              SOUT("config counter Pins " );
-              for (uint8_t i = 0 ; i < USE_CTRL_POTI_ADC ; i++ )
-                {
-                  pinMode(PIN_INP_CNT[i], INPUT_PULLUP);
-                  SOUT(PIN_INP_CNT[i]); SOUT(" ");
-                }
-            #endif
       // --- network
         // start WIFI
           #if (USE_WIFI > OFF)
@@ -468,10 +564,35 @@
                 fram.getDeviceID(&manuID, &prodID);
                 SOUT(" product "); SOUT(prodID); SOUT(" producer "); SOUTLN(manuID);
 
-                SOUT(" FRAM selftest "); SOUT(fram.selftest());
+                SOUTLN(" FRAM selftest "); SOUTLN(fram.selftest());
               }
             #endif
 
+      // --- services using interrupt
+        // start counter
+          #if (USE_CNT_INP > OFF)
+              SOUT("config counter Pins " );
+              for (uint8_t i = 0 ; i < USE_CNT_INP ; i++ )
+                {
+                  switch (i)
+                    {
+                      case 0: pinMode(PIN_CNT_FAN_1, INPUT_PULLUP); SOUT(PIN_CNT_FAN_1); SOUT(" "); break;
+                      #if (USE_CNT_INP > 1)
+                          case 1: pinMode(PIN_CNT_FAN_2, INPUT_PULLUP); SOUT(PIN_CNT_FAN_2); SOUT(" "); break;
+                        #endif
+                      default: break;
+                    }
+                }
+              SOUTLN();
+              initFanPCNT();
+                      //attachInterrupt(digitalPinToInterrupt(PIN_PWM_FAN_1), &pcnt_intr_handler, FALLING);
+
+              #ifdef USE_MCPWM
+                  mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM_CAP_0, PIN_CNT_FAN_1); // MAGIC LINE to define WHICH GPIO
+                  // gpio_pulldown_en(GPIO_CAP0_IN); //Enable pull down on CAP0 signal
+                  mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 0);
+                #endif
+            #endif
       // --- finish setup
           #if (DEBUG_MODE >= CFG_DEBUG_STARTUP)
               #if (USE_LED_BLINK_OUT > 0)
@@ -546,20 +667,6 @@
 
         #endif
       // ----------------------
-      #if (USE_WS2812_LINE_OUT > OFF)
-          if (ws2812T.TOut())
-            {
-              ws2812T.startT();
-              ChangePalettePeriodically();
-              startIndex = startIndex + 1; /* motion speed */
-              ws2812_cnt++;
-                    //SOUT(millis()); SOUT(" "); SOUTLN(ws2812_cnt);
-              FillLEDsFromPaletteColors( startIndex);
-              FastLED.show();
-            }
-        #endif
-
-      // ----------------------
       #if (USE_TOUCHSCREEN > OFF)
         touch.runTouch(outBuf);
         #endif // USE_TOUCHSCREEN
@@ -572,6 +679,93 @@
             sprintf(outBuf,"key %d", key);
             dispStatus(outBuf);
           }
+        #endif
+      // ----------------------
+      #if (USE_CNT_INP > OFF)
+          for ( uint8_t i = 0; i < USE_CNT_INP ; i++ )
+            {
+              uint64_t    tmp = micros();
+              uint64_t    lim = 0ul;
+              pcnt_unit_t unit;
+                          //SOUT(tmp);
+              switch (i)
+                {
+                  #if (USE_CNT_INP > 1)
+                      case 1:
+                        lim = PCNT2_UFLOW;
+                        unit = (pcnt_unit_t) PCNT2_UNIT;
+                        pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT2_UNIT], &tmpErg, 0);
+                          //SOUT(" res1 "); SOUT(pcnt_res);
+                        break;
+                    #endif
+                  #if (USE_CNT_INP > 2)
+                      case 2:
+                        lim = PCNT3_UFLOW;
+                        pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT3_UNIT], &tmpErg, 0);
+                        break;
+                    #endif
+                  #if (USE_CNT_INP > 3)
+                      case 3:
+                        lim = PCNT4_UFLOW;
+                        pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT4_UNIT], &tmpErg, 0);
+                        break;
+                    #endif
+                  default:   // case 0
+                    lim = PCNT1_UFLOW;
+                    pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT1_UNIT], &tmpErg, 0);
+                          //SOUT(" res0 "); SOUT(pcnt_res);
+                    break;
+                }
+              if (pcnt_res == pdTRUE)
+                {
+                  cntErg[i].usCnt   = (tmpErg.usCnt - oldUs[i]);
+                  oldUs[i]          = tmpErg.usCnt;
+                  cntErg[i].pulsCnt = tmpErg.pulsCnt;
+                  uint16_t pulsCnt  = tmpErg.pulsCnt;
+                  // check for auto range switching
+                    /*
+                    if (cntErg[i].usCnt > PNCT_AUTO_SWDN)
+                      {
+                        pulsCnt = (tmpErg.pulsCnt * 2) / 3;
+                        if (pulsCnt <= 0) pulsCnt = 1;
+                        SOUTLN(); SOUT(i); SOUT(" dn "); SOUT(cntErg[i].usCnt); SOUT(" "); SOUTLN(pulsCnt);
+                      }
+                    if ( (cntErg[i].usCnt < PNCT_AUTO_SWUP) && (pulsCnt > 0) )
+                      {
+                        pulsCnt = (tmpErg.pulsCnt * 3) / 2;
+                        SOUTLN(); SOUT(i); SOUT(" up "); SOUT(cntErg[i].usCnt); SOUT(" "); SOUTLN(pulsCnt);
+                      }
+
+                    pcnt_event_disable(unit, PCNT_EVT_THRES_0);
+                    pcnt_set_event_value(unit, PCNT_EVT_THRES_0, pulsCnt);
+                    pcnt_event_enable(unit, PCNT_EVT_THRES_0);
+                    */
+
+                  if ( cntErg[i].usCnt > 55 )
+                    { // low freq
+                          //cntErg[i].usCnt /= tmpErg.pulsCnt;
+                      if ( (cntErg[i].usCnt > 0) && (cntErg[i].usCnt > tmpErg.pulsCnt) )
+                        {
+                          cntErg[i].freq = (uint32_t) (1000000ul / (cntErg[i].usCnt / tmpErg.pulsCnt) );
+                        }
+                          //SOUT(" l "); SOUT(cntErg[i].freq);
+                    }
+                    else
+                    { // high freq
+                      cntErg[i].freq = (uint32_t) (tmpErg.pulsCnt * 1000000ul / cntErg[i].usCnt);
+                          //SOUT(" h "); SOUT(cntErg[i].freq);
+                    }
+                }
+                else
+                {
+                  if ( tmp - oldUs[i] > lim )
+                    {
+                      oldUs[i] = tmp;
+                      cntErg[i].freq = 0;
+                    }
+                }
+                          //SOUT(" erg "); SOUT(i); SOUT(" "); SOUTLN(cntErg[i].freq);
+            }
         #endif
       // ----------------------
       #ifdef USE_MEASURE_CYCLE
@@ -588,81 +782,10 @@
                   //gasThres = (int16_t) tholdGas.value((double) gasThres);
                         //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
                 #endif
-              #if (USE_RGBLED_PWM > OFF)
-                  {
-                    #if (TEST_RGBLED_PWM > OFF)
-                        switch (colRGBLED)
-                          {
-                            case 0:
-                              if (RGBLED_rt >= 254)
-                                {
-                                  RGBLED_rt = 0;
-                                  RGBLED_gr += incRGBLED;
-                                  colRGBLED++;
-                                }
-                                else
-                                { RGBLED_rt += incRGBLED; }
-                              break;
-                            case 1:
-                              if (RGBLED_gr >= 254)
-                                {
-                                  RGBLED_gr = 0;
-                                  RGBLED_bl += incRGBLED;
-                                  colRGBLED++;
-                                }
-                                else
-                                { RGBLED_gr += incRGBLED; }
-                              break;
-                            case 2:
-                              if (RGBLED_bl >= 254)
-                                {
-                                  RGBLED_bl = 0;
-                                  RGBLED_rt += incRGBLED;
-                                  colRGBLED = 0;
-                                }
-                                else
-                                { RGBLED_bl += incRGBLED; }
-                              break;
-                            default:
-                              break;
-                          }
-
-                        #if (USE_WEBCTRL_RGB > OFF)
-                            _tmp += 4;
-                            if (_tmp > 50)
-                              { _tmp = 0; }
-                            //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
-                            ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
-                            ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
-                            ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
-                          #endif
-
-                        ledcWrite(PWM_RGB_RED,   RGBLED_rt);
-                        ledcWrite(PWM_RGB_GREEN, RGBLED_gr);
-                        ledcWrite(PWM_RGB_BLUE,  RGBLED_bl);
-
-                      #endif
-
-                    #if (USE_ADC1 > OFF)
-                        getADCIn();
-                      #endif
-
-                    #if (USE_DIG_INP > OFF)
-                        getDIGIn();
-                      #endif
-
-                    #if (USE_CNT_INP > OFF)
-                        getCNTIn();
-                      #endif
-
-                    #if (USE_POTICTRL_FAN > 0)
-                        valFan[INP_CNT_FAN_1] = (uint8_t) map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 100);
-                        valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                        //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
-                        ledcWrite(PWM_FAN_1, valFan[INP_CNT_FAN_1]);
-                        ledcWrite(PWM_FAN_2, valFan[INP_CNT_FAN_2]);
-                      #endif
-                  }
+              #if (USE_CNT_INP > OFF)
+                  #ifdef USE_PW
+                      getCNTIn();
+                    #endif
                 #endif
               #if (USE_TYPE_K_SPI > OFF)
                   int8_t  tkerr = (int8_t) ISOK;
@@ -699,13 +822,119 @@
                             SOUTLN();
                     #endif
                 #endif
+              #if (USE_ADC1 > OFF)
+                  getADCIn();
+                #endif
+
+              #if (USE_DIG_INP > OFF)
+                  getDIGIn();
+                #endif
+
+              #if (USE_MCPWM > OFF)
+                  getCNTIn();
+                #endif
+            }
+        #endif
+      // ----------------------
+      #ifdef USE_OUTPUT_CYCLE
+          #if (USE_WS2812_LINE_OUT > OFF)
+              if (ws2812T.TOut())
+                {
+                  ws2812T.startT();
+                  ChangePalettePeriodically();
+                  startIndex = startIndex + 1; /* motion speed */
+                  ws2812_cnt++;
+                        //SOUT(millis()); SOUT(" "); SOUTLN(ws2812_cnt);
+                  FillLEDsFromPaletteColors( startIndex);
+                  FastLED.show();
+                }
+            #endif
+
+          if (outpT.TOut())
+            {
+              outpT.startT();
+              #if (USE_RGBLED_PWM > OFF)
+                  #if (TEST_RGBLED_PWM > OFF)
+                      switch (colRGBLED)
+                        {
+                          case 0:
+                            if (RGBLED_rt >= 254)
+                              {
+                                RGBLED_rt = 0;
+                                RGBLED_gr += incRGBLED;
+                                colRGBLED++;
+                              }
+                              else
+                              { RGBLED_rt += incRGBLED; }
+                            break;
+                          case 1:
+                            if (RGBLED_gr >= 254)
+                              {
+                                RGBLED_gr = 0;
+                                RGBLED_bl += incRGBLED;
+                                colRGBLED++;
+                              }
+                              else
+                              { RGBLED_gr += incRGBLED; }
+                            break;
+                          case 2:
+                            if (RGBLED_bl >= 254)
+                              {
+                                RGBLED_bl = 0;
+                                RGBLED_rt += incRGBLED;
+                                colRGBLED = 0;
+                              }
+                              else
+                              { RGBLED_bl += incRGBLED; }
+                            break;
+                          default:
+                            break;
+                        }
+
+                      #if (USE_WEBCTRL_RGB > OFF)
+                          _tmp += 4;
+                          if (_tmp > 50)
+                            { _tmp = 0; }
+                          //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
+                          ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
+                          ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
+                          ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
+                        #endif
+
+                      ledcWrite(PWM_RGB_RED,   RGBLED_rt);
+                      ledcWrite(PWM_RGB_GREEN, RGBLED_gr);
+                      ledcWrite(PWM_RGB_BLUE,  RGBLED_bl);
+                    #endif
+
+                #endif
+
+              #if (USE_FAN_PWM > OFF)
+                  valFanPWM[0] += 1;
+                  valFanPWM[1] += 1;
+                  if (valFanPWM[1] >= 127) // -50%
+                    {
+                      valFanPWM[0] = 0;
+                      valFanPWM[1] = 0;
+                    }
+
+                  #if (USE_POTICTRL_FAN > 0)
+                      valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                      valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                      //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
+                      valFanPWM[0] = valFan[INP_CNT_FAN_1];
+                      valFanPWM[1] = valFan[INP_CNT_FAN_2];
+                    #endif
+
+                  ledcWrite(PWM_FAN_1, valFanPWM[0]);
+                  ledcWrite(PWM_FAN_2, valFanPWM[1]);
+                #endif
+
             }
         #endif
       // ----------------------
       #if (USE_DISP > 0)
         if (dispT.TOut())    // handle touch output
           {
-            dispT.startT();
             #ifdef RUN_OLED_TEST
                 oled.clearBuffer();
                 switch (oledIdx)
@@ -809,8 +1038,12 @@
                 break;
 
               case 7: // test values
-                SOUT("SW1 "); SOUT(inpValDig[INP_SW_CTRL]); SOUT(" ");
-                SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
+                #if (USE_DIG_INP > OFF)
+                    SOUT("SW1 "); SOUT(inpValDig[INP_SW_CTRL]); SOUT(" ");
+                  #endif
+                #if (USE_CTRL_POTI_ADC > OFF)
+                    SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
+                  #endif
                 break;
 
               case 8: // WS2812 lines
@@ -834,10 +1067,35 @@
                   dispText(outStr ,  0, 0, outStr.length());
                   #endif
                 break;
+              case 9: // counter values
+                #if (USE_CNT_INP > OFF)
+                      outStr = "              ";
+                      dispText(outStr ,  0, 2, outStr.length());
+                      outStr = "f";
+                      for (uint8_t i = 0; i < USE_CNT_INP ; i++ )
+                        {
+                          outStr += " ";
+                          outStr += (String) cntErg[i].freq;
+                                //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
+                        }
+                      SOUT(outStr); SOUT(" "); SOUT(valFanPWM[0]); SOUT(" ");
+                      dispText(outStr ,  0, 2, outStr.length());
+                    #ifdef USE_MCPWM
+                        outStr = "              ";
+                        dispText(outStr ,  0, 0, outStr.length());
+                        outStr = "LH ";
+                        outStr += (String) cntLowPulse[0]; outStr += (" ");
+                        outStr += (String) cntHighPulse[0];
+                                  SOUT(outStr); SOUT(" ");
+                        dispText(outStr ,  0, 2, outStr.length());
+                      #endif
+                  #endif
+                break;
 
               default:
-                SOUTLN();
+                SOUT("disp end "); SOUT(" "); SOUTLN(millis());
                 oledIdx = 0;
+                dispT.startT();
                 break;
               }
             #ifdef USE_STATUS
@@ -1234,10 +1492,80 @@
 
     // --- counter
       #if (USE_CNT_INP > OFF)
-          void getCNTIn()
+          static void initFanPCNT()
             {
+              /* Initialize PCNT event queue and PCNT functions */
+              pcnt_unit_t unit;
+              SOUT("init pcnt ");
+              for (uint8_t i = 0 ; i < USE_CNT_INP ; i++)
+                {
+                  // Initialize PCNT unit and  queue
+                    pcnt_unit_config(&config_cnt[i]);
+                    pcnt_evt_queue[i] = xQueueCreate(1, sizeof(pcnt_evt_t));
+                  switch (i)
+                    {
+                      #if (USE_CNT_INP > 1)
+                          case 1:
+                            unit = (pcnt_unit_t) PCNT2_UNIT;
+                            // Configure and enable the input filter
+                              pcnt_set_filter_value(unit, PCNT2_INP_FILT);
+                              pcnt_filter_enable(unit);
+                            // Set threshold 0 and 1 values and enable events to watch //
+                              pcnt_set_event_value(unit, PCNT_EVT_THRES_0, PCNT2_THRESH0_VAL);
+                              pcnt_event_enable(unit, PCNT_EVT_THRES_0);
+                              //pcnt_set_event_value(unit, PCNT_EVT_THRES_1, PCNT2_THRESH1_VAL);
+                              //pcnt_event_enable(unit, PCNT_EVT_THRES_1);
+                            // Enable events on zero, maximum and minimum limit values //
+                              //pcnt_event_enable(unit, PCNT_EVT_ZERO);
+                              //pcnt_event_enable(unit, PCNT_EVT_H_LIM);
+                              //pcnt_event_enable(unit, PCNT_EVT_L_LIM);
+                            break;
+                        #endif
+                      default:  // = case 0
+                        unit = (pcnt_unit_t) PCNT1_UNIT;
+                        // Configure and enable the input filter
+                          pcnt_set_filter_value(unit, PCNT1_INP_FILT);
+                          pcnt_filter_enable(unit);
+                        // Set threshold 0 and 1 values and enable events to watch //
+                          pcnt_set_event_value(unit, PCNT_EVT_THRES_0, PCNT1_THRESH0_VAL);
+                          pcnt_event_enable(unit, PCNT_EVT_THRES_0);
+                          //pcnt_set_event_value(unit, PCNT_EVT_THRES_1, PCNT1_THRESH0_VAL);
+                          //pcnt_event_enable(unit, PCNT_EVT_THRES_1);
+                        // Enable events on zero, maximum and minimum limit values //
+                          //pcnt_event_enable(unit, PCNT1_EVT_ZERO);
+                          //pcnt_event_enable(unit, PCNT1_EVT_H_LIM);
+                          //pcnt_event_enable(unit, PCNT1_EVT_L_LIM);
+                        break;
+                    }
+                  SOUT(i); SOUT(" ");
+                  // Initialize PCNT's counter //
+                    pcnt_counter_pause(unit);
+                    pcnt_counter_clear(unit);
 
+                  // Install interrupt service and add isr callback handler //
+                  pcnt_isr_service_install(unit);
+                  switch (i)
+                    {
+                      #if (USE_CNT_INP > 1)
+                          case 1: pcnt_isr_handler_add(unit, pcnt2_intr_hdl, &unit); break;
+                        #endif
+                      default: pcnt_isr_handler_add(unit, pcnt1_intr_hdl, &unit); break;
+                    }
+                  // Everything is set up, now go to counting //
+                  pcnt_counter_resume(unit);
+                }
             }
+          #ifdef USE_MCPWM
+              static void getCNTIn()
+                {
+                      // count LOW width
+                      mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 0);
+                      cntLowPulse[0] = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0) / 1000;
+                      // count HIGH width
+                      mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_POS_EDGE, 0);
+                      cntHighPulse[0] = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0) /1000 ;
+                }
+            #endif
         #endif
 
       #if (USE_DIG_INP > OFF)

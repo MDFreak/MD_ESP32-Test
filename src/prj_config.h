@@ -137,7 +137,7 @@
 
             #endif
 
-        // --- counter channels  0..3
+        // --- counter channels  0..7
           #if (USE_CNT_INP > OFF)
               #if (USE_FAN_CNT_INP > OFF)
                   #define CNT_FAN_1     0
@@ -469,11 +469,17 @@
     // --- user output
       // --- PWM
         #if (USE_RGBLED_PWM > OFF)
-            #define PWM_LEDS_FREQ      5000u
+            #ifndef USE_OUTPUT_CYCLE
+                #define USE_OUTPUT_CYCLE
+              #endif
+            #define PWM_LEDS_FREQ      4000u
             #define PWM_LEDS_RES       8
           #endif
 
         #if (USE_FAN_PWM > OFF)
+            #ifndef USE_OUTPUT_CYCLE
+                #define USE_OUTPUT_CYCLE
+              #endif
             #define PWM_FAN_FREQ      4500u
             #define PWM_FAN_RES       8
           #endif
@@ -595,6 +601,9 @@
     // --- user input
       // --- keypads
         #if defined(KEYS)
+            #ifndef USE_MEASURE_CYCLE
+                #define USE_MEASURE_CYCLE
+              #endif
             #if !(KEYS ^ MC_UI_Keypad_ANA0_RO)
                 #define USE_KEYPADSHIELD
                 #define KEYS_ADC        34   // ADC Pin GPIO02
@@ -624,24 +633,41 @@
 
       // --- counter
         #if (USE_CNT_INP > OFF)
+            #define PCNT_H_LIM_VAL      0   // not used
+            #define PCNT_L_LIM_VAL      0   // not used
+            #define PNCT_AUTO_SWDN      5000000ul  // > 5 sec period
+            #define PNCT_AUTO_SWUP      50000ul    // < 50 msec period
+            // counter 1
+            #define PCNT1_INP_FILT      10  // glitch filter (clock 80 MHz)
+            #define PCNT1_UFLOW         3000000ul  // timedelay due to 0 Hz [us]
+            #define PCNT1_INP_SIG_IO    PIN_CNT_FAN_1       // Pulse Input GPIO
+            #define PCNT1_INP_CTRL_IO   PIN_CNT_FAN_1       // Control GPIO HIGH=count up, LOW=count down
+            //#define PCNT1_THRESH1_VAL   5
+            #define PCNT1_THRESH0_VAL   3
+            #define PCNT1_EVT_0         PCNT_EVT_THRES_0
+            //#define PCNT1_EVT_1         PCNT_EVT_THRES_1
+            #define PCNT1_UNIT          0
+            #define PCNT1_CHAN          0
+            #define PCNT1_ID            0
+            #if (USE_CNT_INP > 1)
+                // counter 2
+                #define PCNT2_INP_FILT      10  // glitch filter (clock 80 MHz)
+                #define PCNT2_UFLOW         3000000ul  // timedelay due to 0 Hz [us]
+                #define PCNT2_INP_SIG_IO    PIN_CNT_FAN_2   // Pulse Input GPIO
+                #define PCNT2_INP_CTRL_IO   PIN_CNT_FAN_2       // Control GPIO HIGH=count up, LOW=count down
+                //#define PCNT2_THRESH1_VAL   2
+                #define PCNT2_THRESH0_VAL   400
+                #define PCNT2_EVT_0         PCNT_EVT_THRES_0
+                #define PCNT2_UNIT          1
+                #define PCNT2_CHAN          0
+                #define PCNT2_ID            1
+              #endif
             #ifndef USE_MEASURE_CYCLE
                 #define USE_MEASURE_CYCLE
               #endif
-            const uint8_t PIN_INP_CNT[8] =
-              {
-                PIN_CNT_FAN_1,  PIN_CNT_FAN_2,
-                NO_PIN,         NO_PIN,
-                NO_PIN,         NO_PIN,
-                NO_PIN,         NO_PIN
-              };
-            #define INP_CNT_FAN_1  0
-            #define INP_CNT_FAN_2  1
           #endif
 
         #if (USE_ADC1 > OFF)
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
-              #endif
             typedef struct
               {
                 uint8_t  pin;
@@ -657,6 +683,9 @@
                 { NO_PIN,         0, 0 }
               };
             #define INP_POTI_CTRL  0
+            #ifndef USE_MEASURE_CYCLE
+                #define USE_MEASURE_CYCLE
+              #endif
           #endif
 
         #if (USE_DIG_INP > OFF)
@@ -682,37 +711,44 @@
           #define DS_T_PRECISION   9
           #define DS18B20_ANZ      1
           #ifndef USE_MEASURE_CYCLE
-              //#define USE_MEASURE_CYCLE
+              #define USE_MEASURE_CYCLE
             #endif
         #endif
 
       #if (USE_BME280_I2C > OFF)
-        #endif
-
-      #if (USE_MQ135_GAS_ADC > OFF)
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
+        #endif
+
+      #if (USE_MQ135_GAS_ADC > OFF)
           #define MQ135_FILT      15       // floating  measure filtering
           //#define MQ135_ThresFilt 25       // threshold measure filtering
           #define MQ135_EM_WIN    100      // window for traffic light
           //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
-        #endif
-
-      #if (USE_TYPE_K_SPI > OFF)
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
+        #endif
+
+      #if (USE_TYPE_K_SPI > OFF)
           #define TYPEK_FILT      11       // floating  measure filtering
           #define TYPEK_DROP_PEEK 2        // drop biggest / lowest
           #define TYPEK1_OFFSET   0.       // offset unit °C
           #define TYPEK1_GAIN     1.       // result = (measure * gain) + offset
           #define TYPEK2_OFFSET   0.       // offset unit °C
           #define TYPEK2_GAIN     1.       // result = (measure * gain) + offset
+          #ifndef USE_MEASURE_CYCLE
+              #define USE_MEASURE_CYCLE
+            #endif
         #endif
 
       #ifdef USE_MEASURE_CYCLE
           #define MEASURE_CYCLE_MS  500u
+        #endif
+
+      #ifdef USE_OUTPUT_CYCLE
+          #define OUTPUT_CYCLE_MS  500u
         #endif
 
     // --- test features --------------------------------
@@ -720,7 +756,7 @@
       #define USE_WEBCTRL_RGB       OFF
       #define USE_WEBCTRL_FAN       OFF
       #define USE_POTICTRL_RGB      OFF
-      #define USE_POTICTRL_FAN      ON
+      #define USE_POTICTRL_FAN      OFF
       #define USE_SWCTRL_RGB        ON
       #define USE_SWCTRL_FAN        ON
       #define USE_SWCTRL_1812       ON

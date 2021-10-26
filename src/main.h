@@ -15,6 +15,13 @@
   #include <prj_config.h>
   //#include <driver\gpio.h>
   #include <driver\adc.h>
+  #include "freertos/task.h"
+  #include "freertos/queue.h"
+  #include "driver/ledc.h"
+  #include "driver/mcpwm.h"
+  #include "driver/pcnt.h"
+  #include "esp_attr.h"
+  #include "esp_log.h"
 
   // --- system components
     #if (USE_PWM_OUT > OFF)
@@ -40,13 +47,43 @@
 
     #if (USE_CNT_INP > OFF)
         #include <driver\pcnt.h>
-      #endif
+        #include <driver\mcpwm.h>
+        #include <esp_attr.h>
+
+    #endif
 
     #if ((USE_ADC1 > OFF) || (USE_ADC2 > OFF))
         #include <driver\adc.h>
       #endif
 
   // --- user outputs
+    // --- PWM
+      /** ### Configure the project ------------------------
+
+        - The example uses fixed PWM frequency of 5 kHz, duty cycle in 50%,
+          and output GPIO pin.
+          To change them, adjust `LEDC_FREQUENCY`, `LEDC_DUTY`,
+          `LEDC_OUTPUT_IO` macros at the top of ledc_basic_example_main.c.
+
+        - Depending on the selected `LEDC_FREQUENCY`,
+          you will need to change the `LEDC_DUTY_RES`.
+
+        - To dynamicaly set the duty and frequency,
+          you can use the following functions:
+          - To set the frequency to 2.5 kHZ i.e:
+            ```c
+            ledc_set_freq(LEDC_MODE, LEDC_TIMER, 2500);
+            ```
+          - Now the duty to 100% i.e:
+            ```c
+            ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, 8191);
+            ledc_update_duty(LEDC_MODE, LEDC_CHANNEL);
+            ```
+        - To change the duty cycle you need to calculate
+          the duty range according to the duty resolution.
+          - If duty resolution is 13 bits:
+            Duty range: `0 to (2 ** 13) - 1 = 8191` where 0 is 0% and 8191 is 100%.
+       **/
     #if (USE_RGBLED_PWM > OFF)
         typedef struct
           {
@@ -84,6 +121,11 @@
         #include "md_lcd.h"
       #endif
 
+
+  // --- user inputs
+    #if (USE_CNT_INP > 0)
+        static void initFanPCNT();
+      #endif
   // --- memory
     #if (USE_FRAM_I2C > OFF)
         #include <md_FRAM.h>
