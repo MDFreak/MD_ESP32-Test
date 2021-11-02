@@ -32,15 +32,17 @@
       #define USE_BUZZER_PWM        OFF
       #define USE_FAN_PWM           2
       #define USE_OUT_FREQ_PWM      1
-      #define USE_WS2812_LINE_OUT   1   // [0, 1..4]
+      #define USE_WS2812_MATRIX_OUT 1     // [0, 1..4]
+      #define USE_WS2812_LINE_OUT   1     // [0, 1..4]
     // --- user input components
       #define USE_TOUCHSCREEN_SPI   OFF
       #define USE_TOUCHSCREEN_IO    OFF
       #define USE_KEYPADSHIELD_ADC  OFF
       #define USE_FAN_CNT_INP       2
+      #define USE_FAN_PWM_INP       OFF
     // --- sensors
       #define USE_DS18B20_1W_IO     OFF   // [0, 1, ....] limited by 1W connections
-      #define USE_BME280_I2C        OFF   // [0, 1, ....] limited by I2C channels/addr
+      #define USE_BME280_I2C        1     // [0, 1, ....] limited by I2C channels/addr
       #define USE_TYPE_K_SPI        OFF   // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ADC     OFF   // [0, 1, ....] limited by analog inputs
     // --- network  components
@@ -61,6 +63,7 @@
       #define USE_SPI             USE_DISP_SPI + USE_TOUCHSCREEN_SPI + USE_TYPE_K_SPI
       #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_FAN_PWM + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
       #define USE_CNT_INP         USE_FAN_CNT_INP     // max 2 * 8 independent
+      #define USE_PWM_INP         USE_FAN_PWM_INP
       #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC
       #define USE_ADC2            OFF // not to use
       #define USE_DIG_INP         USE_CTRL_SW_INP     //

@@ -36,7 +36,9 @@
               #define PIN_CNT_FAN_1 36
               #define PIN_CNT_FAN_2 34
             #endif
-
+        #if (USE_PWM_INP > OFF)
+              #define PIN_PWM_INP_1 PIN_CNT_FAN_2
+          #endif
         // --- user output
           #if (USE_TRAFFIC_LED_OUT > OFF)
               #define PIN_TL_RED    26   // RGB red
@@ -59,8 +61,15 @@
               #define PIN_FREQ_1    26
             #endif
 
+          #if (USE_WS2812_MATRIX_OUT > OFF)
+              #define PIN_WS2812_MD1  5
+                //#define PIN_WS2812_MD2  x
+                //#define PIN_WS2812_MD3  x
+                //#define PIN_WS2812_MD4  x
+            #endif
+
           #if (USE_WS2812_LINE_OUT > OFF)
-              #define PIN_WS2812_D1  5
+              #define PIN_WS2812_LD1  12
                 //#define PIN_WS2812_D2  x
                 //#define PIN_WS2812_D3  x
                 //#define PIN_WS2812_D4  x
@@ -399,32 +408,61 @@
 
     // --- user interface
       // --- display output
-        #define DISP_CYCLE       500ul   // Intervallzeit [us]
+        #define DISP_CYCLE       1000ul   // Intervallzeit [us]
         // output status line
         #define STAT_TIMEDEF     5000u    // default time to clear status
 
       // WS2812 LEDs
+        #if (USE_WS2812_MATRIX_OUT > OFF)
+            #define UPD_2812_M1_MS 8
+            #define LEDS_2812_M1   256
+            #define BRIGHT_2812_M1 5
+            #define TYPE_2812_M1   WS2812B
+            #define COLORD_2812_M1 NEO_GRB
+            #define COLPIX_2812_M1 64
+            #define ROWPIX_2812_M1 8
+            #define COLPIX_2812_T1 8
+            #define ROWPIX_2812_T1 8
+            #define COLTIL_2812_M1 4
+            #define ROWTIL_2812_M1 1
+          #endif
+
         #if (USE_WS2812_LINE_OUT > OFF)
-            #define UPDATE_2812_S 100
-            #define LEDS_2812_1   20
-            #define BRIGHT_2812_1 4
-            #define TYPE_2812_1   WS2812
-            #define COLORD_2812_1 GRB
+            //#define USE_FAST_LED
+            #ifdef USE_FAST_LED
+                #define UPD_2812_L1_MS 1
+                #define LEDS_2812_L1   300
+                #define BRIGHT_2812_L1 5
+                #define TYPE_2812_L1   WS2812
+                #define COLORD_2812_L1 GRB
+            #else
+            #define UPD_2812_L1_MS 1
+            #define LEDS_2812_L1   300
+            #define BRIGHT_2812_L1 5
+            #define TYPE_2812_L1   WS2812B
+            #define COLORD_2812_L1 NEO_GRB
+            #define COLPIX_2812_L1 300
+            #define ROWPIX_2812_L1 1
+            //#define COLPIX_2812_T1 8
+            //#define ROWPIX_2812_T1 8
+            #define COLTIL_2812_L1 4
+            #define ROWTIL_2812_L1 1
+              #endif
             #if (USE_WS2812_LINE_OUT > 1)
-                #define LEDS_2812_1   30
-                #define BRIGHT_2812_1 12
-                #define TYPE_2812_1   WS2812
-                #define COLORD_2812_1 GRB
+                #define LEDS_2812_L1   30
+                #define BRIGHT_2812_L1 12
+                #define TYPE_2812_L1   WS2812
+                #define COLORD_2812_L1 GRB
                 #if (USE_WS2812_LINE_OUT > 2)
-                    #define LEDS_2812_1   30
-                    #define BRIGHT_2812_1 12
-                    #define TYPE_2812_1   WS2812
-                    #define COLORD_2812_1 GRB
+                    #define LEDS_2812_L1   30
+                    #define BRIGHT_2812_L1 12
+                    #define TYPE_2812_L1   WS2812
+                    #define COLORD_2812_L1 GRB
                     #if (USE_WS2812_LINE_OUT > 3)
-                        #define LEDS_2812_1   30
-                        #define BRIGHT_2812_1 12
-                        #define TYPE_2812_1   WS2812
-                        #define COLORD_2812_1 GRB
+                        #define LEDS_2812_L1   30
+                        #define BRIGHT_2812_L1 12
+                        #define TYPE_2812_L1   WS2812
+                        #define COLORD_2812_L1 GRB
                       #endif
                   #endif
               #endif
@@ -666,7 +704,10 @@
                 #define USE_MEASURE_CYCLE
               #endif
           #endif
+      // --- dutycycle (pwm) input
+        #if (USE_PWM_INP > OFF)
 
+          #endif
         #if (USE_ADC1 > OFF)
             typedef struct
               {
@@ -703,9 +744,10 @@
           #endif
 
     // --- memories
-      #if (USE_FRAM_I2C > OFF)
-          #define SIZE_FRAM     0x8000
-        #endif
+      // --- FRAM
+        #if (USE_FRAM_I2C > OFF)
+            #define SIZE_FRAM     0x8000
+          #endif
     // --- sensors
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION   9

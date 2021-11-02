@@ -13,15 +13,15 @@
   #include <md_filter.hpp>
   #include <project.h>
   #include <prj_config.h>
-  //#include <driver\gpio.h>
-  #include <driver\adc.h>
-  #include "freertos/task.h"
-  #include "freertos/queue.h"
-  #include "driver/ledc.h"
-  #include "driver/mcpwm.h"
-  #include "driver/pcnt.h"
-  #include "esp_attr.h"
-  #include "esp_log.h"
+      //#include <driver\gpio.h>
+      //#include <driver\adc.h>
+      //#include "freertos/task.h"
+      //#include "freertos/queue.h"
+      //#include "driver/ledc.h"
+      //#include "driver/mcpwm.h"
+      //#include "driver/pcnt.h"
+      //#include "esp_attr.h"
+      //#include "esp_log.h"
 
   // --- system components
     #if (USE_PWM_OUT > OFF)
@@ -46,11 +46,15 @@
       #endif
 
     #if (USE_CNT_INP > OFF)
+        #include <freertos/queue.h>
         #include <driver\pcnt.h>
+        #include <esp_attr.h>
+      #endif
+
+    #if (USE_PWM_INP > OFF)
         #include <driver\mcpwm.h>
         #include <esp_attr.h>
-
-    #endif
+      #endif
 
     #if ((USE_ADC1 > OFF) || (USE_ADC2 > OFF))
         #include <driver\adc.h>
@@ -113,8 +117,16 @@
           #endif
       #endif // USE_OLED_I2C
 
+    #if (USE_WS2812_MATRIX_OUT > OFF)
+        #include <md_leds.h>
+      #endif
+
     #if (USE_WS2812_LINE_OUT > OFF)
-        #include <FastLED.h>
+        #ifdef USE_FAST_LED
+            #include <FastLED.h>
+        #else
+            #include <md_leds.h>
+          #endif
       #endif
 
     #if (USE_TFT > OFF)
@@ -122,9 +134,12 @@
       #endif
 
 
+          #if (USE_CNT_INP > OFF)
+              static void initFanPCNT();
+              void getCNTIn();
+            #endif
   // --- user inputs
-    #if (USE_CNT_INP > 0)
-        static void initFanPCNT();
+    #if (USE_CNT_INP > OFF)
       #endif
   // --- memory
     #if (USE_FRAM_I2C > OFF)
@@ -196,6 +211,7 @@
             #endif
         // --- counter input
           #if (USE_CNT_INP > OFF)
+              static void initFanPCNT();
               void getCNTIn();
             #endif
       // --- sensors

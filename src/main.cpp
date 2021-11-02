@@ -4,9 +4,9 @@
 // ---------------------------------------
 // --- declarations
   // ------ system -----------------------
-    int16_t _tmp = 0;
-    bool firstrun = true;
-    uint16_t     md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
+    //static uint64_t _tmp = 0ul;
+    static bool firstrun = true;
+    static uint16_t     md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
                              #if (USE_WIFI > OFF)
                                + ERRBIT_WIFI
                                #if (USE_NTP_SERVER > OFF)
@@ -22,20 +22,20 @@
                              ;
     TwoWire i2c1 = TwoWire(0);
     // cycletime measurement
-    uint64_t anzUsCycles = 0;
-    uint64_t usLast = 0;
-    uint64_t usPerCycle = 0;
-    uint64_t anzMsCycles = 0;
-    uint64_t msLast = 0;
-    uint64_t msPerCycle = 0;
+    static uint64_t anzUsCycles = 0ul;
+    static uint64_t usLast      = 0ul;
+    static uint64_t usPerCycle  = 0ul;
+    //static uint64_t anzMsCycles = 0;
+    //static uint64_t msLast = 0;
+    //static uint64_t msPerCycle = 0;
 
     #if ( USE_I2C > 1 )
         TwoWire i2c2 = TwoWire(1);
       #endif
 
-    #if ( USE_LED_BLINK_OUT > 0 )
+    #if ( USE_COL16_BLINK_OUT > 0 )
         msTimer ledT = msTimer(BLINKTIME_MS);
-        bool LED_ON = FALSE;
+        bool COL16_ON = FALSE;
       #endif
 
     #if ( USE_DISP > 0 )
@@ -67,17 +67,63 @@
         uint8_t key;
       #endif // USE_KEYPADSHIELD
 
-    #if (USE_WS2812_LINE_OUT >OFF)
-        CRGBPalette16 currentPalette;
-        TBlendType    currentBlending;
-        extern CRGBPalette16 myRedWhiteBluePalette;
-        extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
-        CRGB leds[LEDS_2812_1];
-        msTimer ws2812T   = msTimer(10);
-        static uint8_t startIndex = 0;
-        unsigned long ws2812_alt = 0;
-        uint32_t ws2812_cnt = 0;
-        uint32_t ws2812_v = 0;
+
+    #if (USE_WS2812_MATRIX_OUT > OFF)
+        //Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, 6,
+          //NEO_MATRIX_TOP     + NEO_MATRIX_RIGHT +
+          //NEO_MATRIX_COLUMNS + NEO_MATRIX_PROGRESSIVE,
+          //NEO_RGB            + NEO_KHZ800);
+        md_ws2812_matrix matrix_1 = md_ws2812_matrix
+          ( COLPIX_2812_M1, ROWPIX_2812_M1,
+            COLTIL_2812_M1, ROWTIL_2812_M1, PIN_WS2812_MD1,
+            NEO_TILE_TOP       + NEO_TILE_LEFT +
+            NEO_TILE_ROWS      + NEO_TILE_PROGRESSIVE +
+            NEO_MATRIX_TOP     + NEO_MATRIX_LEFT +
+            NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
+            (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
+        msTimer ws2812MT   = msTimer(UPD_2812_M1_MS);
+        const char text2812[] = "Willkommen im Weltladen";
+        const scroll2812_t outM2812 =
+          {
+            { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, (uint8_t) BRIGHT_2812_M1 },
+            { (char*) text2812, COL16_RED_HIGH,    (uint8_t) BRIGHT_2812_M1 },
+            { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, (uint8_t) BRIGHT_2812_M1 }
+          };
+        static int16_t posM2812 = -10000;
+      #endif
+
+    #if (USE_WS2812_LINE_OUT > OFF)
+        msTimer        ws2812LT    = msTimer(UPD_2812_L1_MS);
+        static uint8_t idx2812L    = 0;
+        unsigned long  ws2812L_alt = 0;
+        uint32_t       ws2812L_cnt = 0;
+        uint32_t       ws2812L_v   = 0;
+        #ifdef USE_FAST_LED
+            CRGBPalette16 currentPalette;
+            TBlendType    currentBlending;
+            extern CRGBPalette16 myRedWhiteBluePalette;
+            extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
+            CRGB leds[LEDS_2812_L1];
+        #else
+            md_ws2812_matrix line_1 = md_ws2812_matrix
+              ( COLPIX_2812_L1, ROWPIX_2812_L1,
+                COLTIL_2812_L1, ROWTIL_2812_L1, PIN_WS2812_LD1,
+                NEO_TILE_TOP       + NEO_TILE_LEFT +
+                NEO_TILE_ROWS      + NEO_TILE_PROGRESSIVE +
+                NEO_MATRIX_TOP     + NEO_MATRIX_LEFT +
+                NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
+                (neoPixelType) COLORD_2812_L1 + NEO_KHZ800 );
+            /*
+              const char text2812[] = "Willkommen im Weltladen";
+              const scroll2812_t outM2812 =
+                {
+                  { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, (uint8_t) BRIGHT_2812_M1 },
+                  { (char*) text2812, COL16_RED_HIGH,    (uint8_t) BRIGHT_2812_M1 },
+                  { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, (uint8_t) BRIGHT_2812_M1 }
+                };
+            */
+            static int16_t posL2812 = -10000;
+          #endif
       #endif
 
     #if (USE_CTRL_POTI_ADC > OFF)
@@ -190,15 +236,23 @@
               }
           #endif
       #endif
+    #if (USE_PWM_INP > OFF)
+        typedef struct
+          {
+            uint32_t lowVal;
+            uint32_t highVal;
+          } pwm_val_t;
+        pwm_val_t pwmInVal[USE_PWM_INP];
+      #endif
   // ------ user output ---------------
-    #if (USE_RGBLED_PWM > OFF)
-        outRGBVal_t outValRGB[USE_RGBLED_PWM];
-        #if (TEST_RGBLED_PWM > OFF)
+    #if (USE_RGBCOL16_PWM > OFF)
+        outRGBVal_t outValRGB[USE_RGBCOL16_PWM];
+        #if (TEST_RGBCOL16_PWM > OFF)
             uint8_t  colRGBLED = 0;
             uint16_t incRGBLED = 10;
-            uint32_t RGBLED_gr = 0;
-            uint32_t RGBLED_bl = 0;
-            uint32_t RGBLED_rt = 0;
+            uint32_t RGBCOL16_gr = 0;
+            uint32_t RGBCOL16_bl = 0;
+            uint32_t RGBCOL16_rt = 0;
           #endif
       #endif
 
@@ -317,7 +371,7 @@
       // --- system
         // start system
           Serial.begin(SER_BAUDRATE);
-          delay( 3000 ); // power-up safety delay
+          usleep(30000); // power-up safety delay
           SOUTLN(); SOUTLN("setup start ...");
           #ifdef SCAN_I2C
               scanI2C(I2C1, 0, SCAN_I2C, PIN_I2C1_SDA, PIN_I2C1_SCL);
@@ -326,15 +380,15 @@
                 #endif
             #endif
 
-          #if (USE_LED_BLINK_OUT > 0)
+          #if (USE_COL16_BLINK_OUT > 0)
               pinMode(PIN_BOARD_LED, OUTPUT);
               digitalWrite(PIN_BOARD_LED, ON);
-              LED_ON = ON;
+              COL16_ON = ON;
             #endif
 
       // --- user output
         // start display - output to user
-          #if (USE_TRAFFIC_LED_OUT > 0)
+          #if (USE_TRAFFIC_COL16_OUT > 0)
               pinMode(PIN_TL_GREEN, OUTPUT);
               pinMode(PIN_TL_YELLOW, OUTPUT);
               pinMode(PIN_TL_RED, OUTPUT);
@@ -346,7 +400,7 @@
               digitalWrite(PIN_TL_RED, OFF);
               digitalWrite(PIN_TL_YELLOW, OFF);
             #endif
-          #if (USE_RGBLED_PWM > 0)
+          #if (USE_RGBCOL16_PWM > 0)
               // RGB red
                 pinMode(PIN_RGB_RED, OUTPUT);
                 ledcSetup(PWM_RGB_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
@@ -378,11 +432,29 @@
           dispStatus("setup start ...");
 
         // WS2812 LEDs
+          #if (USE_WS2812_MATRIX_OUT > OFF)
+              SOUT("start WS2812 matrix ...");
+              matrix_1.begin();
+              //usleep(5000);
+              //matrix_1.start_scroll_task((scroll2812_t*) &outM2812, &posM2812);
+              matrix_1.start_scroll_matrix((scroll2812_t*) &outM2812, &posM2812);
+              SOUTLN(" ok");
+            #endif
+
           #if (USE_WS2812_LINE_OUT > OFF)
-              FastLED.addLeds<TYPE_2812_1, PIN_WS2812_D1, COLORD_2812_1>(leds, LEDS_2812_1).setCorrection(TypicalLEDStrip);
-              FastLED.setBrightness(BRIGHT_2812_1);
-              currentPalette = RainbowColors_p;
-              currentBlending = LINEARBLEND;
+              #ifdef USE_FAST_LED
+                  FastLED.addLeds<TYPE_2812_L1, PIN_WS2812_LD1, COLORD_2812_L1>(leds, LEDS_2812_L1).setCorrection(TypicalLEDStrip);
+                  FastLED.setBrightness(BRIGHT_2812_L1);
+                  currentPalette = RainbowColors_p;
+                  currentBlending = LINEARBLEND;
+                  //FastLED.show();
+              #else
+                  SOUT("start WS2812 line ...");
+                  line_1.begin();
+                  //usleep(5000);
+                  line_1.scroll_colorLine(true);
+                  SOUTLN(" ok");
+                #endif
             #endif
 
         // start buzzer (task)
@@ -452,6 +524,13 @@
                   SOUT(PIN_ADC_CONF[i].atten) ; SOUT(") ");
                 }
               SOUTLN();
+            #endif
+        // start dutycycle (pwm) inputs
+          #if (USE_PWM_INP > OFF)
+              //mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, GPIO_OUT);
+              mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM_CAP_0, PIN_PWM_INP_1); // MAGIC LINE to define WHICH GPIO
+              // gpio_pulldown_en(GPIO_CAP0_IN); //Enable pull down on CAP0 signal
+              mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 1);
             #endif
       // --- network
         // start WIFI
@@ -595,9 +674,9 @@
             #endif
       // --- finish setup
           #if (DEBUG_MODE >= CFG_DEBUG_STARTUP)
-              #if (USE_LED_BLINK_OUT > 0)
+              #if (USE_COL16_BLINK_OUT > 0)
                   digitalWrite(PIN_BOARD_LED, OFF);
-                  LED_ON = OFF;
+                  COL16_ON = OFF;
                 #endif
               SOUTLN();
               SOUT("... end setup -- error="); SOUTLN(md_error);
@@ -606,9 +685,22 @@
     }
 
 // ---------------------------------------
+  #if (USE_WS2812_MATRIX_OUT > OFF)
+
+    #endif
+// ---------------------------------------
 // --- system run = endless loop
   void loop()
     {
+      if (firstrun == true)
+        {
+          String taskMessage = "loop task running on core ";
+          taskMessage = taskMessage + xPortGetCoreID();
+          SOUTLN(taskMessage);
+          usLast = micros();
+          firstrun = false;
+        }
+      anzUsCycles++;
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
       #if (USE_WIFI > OFF)  // restart WIFI if offline
           if(wifiT.TOut())
@@ -649,8 +741,6 @@
                   #endif
           }
         #endif // USE_NTP_SERVER
-
-
       // ----------------------
       #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
           if (servT.TOut())
@@ -721,7 +811,7 @@
                   cntErg[i].usCnt   = (tmpErg.usCnt - oldUs[i]);
                   oldUs[i]          = tmpErg.usCnt;
                   cntErg[i].pulsCnt = tmpErg.pulsCnt;
-                  uint16_t pulsCnt  = tmpErg.pulsCnt;
+                  //uint16_t pulsCnt  = tmpErg.pulsCnt;
                   // check for auto range switching
                     /*
                     if (cntErg[i].usCnt > PNCT_AUTO_SWDN)
@@ -766,6 +856,14 @@
                 }
                           //SOUT(" erg "); SOUT(i); SOUT(" "); SOUTLN(cntErg[i].freq);
             }
+        #endif
+      // ----------------------
+      #if (USE_PWM_INP > OFF)
+          mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 1);
+          pwmInVal->lowVal = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0);
+
+          mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_POS_EDGE, 1);
+          pwmInVal->highVal = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0);
         #endif
       // ----------------------
       #ifdef USE_MEASURE_CYCLE
@@ -837,55 +935,73 @@
         #endif
       // ----------------------
       #ifdef USE_OUTPUT_CYCLE
+          #if (USE_WS2812_MATRIX_OUT > OFF)
+              //if (ws2812T.TOut())
+              //  {
+              //    ws2812T.startT();
+                  //SOUTLN(); SOUT(micros());
+                  matrix_1.scroll_matrix();
+                  //SOUT(" "); SOUTLN(micros());
+              //  }
+            #endif
+
           #if (USE_WS2812_LINE_OUT > OFF)
-              if (ws2812T.TOut())
-                {
-                  ws2812T.startT();
-                  ChangePalettePeriodically();
-                  startIndex = startIndex + 1; /* motion speed */
-                  ws2812_cnt++;
-                        //SOUT(millis()); SOUT(" "); SOUTLN(ws2812_cnt);
-                  FillLEDsFromPaletteColors( startIndex);
-                  FastLED.show();
-                }
+              #ifdef USE_FAST_LED
+                  if (ws2812LT.TOut())
+                    {
+                      ws2812LT.startT();
+                      ChangePalettePeriodically();
+                      idx2812L = idx2812L + 1; /* motion speed */
+                      ws2812L_cnt++;
+                            //SOUT(millis()); SOUT(" "); SOUTLN(ws2812_cnt);
+                      FillLEDsFromPaletteColors( idx2812L);
+                      FastLED.show();
+                    }
+              #else
+                  if (ws2812LT.TOut())
+                    {
+                      ws2812LT.startT();
+                      line_1.scroll_colorLine();
+                    }
+                #endif
             #endif
 
           if (outpT.TOut())
             {
               outpT.startT();
-              #if (USE_RGBLED_PWM > OFF)
-                  #if (TEST_RGBLED_PWM > OFF)
+              #if (USE_RGBCOL16_PWM > OFF)
+                  #if (TEST_RGBCOL16_PWM > OFF)
                       switch (colRGBLED)
                         {
                           case 0:
-                            if (RGBLED_rt >= 254)
+                            if (RGBCOL16_rt >= 254)
                               {
-                                RGBLED_rt = 0;
-                                RGBLED_gr += incRGBLED;
+                                RGBCOL16_rt = 0;
+                                RGBCOL16_gr += incRGBLED;
                                 colRGBLED++;
                               }
                               else
-                              { RGBLED_rt += incRGBLED; }
+                              { RGBCOL16_rt += incRGBLED; }
                             break;
                           case 1:
-                            if (RGBLED_gr >= 254)
+                            if (RGBCOL16_gr >= 254)
                               {
-                                RGBLED_gr = 0;
-                                RGBLED_bl += incRGBLED;
+                                RGBCOL16_gr = 0;
+                                RGBCOL16_bl += incRGBLED;
                                 colRGBLED++;
                               }
                               else
-                              { RGBLED_gr += incRGBLED; }
+                              { RGBCOL16_gr += incRGBLED; }
                             break;
                           case 2:
-                            if (RGBLED_bl >= 254)
+                            if (RGBCOL16_bl >= 254)
                               {
-                                RGBLED_bl = 0;
-                                RGBLED_rt += incRGBLED;
+                                RGBCOL16_bl = 0;
+                                RGBCOL16_rt += incRGBLED;
                                 colRGBLED = 0;
                               }
                               else
-                              { RGBLED_bl += incRGBLED; }
+                              { RGBCOL16_bl += incRGBLED; }
                             break;
                           default:
                             break;
@@ -901,9 +1017,9 @@
                           ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
                         #endif
 
-                      ledcWrite(PWM_RGB_RED,   RGBLED_rt);
-                      ledcWrite(PWM_RGB_GREEN, RGBLED_gr);
-                      ledcWrite(PWM_RGB_BLUE,  RGBLED_bl);
+                      ledcWrite(PWM_RGB_RED,   RGBCOL16_rt);
+                      ledcWrite(PWM_RGB_GREEN, RGBCOL16_gr);
+                      ledcWrite(PWM_RGB_BLUE,  RGBCOL16_bl);
                     #endif
 
                 #endif
@@ -931,7 +1047,7 @@
 
             }
         #endif
-      // ----------------------
+      // --- Display -------------------
       #if (USE_DISP > 0)
         if (dispT.TOut())    // handle touch output
           {
@@ -974,7 +1090,11 @@
             switch (oledIdx)
               {
               case 1: // system output
-                SOUTLN(); SOUT(millis()); SOUT(" us/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
+                  usPerCycle = (millis() - usLast) / anzUsCycles;
+                  //SOUT(usLast); SOUT(" "); SOUT(micros()); SOUT(" "); SOUTLN(usPerCycle);
+                  usLast      = millis();
+                  //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
+                  anzUsCycles = 0ul;
                 break;
 
               case 2: // webserver nu
@@ -1017,7 +1137,7 @@
                   //outStr.concat(_tmp);
                   //outStr.concat(")");
                   dispText(outStr ,  0, 1, outStr.length());
-                          SOUT(outStr); SOUT("  ");
+                          //SOUT(outStr); SOUT("  ");
                   #endif
                 break;
 
@@ -1032,39 +1152,39 @@
               case 6: // BME 280 temp, humidity, pressure
                 #if ( USE_BME280_I2C > OFF )
                   outStr = getBME280Str();
-                          SOUT(outStr); SOUT(" ");
+                          //SOUT(outStr); SOUT(" ");
                   dispText(outStr , 0, 3, outStr.length());
                   #endif
                 break;
 
               case 7: // test values
                 #if (USE_DIG_INP > OFF)
-                    SOUT("SW1 "); SOUT(inpValDig[INP_SW_CTRL]); SOUT(" ");
+                    //SOUT("SW1 "); SOUT(inpValDig[INP_SW_CTRL]); SOUT(" ");
                   #endif
                 #if (USE_CTRL_POTI_ADC > OFF)
-                    SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
+                    //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
                   #endif
                 break;
 
               case 8: // WS2812 lines
                 #if (USE_WS2812_LINE_OUT > OFF)
-                  outStr = "              ";
-                  dispText(outStr ,  0, 0, outStr.length());
-                  //outStr = "LED ";
-                  outStr = "";
-                      //outStr += (String) ws2812_cnt; outStr += " ";
-                  ws2812_v = millis() - ws2812_alt; // dispT.getTout();
-                  ws2812_alt = millis();
-                  if (ws2812_cnt > 0)
-                    {
-                      ws2812_v = ws2812_v / ws2812_cnt;
-                      ws2812_cnt = 0;
-                    }
-                  outStr += (String) ws2812_v;
-                  outStr += ("ms");
-                        //SOUT((uint32_t) millis()); SOUT(" ");
-                            SOUT(outStr); SOUT(" ");
-                  dispText(outStr ,  0, 0, outStr.length());
+                    outStr = "              ";
+                    dispText(outStr ,  0, 0, outStr.length());
+                    //outStr = "LED ";
+                    outStr = "";
+                        //outStr += (String) ws2812_cnt; outStr += " ";
+                    ws2812L_v = millis() - ws2812L_alt; // dispT.getTout();
+                    ws2812L_alt = millis();
+                    if (ws2812L_cnt > 0)
+                      {
+                        ws2812L_v = ws2812L_v / ws2812L_cnt;
+                        ws2812L_cnt = 0;
+                      }
+                    outStr += (String) ws2812L_v;
+                    outStr += ("ms");
+                          //SOUT((uint32_t) millis()); SOUT(" ");
+                              //SOUT(outStr); SOUT(" ");
+                    dispText(outStr ,  0, 0, outStr.length());
                   #endif
                 break;
               case 9: // counter values
@@ -1078,7 +1198,7 @@
                           outStr += (String) cntErg[i].freq;
                                 //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
                         }
-                      SOUT(outStr); SOUT(" "); SOUT(valFanPWM[0]); SOUT(" ");
+                      //SOUT(outStr); SOUT(" "); //SOUT(valFanPWM[0]); SOUT(" ");
                       dispText(outStr ,  0, 2, outStr.length());
                     #ifdef USE_MCPWM
                         outStr = "              ";
@@ -1091,9 +1211,26 @@
                       #endif
                   #endif
                 break;
+              case 10: // pwm counter values
+                #if (USE_PWM_INP > OFF)
+                      outStr = "              ";
+                      dispText(outStr ,  0, 1, outStr.length());
+                      outStr = "pwm ";
+                      for (uint8_t i = 0; i < USE_PWM_INP ; i++ )
+                        {
+                          outStr += " ";
+                          outStr += (String) pwmInVal[i].lowVal;
+                          outStr += " ";
+                          outStr += (String) pwmInVal[i].highVal;
+                                //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
+                        }
+                      //SOUT(outStr); SOUT(" ");
+                      dispText(outStr ,  0, 1, outStr.length());
+                  #endif
+                break;
 
               default:
-                SOUT("disp end "); SOUT(" "); SOUTLN(millis());
+                //SOUT("disp end "); SOUT(" "); SOUTLN(millis());
                 oledIdx = 0;
                 dispT.startT();
                 break;
@@ -1104,47 +1241,34 @@
           }
         #endif // defined(DISP)
 
-      // --- system control --------------------------------
-        #if (USE_LED_BLINK_OUT > 0)
-          if (ledT.TOut())    // handle touch output
-            {
-              ledT.startT();
-              if (LED_ON == TRUE)
-                  {
-                    digitalWrite(PIN_BOARD_LED, OFF);
-                    LED_ON = OFF;
-                  }
-                else
-                  {
-                    digitalWrite(PIN_BOARD_LED, ON);
-                    LED_ON = ON;
-                  }
-            }
-          #endif
-
-        if (!firstrun)
+    // --- system control --------------------------------
+      #if (USE_COL16_BLINK_OUT > 0)
+        if (ledT.TOut())    // handle touch output
           {
-            anzUsCycles++;
-            if (anzUsCycles > 10000)
-              {
-                usPerCycle = (micros() - usLast) / anzUsCycles;
-                anzUsCycles = 0;
-                usLast = micros();
-              }
-            anzMsCycles++;
-
+            ledT.startT();
+            if (COL16_ON == TRUE)
+                {
+                  digitalWrite(PIN_BOARD_LED, OFF);
+                  COL16_ON = OFF;
+                }
+              else
+                {
+                  digitalWrite(PIN_BOARD_LED, ON);
+                  COL16_ON = ON;
+                }
           }
+        #endif
 
-
-        else
-          {
-            String taskMessage = "loop task running on core ";
-            taskMessage = taskMessage + xPortGetCoreID();
-            SOUTLN(taskMessage);
-            usLast = micros();
-            firstrun = false;
-          }
-      usleep(14);
+      if (firstrun == true)
+        {
+          String taskMessage = "loop task running on core ";
+          taskMessage = taskMessage + xPortGetCoreID();
+          SOUTLN(taskMessage);
+          usLast = micros();
+          firstrun = false;
+        }
+      anzUsCycles++;
+      //usleep(250);
     }
 //
 // --- subroutine and drivers ----------------
@@ -1293,135 +1417,138 @@
         }
     // --- WS2812 lines
       #if (USE_WS2812_LINE_OUT > OFF)
-          void FillLEDsFromPaletteColors( uint8_t colorIndex)
-            {
-              uint8_t brightness = 255;
-              for( int i = 0; i < LEDS_2812_1; i++)
+          #ifdef USE_FAST_LED
+              void FillLEDsFromPaletteColors( uint8_t colorIndex)
                 {
-                  leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
-                  colorIndex += 3;
-                }
-          }
-          /* There are several different palettes of colors demonstrated here.
-            //
-            // FastLED provides several 'preset' palettes: RainbowColors_p, RainbowStripeColors_p,
-            // OceanColors_p, CloudColors_p, LavaColors_p, ForestColors_p, and PartyColors_p.
-            //
-            // Additionally, you can manually define your own color palettes, or you can write
-            // code that creates color palettes on the fly.  All are shown here.
-            */
+                  uint8_t brightness = 255;
+                  for( int i = 0; i < LEDS_2812_L1; i++)
+                    {
+                      leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+                      colorIndex += 3;
+                    }
+              }
+              /* There are several different palettes of colors demonstrated here.
+                //
+                // FastLED provides several 'preset' palettes: RainbowColors_p, RainbowStripeColors_p,
+                // OceanColors_p, CloudColors_p, LavaColors_p, ForestColors_p, and PartyColors_p.
+                //
+                // Additionally, you can manually define your own color palettes, or you can write
+                // code that creates color palettes on the fly.  All are shown here.
+                */
 
-          void ChangePalettePeriodically()
-            {
-              uint8_t secondHand = (millis() / 1000) % 60;
-              static uint8_t lastSecond = 99;
-
-              if( lastSecond != secondHand)
+              void ChangePalettePeriodically()
                 {
-                  lastSecond = secondHand;
-                  if( secondHand ==  0)  { currentPalette = RainbowColors_p;         currentBlending = LINEARBLEND; }
-                  if( secondHand == 10)  { currentPalette = RainbowStripeColors_p;   currentBlending = NOBLEND;  }
-                  if( secondHand == 15)  { currentPalette = RainbowStripeColors_p;   currentBlending = LINEARBLEND; }
-                  if( secondHand == 20)  { SetupPurpleAndGreenPalette();             currentBlending = LINEARBLEND; }
-                  if( secondHand == 25)  { SetupTotallyRandomPalette();              currentBlending = LINEARBLEND; }
-                  if( secondHand == 30)  { SetupBlackAndWhiteStripedPalette();       currentBlending = NOBLEND; }
-                  if( secondHand == 35)  { SetupBlackAndWhiteStripedPalette();       currentBlending = LINEARBLEND; }
-                  if( secondHand == 40)  { currentPalette = CloudColors_p;           currentBlending = LINEARBLEND; }
-                  if( secondHand == 45)  { currentPalette = PartyColors_p;           currentBlending = LINEARBLEND; }
-                  if( secondHand == 50)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = NOBLEND;  }
-                  if( secondHand == 55)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = LINEARBLEND; }
-                }
-            }
+                  uint8_t secondHand = (millis() / 1000) % 60;
+                  static uint8_t lastSecond = 99;
 
-          // This function fills the palette with totally random colors.
-          void SetupTotallyRandomPalette()
-            {
-              for( int i = 0; i < 16; i++)
+                  if( lastSecond != secondHand)
+                    {
+                      lastSecond = secondHand;
+                      if( secondHand ==  0)  { currentPalette = RainbowColors_p;         currentBlending = LINEARBLEND; }
+                      if( secondHand == 10)  { currentPalette = RainbowStripeColors_p;   currentBlending = NOBLEND;  }
+                      if( secondHand == 15)  { currentPalette = RainbowStripeColors_p;   currentBlending = LINEARBLEND; }
+                      if( secondHand == 20)  { SetupPurpleAndGreenPalette();             currentBlending = LINEARBLEND; }
+                      if( secondHand == 25)  { SetupTotallyRandomPalette();              currentBlending = LINEARBLEND; }
+                      if( secondHand == 30)  { SetupBlackAndWhiteStripedPalette();       currentBlending = NOBLEND; }
+                      if( secondHand == 35)  { SetupBlackAndWhiteStripedPalette();       currentBlending = LINEARBLEND; }
+                      if( secondHand == 40)  { currentPalette = CloudColors_p;           currentBlending = LINEARBLEND; }
+                      if( secondHand == 45)  { currentPalette = PartyColors_p;           currentBlending = LINEARBLEND; }
+                      if( secondHand == 50)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = NOBLEND;  }
+                      if( secondHand == 55)  { currentPalette = myRedWhiteBluePalette_p; currentBlending = LINEARBLEND; }
+                    }
+                }
+
+              // This function fills the palette with totally random colors.
+              void SetupTotallyRandomPalette()
                 {
-                  currentPalette[i] = CHSV( random8(), 255, random8());
+                  for( int i = 0; i < 16; i++)
+                    {
+                      currentPalette[i] = CHSV( random8(), 255, random8());
+                    }
                 }
-            }
 
-          /* This function sets up a palette of black and white stripes,
-            // using code.  Since the palette is effectively an array of
-            // sixteen CRGB colors, the various fill_* functions can be used
-            // to set them up.
-            */
-          void SetupBlackAndWhiteStripedPalette()
-            {
-              // 'black out' all 16 palette entries...
-              fill_solid( currentPalette, 16, CRGB::Black);
-              // and set every fourth one to white.
-              currentPalette[0] = CRGB::White;
-              currentPalette[4] = CRGB::White;
-              currentPalette[8] = CRGB::White;
-              currentPalette[12] = CRGB::White;
+              /* This function sets up a palette of black and white stripes,
+                // using code.  Since the palette is effectively an array of
+                // sixteen CRGB colors, the various fill_* functions can be used
+                // to set them up.
+                */
+              void SetupBlackAndWhiteStripedPalette()
+                {
+                  // 'black out' all 16 palette entries...
+                  fill_solid( currentPalette, 16, CRGB::Black);
+                  // and set every fourth one to white.
+                  currentPalette[0] = CRGB::White;
+                  currentPalette[4] = CRGB::White;
+                  currentPalette[8] = CRGB::White;
+                  currentPalette[12] = CRGB::White;
 
-            }
+                }
 
-          // This function sets up a palette of purple and green stripes.
-          void SetupPurpleAndGreenPalette()
-            {
-              CRGB purple = CHSV( HUE_PURPLE, 255, 255);
-              CRGB green  = CHSV( HUE_GREEN, 255, 255);
-              CRGB black  = CRGB::Black;
+              // This function sets up a palette of purple and green stripes.
+              void SetupPurpleAndGreenPalette()
+                {
+                  CRGB purple = CHSV( HUE_PURPLE, 255, 255);
+                  CRGB green  = CHSV( HUE_GREEN, 255, 255);
+                  CRGB black  = CRGB::Black;
 
-              currentPalette = CRGBPalette16(
-                                             green,  green,  black,  black,
-                                             purple, purple, black,  black,
-                                             green,  green,  black,  black,
-                                             purple, purple, black,  black );
-            }
+                  currentPalette = CRGBPalette16(
+                                                 green,  green,  black,  black,
+                                                 purple, purple, black,  black,
+                                                 green,  green,  black,  black,
+                                                 purple, purple, black,  black );
+                }
 
-          /* This example shows how to set up a static color palette
-            // which is stored in PROGMEM (flash), which is almost always more
-            // plentiful than RAM.  A static PROGMEM palette like this
-            // takes up 64 bytes of flash.
-            */
-          const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM =
-            {
-              CRGB::Red,
-              CRGB::Gray, // 'white' is too bright compared to red and blue
-              CRGB::Blue,
-              CRGB::Black,
+              /* This example shows how to set up a static color palette
+                // which is stored in PROGMEM (flash), which is almost always more
+                // plentiful than RAM.  A static PROGMEM palette like this
+                // takes up 64 bytes of flash.
+                */
+              const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM =
+                {
+                  CRGB::Red,
+                  CRGB::Gray, // 'white' is too bright compared to red and blue
+                  CRGB::Blue,
+                  CRGB::Black,
 
-              CRGB::Red,
-              CRGB::Gray,
-              CRGB::Blue,
-              CRGB::Black,
+                  CRGB::Red,
+                  CRGB::Gray,
+                  CRGB::Blue,
+                  CRGB::Black,
 
-              CRGB::Red,
-              CRGB::Red,
-              CRGB::Gray,
-              CRGB::Gray,
-              CRGB::Blue,
-              CRGB::Blue,
-              CRGB::Black,
-              CRGB::Black
-            };
+                  CRGB::Red,
+                  CRGB::Red,
+                  CRGB::Gray,
+                  CRGB::Gray,
+                  CRGB::Blue,
+                  CRGB::Blue,
+                  CRGB::Black,
+                  CRGB::Black
+                };
 
-          /* Additionl notes on FastLED compact palettes:
-            //
-            // Normally, in computer graphics, the palette (or "color lookup table")
-            // has 256 entries, each containing a specific 24-bit RGB color.  You can then
-            // index into the color palette using a simple 8-bit (one byte) value.
-            // A 256-entry color palette takes up 768 bytes of RAM, which on Arduino
-            // is quite possibly "too many" bytes.
-            //
-            // FastLED does offer traditional 256-element palettes, for setups that
-            // can afford the 768-byte cost in RAM.
-            //
-            // However, FastLED also offers a compact alternative.  FastLED offers
-            // palettes that store 16 distinct entries, but can be accessed AS IF
-            // they actually have 256 entries; this is accomplished by interpolating
-            // between the 16 explicit entries to create fifteen intermediate palette
-            // entries between each pair.
-            //
-            // So for example, if you set the first two explicit entries of a compact
-            // palette to Green (0,255,0) and Blue (0,0,255), and then retrieved
-            // the first sixteen entries from the virtual palette (of 256), you'd get
-            // Green, followed by a smooth gradient from green-to-blue, and then Blue.
-            */
+              /* Additionl notes on FastLED compact palettes:
+                //
+                // Normally, in computer graphics, the palette (or "color lookup table")
+                // has 256 entries, each containing a specific 24-bit RGB color.  You can then
+                // index into the color palette using a simple 8-bit (one byte) value.
+                // A 256-entry color palette takes up 768 bytes of RAM, which on Arduino
+                // is quite possibly "too many" bytes.
+                //
+                // FastLED does offer traditional 256-element palettes, for setups that
+                // can afford the 768-byte cost in RAM.
+                //
+                // However, FastLED also offers a compact alternative.  FastLED offers
+                // palettes that store 16 distinct entries, but can be accessed AS IF
+                // they actually have 256 entries; this is accomplished by interpolating
+                // between the 16 explicit entries to create fifteen intermediate palette
+                // entries between each pair.
+                //
+                // So for example, if you set the first two explicit entries of a compact
+                // palette to Green (0,255,0) and Blue (0,0,255), and then retrieved
+                // the first sixteen entries from the virtual palette (of 256), you'd get
+                // Green, followed by a smooth gradient from green-to-blue, and then Blue.
+                */
+          #else
+            #endif
         #endif
 
     // --- passive buzzer
