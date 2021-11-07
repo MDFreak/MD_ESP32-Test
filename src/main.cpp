@@ -93,11 +93,11 @@
       #endif
 
     #if (USE_WS2812_LINE_OUT > OFF)
-        msTimer        ws2812LT    = msTimer(UPD_2812_L1_MS);
-        static uint8_t idx2812L    = 0;
-        unsigned long  ws2812L_alt = 0;
-        uint32_t       ws2812L_cnt = 0;
-        uint32_t       ws2812L_v   = 0;
+        msTimer         ws2812LT    = msTimer(UPD_2812_L1_MS);
+        static uint16_t idx2812L    = 0;
+        unsigned long   ws2812L_alt = 0;
+        uint32_t        ws2812L_cnt = 0;
+        uint32_t        ws2812L_v   = 0;
         #ifdef USE_FAST_LED
             CRGBPalette16 currentPalette;
             TBlendType    currentBlending;
@@ -941,22 +941,25 @@
               //    ws2812T.startT();
                   //SOUTLN(); SOUT(micros());
                   matrix_1.scroll_matrix();
-                  //SOUT(" "); SOUTLN(micros());
+                  SOUT(" "); SOUTLN(micros());
               //  }
             #endif
 
           #if (USE_WS2812_LINE_OUT > OFF)
               #ifdef USE_FAST_LED
-                  if (ws2812LT.TOut())
-                    {
-                      ws2812LT.startT();
+                  //if (ws2812LT.TOut())
+                  //  {
+                  //    ws2812LT.startT();
+                      //SOUT(" FASTLED ... ");
                       ChangePalettePeriodically();
                       idx2812L = idx2812L + 1; /* motion speed */
                       ws2812L_cnt++;
-                            //SOUT(millis()); SOUT(" "); SOUTLN(ws2812_cnt);
+                            //SOUT(micros()); SOUT(" "); SOUT(ws2812L_cnt);
                       FillLEDsFromPaletteColors( idx2812L);
+                            //SOUT(" show ... ");
                       FastLED.show();
-                    }
+                            //SOUTLN(" ready ");
+                  //  }
               #else
                   if (ws2812LT.TOut())
                     {
@@ -1272,7 +1275,7 @@
     }
 //
 // --- subroutine and drivers ----------------
-  // --- user output
+  // --- user output-.
     // --- display
       void clearDisp()
         {

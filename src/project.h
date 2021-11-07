@@ -32,14 +32,14 @@
       #define USE_BUZZER_PWM        OFF
       #define USE_FAN_PWM           2
       #define USE_OUT_FREQ_PWM      1
-      #define USE_WS2812_MATRIX_OUT 1     // [0, 1..4]
+      #define USE_WS2812_MATRIX_OUT OFF   // [0, 1..4]
       #define USE_WS2812_LINE_OUT   1     // [0, 1..4]
     // --- user input components
       #define USE_TOUCHSCREEN_SPI   OFF
       #define USE_TOUCHSCREEN_IO    OFF
       #define USE_KEYPADSHIELD_ADC  OFF
       #define USE_FAN_CNT_INP       2
-      #define USE_FAN_PWM_INP       OFF
+      #define USE_FAN_PWM_INP       2
     // --- sensors
       #define USE_DS18B20_1W_IO     OFF   // [0, 1, ....] limited by 1W connections
       #define USE_BME280_I2C        1     // [0, 1, ....] limited by I2C channels/addr
