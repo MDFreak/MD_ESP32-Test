@@ -33,8 +33,9 @@
         TwoWire i2c2 = TwoWire(1);
       #endif
 
-    #if ( USE_LED_BLINK_OUT > 0 )
+    #if ( USE_COL16_BLINK_OUT > 0 )
         msTimer ledT = msTimer(BLINKTIME_MS);
+        bool SYS_LED_ON = FALSE;
       #endif
 
     #if ( USE_DISP > 0 )
@@ -473,7 +474,6 @@
         // WS2812 LEDs
           #if (USE_WS2812_MATRIX_OUT > OFF)
               SOUT("start WS2812 matrix ...");
-              dispStatus("start WS2812 Matrix");
               matrix_1.begin();
               usleep(5000);
               matrix_1.display_boxes();
@@ -568,18 +568,11 @@
         // start digital inputs
           #if (USE_DIG_INP > OFF)
               SOUT("config digSW Pins " );
-              #if (USE_WS2812_PWR_IN_SW > OFF)
-                  pinMode(PIN_WS2812_PWR_IN_SW, INPUT_PULLUP);
-                  SOUT(PIN_WS2812_PWR_IN_SW); SOUT(" ");
-                #endif
-
-                //PIN_INP_SW_1,   NO_PIN,
-
-              //for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
-                //{
-                  //pinMode(PIN_DIG_INP[i], INPUT_PULLUP);
-                  //SOUT(PIN_DIG_INP[i]); SOUT(" ");
-                //}
+              for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
+                {
+                  pinMode(PIN_DIG_INP[i], INPUT_PULLUP);
+                  SOUT(PIN_DIG_INP[i]); SOUT(" ");
+                }
               SOUTLN();
             #endif
         // start poti inputs
@@ -1434,11 +1427,9 @@
 
             if (!statOn) // disp actual time
               {
-                #if (USE_NTP_SERVER > OFF)
-                    sprintf(statOut,"%02d.%02d. %02d:%02d:%02d ", day(), month(), hour(), minute(), second());
-                    msg = statOut;
-                    doIt = true;
-                  #endif
+                sprintf(statOut,"%02d.%02d. %02d:%02d:%02d ", day(), month(), hour(), minute(), second());
+                msg = statOut;
+                doIt = true;
               }
             if (doIt)
               {
@@ -1572,7 +1563,7 @@
                 // code that creates color palettes on the fly.  All are shown here.
                 */
 
-              void ChangePalettePeriodically(uint8_t lineNo)
+              void ChangePalettePeriodically()
                 {
                   uint8_t secondHand = (millis() / 1000) % 60;
                   static uint8_t lastSecond = 99;

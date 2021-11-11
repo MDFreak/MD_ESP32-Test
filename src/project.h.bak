@@ -34,7 +34,6 @@
       #define USE_OUT_FREQ_PWM      1
       #define USE_WS2812_MATRIX_OUT OFF   // [0, 1..4]
       #define USE_WS2812_LINE_OUT   1     // [0, 1..4]
-      #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
     // --- user input components
       #define USE_TOUCHSCREEN_SPI   OFF
       #define USE_TOUCHSCREEN_IO    OFF
@@ -67,7 +66,7 @@
       #define USE_PWM_INP         USE_FAN_PWM_INP
       #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC
       #define USE_ADC2            OFF // not to use
-      #define USE_DIG_INP         USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
+      #define USE_DIG_INP         USE_CTRL_SW_INP     //
       #define USE_DIG_OUT         USE_WS2812_LINE_OUT + USE_LED_BLINK_OUT //
       #define USE_DIG_IO          USE_DS18B20_1W_IO     //
       #if (USE_SPI > OFF)
