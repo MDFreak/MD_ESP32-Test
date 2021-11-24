@@ -1,9 +1,15 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
 
-var tSlider = "A";
-var tSwitch = "B";
-var tAnalog = "C";
+var tAnalog = "A";
+var tSlider = "B";
+var tColor  = "C";
+var tSwitch = "D";
+var tText   = "E";
+var tOffset = "F";
+var tGraph  = "G";
+var tPic    = "H";
+var tIndex  = "I";
 
 window.addEventListener('load', onload);
 
@@ -35,7 +41,9 @@ function onClose(event)
 
 function onMessage(event)
   {
+    console.log('Message received');
     console.log(event.data);
+    var data = event.data;
   }
 
 function getCurrentValue()
@@ -64,10 +72,35 @@ function updateVal(element)
         s = s.substr(s.length - 1, 1);
         s = tSlider + s + sval;
       }
+    if (s.substr(0,4) == "SLSW")
+      {
+        sval = document.getElementById(element.id).checked;
+        s = s.substr(s.length - 1, 1);
+        s = tSwitch + s;
+        if (sval) s = s + '1';
+        else      s = s + '0';
+      }
+    if (s.substr(0,4) == "BUTT")
+      {
+        sval = document.getElementById('BUTT_1').value;
+        s = s.substr(s.length - 1, 1);
+        s = tSwitch + s + sval.substring(1);
+      }
     console.log(element.id + "->" + s);
     websocket.send(s);
   }
 
+function handleColor()
+  {
+    var val = document.getElementById('BUTT_1').value;
+    //document.getElementById("but"+element.id).innerHTML = val.substring(1);
+    //console.log(val.substring(1));
+    webSocket.send(val.substring(1));
+  }
+
+
+
+/*
 document.addEventListener('DOMContentLoaded',function()
   {
     function b(B)
@@ -220,4 +253,4 @@ document.addEventListener('DOMContentLoaded',function()
                           :g(n))
     }
   });
-
+*/

@@ -6,6 +6,17 @@
   #include <project.h>
 
   // ******************************************
+    // --- test features --------------------------------
+      #define TEST_SOCKET_SERVER    OFF
+      #define TEST_RGBLED_PWM       ON
+      #define USE_WEBCTRL_RGB       OFF
+      #define USE_WEBCTRL_FAN       OFF
+      #define USE_POTICTRL_RGB      OFF
+      #define USE_POTICTRL_FAN      OFF
+      #define USE_SWCTRL_RGB        ON
+      #define USE_SWCTRL_FAN        ON
+      #define USE_SWCTRL_1812       ON
+  // ******************************************
   // --- board management
     #if !(BOARD ^ MC_ESP32_Node)
       // --- system
@@ -36,9 +47,9 @@
               #define PIN_CNT_FAN_1 36
               #define PIN_CNT_FAN_2 34
             #endif
-        #if (USE_PWM_INP > OFF)
-              #define PIN_PWM_INP_1 PIN_CNT_FAN_2
-          #endif
+          #if (USE_PWM_INP > OFF)
+                #define PIN_PWM_INP_1 PIN_CNT_FAN_2
+            #endif
         // --- user output
           #if (USE_TRAFFIC_LED_OUT > OFF)
               #define PIN_TL_RED    26   // RGB red
@@ -62,17 +73,25 @@
             #endif
 
           #if (USE_WS2812_MATRIX_OUT > OFF)
-              #define PIN_WS2812_MD1  5
-                //#define PIN_WS2812_MD2  x
-                //#define PIN_WS2812_MD3  x
-                //#define PIN_WS2812_MD4  x
+              #define PIN_WS2812_M1      16
+              #if (USE_WS2812_PWR_IN_SW > OFF)
+                  #define PIN_WS2812_PWR_IN_SW 36
+                #endif
+              #if (USE_WS2812_MATRIX_OUT > 1)
+                  #define PIN_WS2812_M2  17
+                #endif
+                //#define PIN_WS2812_M3  x
+                //#define PIN_WS2812_M4  x
             #endif
 
           #if (USE_WS2812_LINE_OUT > OFF)
-              #define PIN_WS2812_LD1     12
-                //#define PIN_WS2812_D2  x
-                //#define PIN_WS2812_D3  x
-                //#define PIN_WS2812_D4  x
+              #if (USE_WS2812_PWR_IN_SW > OFF)
+                  #define PIN_WS2812_PWR_IN_SW 36
+                #endif
+              #define PIN_WS2812_L1      17
+                //#define PIN_WS2812_L2      17
+                //#define PIN_WS2812_L3  x
+                //#define PIN_WS2812_L4  x
             #endif
 
           #if (USE_TFT > OFF)
@@ -196,9 +215,10 @@
               #define PIN_CNT_FAN_1 36
               #define PIN_CNT_FAN_2 34
             #endif
-        #if (USE_PWM_INP > OFF)
-              #define PIN_PWM_INP_1 PIN_CNT_FAN_2
-          #endif
+
+          #if (USE_PWM_INP > OFF)
+                #define PIN_PWM_INP_1 PIN_CNT_FAN_2
+            #endif
         // --- user output
           #if (USE_TRAFFIC_LED_OUT > OFF)
               #define PIN_TL_RED    26   // RGB red
@@ -437,10 +457,10 @@
                 #define I2C_OLED1       I2C1
                 #define I2C_SCL_OLED1   PIN_I2C1_SCL
                 #define I2C_SDA_OLED1   PIN_I2C1_SDA
-              #else
-                  #define I2C_OLED1     I2C
-                  #define I2C_SCL_OLED1 PIN_I2C2_SCL
-                  #define I2C_SDA_OLED1 PIN_I2C2_SDA
+            #else
+                #define I2C_OLED1     I2C
+                #define I2C_SCL_OLED1 PIN_I2C2_SCL
+                #define I2C_SDA_OLED1 PIN_I2C2_SDA
               #endif
             #if (( USE_I2C > 1 ) && ( USE_OLED_I2C > 1 ))
                 #define I2C_ADDR_OLED2      I2C_OLED
@@ -460,54 +480,54 @@
         #if (USE_FRAM_I2C > OFF)
             #define I2C_ADDR_FRAM1          I2C_FRAM_50
             #define I2C_FRAM1_USE_I2C1
-              #if defined( I2C_FRAM1_USE_I2C1 )
-                #define I2C_FRAM1           I2C1
-                #define I2C_SCL_FRAM1       PIN_I2C1_SCL
-                #define I2C_SDA_FRAM1       PIN_I2C1_SDA
-              #else
-                  #define I2C_FRAM1         I2C2
-                  #define I2C_SCL_FRAM1     PIN_I2C2_SCL
-                  #define I2C_SDA_FRAM1     PIN_I2C2_SDA
-                #endif
+            #if defined( I2C_FRAM1_USE_I2C1 )
+              #define I2C_FRAM1           I2C1
+              #define I2C_SCL_FRAM1       PIN_I2C1_SCL
+              #define I2C_SDA_FRAM1       PIN_I2C1_SDA
+            #else
+                #define I2C_FRAM1         I2C2
+                #define I2C_SCL_FRAM1     PIN_I2C2_SCL
+                #define I2C_SDA_FRAM1     PIN_I2C2_SDA
+              #endif
             #if (( USE_I2C > 1 ) && ( USE_FRAM_I2C > 1 ))
-              #define I2C_ADDR_FRAM2        I2C_FRAM_50
+                #define I2C_ADDR_FRAM2        I2C_FRAM_50
                 #define I2C_FRAM2_USE_I2C2
-                  #if defined( I2C_FRAM2_USE_I2C1 )
-                    #define I2C_FRAM2       I2C1
-                    #define I2C_SCL_FRAM2   I2C1_SCL
-                    #define I2C_SDA_FRAM2   I2C1_SDA
-                  #else
-                      #define I2C_FRAM2     I2C2
-                      #define I2C_SCL_FRAM2 I2C2_SCL
-                      #define I2C_SDA_FRAM2 I2C2_SDA
-                    #endif
+                #if defined( I2C_FRAM2_USE_I2C1 )
+                  #define I2C_FRAM2       I2C1
+                  #define I2C_SCL_FRAM2   I2C1_SCL
+                  #define I2C_SDA_FRAM2   I2C1_SDA
+                #else
+                    #define I2C_FRAM2     I2C2
+                    #define I2C_SCL_FRAM2 I2C2_SCL
+                    #define I2C_SDA_FRAM2 I2C2_SDA
+                  #endif
               #endif
           #endif
 
         #if ( USE_BME280_I2C > OFF )
             #define I2C_ADDR_BME2801        I2C_BME280
             #define I2C_BME2801_USE_I2C1
-              #if defined( I2C_BME2801_USE_I2C1 )
-                #define I2C_BME2801         I2C1
-                #define I2C_SCL_BME2801     PIN_I2C1_SCL
-                #define I2C_SDA_BME2801     PIN_I2C1_SDA
-              #else
-                  #define I2C_BME2801       I2C2
-                  #define I2C_SCL_BME2801   PIN_I2C2_SCL
-                  #define I2C_SDA_BME2801   PIN_I2C2_SDA
-                #endif
+            #if defined( I2C_BME2801_USE_I2C1 )
+              #define I2C_BME2801         I2C1
+              #define I2C_SCL_BME2801     PIN_I2C1_SCL
+              #define I2C_SDA_BME2801     PIN_I2C1_SDA
+            #else
+                #define I2C_BME2801       I2C2
+                #define I2C_SCL_BME2801   PIN_I2C2_SCL
+                #define I2C_SDA_BME2801   PIN_I2C2_SDA
+              #endif
             #if (( USE_I2C > 1 ) && ( USE_BME280_I2C > 1 ))
                 #define I2C_ADDR_BME2802      I2C_BME280
                 #define I2C_BME2802_USE_I2C2
-                  #if defined( I2C_BME2802_USE_I2C1 )
-                    #define I2C_BME2802       I2C1
-                    #define I2C_SCL_BME2802   I2C1_SCL
-                    #define I2C_SDA_BME2802   I2C1_SDA
-                  #else
-                      #define I2C_BME2802     I2C2
-                      #define I2C_SCL_BME2802 I2C2_SCL
-                      #define I2C_SDA_BME2802 I2C2_SDA
-                    #endif
+                #if defined( I2C_BME2802_USE_I2C1 )
+                  #define I2C_BME2802       I2C1
+                  #define I2C_SCL_BME2802   I2C1_SCL
+                  #define I2C_SDA_BME2802   I2C1_SDA
+                #else
+                    #define I2C_BME2802     I2C2
+                    #define I2C_SCL_BME2802 I2C2_SCL
+                    #define I2C_SDA_BME2802 I2C2_SDA
+                  #endif
               #endif
           #endif
 
@@ -526,7 +546,7 @@
             #define COLBMP_2812    8
             #define ROWBMP_2812    8
             #define UPD_2812_M1_MS 70
-            #define BRIGHT_2812_M1 200
+            #define BRIGHT_2812_M1 5
 
             #define ROW1_2812_M1   NEO_MATRIX_TOP
             #define COL1_2812_M1   NEO_MATRIX_LEFT
@@ -551,49 +571,44 @@
             #define COLPIX_2812_M1 COLTIL_2812_M1 * COLPIX_2812_T1
             #define OFFBEG_2812_M1 1 //+ COLPIX_2812_T1
             #define OFFEND_2812_M1 0 //+ COLPIX_2812_T1
-              #if (USE_WS2812_MATRIX_OUT > 1)
-                  #ifndef USE_OUTPUT_CYCLE
-                      #define USE_OUTPUT_CYCLE
-                    #endif
-                  #define UPD_2812_M2_MS 8
-                  #define LEDS_2812_M2   512
-                  #define BRIGHT_2812_M2 5
-                  #define TYPE_2812_M2   WS2812B
-                  #define COLORD_2812_M2 NEO_GRB
-                  #define COLPIX_2812_M2 128
-                  #define ROWPIX_2812_M2 8
-                  #define COLPIX_2812_T2 8
-                  #define ROWPIX_2812_T2 8
-                  #define COLTIL_2812_M2 4
-                  #define ROWTIL_2812_M2 1
-                #endif
+            #if (USE_WS2812_MATRIX_OUT > 1)
+                #ifndef USE_OUTPUT_CYCLE
+                    #define USE_OUTPUT_CYCLE
+                  #endif
+                #define UPD_2812_M2_MS 8
+                #define LEDS_2812_M2   512
+                #define BRIGHT_2812_M2 5
+                #define TYPE_2812_M2   WS2812B
+                #define COLORD_2812_M2 NEO_GRB
+                #define COLPIX_2812_M2 128
+                #define ROWPIX_2812_M2 8
+                #define COLPIX_2812_T2 8
+                #define ROWPIX_2812_T2 8
+                #define COLTIL_2812_M2 4
+                #define ROWTIL_2812_M2 1
+              #endif
           #endif
 
         #if (USE_WS2812_LINE_OUT > OFF)
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
-
-            #define USE_FAST_LED
-            #ifdef USE_FAST_LED
-                #define UPD_2812_L1_MS 10
-                #define LEDS_2812_L1   300
-                #define BRIGHT_2812_L1 255
-                #define TYPE_2812_L1   WS2812B
-                #define COLORD_2812_L1 GRB
-            #else
-                #define UPD_2812_L1_MS 1
-                #define LEDS_2812_L1   300
-                #define BRIGHT_2812_L1 5
-                #define TYPE_2812_L1   WS2812B
-                #define COLORD_2812_L1 NEO_GRB
-                #define COLPIX_2812_L1 300
-                #define ROWPIX_2812_L1 1
-                //#define COLPIX_2812_T1 8
-                //#define ROWPIX_2812_T1 8
-                #define COLTIL_2812_L1 4
-                #define ROWTIL_2812_L1 1
-              #endif
+            #define UPD_2812_L1_MS 10
+            #define LEDS_2812_L1   30 // 300
+            #define BRIGHT_2812_L1 10
+            #define TYPE_2812_L1   WS2812B
+            #define COLORD_2812_L1 NEO_GRB
+            #define COLPIX_2812_L1 300
+            #define ROWPIX_2812_L1 1
+            #define COLTIL_2812_L1 4
+            #define ROWTIL_2812_L1 1
+              //#define COLPIX_2812_T1 8
+              //#define ROWPIX_2812_T1 8
+                  //#define UPD_2812_L1_MS 1
+                  //#define LEDS_2812_L1   300
+                  //#define BRIGHT_2812_L1 5
+                  //#define TYPE_2812_L1   WS2812B
+                  //#define COLORD_2812_L1 NEO_GRB
             #if (USE_WS2812_LINE_OUT > 1)
                 #define UPD_2812_L2_MS 10
                 #define LEDS_2812_L2   30
@@ -618,13 +633,16 @@
     // --- network
       // --- WIFI
         #if (USE_WIFI > OFF)
-            #define WIFI_ANZ_LOGIN  3
+            #define WIFI_ANZ_LOGIN  4
+            #define WIFI_IS_DUTY    ON
             #define WIFI_SSID0      "MAMD-HomeG" // WLAN Moosgrabenstrasse 26
             #define WIFI_SSID0_PW   "ElaNanniRalf3"
             #define WIFI_SSID1      "HS-HomeG" // WLAN Am Jungberg 9
             #define WIFI_SSID1_PW   "ElaNanniRalf3"
-            #define WIFI_SSID2      "FairHandeln" //Weltladen
+            #define WIFI_SSID2      "WL-Fairnetz" //Weltladen
             #define WIFI_SSID2_PW   "WL&Fair2Live#"
+            #define WIFI_SSID3      "machquadrat" //Weltladen
+            #define WIFI_SSID3_PW   "IamSecure"
             #define WIFI_CONN_DELAY 500000ul // Scan-Abstand [us]
             #define WIFI_CONN_REP   5        // Anzahle der Connect-Schleifen
             #define WIFI_CONN_CYCLE 4000ul   // Intervallzeit fuer Recoonect [us]
@@ -634,11 +652,11 @@
             #if !(BOARD ^ MC_ESP32_Node)
                 #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20   lowest first
             #elif !(BOARD ^ MC_ESP32_D1_MINI)
-            #if (USED_WS2812_LINE_OUT > OFF)
-                #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20
-              #else
-                #define WIFI_FIXIP0     0x1500000Aul // 10.0.0.21
-              #endif
+                #if (USED_WS2812_LINE_OUT > OFF)
+                    #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20
+                  #else
+                    #define WIFI_FIXIP0     0x1500000Aul // 10.0.0.21
+                  #endif
             #elif !(BOARD ^ MC_ESP32_D1_R32)
                 #define WIFI_FIXIP0     0x1A00000Aul // 10.0.0.26   lowest first
               #endif
@@ -651,6 +669,8 @@
             #define WIFI_GATEWAY1   0x8B00000Aul // 10.0.0.139
             #define WIFI_FIXIP2     0x1400000Aul // 10.0.0.20
             #define WIFI_GATEWAY2   0x8a00000Aul // 10.0.0.138
+            #define WIFI_FIXIP3     0x1600000Aul // 10.0.0.22
+            #define WIFI_GATEWAY3   0x0100000Aul // 10.0.0.1
             #define WIFI_SUBNET     0x00FFFFFFul // 255.255.255.0
           #endif
 
@@ -743,6 +763,7 @@
 
               #endif
             #if ( USE_TOUCHSCREEN > 0 )
+                //
               #endif // USE_TOUCHSCREEN
 
             #if ( USE_TFT > 0 )
@@ -861,7 +882,7 @@
           #endif
       // --- dutycycle (pwm) input
         #if (USE_PWM_INP > OFF)
-
+            //
           #endif
         #if (USE_ADC1 > OFF)
             typedef struct
@@ -941,14 +962,5 @@
           #define OUTPUT_CYCLE_MS  500u
         #endif
 
-    // --- test features --------------------------------
-      #define TEST_RGBLED_PWM       ON
-      #define USE_WEBCTRL_RGB       OFF
-      #define USE_WEBCTRL_FAN       OFF
-      #define USE_POTICTRL_RGB      OFF
-      #define USE_POTICTRL_FAN      OFF
-      #define USE_SWCTRL_RGB        ON
-      #define USE_SWCTRL_FAN        ON
-      #define USE_SWCTRL_1812       ON
     // ******************************************
 #endif // _PRJ_CONFIG_H_

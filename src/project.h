@@ -32,7 +32,7 @@
       #define USE_BUZZER_PWM        OFF
       #define USE_FAN_PWM           2
       #define USE_OUT_FREQ_PWM      1
-      #define USE_WS2812_MATRIX_OUT OFF   // [0, 1..4]
+      #define USE_WS2812_MATRIX_OUT 1   // [0, 1..4]
       #define USE_WS2812_LINE_OUT   1     // [0, 1..4]
       #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
     // --- user input components
@@ -52,6 +52,7 @@
       #define USE_LOCAL_IP          ON
       #define USE_WEBSERVER         ON
     // --- memory components
+      #define USE_FLASH_MEM         ON
       #define USE_FRAM_I2C          1   // [0, 1, ...] limited by I2C channel/addr
     // --- test components
       #define USE_CTRL_POTI_ADC     OFF   // [0, 1, ....] limited by analog inputs
@@ -106,12 +107,12 @@
             #endif
       #define USE_AOUT            USE_BUZZER_PWM
         #if (USE_AOUT > OFF)
-          // --- speakers ...
+            // --- speakers ...
               #define USE_BUZZER_PWM     1     // [0, 1, ...] limited by PWM outputs
                 #if (USE_BUZZER_PWM > OFF)
                     #define BUZZER1  AOUT_PAS_BUZZ_3V5V
                   #endif
-            #endif
+          #endif
       #define USE_KEYPADSHIELD    USE_KEYPADSHIELD_ADC
         #if (USE_KEYPADSHIELD > OFF)
             #define USE_TFT1602_GPIO_RO_V5  // used by KEYPADSHIELD

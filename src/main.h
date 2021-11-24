@@ -1,27 +1,28 @@
 #ifndef _MAIN_H_
   #define _MAIN_H_
 
-  #include <Arduino.h>
-  #include <unity.h>
-  #include <Wire.h>
-  #include <string.h>
-  #include <stdio.h>                                                        // Biblioteca STDIO
-  #include <md_time.hpp>
-  #include <md_defines.h>
-  #include <md_util.h>
-  #include <ip_list.hpp>
-  #include <md_filter.hpp>
-  #include <project.h>
-  #include <prj_config.h>
-      //#include <driver\gpio.h>
-      //#include <driver\adc.h>
-      //#include "freertos/task.h"
-      //#include "freertos/queue.h"
-      //#include "driver/ledc.h"
-      //#include "driver/mcpwm.h"
-      //#include "driver/pcnt.h"
-      //#include "esp_attr.h"
-      //#include "esp_log.h"
+  // --- includes
+    #include <Arduino.h>
+    #include <unity.h>
+    #include <Wire.h>
+    #include <string.h>
+    #include <stdio.h>                                                        // Biblioteca STDIO
+    #include <md_time.hpp>
+    #include <md_defines.h>
+    #include <md_util.h>
+    #include <ip_list.hpp>
+    #include <md_filter.hpp>
+    #include <project.h>
+    #include <prj_config.h>
+        //#include <driver\gpio.h>
+        //#include <driver\adc.h>
+        //#include "freertos/task.h"
+        //#include "freertos/queue.h"
+        //#include "driver/ledc.h"
+        //#include "driver/mcpwm.h"
+        //#include "driver/pcnt.h"
+        //#include "esp_attr.h"
+        //#include "esp_log.h"
 
   // --- system components
     #if (USE_PWM_OUT > OFF)
@@ -122,17 +123,12 @@
       #endif
 
     #if (USE_WS2812_LINE_OUT > OFF)
-        #ifdef USE_FAST_LED
-            #include <FastLED.h>
-        #else
-            #include <md_leds.h>
-          #endif
+        #include <Adafruit_NeoPixel.h>
       #endif
 
     #if (USE_TFT > OFF)
         #include "md_lcd.h"
       #endif
-
 
           #if (USE_CNT_INP > OFF)
               static void initFanPCNT();
@@ -145,12 +141,18 @@
     #if (USE_FRAM_I2C > OFF)
         #include <md_FRAM.h>
       #endif
+
+    #if (USE_FLASH_MEM > OFF)
+
+      #endif
   // --- network
     #if (USE_WIFI > OFF)
-      #include <md_webserver.h>
-    #endif
+        #include <AsyncTCP.h>
+        #include <ESPAsyncWebServer.h>
+        #include <md_webserver.h>
+      #endif
   // --- sensors
-    #if (USE_DS18B20_1W_IO > OFF)
+    #if ( USE_DS18B20_1W_IO > OFF )
         #include <OneWire.h>
         #include <DallasTemperature.h>
       #endif
@@ -159,7 +161,7 @@
         #include <Adafruit_Sensor.h>
         #include <Adafruit_BME280.h>
       #endif
-    #if ( USE_TYPE_K_SPI > OFF)
+    #if ( USE_TYPE_K_SPI > OFF )
         #include <SPI.h>
         #include <md_31855_ktype.h>
       #endif
@@ -240,7 +242,10 @@
 
       // --- webserver
         #if (USE_WEBSERVER > OFF)
-            void configWebsite();
+            //void handlingIncomingData(AsyncWebSocketClient *client, void *arg, uint8_t *data, size_t len);
+            //void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type,
+            //             void * arg, uint8_t *data, size_t len);
+            //void configWebsite();
             void startWebServer();
           #endif
 

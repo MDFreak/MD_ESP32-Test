@@ -29,12 +29,17 @@
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
 
+	    //static uint32_t anzMsCycles = 0;
+	    //static uint64_t msLast      = 0;
+  	//static uint32_t msPerCycle  = 0;
+
     #if ( USE_I2C > 1 )
         TwoWire i2c2 = TwoWire(1);
       #endif
 
     #if ( USE_LED_BLINK_OUT > 0 )
         msTimer ledT = msTimer(BLINKTIME_MS);
+        uint8_t SYS_LED_ON = OFF;
       #endif
 
     #if ( USE_DISP > 0 )
@@ -50,7 +55,7 @@
         char        statOut[DISP1_MAXCOLS + 1] = "";
         bool        statOn = false;
         bool        statDate = false;
-        //char        timeOut[STAT_LINELEN + 1] = "";
+          //char        timeOut[STAT_LINELEN + 1] = "";
       #endif
 
   // ------ user input ---------------
@@ -98,72 +103,33 @@
             msTimer ws2812MT   = msTimer(UPD_2812_M1_MS);
           #endif
         const char text2812[] = "Willkommen im Weltladen";
-        static uint8_t      ws2812_bright = (uint8_t) BRIGHT_2812_M1;
+        static uint8_t      ws2812_Mbright = (uint8_t) BRIGHT_2812_M1;
         static scroll2812_t outM2812 =
           {
-            { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, ws2812_bright },
-            //{ (char*) text2812, COL16_RED_HIGH, ws2812_bright },
-            { (char*) text2812, (31 << 11) + (8 << 5) + 5, ws2812_bright },
-            { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, ws2812_bright }
+            { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, ws2812_Mbright },
+            { (char*) text2812, (31 << 11) + (8 << 5) + 5, ws2812_Mbright },
+            { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, ws2812_Mbright }
           };
-        static int16_t posM2812 = (int16_t) (COLPIX_2812_M1 + OFFBEG_2812_M1);
-        unsigned long ws2812_alt = 0;
-        uint32_t      ws2812_cnt = 0;
-        uint32_t      ws2812_v   = 0;
-        bool          ws2812_pwr = false;
+        static int16_t      posM2812 = (int16_t) (COLPIX_2812_M1 + OFFBEG_2812_M1);
+        unsigned long ws2812_Malt = 0;
+        uint32_t      ws2812_Mcnt = 0;
+        uint32_t      ws2812_Mv   = 0;
+        bool          ws2812_Mpwr = false;
       #endif
 
     #if (USE_WS2812_LINE_OUT > OFF)
         msTimer         ws2812LT    = msTimer(UPD_2812_L1_MS);
-        #ifdef USE_FAST_LED
-            //extern CRGBPalette16 myRedWhiteBluePalette;
-            //extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
-            static uint8_t ws2812_bright = (uint8_t) BRIGHT_2812_L1;
-            unsigned long ws2812_alt = 0;
-            uint32_t      ws2812_cnt = 0;
-            uint32_t      ws2812_v   = 0;
-            bool          ws2812_pwr = false;
-            uint16_t      idx2812L1  = 0;
-            CRGBPalette16 curPalette1;
-            TBlendType    curBlending1;
-            CRGB leds1[LEDS_2812_L1];
-            #if (USE_WS2812_LINE_OUT > 1)
-                unsigned long ws2812L2_alt = 0;
-                uint32_t      ws2812L2_cnt = 0;
-                uint32_t      ws2812L2_v   = 0;
-                uint16_t      idx2812L2    = 0;
-                CRGBPalette16 curPalette2;
-                TBlendType    curBlending2;
-                CRGB leds2[LEDS_2812_L2];
-                #if (USE_WS2812_LINE_OUT > 2)
-                    uint16_t idx2812L3 = 0;
-                    CRGB leds3[LEDS_2812_L3];
-                    #if (USE_WS2812_LINE_OUT > 3)
-                        uint16_t idx2812L4 = 0;
-                        CRGB leds4[LEDS_2812_L4];
-                      #endif
-                  #endif
-              #endif
-        #else
-            md_ws2812_matrix line_1 = md_ws2812_matrix
-              ( COLPIX_2812_L1, ROWPIX_2812_L1,
-                COLTIL_2812_L1, ROWTIL_2812_L1, PIN_WS2812_LD1,
-                NEO_TILE_TOP       + NEO_TILE_LEFT +
-                NEO_TILE_ROWS      + NEO_TILE_PROGRESSIVE +
-                NEO_MATRIX_TOP     + NEO_MATRIX_LEFT +
-                NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
-                (neoPixelType) COLORD_2812_L1 + NEO_KHZ800 );
-            /*
-              const char text2812[] = "Willkommen im Weltladen";
-              const scroll2812_t outM2812 =
-                {
-                  { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, (uint8_t) BRIGHT_2812_M1 },
-                  { (char*) text2812, COL16_RED_HIGH,    (uint8_t) BRIGHT_2812_M1 },
-                  { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, (uint8_t) BRIGHT_2812_M1 }
-                };
-            */
-            static int16_t posL2812 = -10000;
-          #endif
+        Adafruit_NeoPixel strip = Adafruit_NeoPixel(LEDS_2812_L1, PIN_WS2812_L1, (neoPixelType) COLORD_2812_L1 + NEO_KHZ800);
+        static uint8_t ws2812_Lbright = (uint8_t) BRIGHT_2812_L1;
+        static uint8_t ws2812_Lrt = 100;
+        static uint8_t ws2812_Lbl = 100;
+        static uint8_t ws2812_Lgr = 100;
+        unsigned long  ws2812_Lalt = 0;
+        uint32_t       ws2812_Lcnt = 0;
+        uint32_t       ws2812_Lv   = 0;
+        bool           ws2812_pwr = false;
+        uint16_t       idx2812L1  = 0;
+        //static int16_t posL2812 = -10000;
       #endif
 
     #if (USE_CTRL_POTI_ADC > OFF)
@@ -285,14 +251,14 @@
         pwm_val_t pwmInVal[USE_PWM_INP];
       #endif
   // ------ user output ---------------
-    #if (USE_RGBCOL16_PWM > OFF)
-        outRGBVal_t outValRGB[USE_RGBCOL16_PWM];
-        #if (TEST_RGBCOL16_PWM > OFF)
+    #if (USE_RGBLED_PWM > OFF)
+        outRGBVal_t outValRGB[USE_RGBLED_PWM];
+        #if (TEST_RGBLED_PWM > OFF)
             uint8_t  colRGBLED = 0;
             uint16_t incRGBLED = 10;
-            uint32_t RGBCOL16_gr = 0;
-            uint32_t RGBCOL16_bl = 0;
-            uint32_t RGBCOL16_rt = 0;
+            uint32_t RGBLED_gr = 64;
+            uint32_t RGBLED_bl = 128;
+            uint32_t RGBLED_rt = 192;
           #endif
       #endif
 
@@ -351,7 +317,85 @@
       #endif
 
     #if (USE_WEBSERVER > OFF)
-        md_server webMD = md_server();
+        #if (TEST_SOCKET_SERVER > OFF)
+          /*
+            const char index_html[] PROGMEM = R"rawliteral(
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta name="viewport" content="width=device-width, initial-scale=1">  <title>ESP32 Websocket</title>
+              <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+              <script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
+
+              <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css">
+              <script language="javascript">
+
+                window.alert(location.host);
+                var gwUrl = "ws://" + location.host + "/ws";
+                var webSocket = new WebSocket(gwUrl);
+                webSocket.onopen = function(e) {
+                    console.log("open");
+                }
+                webSocket.onclose = function(e) {
+                    console.log("close");
+                }
+
+               webSocket.onmessage = function(e) {
+                    console.log("message");
+                }
+                function handleColor() {
+                  var val = document.getElementById('type-color-on-page').value;
+                  webSocket.send(val.substring(1));
+                }
+              </script>
+
+              <style>
+                h2 {background: #3285DC;
+                    color: #FFFFFF;
+                    align:center;
+                }
+
+                .content {
+                    border: 1px solid #164372;
+                    padding: 5px;
+                }
+
+                .button {
+                   background-color: #00b300;
+                   border: none;
+                   color: white;
+                   padding: 8px 10px;
+                   text-align: center;
+                   text-decoration: none;
+                   display: inline-block;
+                   font-size: 14px;
+              }
+              </style>
+            </head>
+            <body>
+              <h2>ESP32 Websocket</h2>
+              <div class="content">
+              <p>Pick a color</p>
+              <div id="qunit"></div>
+
+              <input type="color" id="type-color-on-page"  />
+               <p>
+                 <input type="button" class="button" value="Send to ESP32" id="btn" onclick="handleColor()" />
+               </p>
+
+              </div>
+            </body>
+            </html>
+            )rawliteral";
+
+            // Web server running on port 80
+            AsyncWebServer serv(80);
+            // Web socket
+            AsyncWebSocket socket("/ws");
+          */
+        #else
+            md_server   webMD    = md_server();
+          #endif
         msTimer   servT = msTimer(WEBSERVER_CYCLE);
       #endif // USE_WEBSERVER
 
@@ -439,7 +483,7 @@
               digitalWrite(PIN_TL_RED, OFF);
               digitalWrite(PIN_TL_YELLOW, OFF);
             #endif
-          #if (USE_RGBCOL16_PWM > 0)
+          #if (USE_RGBLED_PWM > 0)
               // RGB red
                 pinMode(PIN_RGB_RED, OUTPUT);
                 ledcSetup(PWM_RGB_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
@@ -479,7 +523,7 @@
               matrix_1.display_boxes();
               usleep(1500000);
               //matrix_1.start_scroll_task((scroll2812_t*) &outM2812, &posM2812);
-              SOUT(" start = "); SOUTLN(posM2812);
+              SOUT(" start = "); SOUT(posM2812);
               matrix_1.start_scroll_matrix((scroll2812_t*) &outM2812,
                                             &posM2812,
                                             - (strlen(text2812) * COLCHAR_2812 + OFFEND_2812_M1));
@@ -488,37 +532,16 @@
             #endif
 
           #if (USE_WS2812_LINE_OUT > OFF)
-              #ifdef USE_FAST_LED
-                  dispStatus("start WS2812 Line");
-                  FastLED.addLeds<TYPE_2812_L1, PIN_WS2812_L1, COLORD_2812_L1>(leds1, LEDS_2812_L1).setCorrection(TypicalLEDStrip);
-                  FastLED.setBrightness(ws2812_bright);
-                  curPalette1 = RainbowStripeColors_p;
-                  curBlending1 = NOBLEND;
-                  #if (USE_WS2812_LINE_OUT > 1)
-                        FastLED.addLeds<TYPE_2812_L2, PIN_WS2812_LD2, COLORD_2812_L2>(leds2, LEDS_2812_L2).setCorrection(TypicalLEDStrip);
-                        FastLED.setBrightness(BRIGHT_2812_L2);
-                        curPalette2  = RainbowStripeColors_p;
-                        curBlending2 = NOBLEND;
-                      #if (USE_WS2812_LINE_OUT > 2)
-                            FastLED.addLeds<TYPE_2812_L3, PIN_WS2812_LD3, COLORD_2812_L3>(leds3, LEDS_2812_L3).setCorrection(TypicalLEDStrip);
-                            FastLED.setBrightness(BRIGHT_2812_L3);
-                            curPalette1 = RainbowColors_p;
-                            curBlending = LINEARBLEND;
-                          #if (USE_WS2812_LINE_OUT > 3)
-                              FastLED.addLeds<TYPE_2812_L4, PIN_WS2812_LD4, COLORD_2812_L4>(leds3, LEDS_2812_L4).setCorrection(TypicalLEDStrip);
-                              FastLED.setBrightness(BRIGHT_2812_L4);
-                              curPalette1 = RainbowColors_p;
-                              curBlending = LINEARBLEND;
-                            #endif
-                        #endif
-                    #endif
-              #else
-                  SOUT("start WS2812 line ...");
-                  line_1.begin();
-                  //usleep(5000);
-                  line_1.scroll_colorLine(true);
-                  SOUTLN(" ok");
-                #endif
+              SOUT("start NEOPIXEL LED strip ... ");
+              strip.begin();
+              strip.setBrightness(255);
+              strip.fill(strip.Color(200,0,0));
+              strip.show();
+              usleep(400000);
+              strip.setBrightness(ws2812_Lbright);
+              strip.fill(strip.Color(ws2812_Lrt,ws2812_Lgr,ws2812_Lbl));
+              strip.show();
+              SOUTLN("ok");
             #endif
 
         // start buzzer (task)
@@ -606,26 +629,57 @@
       // --- network
         // start WIFI
           #if (USE_WIFI > OFF)
-            startWIFI(true);
-            if ((md_error & ERRBIT_WIFI) == 0)
-                dispStatus("WIFI connected");
-              else
-                dispStatus("WIFI error");
-              if ((md_error & ERRBIT_WIFI) == 0)
+              uint8_t rep = WIFI_ANZ_LOGIN;
+              while(rep > 0)
                 {
-                  dispStatus("WIFI connected");
+                  startWIFI(true);
+                  if ((md_error & ERRBIT_WIFI) == OK)
+                      {
+                        dispStatus("WIFI connected");
+                        break;
+                      }
+                    else
+                      {
+                        #if (WIFI_IS_DUTY > OFF)
+                            dispStatus("WIFI error -> halted");
+                        #else
+                            rep--;
+                            if (rep > 0)
+                              { dispStatus("WIFI error ..."); }
+                            else
+                              { dispStatus("WIFI not connected"); }
+                          #endif
+                      }
+                  usleep(500000);
                 }
-                else
-                {
-                  dispStatus("WIFI error");
-                }
-              #endif // USE_WIFI
+              #if (USE_NTP_SERVER > OFF)   // get time from NTP server
+                  if ((md_error & ERRBIT_WIFI) == OK)
+                    {
+                      dispStatus("init NTP time");
+                      initNTPTime();
+                      ntpGet = true;
+                    }
+                #endif
+
+            #endif // USE_WIFI
         // start Webserer
           #if (USE_WEBSERVER > OFF)
               {
                 servT.startT();
-                startWebServer();
-                //md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
+                #if (TEST_SOCKET_SERVER > OFF)
+                    socket.onEvent(onEvent);
+                    serv.addHandler(&socket);
+
+                    serv.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+                      {
+                        request->send_P(200, "text/html", index_html, NULL);
+                      });
+
+                     serv.begin();
+                #else
+                    startWebServer();
+                  #endif
+                  //md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
 
               }
             #endif
@@ -706,7 +760,7 @@
 
       // --- memories
         // FRAM
-          #if (USE_FRAM_I2C > OFF) // NIO funktioniert nicht
+          #if (USE_FRAM_I2C > OFF)
             // Read the first byte
             SOUT("FRAM addr "); SOUTHEX(I2C_ADDR_FRAM1);
             dispStatus("init FRAM");
@@ -722,6 +776,7 @@
               }
             #endif
 
+        // FLASH memory
       // --- services using interrupt
         // start counter
           #if (USE_CNT_INP > OFF)
@@ -785,10 +840,10 @@
             {
               //Serial.print("WiFi md_error = "); Serial.println(md_error);
               wifiT.startT();
-              if((md_error & ERRBIT_WIFI) > 0)
+              if((md_error & ERRBIT_WIFI) != OK)
                 {
-                  SOUTLN("WiFi startWIFI");
-                  dispStatus("WiFi startWIFI");
+                  SOUTLN("WiFi restartWIFI");
+                  dispStatus("WiFi restartWIFI");
                   startWIFI(false);
                 }
             }
@@ -799,38 +854,105 @@
         if (ntpT.TOut() == true)
           {
             setTime(++ntpTime);
-            if ((md_error & ERRBIT_WIFI) == 0)
+            if ((md_error & ERRBIT_WIFI) == OK)
               { // WiFi online
+                #ifdef UNUSED
                 if (((md_error & ERRBIT_NTPTIME) > 0) || (year() < 2000))   // time not initialized
                   {
                     initNTPTime();
                     ntpGet = true;
                   }
+                #endif
+
                 if (ntpGet == true)
                   {
                     ntpGet = wifi.getNTPTime(&ntpTime);
                     setTime(ntpTime);
+                    ////////////////////////////////SOUT(" NTP time "); SOUT(ntpTime);
                   }
               }
             ntpT.startT();
                   #if (DEBUG_MODE == CFG_DEBUG_DETAILS)
                     //SOUT("Datum "); SOUT(day()); SOUT("."); SOUT(month()); SOUT("."); SOUT(year()); SOUT(" ");
                     //SOUT("Zeit "); SOUT(hour()); SOUT("."); SOUT(minute()); SOUT(":"); SOUTLN(second());
-                  #endif
+                    #endif
           }
         #endif // USE_NTP_SERVER
       // ----------------------
       #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
-          if (servT.TOut())
+          md_message *pM   = NULL;
+          mdMSG_t*    pMsg = NULL;
+          int         itmp = 0;
+          char       *ctmp = NULL;
+          while (msgList->count() > 0)
             {
-              servT.startT();
-              /*
-              if ((md_error & ERRBIT_SERVER) != 0)
-                {;}//startWebServer();
-              else
-                //bool ret = webMD.md_handleClient();
-                md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
-              */
+              pM   = (md_message*) msgList->pFirst();
+              pMsg = pM->pMsg;
+              switch (pMsg->type)
+                {
+                  case EL_TSOCKET:
+                      SOUT(" Socket ");
+                    break;
+                  case EL_TANALOG:
+                      SOUT(" Analog ");
+                    break;
+                  case EL_TSLIDER:
+                      SOUT(" Slider ");
+                      ctmp = (char*) pMsg->payload.c_str();
+                      ctmp += 2;
+                      SOUT(ctmp); SOUT(" - ");
+                      itmp = atoi(ctmp);
+                      switch (pMsg->payload[1])
+                        {
+                          case 'b':
+                            RGBLED_bl = (uint8_t) (itmp & 0x000000FF);
+                            break;
+                          case 'g':
+                            RGBLED_gr = (uint8_t) (itmp & 0x000000FF);
+                            break;
+                          case 'r':
+                            RGBLED_rt = (uint8_t) (itmp & 0x000000FF);
+                            break;
+                          case 'l':
+                            ws2812_Lbright = (uint8_t) (itmp & 0x000000FF);
+
+                            strip.setBrightness(ws2812_Lbright);
+                            strip.show();
+                            //strip.fill(strip.Color(200,0,0));
+                            break;
+                          case 'm':
+                            ws2812_Mbright = (uint8_t) (itmp & 0x000000FF);;
+                            break;
+                        }
+                    break;
+                  case EL_TCOLOR:
+                      SOUT(" Color ");
+                      //ws2812_Lrt;
+                      //ws2812_Lgr;
+                      //ws2812_Lbl;
+                    break;
+                  case EL_TSWITCH:
+                      SOUT(" Switch ");
+                    break;
+                  case EL_TTEXT:
+                      SOUT(" Text ");
+                    break;
+                  case EL_TOFFSET:
+                      SOUT(" Offset ");
+                    break;
+                  case EL_TGRAPH:
+                      SOUT(" Graph ");
+                    break;
+                  case EL_TINDEX:
+                      SOUT(" Index ");
+                    break;
+                  default:
+                      SOUT(" ERROR ");
+                    break;
+                }
+              SOUT(pMsg->payload);
+              msgList->rem();
+              SOUT(" msgList.count "); SOUTLN(msgList->count());
             }
 
         #endif
@@ -854,14 +976,14 @@
             {
               uint64_t    tmp = micros();
               uint64_t    lim = 0ul;
-              pcnt_unit_t unit;
+              //pcnt_unit_t unit;
                           //SOUT(tmp);
               switch (i)
                 {
                   #if (USE_CNT_INP > 1)
                       case 1:
                         lim = PCNT2_UFLOW;
-                        unit = (pcnt_unit_t) PCNT2_UNIT;
+                        //unit = (pcnt_unit_t) PCNT2_UNIT;
                         pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT2_UNIT], &tmpErg, 0);
                           //SOUT(" res1 "); SOUT(pcnt_res);
                         break;
@@ -1018,17 +1140,12 @@
                 {
                   ws2812T1.startT();
                   //SOUTLN(); SOUT(micros());
-                  if ( ws2812_pwr && (ws2812_bright < 255 ))
-                    {
-                      ws2812_bright = 255;
-                    }
-                  else if ( !ws2812_pwr && (ws2812_bright == 255 ))
-                    {
-                      ws2812_bright = (uint8_t) BRIGHT_2812_M1;
-                    }
+                  //ws2812_Mbright = (uint8_t) BRIGHT_2812_M1;
+                  //matrix_1.
+                  matrix_1.setBright(ws2812_Mbright);
                   matrix_1.scroll_matrix();
                   //SOUT(" "); SOUTLN(micros());
-                  ws2812_cnt++;
+                  ws2812_Mcnt++;
                 }
             #endif
 
@@ -1036,87 +1153,51 @@
               if (ws2812LT.TOut())
                 {
                   ws2812LT.startT();
-                  #ifdef USE_FAST_LED
-                    //SOUT(" FASTLED ... ");
-                    // Change Brihtness when called
-                    if ( ws2812_pwr && (ws2812_bright < 255 ))
-                      {
-                        ws2812_bright = 255;
-                        FastLED.setBrightness(ws2812_bright);
-                      }
-                    else if ( !ws2812_pwr && (ws2812_bright == 255 ))
-                      {
-                        ws2812_bright = (uint8_t) BRIGHT_2812_L1;
-                        FastLED.setBrightness(ws2812_bright);
-                      }
-
-                    //ChangePalettePeriodically(0);
-                    idx2812L1 = idx2812L1 + 1; /* motion speed */
-                    ws2812_cnt++;
-                    FillLEDsFromPaletteColors(0, idx2812L1);
-                          //SOUT(micros()); SOUT(" "); SOUT(ws2812L1_cnt);
-                          //SOUT(" show ... ");
-                    #if (USE_WS2812_LINE_OUT > 1)
-                          //idx2812L2 = idx2812L2 + 1; /* motion speed */
-                          //ws2812L2_cnt++;
-                          //FillLEDsFromPaletteColors(1, idx2812L2);
-                        #if (USE_WS2812_LINE_OUT > 2)
-                            #if (USE_WS2812_LINE_OUT > 3)
-                              #endif
-                          #endif
-                      #endif
-                    FastLED.show();
-                          //SOUTLN(" ready ");
-                  #else
-                      if (ws2812LT.TOut())
-                        {
-                          ws2812LT.startT();
-                          line_1.scroll_colorLine();
-                        }
-                    #endif
                 }
             #endif
 
           if (outpT.TOut())
             {
               outpT.startT();
-              #if (USE_RGBCOL16_PWM > OFF)
-                  #if (TEST_RGBCOL16_PWM > OFF)
+              #if (USE_RGBLED_PWM > OFF)
+                  #if (TEST_RGBLED_PWM > OFF)
+                    /*
                       switch (colRGBLED)
                         {
                           case 0:
-                            if (RGBCOL16_rt >= 254)
+                            if (RGBLED_rt >= 254)
                               {
-                                RGBCOL16_rt = 0;
-                                RGBCOL16_gr += incRGBLED;
+                                RGBLED_rt = 0;
+                                RGBLED_gr += incRGBLED;
                                 colRGBLED++;
                               }
                               else
-                              { RGBCOL16_rt += incRGBLED; }
+                              { RGBLED_rt += incRGBLED; }
                             break;
                           case 1:
-                            if (RGBCOL16_gr >= 254)
+                            if (RGBLED_gr >= 254)
                               {
-                                RGBCOL16_gr = 0;
-                                RGBCOL16_bl += incRGBLED;
+                                RGBLED_gr = 0;
+                                RGBLED_bl += incRGBLED;
                                 colRGBLED++;
                               }
                               else
-                              { RGBCOL16_gr += incRGBLED; }
+                              { RGBLED_gr += incRGBLED; }
                             break;
                           case 2:
-                            if (RGBCOL16_bl >= 254)
+                            if (RGBLED_bl >= 254)
                               {
-                                RGBCOL16_bl = 0;
-                                RGBCOL16_rt += incRGBLED;
+                                RGBLED_bl = 0;
+                                RGBLED_rt += incRGBLED;
                                 colRGBLED = 0;
                               }
                               else
-                              { RGBCOL16_bl += incRGBLED; }
+                              { RGBLED_bl += incRGBLED; }
                             break;
                           default:
                             break;
                         }
+                    */
 
                       #if (USE_WEBCTRL_RGB > OFF)
                           _tmp += 4;
@@ -1128,9 +1209,9 @@
                           ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
                         #endif
 
-                      ledcWrite(PWM_RGB_RED,   RGBCOL16_rt);
-                      ledcWrite(PWM_RGB_GREEN, RGBCOL16_gr);
-                      ledcWrite(PWM_RGB_BLUE,  RGBCOL16_bl);
+                      ledcWrite(PWM_RGB_RED,   RGBLED_rt);
+                      ledcWrite(PWM_RGB_GREEN, RGBLED_gr);
+                      ledcWrite(PWM_RGB_BLUE,  RGBLED_bl);
                     #endif
 
                 #endif
@@ -1201,8 +1282,14 @@
             switch (oledIdx)
               {
               case 1: // system output
-                  usPerCycle = (millis() - usLast) / anzUsCycles;
+                  usPerCycle = (micros() - usLast) / anzUsCycles;
                   //SOUT(usLast); SOUT(" "); SOUT(micros()); SOUT(" "); SOUTLN(usPerCycle);
+                  outStr = "          ";
+                  dispText(outStr ,  22, 4, outStr.length());
+                  outStr = "";
+                  outStr.concat((unsigned long) usPerCycle);
+                  outStr.concat("us    ");
+                  dispText(outStr ,  22, 4, outStr.length());
                   usLast      = millis();
                   //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
                   anzUsCycles = 0ul;
@@ -1215,7 +1302,7 @@
                   #else
                       outStr = "IP Offline";
                     #endif
-                  dispText(outStr ,  0, 1, outStr.length());
+                  dispText(outStr ,  0, 4, outStr.length());
                   #if (USE_WEBSERVER > OFF)
                       //outStr = (String) (WiFi.localIP());
 
@@ -1293,15 +1380,15 @@
                     dispText(outStr ,  0, 0, outStr.length());
                     //outStr = "LED ";
                     outStr = "";
-                        //outStr += (String) ws2812_cnt; outStr += " ";
-                    ws2812_v = millis() - ws2812_alt; // dispT.getTout();
-                    ws2812_alt = millis();
-                    if (ws2812_cnt > 0)
+                        //outStr += (String) ws2812_Mcnt; outStr += " ";
+                    ws2812_Mv = millis() - ws2812_Malt; // dispT.getTout();
+                    ws2812_Malt = millis();
+                    if (ws2812_Mcnt > 0)
                       {
-                        ws2812_v = ws2812_v / ws2812_cnt;
-                        ws2812_cnt = 0;
+                        ws2812_Mv = ws2812_Mv / ws2812_Mcnt;
+                        ws2812_Mcnt = 0;
                       }
-                    outStr += (String) ws2812_v;
+                    outStr += (String) ws2812_Mv;
                     outStr += ("ms");
                           //SOUT((uint32_t) millis()); SOUT(" ");
                               //SOUT(outStr); SOUT(" ");
@@ -1346,7 +1433,7 @@
                                 //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
                         }
                       //SOUT(outStr); SOUT(" ");
-                      dispText(outStr ,  0, 1, outStr.length());
+                      //dispText(outStr ,  0, 1, outStr.length());
                   #endif
                 break;
 
@@ -1544,158 +1631,6 @@
         }
     // --- WS2812 lines
       #if (USE_WS2812_LINE_OUT > OFF)
-          #ifdef USE_FAST_LED
-              void FillLEDsFromPaletteColors(uint8_t lineNo, uint8_t colorIndex)
-                {
-                  uint8_t brightness = 255;
-                  for( int i = 0; i < LEDS_2812_L1; i++)
-                    {
-                      leds1[i] = ColorFromPalette( curPalette1, colorIndex, brightness, curBlending1);
-                      #if (USE_WS2812_LINE_OUT > 1)
-                          leds2[i] = ColorFromPalette( curPalette2, colorIndex, brightness, curBlending2);
-                          #if (USE_WS2812_LINE_OUT > 2)
-                              leds3[i] = ColorFromPalette( curPalette3, colorIndex, brightness, curBlending3);
-                              #if (USE_WS2812_LINE_OUT > 3)
-                                  leds4[i] = ColorFromPalette( curPalette4, colorIndex, brightness, curBlending4);
-                                #endif
-                            #endif
-                        #endif
-                      colorIndex += 3;
-                    }
-              }
-              /* There are several different palettes of colors demonstrated here.
-                //
-                // FastLED provides several 'preset' palettes: RainbowColors_p, RainbowStripeColors_p,
-                // OceanColors_p, CloudColors_p, LavaColors_p, ForestColors_p, and PartyColors_p.
-                //
-                // Additionally, you can manually define your own color palettes, or you can write
-                // code that creates color palettes on the fly.  All are shown here.
-                */
-
-              void ChangePalettePeriodically(uint8_t lineNo)
-                {
-                  uint8_t secondHand = (millis() / 1000) % 60;
-                  static uint8_t lastSecond = 99;
-
-                  if( lastSecond != secondHand)
-                    {
-                      lastSecond = secondHand;
-                      //if( secondHand ==  0)  { curPalette1 = RainbowColors_p;         curBlending = LINEARBLEND; SOUTLN("RainbowColors_p"); }
-                      curPalette1 = RainbowStripeColors_p;
-                      curBlending1 = NOBLEND;
-                      #if (USE_WS2812_LINE_OUT > 1)
-                          curPalette2 = RainbowStripeColors_p;
-                          curBlending2 = NOBLEND;
-                          #if (USE_WS2812_LINE_OUT > 2)
-                              #if (USE_WS2812_LINE_OUT > 3)
-                                #endif
-                            #endif
-                        #endif
-                          //if( secondHand == 15)  { curPalette1 = RainbowStripeColors_p;   curBlending = LINEARBLEND; SOUTLN("RainbowStripeColors_p"); }
-                          //if( secondHand == 20)  { SetupPurpleAndGreenPalette();             curBlending = LINEARBLEND; SOUTLN("PurpleAndGreenPalette"); }
-                          //if( secondHand == 25)  { SetupTotallyRandomPalette();              curBlending = LINEARBLEND; SOUTLN("TotallyRandomPalette"); }
-                          //if( secondHand == 30)  { SetupBlackAndWhiteStripedPalette();       curBlending = NOBLEND;     SOUTLN("BlackAndWhiteStripedPalette"); }
-                          //if( secondHand == 35)  { SetupBlackAndWhiteStripedPalette();       curBlending = LINEARBLEND; SOUTLN("BlackAndWhiteStripedPalette"); }
-                          //if( secondHand == 40)  { curPalette1 = CloudColors_p;           curBlending = LINEARBLEND; SOUTLN("CloudColors_p"); }
-                          //if( secondHand == 45)  { curPalette1 = PartyColors_p;           curBlending = LINEARBLEND; SOUTLN("PartyColors_p"); }
-                          //if( secondHand == 50)  { curPalette1 = myRedWhiteBluePalette_p; curBlending = NOBLEND;     SOUTLN("myRedWhiteBluePalette_p"); }
-                          //if( secondHand == 55)  { curPalette1 = myRedWhiteBluePalette_p; curBlending = LINEARBLEND; SOUTLN("myRedWhiteBluePalette_p"); }
-                    }
-                }
-
-              #ifdef XXXX
-                  // This function fills the palette with totally random colors.
-                  void SetupTotallyRandomPalette()
-                    {
-                      for( int i = 0; i < 16; i++)
-                        {
-                          curPalette1[i] = CHSV( random8(), 255, random8());
-                        }
-                    }
-
-                  /* This function sets up a palette of black and white stripes,
-                    // using code.  Since the palette is effectively an array of
-                    // sixteen CRGB colors, the various fill_* functions can be used
-                    // to set them up.
-                    */
-                  void SetupBlackAndWhiteStripedPalette()
-                    {
-                      // 'black out' all 16 palette entries...
-                      fill_solid( curPalette1, 16, CRGB::Black);
-                      // and set every fourth one to white.
-                      curPalette1[0] = CRGB::White;
-                      curPalette1[4] = CRGB::White;
-                      curPalette1[8] = CRGB::White;
-                      curPalette1[12] = CRGB::White;
-
-                    }
-
-                  // This function sets up a palette of purple and green stripes.
-                  void SetupPurpleAndGreenPalette()
-                    {
-                      CRGB purple = CHSV( HUE_PURPLE, 255, 255);
-                      CRGB green  = CHSV( HUE_GREEN, 255, 255);
-                      CRGB black  = CRGB::Black;
-
-                      curPalette1 = CRGBPalette16(
-                                                     green,  green,  black,  black,
-                                                     purple, purple, black,  black,
-                                                     green,  green,  black,  black,
-                                                     purple, purple, black,  black );
-                    }
-
-                  /* This example shows how to set up a static color palette
-                    // which is stored in PROGMEM (flash), which is almost always more
-                    // plentiful than RAM.  A static PROGMEM palette like this
-                    // takes up 64 bytes of flash.
-                    */
-                  const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM =
-                    {
-                      CRGB::Red,
-                      CRGB::Gray, // 'white' is too bright compared to red and blue
-                      CRGB::Blue,
-                      CRGB::Black,
-
-                      CRGB::Red,
-                      CRGB::Gray,
-                      CRGB::Blue,
-                      CRGB::Black,
-
-                      CRGB::Red,
-                      CRGB::Red,
-                      CRGB::Gray,
-                      CRGB::Gray,
-                      CRGB::Blue,
-                      CRGB::Blue,
-                      CRGB::Black,
-                      CRGB::Black
-                    };
-
-                  /* Additionl notes on FastLED compact palettes:
-                    //
-                    // Normally, in computer graphics, the palette (or "color lookup table")
-                    // has 256 entries, each containing a specific 24-bit RGB color.  You can then
-                    // index into the color palette using a simple 8-bit (one byte) value.
-                    // A 256-entry color palette takes up 768 bytes of RAM, which on Arduino
-                    // is quite possibly "too many" bytes.
-                    //
-                    // FastLED does offer traditional 256-element palettes, for setups that
-                    // can afford the 768-byte cost in RAM.
-                    //
-                    // However, FastLED also offers a compact alternative.  FastLED offers
-                    // palettes that store 16 distinct entries, but can be accessed AS IF
-                    // they actually have 256 entries; this is accomplished by interpolating
-                    // between the 16 explicit entries to create fifteen intermediate palette
-                    // entries between each pair.
-                    //
-                    // So for example, if you set the first two explicit entries of a compact
-                    // palette to Green (0,255,0) and Blue (0,0,255), and then retrieved
-                    // the first sixteen entries from the virtual palette (of 256), you'd get
-                    // Green, followed by a smooth gradient from green-to-blue, and then Blue.
-                    */
-                #endif
-          #else
-            #endif
         #endif
 
     // --- passive buzzer
@@ -1903,160 +1838,258 @@
       void startWIFI(bool startup)
         {
           #if (USE_WIFI > OFF)
-            bool ret = ISERR;
-            dispStatus("  start WIFI");
-            if (startup)
-              {
-                ip_list ipList = ip_list(); // temporary object
-                          #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                              SOUT(millis()); SOUT(" setup startWIFI created ipList "); SOUTHEXLN((int) &ipList);
-                              SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 0");
-                            #endif
-                ipList.append(WIFI_FIXIP0, WIFI_GATEWAY0, WIFI_SUBNET, WIFI_SSID0, WIFI_SSID0_PW);
-                #if (WIFI_ANZ_LOGIN > 1)
-                          #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                              SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 1");
-                            #endif
-                    ipList.append(WIFI_FIXIP1, WIFI_GATEWAY1, WIFI_SUBNET, WIFI_SSID1, WIFI_SSID1_PW);
-                  #endif
-                #if (WIFI_ANZ_LOGIN > 2)
-                          #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                              SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 2");
-                            #endif
-                    ipList.append(WIFI_FIXIP2, WIFI_GATEWAY2, WIFI_SUBNET, WIFI_SSID2, WIFI_SSID2_PW);
-                  #endif
-                #if (WIFI_ANZ_LOGIN > 3)
-                          #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                              SOUT(millis()); SOUTLN(" setup add WIFI 3");
-                            #endif
-                    ipList.append(WIFI_FIXIP3, WIFI_GATEWAY3, WIFI_SUBNET, WIFI_SSID3, WIFI_SSID3_PW);
-                  #endif
-                #if (WIFI_ANZ_LOGIN > 4)
-                          #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                              SOUT(millis()); SOUTLN(" setup add WIFI 4");
-                            #endif
-                    ipList.append(WIFI_FIXIP3, WIFI_GATEWAY4, WIFI_SUBNET, WIFI_SSID4, WIFI_SSID4_PW);
-                  #endif
-                          SOUT(millis()); SOUTLN(" setup startWIFI locWIFI fertig");
-
-                          //ip_cell* pip = (ip_cell*) ipList.pFirst();
-                          //char stmp[NET_MAX_SSID_LEN] = "";
-                                  /*
-                                    SOUT(" setup ip_list addr "); SOUT((u_long) &ipList);
-                                    SOUT(" count "); SOUTLN(ipList.count());
-                                    SOUT(" ip1: addr "); SOUTHEX((u_long) pip);
-                                    SOUT(" locIP "); SOUTHEX(pip->locIP());
-                                    SOUT(" gwIP ");  SOUTHEX(pip->gwIP());
-                                    SOUT(" snIP ");  SOUTHEX(pip->snIP());
-                                    pip->getSSID(stmp); SOUT(" ssid "); SOUT(stmp);
-                                    pip->getPW(stmp); SOUT(" pw "); SOUTLN(stmp);
-                                    pip = (ip_cell*) pip->pNext();
-                                    SOUT(" ip2: addr "); SOUTHEX((u_long) pip);
-                                    SOUT(" locIP "); SOUTHEX(pip->locIP());
-                                    SOUT(" gwIP ");  SOUTHEX(pip->gwIP());
-                                    SOUT(" snIP ");  SOUTHEX(pip->snIP());
-                                    pip->getSSID(stmp); SOUT(" ssid "); SOUT(stmp);
-                                    pip->getPW(stmp); SOUT(" pw "); SOUTLN(stmp);
-                                    pip = (ip_cell*) pip->pNext();
-                                    SOUT(" ip3: addr "); SOUTHEX((u_long) pip);
-                                    SOUT(" locIP "); SOUTHEX(pip->locIP());
-                                    SOUT(" gwIP ");  SOUTHEX(pip->gwIP());
-                                    SOUT(" snIP ");  SOUTHEX(pip->snIP());
-                                    pip->getSSID(stmp); SOUT(" ssid "); SOUT(stmp);
-                                    pip->getPW(stmp); SOUT(" pw "); SOUTLN(stmp);
-                                  */
-
-                ret = wifi.scanWIFI(&ipList);
-                          SOUT(millis()); SOUT(" scanWIFI ret="); SOUTLN(ret);
-              }
-            ret = wifi.startWIFI();
-                        SOUT("startWIFI ret="); SOUT(ret);
-            md_error = setBit(md_error, ERRBIT_WIFI, ret);
-                  #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                    SOUT("  md_error="); SOUTLN(md_error);
+              bool ret = ISERR;
+              dispStatus("  start WIFI");
+              if (startup)
+                {
+                  ip_list ipList = ip_list(); // temporary object
+                            #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                                SOUT(millis()); SOUT(" setup startWIFI created ipList "); SOUTHEXLN((int) &ipList);
+                                SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 0");
+                              #endif
+                  ipList.append(WIFI_FIXIP0, WIFI_GATEWAY0, WIFI_SUBNET, WIFI_SSID0, WIFI_SSID0_PW);
+                  #if (WIFI_ANZ_LOGIN > 1)
+                            #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                                SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 1");
+                              #endif
+                      ipList.append(WIFI_FIXIP1, WIFI_GATEWAY1, WIFI_SUBNET, WIFI_SSID1, WIFI_SSID1_PW);
                     #endif
+                  #if (WIFI_ANZ_LOGIN > 2)
+                            #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                                SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 2");
+                              #endif
+                      ipList.append(WIFI_FIXIP2, WIFI_GATEWAY2, WIFI_SUBNET, WIFI_SSID2, WIFI_SSID2_PW);
+                    #endif
+                  #if (WIFI_ANZ_LOGIN > 3)
+                            #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                                SOUT(millis()); SOUTLN(" setup add WIFI 3");
+                              #endif
+                      ipList.append(WIFI_FIXIP3, WIFI_GATEWAY3, WIFI_SUBNET, WIFI_SSID3, WIFI_SSID3_PW);
+                    #endif
+                  #if (WIFI_ANZ_LOGIN > 4)
+                            #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                                SOUT(millis()); SOUTLN(" setup add WIFI 4");
+                              #endif
+                      ipList.append(WIFI_FIXIP3, WIFI_GATEWAY4, WIFI_SUBNET, WIFI_SSID4, WIFI_SSID4_PW);
+                    #endif
+                            SOUT(millis()); SOUTLN(" setup startWIFI locWIFI fertig");
 
-            if ((md_error & ERRBIT_WIFI) == 0)
-                dispStatus("WIFI connected");
-              else
-                dispStatus("WIFI error");
+                            //ip_cell* pip = (ip_cell*) ipList.pFirst();
+                            //char stmp[NET_MAX_SSID_LEN] = "";
+                                    /*
+                                      SOUT(" setup ip_list addr "); SOUT((u_long) &ipList);
+                                      SOUT(" count "); SOUTLN(ipList.count());
+                                      SOUT(" ip1: addr "); SOUTHEX((u_long) pip);
+                                      SOUT(" locIP "); SOUTHEX(pip->locIP());
+                                      SOUT(" gwIP ");  SOUTHEX(pip->gwIP());
+                                      SOUT(" snIP ");  SOUTHEX(pip->snIP());
+                                      pip->getSSID(stmp); SOUT(" ssid "); SOUT(stmp);
+                                      pip->getPW(stmp); SOUT(" pw "); SOUTLN(stmp);
+                                      pip = (ip_cell*) pip->pNext();
+                                      SOUT(" ip2: addr "); SOUTHEX((u_long) pip);
+                                      SOUT(" locIP "); SOUTHEX(pip->locIP());
+                                      SOUT(" gwIP ");  SOUTHEX(pip->gwIP());
+                                      SOUT(" snIP ");  SOUTHEX(pip->snIP());
+                                      pip->getSSID(stmp); SOUT(" ssid "); SOUT(stmp);
+                                      pip->getPW(stmp); SOUT(" pw "); SOUTLN(stmp);
+                                      pip = (ip_cell*) pip->pNext();
+                                      SOUT(" ip3: addr "); SOUTHEX((u_long) pip);
+                                      SOUT(" locIP "); SOUTHEX(pip->locIP());
+                                      SOUT(" gwIP ");  SOUTHEX(pip->gwIP());
+                                      SOUT(" snIP ");  SOUTHEX(pip->snIP());
+                                      pip->getSSID(stmp); SOUT(" ssid "); SOUT(stmp);
+                                      pip->getPW(stmp); SOUT(" pw "); SOUTLN(stmp);
+                                    */
 
-            #if (USE_NTP_SERVER > OFF)
-              if((md_error & ERRBIT_WIFI) == 0) // WiFi ok
-                  if((md_error & ERRBIT_NTPTIME) != 0) // WiFi ok
-                    wifi.initNTP();
-              #endif
+                  ret = wifi.scanWIFI(&ipList);
+                            SOUT(millis()); SOUT(" scanWIFI ret="); SOUTLN(ret);
+                }
+              ret = wifi.startWIFI();
+                          SOUT("startWIFI ret="); SOUT(ret);
+              md_error = setBit(md_error, ERRBIT_WIFI, ret);
+                    #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                      SOUT("  md_error="); SOUTLN(md_error);
+                      #endif
+
+              if ((md_error & ERRBIT_WIFI) == 0)
+                  dispStatus("WIFI connected");
+                else
+                  dispStatus("WIFI error");
+
+              #if (USE_NTP_SERVER > OFF)
+                  if((md_error & ERRBIT_WIFI) == 0) // WiFi ok
+                    if((md_error & ERRBIT_NTPTIME) != 0) // WiFi ok
+                      wifi.initNTP();
+                #endif
             #endif // USE_WIFI
         }
+
     // --- NTP server
       void initNTPTime()
         {
           #if (USE_NTP_SERVER > OFF)
-            bool ret = wifi.initNTP();
-                  #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                    Serial.print("initNTPTime ret="); Serial.print(ret);
-                  #endif
-            md_error = setBit(md_error, ERRBIT_NTPTIME, ret);
-                  #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                    Serial.print("  md_error="); Serial.println(md_error);
-                  #endif
-            if ((md_error & ERRBIT_WIFI) == 0)
-              {
-                dispStatus("NTPTime ok");
-              }
-              else
-              {
-                dispStatus("NTPTime error");
-              }
+              bool ret = wifi.initNTP();
+                    #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                      Serial.print("initNTPTime ret="); Serial.print(ret);
+                    #endif
+              md_error = setBit(md_error, ERRBIT_NTPTIME, ret);
+                    #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                      Serial.print("  md_error="); Serial.println(md_error);
+                    #endif
+              if ((md_error & ERRBIT_WIFI) == OK)
+                {
+                  dispStatus("NTPTime ok");
+                }
+                else
+                {
+                  dispStatus("NTPTime error");
+                }
             #endif // USE_NTP_SERVER
         }
 
     // --- webserver
-      void configWebsite()
-        {
-          #if (USE_WEBSERVER > OFF)
-            webMD.createElement(EL_TYPE_SLIDER, "LED red", "%");
-            webMD.createElement(EL_TYPE_SLIDER, "LED green", "%");
-            webMD.createElement(EL_TYPE_SLIDER, "LED blue", "%");
+      #if (USE_WEBSERVER > OFF)
+  /*
+    void    handleClient(AsyncWebSocketClient *client, void *arg, uint8_t *data, size_t len)
+      {
+        AwsFrameInfo *info = (AwsFrameInfo*)arg;
+        char* txt = (char*) data;
+        if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
+          { //  SOUT(" handleWebSocketMessage info->index "); SOUT(info->index); SOUT(" info->final "); SOUT(info->final); SOUT(" info->len "); SOUTLN(info->len);
+            data[len] = 0;
+            uint8_t type  = txt[0];  // extract obj type
+            uint8_t index = txt[1] - WS_IDX_OFFSET;  // extract index
+            int16_t value = atoi(&txt[2]);
+                      //SOUT(" Payload type "); SOUT(type);
+                      //SOUT(" index "); SOUT(index); SOUT(" len "); SOUT(len);
+                      //SOUT(" data '"); SOUT(&txt[2]); SOUT(" = "); SOUT(value);
+                      //SOUT(" ledList cnt "); SOUTLN(psliderList->count());
 
-            webMD.createElement(EL_TYPE_ANALOG, "DS18B20 Temp", "°C");
-            webMD.createElement(EL_TYPE_ANALOG, "Type-K Temp", "°C");
-            webMD.createElement(EL_TYPE_ANALOG, "BME_Temp", "°C");
-            webMD.createElement(EL_TYPE_ANALOG, "BME_Humidity", "%");
-            webMD.createElement(EL_TYPE_ANALOG, "BME_Pressure", "mb");
-            webMD.createElement(EL_TYPE_ANALOG, "Gaswert", "");
-          #endif // USE_WEBSERVER
-        }
-
-      void startWebServer()
-        {
-          #if (USE_WEBSERVER > OFF)
-            bool ret = ISERR;
-            if ((md_error & ERRBIT_SERVER) != 0)
+            if (type == EL_TSLIDER)
               {
-                dispStatus("start webserver");
-                if ((md_error & ERRBIT_WIFI) == 0)
+                md_slider* psl = (md_slider*) psliderList->pIndex(index);
+                      //SOUT(" psl "); SOUTHEX((uint32_t) psl);
+                if (psl != NULL)
                   {
-                    ret = webMD.md_startServer(0, 3, 0);
-                        #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                          // SOUT("startServer ret="); SOUT(ret);
-                        #endif
-                  }
-                md_error = setBit(md_error, ERRBIT_SERVER, ret);
-                      #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                        // SOUT("  md_error="); SOUTLN(md_error);
-                      #endif
-
-                if ((md_error & ERRBIT_SERVER) == 0)
-                  {
-                    dispStatus("Webserver online");
-                  }
-                  else
-                  {
-                    dispStatus("Webserver error");
+                    psl->destVal = value;
+                    SOUT(" slider "); SOUT((index+1)); SOUT("="); SOUTLN(value);
                   }
               }
-          #endif // USE_WEBSERVER
-        }
+
+            else if (type == EL_TSWITCH)
+              {
+                md_switch* psw = (md_switch*) pswitchList->pIndex(index);
+                while (psw != NULL)
+                  {
+                    psw->destVal = value; SOUT(" switch "); SOUTLN(value);
+                  }
+              }
+
+            else if (type == EL_TANALOG)
+              {
+                md_analog* pana = (md_analog*) panalogList->pIndex(index);
+                while (pana != NULL)
+                  {
+                    pana->destVal = value; SOUT(" analog "); SOUTLN(value);
+                  }
+              }
+
+            else { }
+          }
+      }
+    */
+    /*
+          void handlingIncomingData()
+            {
+
+
+              AwsFrameInfo *info = (AwsFrameInfo*)arg;
+
+              if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
+                {
+                  String hexColor = "";
+                  for (int i=0; i < len; i++)
+                    hexColor += ((char) data[i]);
+
+                  Serial.println("Hex Color: " + hexColor);
+
+                  long n = strtol(&hexColor[0], NULL, 16);
+                  Serial.println(n);
+                  strip.fill(n);
+                  strip.show();
+                }
+            }
+    */
+          // Callback for incoming event
+          /*void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type,
+                       void * arg, uint8_t *data, size_t len)
+            {
+              switch(type)
+                {
+                  case WS_EVT_CONNECT:
+                    Serial.printf("Client connected: \n\tClient id:%u\n\tClient IP:%s\n",
+                         client->id(), client->remoteIP().toString().c_str());
+                    break;
+                  case WS_EVT_DISCONNECT:
+                    Serial.printf("Client disconnected:\n\tClient id:%u\n", client->id());
+                    break;
+                  case WS_EVT_DATA:
+                    handlingIncomingData(client, arg, data, len);
+                    break;
+                  case WS_EVT_PONG:
+                    Serial.printf("Pong:\n\tClient id:%u\n", client->id());
+                    break;
+                  case WS_EVT_ERROR:
+                    Serial.printf("Error:\n\tClient id:%u\n", client->id());
+                    break;
+                }
+            }
+            void configWebsite()
+            {
+              webMD.createElement(EL_TSLIDER, "LED red", "%");
+              webMD.createElement(EL_TSLIDER, "LED green", "%");
+              webMD.createElement(EL_TSLIDER, "LED blue", "%");
+
+              webMD.createElement(EL_TANALOG, "DS18B20 Temp", "°C");
+              webMD.createElement(EL_TANALOG, "Type-K Temp", "°C");
+              webMD.createElement(EL_TANALOG, "BME_Temp", "°C");
+              webMD.createElement(EL_TANALOG, "BME_Humidity", "%");
+              webMD.createElement(EL_TANALOG, "BME_Pressure", "mb");
+              webMD.createElement(EL_TANALOG, "Gaswert", "");
+            }
+          */
+
+          void startWebServer()
+            {
+              bool ret = ISERR;
+              if ((md_error & ERRBIT_SERVER) != 0)
+                {
+                  dispStatus("start webserver");
+                  SOUT("startServer ... ");
+                  if ((md_error & ERRBIT_WIFI) == 0)
+                    {
+                      ret = webMD.md_startServer();
+                          #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                              SOUT("ret="); SOUTLN(ret);
+                            #endif
+                    }
+                  md_error = setBit(md_error, ERRBIT_SERVER, ret);
+                        #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                          // SOUT("  md_error="); SOUTLN(md_error);
+                        #endif
+
+                  if ((md_error & ERRBIT_SERVER) == 0)
+                    {
+                      dispStatus("Webserver online");
+                      SOUTLN("Webserver online");
+                    }
+                    else
+                    {
+                      dispStatus("Webserver ERROR");
+                      SOUTLN("Webserver ERROR");
+                    }
+                }
+            }
+        #endif // USE_WEBSERVER
 
 // --- end of code --------------------------
