@@ -72,66 +72,6 @@
       #endif // USE_KEYPADSHIELD
 
 
-    #if (USE_WS2812_MATRIX_OUT > OFF)
-        #if (ANZ_TILES_M1 > OFF)
-            md_ws2812_matrix matrix_1 = md_ws2812_matrix
-              ( COLPIX_2812_T1, ROWPIX_2812_T1,
-                COLTIL_2812_M1, ROWTIL_2812_M1, PIN_WS2812_M1,
-                ROW1_2812_T1  + COL1_2812_T1 +
-                DIR_2812_T1   + ORI_2812_T1,
-                (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
-        #else
-            md_ws2812_matrix matrix_1 = md_ws2812_matrix
-              ( COLPIX_2812_M1, ROWPIX_2812_M1,
-                0, 0, PIN_WS2812_M1,
-                ROW1_2812_M1  + COL1_2812_M1 +
-                DIR_2812_M1   + ORI_2812_M1,
-                (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
-          #endif
-        msTimer ws2812T1   = msTimer(UPD_2812_M1_MS);
-        #if (USE_WS2812_MATRIX_OUT > 1)
-            md_ws2812_matrix matrix_2 = md_ws2812_matrix
-              ( COLPIX_2812_M2, ROWPIX_2812_M2,
-                COLTIL_2812_M2, ROWTIL_2812_M2, PIN_WS2812_M2,
-                #if (ANZ_TILES_M2 > OFF)
-                    NEO_TILE_TOP       + NEO_TILE_LEFT +
-                    NEO_TILE_ROWS      + NEO_TILE_PROGRESSIVE +
-                  #endif
-                NEO_MATRIX_TOP     + NEO_MATRIX_LEFT +
-                NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
-                (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
-            msTimer ws2812MT   = msTimer(UPD_2812_M1_MS);
-          #endif
-        const char text2812[] = "Willkommen im Weltladen";
-        static uint8_t      ws2812_Mbright = (uint8_t) BRIGHT_2812_M1;
-        static scroll2812_t outM2812 =
-          {
-            { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, ws2812_Mbright },
-            { (char*) text2812, (31 << 11) + (8 << 5) + 5, ws2812_Mbright },
-            { MD_BITMAP_SMILY,  COL16_YELLOW_HIGH, ws2812_Mbright }
-          };
-        static int16_t      posM2812 = (int16_t) (COLPIX_2812_M1 + OFFBEG_2812_M1);
-        unsigned long ws2812_Malt = 0;
-        uint32_t      ws2812_Mcnt = 0;
-        uint32_t      ws2812_Mv   = 0;
-        bool          ws2812_Mpwr = false;
-      #endif
-
-    #if (USE_WS2812_LINE_OUT > OFF)
-        msTimer         ws2812LT    = msTimer(UPD_2812_L1_MS);
-        Adafruit_NeoPixel strip = Adafruit_NeoPixel(LEDS_2812_L1, PIN_WS2812_L1, (neoPixelType) COLORD_2812_L1 + NEO_KHZ800);
-        static uint8_t ws2812_Lbright = (uint8_t) BRIGHT_2812_L1;
-        static uint8_t ws2812_Lrt = 100;
-        static uint8_t ws2812_Lbl = 100;
-        static uint8_t ws2812_Lgr = 100;
-        unsigned long  ws2812_Lalt = 0;
-        uint32_t       ws2812_Lcnt = 0;
-        uint32_t       ws2812_Lv   = 0;
-        bool           ws2812_pwr = false;
-        uint16_t       idx2812L1  = 0;
-        //static int16_t posL2812 = -10000;
-      #endif
-
     #if (USE_CTRL_POTI_ADC > OFF)
         uint16_t inpValADC[USE_CTRL_POTI_ADC];
       #endif
@@ -254,12 +194,68 @@
     #if (USE_RGBLED_PWM > OFF)
         outRGBVal_t outValRGB[USE_RGBLED_PWM];
         #if (TEST_RGBLED_PWM > OFF)
-            uint8_t  colRGBLED = 0;
-            uint16_t incRGBLED = 10;
-            uint32_t RGBLED_gr = 64;
-            uint32_t RGBLED_bl = 128;
-            uint32_t RGBLED_rt = 192;
+            md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1), new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
+            //uint8_t  colRGBLED = 0;
+            //uint16_t incRGBLED = 10;
+            //uint32_t RGBLED_gr = 64;
+            //uint32_t RGBLED_bl = 128;
+            //uint32_t RGBLED_rt = 192;
           #endif
+      #endif
+
+    #if (USE_WS2812_MATRIX_OUT > OFF)
+        #if (ANZ_TILES_M1 > OFF)
+            md_ws2812_matrix matrix_1 = md_ws2812_matrix
+              ( COLPIX_2812_T1, ROWPIX_2812_T1,
+                COLTIL_2812_M1, ROWTIL_2812_M1, PIN_WS2812_M1,
+                ROW1_2812_T1  + COL1_2812_T1 +
+                DIR_2812_T1   + ORI_2812_T1,
+                (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
+            //md_LEDPix24* matrix2812[2] = { new md_LEDPix24(), new md_LEDPix24() };
+        #else
+            md_ws2812_matrix matrix_1 = md_ws2812_matrix
+              ( COLPIX_2812_M1, ROWPIX_2812_M1,
+                0, 0, PIN_WS2812_M1,
+                ROW1_2812_M1  + COL1_2812_M1 +
+                DIR_2812_M1   + ORI_2812_M1,
+                (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
+          #endif
+        msTimer ws2812T1   = msTimer(UPD_2812_M1_MS);
+        #if (USE_WS2812_MATRIX_OUT > 1)
+            md_ws2812_matrix matrix_2 = md_ws2812_matrix
+              ( COLPIX_2812_M2, ROWPIX_2812_M2,
+                COLTIL_2812_M2, ROWTIL_2812_M2, PIN_WS2812_M2,
+                #if (ANZ_TILES_M2 > OFF)
+                    NEO_TILE_TOP       + NEO_TILE_LEFT +
+                    NEO_TILE_ROWS      + NEO_TILE_PROGRESSIVE +
+                  #endif
+                NEO_MATRIX_TOP     + NEO_MATRIX_LEFT +
+                NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
+                (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
+            msTimer ws2812MT   = msTimer(UPD_2812_M1_MS);
+          #endif
+        const char text2812[] = "Willkommen im Weltladen";
+        static scroll2812_t outM2812[2] = { scroll2812_t(), scroll2812_t() } ;
+        static int16_t posM2812 = (int16_t) (COLPIX_2812_M1 + OFFBEG_2812_M1);
+        unsigned long  ws2812_Malt = 0;
+        uint32_t       ws2812_Mcnt = 0;
+        uint32_t       ws2812_Mv   = 0;
+        bool           ws2812_Mpwr = false;
+      #endif
+
+    #if (USE_WS2812_LINE_OUT > OFF)
+        msTimer         ws2812LT    = msTimer(UPD_2812_L1_MS);
+        Adafruit_NeoPixel strip = Adafruit_NeoPixel(COLPIX_2812_L1, PIN_WS2812_L1, (neoPixelType) COLORD_2812_L1 + NEO_KHZ800);
+        //static uint8_t ws2812_Lbright = (uint8_t) BRIGHT_2812_L1;
+        static uint8_t ws2812_Lrt  = 100;
+        static uint8_t ws2812_Lbl  = 100;
+        static uint8_t ws2812_Lgr  = 100;
+        unsigned long  ws2812_Lalt = 0;
+        uint32_t       ws2812_Lcnt = 0;
+        uint32_t       ws2812_Lv   = 0;
+        bool           ws2812_pwr  = false;
+        uint16_t       idx2812L1   = 0;
+        md_LEDPix24*   line2812[2] = {NULL, NULL};
       #endif
 
     #if (USE_BUZZER_PWM > OFF)
@@ -452,6 +448,7 @@
 // --- system setup -----------------------------------
   void setup()
     {
+      uint32_t i32tmp = 0;
       // --- system
         // start system
           Serial.begin(SER_BAUDRATE);
@@ -510,23 +507,61 @@
                 SOUTLN("LED blau");
                 usleep(500000);
                 ledcWrite(PWM_RGB_BLUE, 0);
+
             #endif
           startDisp();
           dispStatus("setup start ...");
 
         // WS2812 LEDs
           #if (USE_WS2812_MATRIX_OUT > OFF)
-              SOUT("start WS2812 matrix ...");
+              SOUTLN("start WS2812 matrix ...");
               dispStatus("start WS2812 Matrix");
+
+              //SOUT(" p_outM 0/1 "); SOUTHEX((uint32_t) &outM2812[0]);            SOUT(" / "); SOUTHEXLN ((uint32_t) &outM2812[1]);
+              //SOUT(" p_text 0/1 "); SOUTHEX((uint32_t) &outM2812[0].text);       SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].text);
+              //SOUT(" p_pix24 0/1 "); SOUTHEX((uint32_t) outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
+
+              outM2812[1].bmpB->bmp_num = MD_BITMAP_SMILY;
+              outM2812[1].bmpB->pix24->col16(COL16_2812_BM1);
+              outM2812[1].bmpB->pix24->bright(BRI_2812_BM1);
+              outM2812[0].bmpB = outM2812[1].bmpB;
+              outM2812[1].text->text = (char*) text2812;
+              outM2812[1].text->pix24->col16(COL16_2812_M1);
+              outM2812[1].text->pix24->bright(BRI_2812_M1);
+              outM2812[0].text = outM2812[1].text;
+              outM2812[1].bmpE->bmp_num = MD_BITMAP_SMILY;
+              outM2812[1].bmpE->pix24->col16(COL16_2812_BM1);
+              outM2812[1].bmpE->pix24->bright(BRI_2812_BM1);
+              outM2812[0].bmpE = outM2812[1].bmpE;
+              //memcpy((char*) &outM2812[0], (char*) &outM2812[1], sizeof(outM2812[1]));
+              //SOUT(" outM bmpB 0/1 ");
+              //SOUTHEX(outM2812[0].bmpB->bmp_num); SOUT(" / "); SOUTHEX(outM2812[1].bmpB->bmp_num); SOUT(" - ");
+              //SOUTHEX((uint32_t) outM2812[0].bmpB->pix24);   SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
+              //SOUTHEX(*outM2812[0].bmpB->pix24);  SOUT(" / "); SOUTHEXLN(*outM2812[1].bmpB->pix24);
+              //SOUT(" outM text 0/1 ");
+              //SOUT(outM2812[0].text->text);       SOUT(" / "); SOUT(outM2812[1].text->text); SOUT(" - ");
+              //SOUTHEX((uint32_t) outM2812[0].text->pix24);   SOUT(" / "); SOUTHEXLN((uint32_t) outM2812[1].text->pix24);
+              //SOUTHEX(*outM2812[0].text->pix24);  SOUT(" / "); SOUTHEXLN(*outM2812[1].text->pix24);
+              //SOUT(" outM bmpE 0/1 ");
+              //SOUTHEX(outM2812[0].bmpE->bmp_num); SOUT(" / "); SOUTHEX(outM2812[1].bmpE->bmp_num); SOUT(" - ");
+              //SOUTHEX(*outM2812[0].bmpE->pix24);  SOUT(" / "); SOUTHEXLN(*outM2812[1].bmpE->pix24);
+
+              //SOUT(" p_outM 0/1 "); SOUTHEX((uint32_t) &outM2812[0]);            SOUT(" / "); SOUTHEXLN ((uint32_t) &outM2812[1]);
+              //SOUT(" p_text 0/1 "); SOUTHEX((uint32_t) &outM2812[0].text);       SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].text);
+              //SOUT(" p_pix24 0/1 "); SOUTHEX((uint32_t) outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
+
+              usleep(10000);
+              //outM2812[0].text = outM2812[1].text;
+              //outM2812[0].bmpE = outM2812[1].bmpE;
               matrix_1.begin();
-              usleep(5000);
+              usleep(50000);
               matrix_1.display_boxes();
               usleep(1500000);
               //matrix_1.start_scroll_task((scroll2812_t*) &outM2812, &posM2812);
+
               SOUT(" start = "); SOUT(posM2812);
-              matrix_1.start_scroll_matrix((scroll2812_t*) &outM2812,
-                                            &posM2812,
-                                            - (strlen(text2812) * COLCHAR_2812 + OFFEND_2812_M1));
+              matrix_1.start_scroll_matrix(  (scroll2812_t*) outM2812, &posM2812,
+                                           - (strlen(text2812) * COLCHAR_2812 + OFFEND_2812_M1));
               ws2812T1.startT();
               SOUTLN(" ok");
             #endif
@@ -538,10 +573,31 @@
               strip.fill(strip.Color(200,0,0));
               strip.show();
               usleep(400000);
-              strip.setBrightness(ws2812_Lbright);
-              strip.fill(strip.Color(ws2812_Lrt,ws2812_Lgr,ws2812_Lbl));
+              i32tmp = COL24_2812_L1 + (BRI_2812_L1 << 24);
+              SOUT(" strip BriCol org "); SOUTHEX(i32tmp);
+
+              line2812[0] = new md_LEDPix24();
+              line2812[1] = new md_LEDPix24(i32tmp);
+                  //(BRI_2812_L1,
+                  // (uint8_t) ((COL24_2812_L1 & 0x00ff0000) >> 16),
+                  // (uint8_t) ((COL24_2812_L1 & 0x0000ff00) >> 8),
+                  // (uint8_t) ( COL24_2812_L1 & 0x000000ff)
+                  //);
+              //SOUT(" line[0]/[1] vor "); SOUTHEX((uint32_t)*line2812[0]); SOUT(" "); SOUTHEX((uint32_t)*line2812[1]);
+              *line2812[0] = *line2812[1];
+              //SOUT(" line[0]/[1] nach "); SOUTHEX((uint32_t)*line2812[0]); SOUT(" "); SOUTHEXLN((uint32_t)*line2812[1]);
+              //SOUT(" line[0].bright() "); SOUTHEX(line2812[0]->bright());
+              //SOUT(" line[0].col24() "); SOUTHEXLN(line2812[0]->col24());
+              //strip.setBrightness(line2812[0]->bright());
+              strip.setBrightness(5);
+              strip.fill(line2812[0]->col24());
+              //strip.fill(strip.Color((uint8_t) ((line2812[0]->col24() & 0x00FF0000u) >> 16),
+              //                       (uint8_t) ((line2812[0]->col24() & 0x0000FF00u) >> 8 ),
+              //                       (uint8_t)  (line2812[0]->col24() & 0x000000FFu) ) );
               strip.show();
               SOUTLN("ok");
+              //
+              delay(1000);
             #endif
 
         // start buzzer (task)
@@ -883,74 +939,100 @@
           md_message *pM   = NULL;
           mdMSG_t*    pMsg = NULL;
           int         itmp = 0;
-          char       *ctmp = NULL;
+          char*       ctmp = NULL;
+          md_LEDPix24* ppix = NULL;
+          //uint8_t     rtcol;
+          //uint8_t     grcol;
+          //uint8_t     blcol;
+          char        idx;
           while (msgList->count() > 0)
             {
               pM   = (md_message*) msgList->pFirst();
               pMsg = pM->pMsg;
-              switch (pMsg->type)
-                {
-                  case EL_TSOCKET:
-                      SOUT(" Socket ");
-                    break;
-                  case EL_TANALOG:
-                      SOUT(" Analog ");
-                    break;
-                  case EL_TSLIDER:
-                      SOUT(" Slider ");
-                      ctmp = (char*) pMsg->payload.c_str();
-                      ctmp += 2;
-                      SOUT(ctmp); SOUT(" - ");
-                      itmp = atoi(ctmp);
-                      switch (pMsg->payload[1])
-                        {
-                          case 'b':
-                            RGBLED_bl = (uint8_t) (itmp & 0x000000FF);
-                            break;
-                          case 'g':
-                            RGBLED_gr = (uint8_t) (itmp & 0x000000FF);
-                            break;
-                          case 'r':
-                            RGBLED_rt = (uint8_t) (itmp & 0x000000FF);
-                            break;
-                          case 'l':
-                            ws2812_Lbright = (uint8_t) (itmp & 0x000000FF);
+              idx  = pMsg->payload[1];
+              SOUT(" msg client "); SOUT(pMsg->client);
+              SOUT(" type "); SOUT(pMsg->type);
+              SOUT(" idx "); SOUTLN(idx);
 
-                            strip.setBrightness(ws2812_Lbright);
-                            strip.show();
-                            //strip.fill(strip.Color(200,0,0));
-                            break;
-                          case 'm':
-                            ws2812_Mbright = (uint8_t) (itmp & 0x000000FF);;
-                            break;
-                        }
-                    break;
-                  case EL_TCOLOR:
-                      SOUT(" Color ");
-                      //ws2812_Lrt;
-                      //ws2812_Lgr;
-                      //ws2812_Lbl;
-                    break;
-                  case EL_TSWITCH:
-                      SOUT(" Switch ");
-                    break;
-                  case EL_TTEXT:
-                      SOUT(" Text ");
-                    break;
-                  case EL_TOFFSET:
-                      SOUT(" Offset ");
-                    break;
-                  case EL_TGRAPH:
-                      SOUT(" Graph ");
-                    break;
-                  case EL_TINDEX:
-                      SOUT(" Index ");
-                    break;
-                  default:
-                      SOUT(" ERROR ");
-                    break;
+              if (pMsg->type == EL_TSOCKET)
+                { SOUT(" Socket "); }
+              else
+                {
+                  ctmp = (char*) pMsg->payload.c_str();
+                  ctmp += 2;
+                  SOUT("ctmp "); SOUT(ctmp); SOUT(" - ");
+                  itmp = atoi(ctmp);
+                  switch (pMsg->type)
+                    {
+                      case EL_TANALOG:
+                          SOUT(" Analog nu ");
+                        break;
+                      case EL_TSLIDER:
+                          SOUT(" Slider ");
+                          switch (idx) // index of serverelement
+                            {
+                              case '1': // RGB-LED col24
+                                SOUT(" RGBLED bright "); SOUT(RGBLED[1]->bright()); SOUT(" neu ");
+                                RGBLED[1]->bright(itmp);
+                                SOUT(RGBLED[1]->bright()); SOUT(" ");
+                                break;
+                              case '2': // 2821 line col24
+                                SOUT(" line bright "); SOUT(line2812[1]->bright()); SOUT(" neu ");
+                                line2812[1]->bright((uint8_t) itmp);
+                                SOUT(line2812[1]->bright()); SOUT(" ");
+                                break;
+                              case '3':
+                                ppix = outM2812[1].text->pix24;
+                                SOUT(" matrix bright "); SOUT(ppix->bright()); SOUT(" neu ");
+                                ppix->bright((uint8_t) itmp);
+                                SOUTLN(ppix->bright());
+                                break;
+                            }
+                        break;
+                      case EL_TCOLOR:
+                          SOUT(" Color ");
+                          itmp  = (int)strtol(ctmp, NULL, 16);
+                          switch (idx) // index of serverelement
+                            {
+                              case '1': // RGB-LED col24
+                                SOUT(" RGBLED color "); SOUTHEX(RGBLED[1]->col24()); SOUT(" neu ");
+                                RGBLED[1]->col24(itmp);
+                                SOUTHEXLN(RGBLED[1]->col24());
+                                break;
+                              case '2': // 2821 line col24
+                                SOUT(" line2812 color24 "); SOUTHEX(line2812[1]->col24());
+                                line2812[1]->col24(itmp);
+                                SOUT(" neu 24/16"); SOUTHEX(line2812[1]->col24()); SOUT(" / "); SOUTLN(Col16(line2812[1]->col24()));
+                                break;
+                              case '3': // 2821 matrix col16
+                                ppix = outM2812[1].text->pix24;
+                                SOUT(" matrix color24 "); SOUTHEX(ppix->col24());
+                                ppix->col24(itmp);
+                                SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                break;
+                            }
+                        break;
+                      case EL_TSWITCH:
+                          SOUT(" Switch ");
+                        break;
+                      case EL_TTEXT:
+                          SOUT(" Text ");
+                        break;
+                      case EL_TOFFSET:
+                          SOUT(" Offset ");
+                        break;
+                      case EL_TGRAPH:
+                          SOUT(" Graph ");
+                        break;
+                      case EL_TINDEX:
+                          SOUT(" Index ");
+                        break;
+                      default:
+                          SOUT(" ERROR ");
+                        break;
+                    }
                 }
-              SOUT(pMsg->payload);
+              SOUT("'"); SOUT(pMsg->payload); SOUT("'");
               msgList->rem();
               SOUT(" msgList.count "); SOUTLN(msgList->count());
             }
@@ -1136,29 +1218,87 @@
       // ----------------------
       #ifdef USE_OUTPUT_CYCLE
           #if (USE_WS2812_MATRIX_OUT > OFF)
-              if (ws2812T1.TOut())
-                {
-                  ws2812T1.startT();
+              //if (ws2812T1.TOut())
+                //{
+                  //ws2812T1.startT();
+                  //bool doIt = false;
                   //SOUTLN(); SOUT(micros());
-                  //ws2812_Mbright = (uint8_t) BRIGHT_2812_M1;
-                  //matrix_1.
-                  matrix_1.setBright(ws2812_Mbright);
-                  matrix_1.scroll_matrix();
+                  // check chanches bitmap at begin
+
+                    if (*outM2812[0].bmpB->pix24 == *outM2812[1].bmpB->pix24) {}
+                      else
+                      {
+                        *outM2812[0].bmpB->pix24 = *outM2812[1].bmpB->pix24;
+                      }
+
+                  // check chanches in text (text, color, intensity)
+                    if (strcmp(outM2812[0].text->text, outM2812[1].text->text) > 0)
+                      {
+                        memcpy(outM2812[0].text->text, outM2812[1].text->text, sizeof((char*) outM2812[1].text->text));
+                      }
+
+                    //SOUT(" matrix 0/1  "); SOUTHEX((uint32_t)  outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t)  outM2812[0].text->pix24);
+                    //SOUT(" matrix 0/1 *"); SOUTHEX((uint32_t) *outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t) *outM2812[0].text->pix24);
+                    if ((uint32_t) *outM2812[0].text->pix24 == (uint32_t) *outM2812[1].text->pix24) {}
+                      else
+                      {
+                        //SOUTLN(" changed matrix bright&color ");
+                        //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
+                        //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
+                        //SOUT(" / ");
+                        //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
+                        *outM2812[0].text->pix24 = *outM2812[1].text->pix24;
+                        //SOUTLN(" neu ");
+                        //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
+                        //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
+                        //SOUT(" / ");
+                        //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
+                      }
+
+                  // check chanches bitmap at end
+                  /*
+                    if (outM2812[0] == outM2812[1]) {}
+                    else
+                      {
+                        SOUT(" changed matrix bitmap "); SOUT(outM2812[0].text.pix24.bright());
+                        *outM2812[0].bmpE.pix24 = *outM2812[1].bmpE.pix24;
+                      }
+
+                    if (doIt == true)
+                      {
+                        //SOUT(" do start-matrix ");
+                        matrix_1.start_scroll_matrix((scroll2812_t*) &outM2812);
+                      }
+                  */
                   //SOUT(" "); SOUTLN(micros());
+                  matrix_1.scroll_matrix();
+                  //SOUT(" matrix ready "); SOUTLN(micros());
                   ws2812_Mcnt++;
-                }
+                //}
             #endif
 
           #if (USE_WS2812_LINE_OUT > OFF)
-              if (ws2812LT.TOut())
-                {
-                  ws2812LT.startT();
-                }
+              //if (ws2812LT.TOut())
+                //{
+                  //ws2812LT.startT();
+                  //SOUT(" outCycle line 0/1 "); SOUTHEX(*line2812[0]); SOUT("/"); SOUTHEX(*line2812[1]);
+                  //SOUT(" bright 0/1 "); SOUTHEX(line2812[0]->bright()); SOUT("/"); SOUTHEX(line2812[1]->bright());
+                  //SOUT(" col24 0/1 "); SOUTHEX(line2812[0]->col24()); SOUT("/"); SOUTHEXLN(line2812[1]->col24());
+                  if (*(line2812[1]) == *(line2812[0])) {}
+                    else
+                    {
+                      SOUTLN(" line changed ");
+                      *line2812[0] = *line2812[1];
+                      strip.setBrightness(line2812[0]->bright());
+                      strip.fill(line2812[0]->col24());
+                      strip.show();
+                    }
+                //}
             #endif
 
-          if (outpT.TOut())
-            {
-              outpT.startT();
+          //if (outpT.TOut())
+            //{
+              //outpT.startT();
               #if (USE_RGBLED_PWM > OFF)
                   #if (TEST_RGBLED_PWM > OFF)
                     /*
@@ -1209,11 +1349,21 @@
                           ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
                         #endif
 
-                      ledcWrite(PWM_RGB_RED,   RGBLED_rt);
-                      ledcWrite(PWM_RGB_GREEN, RGBLED_gr);
-                      ledcWrite(PWM_RGB_BLUE,  RGBLED_bl);
-                    #endif
 
+                      if(*RGBLED[0] == *RGBLED[1]) {}
+                        else
+                        {
+                          SOUT(" RGBLED changed 0/1 "); SOUTHEX((uint32_t) *RGBLED[0]);
+                          SOUT(" / "); SOUTHEXLN((uint32_t) *RGBLED[1]);
+                          *RGBLED[0] = *RGBLED[1];
+                          //ledcWrite(PWM_RGB_RED,   BrightCol(RGBLED[0][LED_RED],RGBLED[0][LED_BRIGHT]));
+                          //ledcWrite(PWM_RGB_GREEN, BrightCol(RGBLED[0][LED_GREEN],RGBLED[0][LED_BRIGHT]));
+                          //ledcWrite(PWM_RGB_BLUE, BrightCol()  BrightCol(RGBLED[0][LED_BLUE],RGBLED[0][LED_BRIGHT]));
+                          ledcWrite(PWM_RGB_RED,   Bright_x_Col(Red(RGBLED[0]->col24()),   RGBLED[0]->bright()));
+                          ledcWrite(PWM_RGB_GREEN, Bright_x_Col(Green(RGBLED[0]->col24()), RGBLED[0]->bright()));
+                          ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
+                        }
+                    #endif
                 #endif
 
               #if (USE_FAN_PWM > OFF)
@@ -1237,7 +1387,7 @@
                   ledcWrite(PWM_FAN_2, valFanPWM[1]);
                 #endif
 
-            }
+            //}
         #endif
       // --- Display -------------------
       #if (USE_DISP > 0)

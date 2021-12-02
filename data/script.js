@@ -43,7 +43,12 @@ function onMessage(event)
   {
     console.log('Message received');
     console.log(event.data);
-    var data = event.data;
+    var s = event.data;
+    if (s.substr(0,1) = tSlider)
+      {
+
+      }
+
   }
 
 function getCurrentValue()
@@ -63,14 +68,17 @@ function getCurrentValue()
 
 function updateVal(element)
   {
-    var sval;
-    var s = element.id;
-    if (s.substr(0,4) == "LEDV")
+    var sval, hval;
+    var s  = element.id;
+    var id = s.substr(0,4);
+    var n  = s.substr(s.length - 1, 1);
+    if (id == "LEDV")
       {
         sval = document.getElementById(element.id).value;
+        //hval = (sval).toString(16);
         document.getElementById("val"+element.id).innerHTML = sval;
         s = s.substr(s.length - 1, 1);
-        s = tSlider + s + sval;
+        s = tSlider + n + sval;
       }
     if (s.substr(0,4) == "SLSW")
       {
@@ -82,9 +90,16 @@ function updateVal(element)
       }
     if (s.substr(0,4) == "BUTT")
       {
-        sval = document.getElementById('BUTT_1').value;
+        sval = document.getElementById(element.id).value;
         s = s.substr(s.length - 1, 1);
         s = tSwitch + s + sval.substring(1);
+      }
+    if (id == "LEDC")
+      {
+        sval = document.getElementById(element.id).value;
+              console.log(element.id + " val " + sval);
+        s = s.substr(s.length - 1, 1);
+        s = tColor + s + sval.substring(1);
       }
     console.log(element.id + "->" + s);
     websocket.send(s);

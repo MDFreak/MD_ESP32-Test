@@ -537,166 +537,7 @@
         // output status line
         #define STAT_TIMEDEF     5000u    // default time to clear status
 
-      // WS2812 LEDs
-        #if (USE_WS2812_MATRIX_OUT > OFF)
-            #ifndef USE_OUTPUT_CYCLE
-                #define USE_OUTPUT_CYCLE
-              #endif
-            #define COLCHAR_2812   6
-            #define COLBMP_2812    8
-            #define ROWBMP_2812    8
-            #define UPD_2812_M1_MS 70
-            #define BRIGHT_2812_M1 5
-
-            #define ROW1_2812_M1   NEO_MATRIX_TOP
-            #define COL1_2812_M1   NEO_MATRIX_LEFT
-            #define DIR_2812_M1    NEO_MATRIX_COLUMNS
-            #define ORI_2812_M1    NEO_MATRIX_ZIGZAG
-
-            #define TYPE_2812_M1   WS2812B
-            #define COLORD_2812_M1 NEO_GRB
-            #define ROWPIX_2812_M1 8
-            #define LEDS_2812_M1   COLPIX_2812_M1 * ROWPIX_2812_M1
-
-            #define ROW1_2812_T1   NEO_MATRIX_TOP
-            #define COL1_2812_T1   NEO_MATRIX_LEFT
-            #define DIR_2812_T1    NEO_MATRIX_COLUMNS
-            #define ORI_2812_T1    NEO_MATRIX_ZIGZAG
-
-            #define COLPIX_2812_T1 8
-            #define ROWPIX_2812_T1 8
-            #define COLTIL_2812_M1 16  // needs correct value
-            #define ROWTIL_2812_M1 1   // 0 = OFF
-            #define ANZ_TILES_M1   COLTIL_2812_M1 * ROWPIX_2812_T1
-            #define COLPIX_2812_M1 COLTIL_2812_M1 * COLPIX_2812_T1
-            #define OFFBEG_2812_M1 1 //+ COLPIX_2812_T1
-            #define OFFEND_2812_M1 0 //+ COLPIX_2812_T1
-            #if (USE_WS2812_MATRIX_OUT > 1)
-                #ifndef USE_OUTPUT_CYCLE
-                    #define USE_OUTPUT_CYCLE
-                  #endif
-                #define UPD_2812_M2_MS 8
-                #define LEDS_2812_M2   512
-                #define BRIGHT_2812_M2 5
-                #define TYPE_2812_M2   WS2812B
-                #define COLORD_2812_M2 NEO_GRB
-                #define COLPIX_2812_M2 128
-                #define ROWPIX_2812_M2 8
-                #define COLPIX_2812_T2 8
-                #define ROWPIX_2812_T2 8
-                #define COLTIL_2812_M2 4
-                #define ROWTIL_2812_M2 1
-              #endif
-          #endif
-
-        #if (USE_WS2812_LINE_OUT > OFF)
-            #ifndef USE_OUTPUT_CYCLE
-                #define USE_OUTPUT_CYCLE
-              #endif
-            #define UPD_2812_L1_MS 10
-            #define LEDS_2812_L1   30 // 300
-            #define BRIGHT_2812_L1 10
-            #define TYPE_2812_L1   WS2812B
-            #define COLORD_2812_L1 NEO_GRB
-            #define COLPIX_2812_L1 300
-            #define ROWPIX_2812_L1 1
-            #define COLTIL_2812_L1 4
-            #define ROWTIL_2812_L1 1
-              //#define COLPIX_2812_T1 8
-              //#define ROWPIX_2812_T1 8
-                  //#define UPD_2812_L1_MS 1
-                  //#define LEDS_2812_L1   300
-                  //#define BRIGHT_2812_L1 5
-                  //#define TYPE_2812_L1   WS2812B
-                  //#define COLORD_2812_L1 NEO_GRB
-            #if (USE_WS2812_LINE_OUT > 1)
-                #define UPD_2812_L2_MS 10
-                #define LEDS_2812_L2   30
-                #define BRIGHT_2812_L2 12
-                #define TYPE_2812_L2   WS2812B
-                #define COLORD_2812_L2 GRB
-                #if (USE_WS2812_LINE_OUT > 2)
-                    #define LEDS_2812_L3   30
-                    #define BRIGHT_2812_L3 12
-                    #define TYPE_2812_L3   WS2812
-                    #define COLORD_2812_L3 GRB
-                    #if (USE_WS2812_LINE_OUT > 3)
-                        #define LEDS_2812_L4   30
-                        #define BRIGHT_2812_L4 12
-                        #define TYPE_2812_L4   WS2812
-                        #define COLORD_2812_L4 GRB
-                      #endif
-                  #endif
-              #endif
-          #endif
-
-    // --- network
-      // --- WIFI
-        #if (USE_WIFI > OFF)
-            #define WIFI_ANZ_LOGIN  4
-            #define WIFI_IS_DUTY    ON
-            #define WIFI_SSID0      "MAMD-HomeG" // WLAN Moosgrabenstrasse 26
-            #define WIFI_SSID0_PW   "ElaNanniRalf3"
-            #define WIFI_SSID1      "HS-HomeG" // WLAN Am Jungberg 9
-            #define WIFI_SSID1_PW   "ElaNanniRalf3"
-            #define WIFI_SSID2      "WL-Fairnetz" //Weltladen
-            #define WIFI_SSID2_PW   "WL&Fair2Live#"
-            #define WIFI_SSID3      "machquadrat" //Weltladen
-            #define WIFI_SSID3_PW   "IamSecure"
-            #define WIFI_CONN_DELAY 500000ul // Scan-Abstand [us]
-            #define WIFI_CONN_REP   5        // Anzahle der Connect-Schleifen
-            #define WIFI_CONN_CYCLE 4000ul   // Intervallzeit fuer Recoonect [us]
-            #define NTPSERVER_CYCLE 1000ul   // Intervallzeit [us]
-
-            #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
-            #if !(BOARD ^ MC_ESP32_Node)
-                #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20   lowest first
-            #elif !(BOARD ^ MC_ESP32_D1_MINI)
-                #if (USED_WS2812_LINE_OUT > OFF)
-                    #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20
-                  #else
-                    #define WIFI_FIXIP0     0x1500000Aul // 10.0.0.21
-                  #endif
-            #elif !(BOARD ^ MC_ESP32_D1_R32)
-                #define WIFI_FIXIP0     0x1A00000Aul // 10.0.0.26   lowest first
-              #endif
-            #define WIFI_GATEWAY0   0x8B00000Aul // 10.0.0.139
-            #if (USED_WS2812_LINE_OUT > OFF)
-                #define WIFI_FIXIP1     0x1400000Aul // 10.0.0.20
-              #else
-                #define WIFI_FIXIP1     0x1500000Aul // 10.0.0.21
-              #endif
-            #define WIFI_GATEWAY1   0x8B00000Aul // 10.0.0.139
-            #define WIFI_FIXIP2     0x1400000Aul // 10.0.0.20
-            #define WIFI_GATEWAY2   0x8a00000Aul // 10.0.0.138
-            #define WIFI_FIXIP3     0x1600000Aul // 10.0.0.22
-            #define WIFI_GATEWAY3   0x0100000Aul // 10.0.0.1
-            #define WIFI_SUBNET     0x00FFFFFFul // 255.255.255.0
-          #endif
-
-      // --- webserver
-        #if (USE_WEBSERVER > OFF)
-            #define WEBSERVER_CYCLE 1000ul  // Intervallzeit [us]
-          #endif
-
     // --- user output
-      // --- PWM
-        #if (USE_RGBLED_PWM > OFF)
-            #ifndef USE_OUTPUT_CYCLE
-                #define USE_OUTPUT_CYCLE
-              #endif
-            #define PWM_LEDS_FREQ      4000u
-            #define PWM_LEDS_RES       8
-          #endif
-
-        #if (USE_FAN_PWM > OFF)
-            #ifndef USE_OUTPUT_CYCLE
-                #define USE_OUTPUT_CYCLE
-              #endif
-            #define PWM_FAN_FREQ      4500u
-            #define PWM_FAN_RES       8
-          #endif
-
       // --- display
         #if (USE_DISP > 0)
             #define USE_STATUS
@@ -811,6 +652,121 @@
                 #define PLAY_START_DINGDONG
               #endif
           #endif // USE_BUZZER_PWM
+
+      // WS2812 LEDs
+        #if (USE_WS2812_MATRIX_OUT > OFF)
+            #ifndef USE_OUTPUT_CYCLE
+                #define USE_OUTPUT_CYCLE
+              #endif
+            #define COLCHAR_2812   6
+            #define COLBMP_2812    8
+            #define ROWBMP_2812    8
+            #define UPD_2812_M1_MS 70
+            #define COL16_2812_M1  0xFFC0u   //0xB924u   // color r-g-b (5-6-5)
+            #define COL16_2812_BM1 0x7743u   // color r-g-b (5-6-5)
+            #define BRI_2812_M1    5
+            #define BRI_2812_BM1   5
+
+            #define ROW1_2812_M1   NEO_MATRIX_TOP
+            #define COL1_2812_M1   NEO_MATRIX_LEFT
+            #define DIR_2812_M1    NEO_MATRIX_COLUMNS
+            #define ORI_2812_M1    NEO_MATRIX_ZIGZAG
+
+            #define TYPE_2812_M1   WS2812B
+            #define COLORD_2812_M1 NEO_GRB
+            #define ROWPIX_2812_M1 8
+            #define LEDS_2812_M1   COLPIX_2812_M1 * ROWPIX_2812_M1
+
+            #define ROW1_2812_T1   NEO_MATRIX_TOP
+            #define COL1_2812_T1   NEO_MATRIX_LEFT
+            #define DIR_2812_T1    NEO_MATRIX_COLUMNS
+            #define ORI_2812_T1    NEO_MATRIX_ZIGZAG
+
+            #define COLPIX_2812_T1 8
+            #define ROWPIX_2812_T1 8
+            #define COLTIL_2812_M1 16  // needs correct value
+            #define ROWTIL_2812_M1 1   // 0 = OFF
+            #define ANZ_TILES_M1   COLTIL_2812_M1 * ROWPIX_2812_T1
+            #define COLPIX_2812_M1 COLTIL_2812_M1 * COLPIX_2812_T1
+            #define OFFBEG_2812_M1 1 //+ COLPIX_2812_T1
+            #define OFFEND_2812_M1 0 //+ COLPIX_2812_T1
+            #if (USE_WS2812_MATRIX_OUT > 1)
+                #ifndef USE_OUTPUT_CYCLE
+                    #define USE_OUTPUT_CYCLE
+                  #endif
+                #define UPD_2812_M2_MS 8
+                #define LEDS_2812_M2   512
+                #define BRIGHT_2812_M2 5
+                #define TYPE_2812_M2   WS2812B
+                #define COLORD_2812_M2 NEO_GRB
+                #define COLPIX_2812_M2 128
+                #define ROWPIX_2812_M2 8
+                #define COLPIX_2812_T2 8
+                #define ROWPIX_2812_T2 8
+                #define COLTIL_2812_M2 4
+                #define ROWTIL_2812_M2 1
+              #endif
+          #endif
+
+        #if (USE_WS2812_LINE_OUT > OFF)
+            #ifndef USE_OUTPUT_CYCLE
+                #define USE_OUTPUT_CYCLE
+              #endif
+            #define UPD_2812_L1_MS 10
+            #define COL24_2812_L1  0x6300F1u   // color r-g-b (5-6-5)
+            #define BRI_2812_L1    5u
+            #define TYPE_2812_L1   WS2812B
+            #define COLORD_2812_L1 NEO_GRB
+            #define COLPIX_2812_L1 300
+            #define ROWPIX_2812_L1 1
+            #define COLTIL_2812_L1 4
+            #define ROWTIL_2812_L1 1
+              //#define COLPIX_2812_T1 8
+              //#define ROWPIX_2812_T1 8
+                  //#define UPD_2812_L1_MS 1
+                  //#define LEDS_2812_L1   300
+                  //#define BRIGHT_2812_L1 5
+                  //#define TYPE_2812_L1   WS2812B
+                  //#define COLORD_2812_L1 NEO_GRB
+            #if (USE_WS2812_LINE_OUT > 1)
+                #define UPD_2812_L2_MS 10
+                #define LEDS_2812_L2   30
+                #define BRIGHT_2812_L2 12
+                #define TYPE_2812_L2   WS2812B
+                #define COLORD_2812_L2 GRB
+                #if (USE_WS2812_LINE_OUT > 2)
+                    #define LEDS_2812_L3   30
+                    #define BRIGHT_2812_L3 12
+                    #define TYPE_2812_L3   WS2812
+                    #define COLORD_2812_L3 GRB
+                    #if (USE_WS2812_LINE_OUT > 3)
+                        #define LEDS_2812_L4   30
+                        #define BRIGHT_2812_L4 12
+                        #define TYPE_2812_L4   WS2812
+                        #define COLORD_2812_L4 GRB
+                      #endif
+                  #endif
+              #endif
+          #endif
+
+      // --- PWM
+        #if (USE_RGBLED_PWM > OFF)
+            #ifndef USE_OUTPUT_CYCLE
+                #define USE_OUTPUT_CYCLE
+              #endif
+            #define PWM_LEDS_FREQ  4000u
+            #define PWM_LEDS_RES   8
+            #define BRI_RGBLED_1   15
+            #define COL24_RGBLED_1 0xBE2727u   // bright 10 + red 10 + green 10 + blue 10
+          #endif
+
+        #if (USE_FAN_PWM > OFF)
+            #ifndef USE_OUTPUT_CYCLE
+                #define USE_OUTPUT_CYCLE
+              #endif
+            #define PWM_FAN_FREQ      4500u
+            #define PWM_FAN_RES       8
+          #endif
 
     // --- user input
       // --- keypads
@@ -961,6 +917,55 @@
       #ifdef USE_OUTPUT_CYCLE
           #define OUTPUT_CYCLE_MS  500u
         #endif
+
+    // --- network
+      // --- WIFI
+        #if (USE_WIFI > OFF)
+            #define WIFI_ANZ_LOGIN  4
+            #define WIFI_IS_DUTY    ON
+            #define WIFI_SSID0      "MAMD-HomeG" // WLAN Moosgrabenstrasse 26
+            #define WIFI_SSID0_PW   "ElaNanniRalf3"
+            #define WIFI_SSID1      "HS-HomeG" // WLAN Am Jungberg 9
+            #define WIFI_SSID1_PW   "ElaNanniRalf3"
+            #define WIFI_SSID2      "WL-Fairnetz" //Weltladen
+            #define WIFI_SSID2_PW   "WL&Fair2Live#"
+            #define WIFI_SSID3      "machquadrat" //Weltladen
+            #define WIFI_SSID3_PW   "IamSecure"
+            #define WIFI_CONN_DELAY 500000ul // Scan-Abstand [us]
+            #define WIFI_CONN_REP   5        // Anzahle der Connect-Schleifen
+            #define WIFI_CONN_CYCLE 4000ul   // Intervallzeit fuer Recoonect [us]
+            #define NTPSERVER_CYCLE 1000ul   // Intervallzeit [us]
+
+            #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
+            #if !(BOARD ^ MC_ESP32_Node)
+                #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20   lowest first
+            #elif !(BOARD ^ MC_ESP32_D1_MINI)
+                #if (USED_WS2812_LINE_OUT > OFF)
+                    #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20
+                  #else
+                    #define WIFI_FIXIP0     0x1500000Aul // 10.0.0.21
+                  #endif
+            #elif !(BOARD ^ MC_ESP32_D1_R32)
+                #define WIFI_FIXIP0     0x1A00000Aul // 10.0.0.26   lowest first
+              #endif
+            #define WIFI_GATEWAY0   0x8B00000Aul // 10.0.0.139
+            #if (USED_WS2812_LINE_OUT > OFF)
+                #define WIFI_FIXIP1     0x1400000Aul // 10.0.0.20
+              #else
+                #define WIFI_FIXIP1     0x1500000Aul // 10.0.0.21
+              #endif
+            #define WIFI_GATEWAY1   0x8B00000Aul // 10.0.0.139
+            #define WIFI_FIXIP2     0x1400000Aul // 10.0.0.20
+            #define WIFI_GATEWAY2   0x8a00000Aul // 10.0.0.138
+            #define WIFI_FIXIP3     0x1600000Aul // 10.0.0.22
+            #define WIFI_GATEWAY3   0x0100000Aul // 10.0.0.1
+            #define WIFI_SUBNET     0x00FFFFFFul // 255.255.255.0
+          #endif
+
+      // --- webserver
+        #if (USE_WEBSERVER > OFF)
+            #define WEBSERVER_CYCLE 1000ul  // Intervallzeit [us]
+          #endif
 
     // ******************************************
 #endif // _PRJ_CONFIG_H_
