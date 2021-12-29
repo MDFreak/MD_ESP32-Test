@@ -23,7 +23,6 @@
         //#include "driver/pcnt.h"
         //#include "esp_attr.h"
         //#include "esp_log.h"
-
   // --- system components
     #if (USE_PWM_OUT > OFF)
         #include <driver\ledc.h>
@@ -143,7 +142,7 @@
       #endif
 
     #if (USE_FLASH_MEM > OFF)
-
+        #include <SPIFFS.h>
       #endif
   // --- network
     #if (USE_WIFI > OFF)
@@ -189,8 +188,9 @@
               int16_t showTrafficLight(int16_t inval, int16_t inthres);
             #endif
 
-        // WS2812 LEDs
+        // WS2812 LED
           #if (USE_WS2812_LINE_OUT > OFF)
+              void initWS2812Line();
               void FillLEDsFromPaletteColors(uint8_t lineNo, uint8_t colorIndex);
               void ChangePalettePeriodically(uint8_t lineNo);
               #ifdef XXXX
@@ -198,6 +198,10 @@
                   void SetupBlackAndWhiteStripedPalette();
                   void SetupPurpleAndGreenPalette();
                 #endif
+            #endif
+
+          #if (USE_WS2812_MATRIX_OUT > OFF)
+              void initWS2812Matrix();
             #endif
 
       // --- user input
@@ -223,16 +227,19 @@
           #if (USE_DS18B20_1W_IO > OFF)
               String getDS18D20Str();
             #endif
-        // --- BME280
-          #if ( USE_BME280_I2C > OFF )
-              String getBME280Str();
-            #endif
         // --- MQ135 gas sensor
           #if (USE_MQ135_GAS_ADC > OFF)
               int16_t getGasValue();
               int16_t getGasThres();
             #endif
+
         // --- T-element type K
+
+    // ----- memory ---------------------------
+          #if (USE_FLASH_MEM > OFF)
+              void testFlash();
+            #endif
+
     // ------ network -------------------------
       // --- WIFI
         #if (USE_WIFI > OFF)
@@ -247,6 +254,8 @@
             //             void * arg, uint8_t *data, size_t len);
             //void configWebsite();
             void startWebServer();
+            void readMessage();
+            void sendMessage();
           #endif
 
     // -------------------------

@@ -46,6 +46,7 @@
       #define USE_BME280_I2C        1     // [0, 1, ....] limited by I2C channels/addr
       #define USE_TYPE_K_SPI        OFF   // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ADC     OFF   // [0, 1, ....] limited by analog inputs
+      #define USE_PHOTO_SENS        ON
     // --- network  components
       #define USE_WIFI              ON
       #define USE_NTP_SERVER        ON
@@ -66,7 +67,7 @@
       #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_FAN_PWM + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
       #define USE_CNT_INP         USE_FAN_CNT_INP     // max 2 * 8 independent
       #define USE_PWM_INP         USE_FAN_PWM_INP
-      #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC
+      #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
       #define USE_ADC2            OFF // not to use
       #define USE_DIG_INP         USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
       #define USE_DIG_OUT         USE_WS2812_LINE_OUT + USE_LED_BLINK_OUT //

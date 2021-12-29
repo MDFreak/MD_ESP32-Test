@@ -37,6 +37,7 @@
         // --- user input
           #if (USE_CTRL_POTI_ADC > OFF)
               #define PIN_INP_POTI_1 35   // ADC 1-5
+              #define ADC_INP_POTI_1 NU   // ADC 1-5
             #endif
 
           #if (USE_CTRL_SW_INP > OFF)
@@ -120,7 +121,13 @@
               #define TYPEK2_CS_PIN  17
             #endif
           #if (USE_MQ135_GAS_ADC > OFF)
-              #define PIN_MQ135     36
+              #define PIN_MQ135     35
+              #define ADC_MQ135     5   // ADC 1-3
+            #endif
+
+          #if (USE_PHOTO_SENS > OFF)
+              #define PIN_PHOTO_SENS 39
+              #define ADC_PHOTO_SENS 3
             #endif
 
         // --- PWM channels   0..15
@@ -151,18 +158,6 @@
               #if (USE_OUT_FREQ_PWM > OFF)
                   #define PWM_FREQ_1    6
                 #endif
-            #endif
-
-        // --- ADC channels
-          #if (USE_ADC1 > 0)
-              #if (USE_MQ135_GAS_ADC > OFF)
-                  #define ADC_MQ135       3   // ADC 1-3
-                #endif
-
-              #if (USE_CTRL_POTI_ADC > OFF)
-                  #define ADC_INP_POTI_1  5   // ADC 1-5
-                #endif
-
             #endif
 
         // --- counter channels  0..7
@@ -662,8 +657,8 @@
             #define COLBMP_2812    8
             #define ROWBMP_2812    8
             #define UPD_2812_M1_MS 70
-            #define COL16_2812_M1  0xFFC0u   //0xB924u   // color r-g-b (5-6-5)
-            #define COL16_2812_BM1 0x7743u   // color r-g-b (5-6-5)
+            #define COL24_2812_M1  0xFF0000u   // 0xB924u   // color r-g-b (5-6-5)
+            #define COL24_2812_BM1 0x00FF00u   // color r-g-b (5-6-5)
             #define BRI_2812_M1    5
             #define BRI_2812_BM1   5
 
@@ -759,13 +754,16 @@
             #define BRI_RGBLED_1   15
             #define COL24_RGBLED_1 0xBE2727u   // bright 10 + red 10 + green 10 + blue 10
           #endif
-
         #if (USE_FAN_PWM > OFF)
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
             #define PWM_FAN_FREQ      4500u
             #define PWM_FAN_RES       8
+          #endif
+
+        #ifdef USE_OUTPUT_CYCLE
+            #define OUTPUT_CYCLE_MS  500u
           #endif
 
     // --- user input
@@ -841,21 +839,6 @@
             //
           #endif
         #if (USE_ADC1 > OFF)
-            typedef struct
-              {
-                uint8_t  pin;
-                uint8_t  channel;
-                uint8_t  atten;
-              } md_adc_conf_t;
-
-            const md_adc_conf_t PIN_ADC_CONF[4] =
-              {
-                { PIN_INP_POTI_1, 7, 1 },
-                { NO_PIN,         0, 0 },
-                { NO_PIN,         0, 0 },
-                { NO_PIN,         0, 0 }
-              };
-            #define INP_POTI_CTRL  0
             #ifndef USE_MEASURE_CYCLE
                 #define USE_MEASURE_CYCLE
               #endif
@@ -883,6 +866,12 @@
         #endif
 
       #if (USE_BME280_I2C > OFF)
+          #define BME280T_FILT    0
+          #define BME280T_Drop    0
+          #define BME280P_FILT    0
+          #define BME280P_Drop    0
+          #define BME280H_FILT    0
+          #define BME280H_Drop    0
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
@@ -910,18 +899,24 @@
             #endif
         #endif
 
-      #ifdef USE_MEASURE_CYCLE
-          #define MEASURE_CYCLE_MS  500u
+      #if (USE_PHOTO_SENS > OFF)
+        #define PHOTO_FILT        7
+        #define PHOTO_DROP        0
+        #define ATT_PHOTO_SENS    3 // 2 = ADC_ATTEN_DB_6; 3 = ADC_ATTEN_DB_11
+        #ifndef USE_MEASURE_CYCLE
+            #define USE_MEASURE_CYCLE
+          #endif
         #endif
 
-      #ifdef USE_OUTPUT_CYCLE
-          #define OUTPUT_CYCLE_MS  500u
+      #define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
+      #ifdef USE_MEASURE_CYCLE
+          #define MEASURE_CYCLE_MS  500u
         #endif
 
     // --- network
       // --- WIFI
         #if (USE_WIFI > OFF)
-            #define WIFI_ANZ_LOGIN  4
+            #define WIFI_ANZ_LOGIN  7
             #define WIFI_IS_DUTY    ON
             #define WIFI_SSID0      "MAMD-HomeG" // WLAN Moosgrabenstrasse 26
             #define WIFI_SSID0_PW   "ElaNanniRalf3"
@@ -929,8 +924,16 @@
             #define WIFI_SSID1_PW   "ElaNanniRalf3"
             #define WIFI_SSID2      "WL-Fairnetz" //Weltladen
             #define WIFI_SSID2_PW   "WL&Fair2Live#"
-            #define WIFI_SSID3      "machquadrat" //Weltladen
+            #define WIFI_SSID3      "machquadrat" //machQuadrat
             #define WIFI_SSID3_PW   "IamSecure"
+            #define WIFI_SSID4      "MD_KingKong" //Hotspot Martin
+            #define WIFI_SSID4_PW   "ElaNanniRalf3"
+            #define WIFI_SSID5      "CDWiFi"        //OEBB Raijet
+            #define WIFI_SSID5_PW   ""
+            #define WIFI_SSID6      "xWIFI@DB"        //DB ICE
+            #define WIFI_SSID6_PW   ""
+            #define WIFI_SSID7      ""        //?
+            #define WIFI_SSID7_PW   ""
             #define WIFI_CONN_DELAY 500000ul // Scan-Abstand [us]
             #define WIFI_CONN_REP   5        // Anzahle der Connect-Schleifen
             #define WIFI_CONN_CYCLE 4000ul   // Intervallzeit fuer Recoonect [us]
@@ -948,18 +951,30 @@
             #elif !(BOARD ^ MC_ESP32_D1_R32)
                 #define WIFI_FIXIP0     0x1A00000Aul // 10.0.0.26   lowest first
               #endif
-            #define WIFI_GATEWAY0   0x8B00000Aul // 10.0.0.139
+            #define WIFI_GATEWAY0   0x8B00000Aul // 10.0.0.139 // Moosgraben
             #if (USED_WS2812_LINE_OUT > OFF)
                 #define WIFI_FIXIP1     0x1400000Aul // 10.0.0.20
               #else
                 #define WIFI_FIXIP1     0x1500000Aul // 10.0.0.21
               #endif
-            #define WIFI_GATEWAY1   0x8B00000Aul // 10.0.0.139
-            #define WIFI_FIXIP2     0x1400000Aul // 10.0.0.20
-            #define WIFI_GATEWAY2   0x8a00000Aul // 10.0.0.138
-            #define WIFI_FIXIP3     0x1600000Aul // 10.0.0.22
-            #define WIFI_GATEWAY3   0x0100000Aul // 10.0.0.1
-            #define WIFI_SUBNET     0x00FFFFFFul // 255.255.255.0
+            #ifdef USE_LOCAL_IP
+                #define WIFI_GATEWAY1   0x8B00000Aul // 10.0.0.139      // Jungberg
+                #define WIFI_GATEWAY2   0x8a00000Aul // 10.0.0.138      // Weltladen
+                #define WIFI_FIXIP2     0x1600000Aul // 10.0.0.22
+                #define WIFI_GATEWAY3   0x0100000Aul // 10.0.0.1        // machquadrat
+                #define WIFI_FIXIP3     0x1600000Aul // 10.0.0.22
+                #define WIFI_GATEWAY4   0x012BA8C0ul // 192.168.43.154  // hotspot KingKong
+                #define WIFI_FIXIP4     0x162BA8C0ul // 192.168.43.22
+                #define WIFI_GATEWAY5   0x0926A8C0ul // 192.168.32.1    // OEBB Railjet
+                #define WIFI_FIXIP5     0x1620A8C0ul // 192.168.32.22
+                #define WIFI_GATEWAY6   0x01AE12ACul // 172.18.0.1    // DB ICE
+                #define WIFI_FIXIP6     0x16AE12ACul // 172.18.174.22
+                #define WIFI_GATEWAY7   0x0100000Aul // 10.0.0.10       // ?
+                #define WIFI_FIXIP7     0x1600000Aul // 10.0.0.22  // ?
+                #define WIFI_GATEWAY8   0x0100000Aul // 10.0.0.1        // ?
+                #define WIFI_FIXIP8     0x1600000Aul // 10.0.0.22  // ?
+                #define WIFI_SUBNET     0x0000FFFFul // 255.255.255.0
+              #endif
           #endif
 
       // --- webserver

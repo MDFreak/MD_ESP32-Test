@@ -8,9 +8,12 @@
     <title>MD ESP Server</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
           crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -56,7 +59,18 @@
                      min="0" max="255" value="15" step="1">
               <div class="valLEDV"><span id="valLEDV_3"></span></div>
             </div>
-            <!-- switch sliders -->
+            <div class="input-group" id="brightness-group">
+              <div class="buttons">
+                  <input type="color" id="LEDC_4" class="default-action"
+                         onchange="updateVal(this)">
+              </div>
+              <label for="LEDV_4">| 2812 Matrix</label>
+              <input type="range" id="LEDV_4" class="BrightSlider"
+                     oninput="updateVal(this)"
+                     min="0" max="255" value="15" step="1">
+              <div class="valLEDV"><span id="valLEDV_4"></span></div>
+            </div>
+          <!-- switch sliders -->
             <div class="input-group" id="switch-group">
               <div class="switch">
                 <input type="checkbox" id="SLSW_1" class="default-action"
@@ -85,6 +99,77 @@
               </div>
               <label for="SLSW_4">| SW4</label>
             </div>
+          </nav>
+        </div>
+        <!-- sensor values -->
+        <!--
+            <div class="card">
+              <p class="card-title">
+                <i class="fas fa-thermometer-three-quarters" style="color:#059e8a;"></i>
+                Temperatur
+              </p>
+              <p class="reading"><span id="valANAL_0"></span> &deg;C</p>
+            </div>
+            <div class="card">
+              <p class="card-title">
+                <i class="fas fa-tint" style="color:#00add6;"></i>
+                Humidity
+              </p>
+              <p class="reading"><span id="valANAL_1"></span> &percnt;</p>
+            </div>
+            <div class="card">
+              <p class="card-title">
+                <i class="fas fa-angle-double-down" style="color:#e1e437;"></i>
+                Pressure
+              </p>
+              <p class="reading"><span id="valANAL_2"></span> mb</p>
+            </div>
+        -->
+          <!-- <nav id="menu">-->
+        <div id="sidebar">
+            <div class="input-group" id="analog-group">
+              <div class="analogs" id="ANAL_0">
+                <label for="ANAL_0">
+                  <span id="lANAL_0"> ? </span>
+                </label>
+              </div>
+              <div class="valANAL" id="valANAL">
+                <span id="valANAL_0"></span> °C
+              </div>
+            </div>
+            <div class="input-group" id="analog-group">
+              <div class="analogs" id="ANAL_1">
+                <label for="ANAL_1">
+                  <span id="lANAL_1"> ? </span>
+                </label>
+              </div>
+              <div class="valANAL" id="valANAL">
+                <span id="valANAL_1"></span> %
+              </div>
+            </div>
+            <div class="input-group" id="analog-group">
+              <div class="analogs" id="ANAL_2">
+                <label for="ANAL_2">
+                  <span id="lANAL_2"> ? </span>
+                </label>
+              </div>
+              <div class="valANAL" id="valANAL">
+                <span id="valANAL_2"></span> mb
+              </div>
+            </div>
+            <div class="input-group" id="analog-group">
+              <div class="analogs" id="ANAL_3">
+                <label for="ANAL_3">
+                  <span id="lANAL_3"> ? </span>
+                </label>
+              </div>
+              <div class="valANAL" id="valANAL">
+                <span id="valANAL_3"></span> dig
+              </div>
+            </div>
+          <!-- </nav>-->
+        </div>
+
 <!--
             <div class="input-group" id="button-group">
               <label for="BUTT_1">ColorPicker</label>
@@ -135,8 +220,6 @@
               <button id="face_enroll" class="disabled"     disabled="disabled">Enroll Face</button>
             </section>
 -->
-          </nav>
-        </div>
       </div>
     </section>
   </body>

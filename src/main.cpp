@@ -1,8 +1,9 @@
 #include <main.h>
 #include <prj_config.h>
 
-// ---------------------------------------
+// ----------------------------------------------------------------
 // --- declarations
+// ----------------------------------------------------------------
   // ------ system -----------------------
     //static uint64_t _tmp = 0ul;
     static bool firstrun = true;
@@ -25,13 +26,14 @@
     static uint64_t anzUsCycles = 0ul;
     static uint64_t usLast      = 0ul;
     static uint64_t usPerCycle  = 0ul;
-	    //static uint64_t anzMsCycles = 0;
+      //static uint64_t anzMsCycles = 0;
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
 
 	    //static uint32_t anzMsCycles = 0;
 	    //static uint64_t msLast      = 0;
-  	//static uint32_t msPerCycle  = 0;
+
+    //static uint32_t msPerCycle  = 0;
 
     #if ( USE_I2C > 1 )
         TwoWire i2c2 = TwoWire(1);
@@ -234,7 +236,7 @@
                 (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
             msTimer ws2812MT   = msTimer(UPD_2812_M1_MS);
           #endif
-        const char text2812[] = "Willkommen im Weltladen";
+        const char text2812[] = " # YES We Care ";
         static scroll2812_t outM2812[2] = { scroll2812_t(), scroll2812_t() } ;
         static int16_t posM2812 = (int16_t) (COLPIX_2812_M1 + OFFBEG_2812_M1);
         unsigned long  ws2812_Malt = 0;
@@ -247,9 +249,9 @@
         msTimer         ws2812LT    = msTimer(UPD_2812_L1_MS);
         Adafruit_NeoPixel strip = Adafruit_NeoPixel(COLPIX_2812_L1, PIN_WS2812_L1, (neoPixelType) COLORD_2812_L1 + NEO_KHZ800);
         //static uint8_t ws2812_Lbright = (uint8_t) BRIGHT_2812_L1;
-        static uint8_t ws2812_Lrt  = 100;
-        static uint8_t ws2812_Lbl  = 100;
-        static uint8_t ws2812_Lgr  = 100;
+        //static uint8_t ws2812_Lrt  = 100;
+        //static uint8_t ws2812_Lbl  = 100;
+        //static uint8_t ws2812_Lgr  = 100;
         unsigned long  ws2812_Lalt = 0;
         uint32_t       ws2812_Lcnt = 0;
         uint32_t       ws2812_Lv   = 0;
@@ -390,7 +392,9 @@
             AsyncWebSocket socket("/ws");
           */
         #else
-            md_server   webMD    = md_server();
+            //md_server   webMD    = md_server();
+            md_server*   pmdServ   = new md_server();
+            static bool  newClient = false;
           #endif
         msTimer   servT = msTimer(WEBSERVER_CYCLE);
       #endif // USE_WEBSERVER
@@ -399,9 +403,21 @@
     #ifdef USE_MEASURE_CYCLE
         msTimer measT   = msTimer(MEASURE_CYCLE_MS);
       #endif
+
     #ifdef USE_OUTPUT_CYCLE
         msTimer outpT   = msTimer(OUTPUT_CYCLE_MS);
       #endif
+
+    #if (USE_BME280_I2C > OFF)
+        Adafruit_BME280 bme;
+        md_val<int16_t> bmeT;
+        md_val<uint16_t> bmeP;
+        md_val<uint16_t> bmeH;
+        //Adafruit_Sensor *bme_temp  = bme.getTemperatureSensor();
+        //Adafruit_Sensor *bme_press = bme.getPressureSensor();
+        //Adafruit_Sensor *bme_humid = bme.getHumiditySensor();
+      #endif
+
     #if (USE_DS18B20_1W_IO > OFF)
         OneWire dsOneWire(DS_ONEWIRE_PIN);
         DallasTemperature dsSensors(&dsOneWire);
@@ -409,18 +425,17 @@
         float dsTemp[DS18B20_ANZ];
       #endif
 
-    #if (USE_BME280_I2C > OFF)
-        Adafruit_BME280 bme;
-        Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
-        Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
-        Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
-      #endif
-
     #if (USE_MQ135_GAS_ADC > OFF)
         filterValue valGas(MQ135_FILT, 1);
         //filterValue tholdGas(MQ135_ThresFilt,1);
         int16_t gasValue;
         int16_t gasThres;
+      #endif
+
+    #if (USE_PHOTO_SENS > OFF)
+        filterValue valPhoto(PHOTO_FILT, 1);
+        //int16_t photoValue = 0;
+        md_val<uint16_t> phVal;
       #endif
 
     #if (USE_TYPE_K_SPI > 0)
@@ -442,13 +457,20 @@
       #endif
 
   // ------ memories
+    #if (USE_FLASH_MEM > OFF)
+        #include <SPIFFS.h>
+      #endif
+
     #if (USE_FRAM_I2C > OFF)
         md_FRAM fram = md_FRAM();
       #endif
+
+// ----------------------------------------------------------------
 // --- system setup -----------------------------------
+// ----------------------------------------------------------------
   void setup()
     {
-      uint32_t i32tmp = 0;
+//      uint32_t i32tmp = 0;
       // --- system
         // start system
           Serial.begin(SER_BAUDRATE);
@@ -516,88 +538,15 @@
           #if (USE_WS2812_MATRIX_OUT > OFF)
               SOUTLN("start WS2812 matrix ...");
               dispStatus("start WS2812 Matrix");
-
-              //SOUT(" p_outM 0/1 "); SOUTHEX((uint32_t) &outM2812[0]);            SOUT(" / "); SOUTHEXLN ((uint32_t) &outM2812[1]);
-              //SOUT(" p_text 0/1 "); SOUTHEX((uint32_t) &outM2812[0].text);       SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].text);
-              //SOUT(" p_pix24 0/1 "); SOUTHEX((uint32_t) outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
-
-              outM2812[1].bmpB->bmp_num = MD_BITMAP_SMILY;
-              outM2812[1].bmpB->pix24->col16(COL16_2812_BM1);
-              outM2812[1].bmpB->pix24->bright(BRI_2812_BM1);
-              outM2812[0].bmpB = outM2812[1].bmpB;
-              outM2812[1].text->text = (char*) text2812;
-              outM2812[1].text->pix24->col16(COL16_2812_M1);
-              outM2812[1].text->pix24->bright(BRI_2812_M1);
-              outM2812[0].text = outM2812[1].text;
-              outM2812[1].bmpE->bmp_num = MD_BITMAP_SMILY;
-              outM2812[1].bmpE->pix24->col16(COL16_2812_BM1);
-              outM2812[1].bmpE->pix24->bright(BRI_2812_BM1);
-              outM2812[0].bmpE = outM2812[1].bmpE;
-              //memcpy((char*) &outM2812[0], (char*) &outM2812[1], sizeof(outM2812[1]));
-              //SOUT(" outM bmpB 0/1 ");
-              //SOUTHEX(outM2812[0].bmpB->bmp_num); SOUT(" / "); SOUTHEX(outM2812[1].bmpB->bmp_num); SOUT(" - ");
-              //SOUTHEX((uint32_t) outM2812[0].bmpB->pix24);   SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
-              //SOUTHEX(*outM2812[0].bmpB->pix24);  SOUT(" / "); SOUTHEXLN(*outM2812[1].bmpB->pix24);
-              //SOUT(" outM text 0/1 ");
-              //SOUT(outM2812[0].text->text);       SOUT(" / "); SOUT(outM2812[1].text->text); SOUT(" - ");
-              //SOUTHEX((uint32_t) outM2812[0].text->pix24);   SOUT(" / "); SOUTHEXLN((uint32_t) outM2812[1].text->pix24);
-              //SOUTHEX(*outM2812[0].text->pix24);  SOUT(" / "); SOUTHEXLN(*outM2812[1].text->pix24);
-              //SOUT(" outM bmpE 0/1 ");
-              //SOUTHEX(outM2812[0].bmpE->bmp_num); SOUT(" / "); SOUTHEX(outM2812[1].bmpE->bmp_num); SOUT(" - ");
-              //SOUTHEX(*outM2812[0].bmpE->pix24);  SOUT(" / "); SOUTHEXLN(*outM2812[1].bmpE->pix24);
-
-              //SOUT(" p_outM 0/1 "); SOUTHEX((uint32_t) &outM2812[0]);            SOUT(" / "); SOUTHEXLN ((uint32_t) &outM2812[1]);
-              //SOUT(" p_text 0/1 "); SOUTHEX((uint32_t) &outM2812[0].text);       SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].text);
-              //SOUT(" p_pix24 0/1 "); SOUTHEX((uint32_t) outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
-
-              usleep(10000);
-              //outM2812[0].text = outM2812[1].text;
-              //outM2812[0].bmpE = outM2812[1].bmpE;
-              matrix_1.begin();
-              usleep(50000);
-              matrix_1.display_boxes();
-              usleep(1500000);
-              //matrix_1.start_scroll_task((scroll2812_t*) &outM2812, &posM2812);
-
-              SOUT(" start = "); SOUT(posM2812);
-              matrix_1.start_scroll_matrix(  (scroll2812_t*) outM2812, &posM2812,
-                                           - (strlen(text2812) * COLCHAR_2812 + OFFEND_2812_M1));
+              initWS2812Matrix();
               ws2812T1.startT();
               SOUTLN(" ok");
             #endif
 
           #if (USE_WS2812_LINE_OUT > OFF)
               SOUT("start NEOPIXEL LED strip ... ");
-              strip.begin();
-              strip.setBrightness(255);
-              strip.fill(strip.Color(200,0,0));
-              strip.show();
-              usleep(400000);
-              i32tmp = COL24_2812_L1 + (BRI_2812_L1 << 24);
-              SOUT(" strip BriCol org "); SOUTHEX(i32tmp);
-
-              line2812[0] = new md_LEDPix24();
-              line2812[1] = new md_LEDPix24(i32tmp);
-                  //(BRI_2812_L1,
-                  // (uint8_t) ((COL24_2812_L1 & 0x00ff0000) >> 16),
-                  // (uint8_t) ((COL24_2812_L1 & 0x0000ff00) >> 8),
-                  // (uint8_t) ( COL24_2812_L1 & 0x000000ff)
-                  //);
-              //SOUT(" line[0]/[1] vor "); SOUTHEX((uint32_t)*line2812[0]); SOUT(" "); SOUTHEX((uint32_t)*line2812[1]);
-              *line2812[0] = *line2812[1];
-              //SOUT(" line[0]/[1] nach "); SOUTHEX((uint32_t)*line2812[0]); SOUT(" "); SOUTHEXLN((uint32_t)*line2812[1]);
-              //SOUT(" line[0].bright() "); SOUTHEX(line2812[0]->bright());
-              //SOUT(" line[0].col24() "); SOUTHEXLN(line2812[0]->col24());
-              //strip.setBrightness(line2812[0]->bright());
-              strip.setBrightness(5);
-              strip.fill(line2812[0]->col24());
-              //strip.fill(strip.Color((uint8_t) ((line2812[0]->col24() & 0x00FF0000u) >> 16),
-              //                       (uint8_t) ((line2812[0]->col24() & 0x0000FF00u) >> 8 ),
-              //                       (uint8_t)  (line2812[0]->col24() & 0x000000FFu) ) );
-              strip.show();
-              SOUTLN("ok");
-              //
-              delay(1000);
+              initWS2812Line();
+              sleep(1);
             #endif
 
         // start buzzer (task)
@@ -661,20 +610,6 @@
                 //}
               SOUTLN();
             #endif
-        // start poti inputs
-          #if (USE_ADC1 > OFF)
-              SOUT("config ADCs Pins " );
-              for (uint8_t i = 0 ; i < USE_CTRL_POTI_ADC ; i++ )
-                {
-                  pinMode(PIN_ADC_CONF[i].pin, INPUT);
-                  adc1_config_channel_atten((adc1_channel_t) PIN_ADC_CONF[i].channel,
-                                            (adc_atten_t)   PIN_ADC_CONF[i].atten);
-                  SOUT(PIN_ADC_CONF[i].pin); SOUT(" (");
-                  SOUT(PIN_ADC_CONF[i].channel); SOUT(", ");
-                  SOUT(PIN_ADC_CONF[i].atten) ; SOUT(") ");
-                }
-              SOUTLN();
-            #endif
         // start dutycycle (pwm) inputs
           #if (USE_PWM_INP > OFF)
               //mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, GPIO_OUT);
@@ -723,15 +658,15 @@
               {
                 servT.startT();
                 #if (TEST_SOCKET_SERVER > OFF)
-                    socket.onEvent(onEvent);
-                    serv.addHandler(&socket);
+                    //socket.onEvent(onEvent);
+                    //serv.addHandler(&socket);
 
-                    serv.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-                      {
-                        request->send_P(200, "text/html", index_html, NULL);
-                      });
+                    //serv.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+                    //  {
+                    //    request->send_P(200, "text/html", index_html, NULL);
+                    //  });
 
-                     serv.begin();
+                    // serv.begin();
                 #else
                     startWebServer();
                   #endif
@@ -763,19 +698,27 @@
                   #endif
                 if (bmeda)
                     {
-                            SOUTLN(" gefunden");
                       bme.setSampling(bme.MODE_SLEEP);
-                      String stmp = getBME280Str();
-                            SOUTLN(stmp);
-                      //bme_temp->printSensorDetails();
-                      //bme_pressure->printSensorDetails();
-                      //bme_humidity->printSensorDetails();
-
+                            SOUTLN(" gefunden");
+                      bmeT.begin(BME280T_FILT, BME280T_Drop, FILT_NU);
+                      bmeP.begin(BME280P_FILT, BME280P_Drop, FILT_NU);
+                      bmeH.begin(BME280H_FILT, BME280H_Drop, FILT_NU);
                     }
                   else
                     {
                       SOUT(" nicht gefunden");
                     }
+            #endif
+
+
+        // photo sensor
+          #if (USE_PHOTO_SENS > OFF)
+            SOUT("init poto sensor ... ");
+            phVal.begin(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
+            pinMode(PIN_PHOTO_SENS, INPUT);
+            adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO_SENS,
+                                      (adc_atten_t)    ATT_PHOTO_SENS);
+            SOUTLN(" ready");
             #endif
 
         // K-type thermoelementation
@@ -816,6 +759,11 @@
 
       // --- memories
         // FRAM
+
+          #if (USE_FLASH_MEM > OFF)
+              testFlash();
+            #endif
+
           #if (USE_FRAM_I2C > OFF)
             // Read the first byte
             SOUT("FRAM addr "); SOUTHEX(I2C_ADDR_FRAM1);
@@ -873,12 +821,9 @@
             #endif
     }
 
-// ---------------------------------------
-  #if (USE_WS2812_MATRIX_OUT > OFF)
-
-    #endif
-// ---------------------------------------
+// ----------------------------------------------------------------
 // --- system run = endless loop
+// ----------------------------------------------------------------
   void loop()
     {
       if (firstrun == true)
@@ -936,107 +881,8 @@
         #endif // USE_NTP_SERVER
       // ----------------------
       #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
-          md_message *pM   = NULL;
-          mdMSG_t*    pMsg = NULL;
-          int         itmp = 0;
-          char*       ctmp = NULL;
-          md_LEDPix24* ppix = NULL;
-          //uint8_t     rtcol;
-          //uint8_t     grcol;
-          //uint8_t     blcol;
-          char        idx;
-          while (msgList->count() > 0)
-            {
-              pM   = (md_message*) msgList->pFirst();
-              pMsg = pM->pMsg;
-              idx  = pMsg->payload[1];
-              SOUT(" msg client "); SOUT(pMsg->client);
-              SOUT(" type "); SOUT(pMsg->type);
-              SOUT(" idx "); SOUTLN(idx);
-
-              if (pMsg->type == EL_TSOCKET)
-                { SOUT(" Socket "); }
-              else
-                {
-                  ctmp = (char*) pMsg->payload.c_str();
-                  ctmp += 2;
-                  SOUT("ctmp "); SOUT(ctmp); SOUT(" - ");
-                  itmp = atoi(ctmp);
-                  switch (pMsg->type)
-                    {
-                      case EL_TANALOG:
-                          SOUT(" Analog nu ");
-                        break;
-                      case EL_TSLIDER:
-                          SOUT(" Slider ");
-                          switch (idx) // index of serverelement
-                            {
-                              case '1': // RGB-LED col24
-                                SOUT(" RGBLED bright "); SOUT(RGBLED[1]->bright()); SOUT(" neu ");
-                                RGBLED[1]->bright(itmp);
-                                SOUT(RGBLED[1]->bright()); SOUT(" ");
-                                break;
-                              case '2': // 2821 line col24
-                                SOUT(" line bright "); SOUT(line2812[1]->bright()); SOUT(" neu ");
-                                line2812[1]->bright((uint8_t) itmp);
-                                SOUT(line2812[1]->bright()); SOUT(" ");
-                                break;
-                              case '3':
-                                ppix = outM2812[1].text->pix24;
-                                SOUT(" matrix bright "); SOUT(ppix->bright()); SOUT(" neu ");
-                                ppix->bright((uint8_t) itmp);
-                                SOUTLN(ppix->bright());
-                                break;
-                            }
-                        break;
-                      case EL_TCOLOR:
-                          SOUT(" Color ");
-                          itmp  = (int)strtol(ctmp, NULL, 16);
-                          switch (idx) // index of serverelement
-                            {
-                              case '1': // RGB-LED col24
-                                SOUT(" RGBLED color "); SOUTHEX(RGBLED[1]->col24()); SOUT(" neu ");
-                                RGBLED[1]->col24(itmp);
-                                SOUTHEXLN(RGBLED[1]->col24());
-                                break;
-                              case '2': // 2821 line col24
-                                SOUT(" line2812 color24 "); SOUTHEX(line2812[1]->col24());
-                                line2812[1]->col24(itmp);
-                                SOUT(" neu 24/16"); SOUTHEX(line2812[1]->col24()); SOUT(" / "); SOUTLN(Col16(line2812[1]->col24()));
-                                break;
-                              case '3': // 2821 matrix col16
-                                ppix = outM2812[1].text->pix24;
-                                SOUT(" matrix color24 "); SOUTHEX(ppix->col24());
-                                ppix->col24(itmp);
-                                SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
-                                break;
-                            }
-                        break;
-                      case EL_TSWITCH:
-                          SOUT(" Switch ");
-                        break;
-                      case EL_TTEXT:
-                          SOUT(" Text ");
-                        break;
-                      case EL_TOFFSET:
-                          SOUT(" Offset ");
-                        break;
-                      case EL_TGRAPH:
-                          SOUT(" Graph ");
-                        break;
-                      case EL_TINDEX:
-                          SOUT(" Index ");
-                        break;
-                      default:
-                          SOUT(" ERROR ");
-                        break;
-                    }
-                }
-              SOUT("'"); SOUT(pMsg->payload); SOUT("'");
-              msgList->rem();
-              SOUT(" msgList.count "); SOUTLN(msgList->count());
-            }
-
+          // read only 1 message / cycle for cycle time
+          readMessage();
         #endif
       // ----------------------
       #if (USE_TOUCHSCREEN > OFF)
@@ -1152,6 +998,7 @@
           if (measT.TOut())
             {
               measT.startT();
+
               #if (USE_MQ135_GAS_ADC > OFF)
                   gasValue = analogRead(PIN_MQ135);
                         //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
@@ -1162,11 +1009,25 @@
                   //gasThres = (int16_t) tholdGas.value((double) gasThres);
                         //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
                 #endif
+
+              #if ( USE_BME280_I2C > OFF )
+                  bme.init();
+                  usleep(1000);
+                  bmeT.doVal((int16_t) (bme.readTemperature() + 0.5));
+                  bmeH.doVal((uint16_t) (bme.readHumidity() + 0.5));
+                  bmeP.doVal((uint16_t) ((bme.readPressure() / 100.0F) + 0.5));
+                #endif
+
+              #if (USE_PHOTO_SENS > OFF)
+                  phVal.doVal(analogRead(PIN_PHOTO_SENS));
+                #endif
+
               #if (USE_CNT_INP > OFF)
                   #ifdef USE_PW
                       getCNTIn();
                     #endif
                 #endif
+
               #if (USE_TYPE_K_SPI > OFF)
                   int8_t  tkerr = (int8_t) ISOK;
                   int16_t ival = TypeK1.actT();
@@ -1202,9 +1063,6 @@
                             SOUTLN();
                     #endif
                 #endif
-              #if (USE_ADC1 > OFF)
-                  getADCIn();
-                #endif
 
               #if (USE_DIG_INP > OFF)
                   getDIGIn();
@@ -1221,58 +1079,56 @@
               //if (ws2812T1.TOut())
                 //{
                   //ws2812T1.startT();
-                  //bool doIt = false;
-                  //SOUTLN(); SOUT(micros());
-                  // check chanches bitmap at begin
-
-                    if (*outM2812[0].bmpB->pix24 == *outM2812[1].bmpB->pix24) {}
-                      else
+                    if (!(outM2812[0].bmpB->pix24 == outM2812[1].bmpB->pix24)) //{}
+                      //else
                       {
-                        *outM2812[0].bmpB->pix24 = *outM2812[1].bmpB->pix24;
+                        outM2812[0].bmpB->pix24 = outM2812[1].bmpB->pix24;
+                        outM2812[0].bmpE->pix24 = outM2812[1].bmpE->pix24;
                       }
 
-                  // check chanches in text (text, color, intensity)
-                    if (strcmp(outM2812[0].text->text, outM2812[1].text->text) > 0)
+                      //if (strcmp(outM2812[0].text->text, outM2812[1].text->text) > 0)
+                    if (strncmp((char*) outM2812[0].text, (char*) outM2812[1].text, sizeof(outM2812[1].text)) > 0)
                       {
-                        memcpy(outM2812[0].text->text, outM2812[1].text->text, sizeof((char*) outM2812[1].text->text));
+                        memcpy((char*) outM2812[0].text, (char*) outM2812[1].text, sizeof(outM2812[1].text));
+                          //memcpy(outM2812[0].text->text, outM2812[1].text->text, sizeof((char*) outM2812[1].text->text));
                       }
 
-                    //SOUT(" matrix 0/1  "); SOUTHEX((uint32_t)  outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t)  outM2812[0].text->pix24);
-                    //SOUT(" matrix 0/1 *"); SOUTHEX((uint32_t) *outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t) *outM2812[0].text->pix24);
-                    if ((uint32_t) *outM2812[0].text->pix24 == (uint32_t) *outM2812[1].text->pix24) {}
-                      else
+                        //SOUT(" matrix 0/1  "); SOUTHEX((uint32_t)  outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t)  outM2812[0].text->pix24);
+                        //SOUT(" matrix 0/1 *"); SOUTHEX((uint32_t) *outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t) *outM2812[0].text->pix24);
+                    //md_LEDPix24* ppix = *outM2812[0].text->pix24
+                    if (!(outM2812[0].text->pix24 == outM2812[1].text->pix24)) //{}
+                      //else
                       {
                         //SOUTLN(" changed matrix bright&color ");
-                        //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
-                        //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
-                        //SOUT(" / ");
-                        //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
-                        *outM2812[0].text->pix24 = *outM2812[1].text->pix24;
-                        //SOUTLN(" neu ");
-                        //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
-                        //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
-                        //SOUT(" / ");
-                        //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
+                          //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
+                          //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
+                          //SOUT(" / ");
+                          //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
+                        outM2812[0].text->pix24 = outM2812[1].text->pix24;
+                          //SOUTLN(" neu ");
+                          //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
+                          //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
+                          //SOUT(" / ");
+                          //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
                       }
 
-                  // check chanches bitmap at end
-                  /*
-                    if (outM2812[0] == outM2812[1]) {}
-                    else
-                      {
-                        SOUT(" changed matrix bitmap "); SOUT(outM2812[0].text.pix24.bright());
-                        *outM2812[0].bmpE.pix24 = *outM2812[1].bmpE.pix24;
-                      }
+                        /*
+                          if (outM2812[0] == outM2812[1]) {}
+                          else
+                            {
+                              SOUT(" changed matrix bitmap "); SOUT(outM2812[0].text.pix24.bright());
+                              *outM2812[0].bmpE.pix24 = *outM2812[1].bmpE.pix24;
+                            }
 
-                    if (doIt == true)
-                      {
-                        //SOUT(" do start-matrix ");
-                        matrix_1.start_scroll_matrix((scroll2812_t*) &outM2812);
-                      }
-                  */
-                  //SOUT(" "); SOUTLN(micros());
+                          if (doIt == true)
+                            {
+                              //SOUT(" do start-matrix ");
+                              matrix_1.start_scroll_matrix((scroll2812_t*) &outM2812);
+                            }
+                        */
+                        //SOUT(" "); SOUTLN(micros());
                   matrix_1.scroll_matrix();
-                  //SOUT(" matrix ready "); SOUTLN(micros());
+                      //SOUT(" matrix ready "); SOUTLN(micros());
                   ws2812_Mcnt++;
                 //}
             #endif
@@ -1296,98 +1152,98 @@
                 //}
             #endif
 
-          //if (outpT.TOut())
-            //{
-              //outpT.startT();
-              #if (USE_RGBLED_PWM > OFF)
-                  #if (TEST_RGBLED_PWM > OFF)
-                    /*
-                      switch (colRGBLED)
-                        {
-                          case 0:
-                            if (RGBLED_rt >= 254)
-                              {
-                                RGBLED_rt = 0;
-                                RGBLED_gr += incRGBLED;
-                                colRGBLED++;
-                              }
-                              else
-                              { RGBLED_rt += incRGBLED; }
-                            break;
-                          case 1:
-                            if (RGBLED_gr >= 254)
-                              {
-                                RGBLED_gr = 0;
-                                RGBLED_bl += incRGBLED;
-                                colRGBLED++;
-                              }
-                              else
-                              { RGBLED_gr += incRGBLED; }
-                            break;
-                          case 2:
-                            if (RGBLED_bl >= 254)
-                              {
-                                RGBLED_bl = 0;
-                                RGBLED_rt += incRGBLED;
-                                colRGBLED = 0;
-                              }
-                              else
-                              { RGBLED_bl += incRGBLED; }
-                            break;
-                          default:
-                            break;
-                        }
-                    */
+            //if (outpT.TOut())
+              //{
+                //outpT.startT();
+                #if (USE_RGBLED_PWM > OFF)
+                    #if (TEST_RGBLED_PWM > OFF)
+                      /*
+                        switch (colRGBLED)
+                          {
+                            case 0:
+                              if (RGBLED_rt >= 254)
+                                {
+                                  RGBLED_rt = 0;
+                                  RGBLED_gr += incRGBLED;
+                                  colRGBLED++;
+                                }
+                                else
+                                { RGBLED_rt += incRGBLED; }
+                              break;
+                            case 1:
+                              if (RGBLED_gr >= 254)
+                                {
+                                  RGBLED_gr = 0;
+                                  RGBLED_bl += incRGBLED;
+                                  colRGBLED++;
+                                }
+                                else
+                                { RGBLED_gr += incRGBLED; }
+                              break;
+                            case 2:
+                              if (RGBLED_bl >= 254)
+                                {
+                                  RGBLED_bl = 0;
+                                  RGBLED_rt += incRGBLED;
+                                  colRGBLED = 0;
+                                }
+                                else
+                                { RGBLED_bl += incRGBLED; }
+                              break;
+                            default:
+                              break;
+                          }
+                      */
 
-                      #if (USE_WEBCTRL_RGB > OFF)
-                          _tmp += 4;
-                          if (_tmp > 50)
-                            { _tmp = 0; }
-                          //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
-                          ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
-                          ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
-                          ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
-                        #endif
+                        #if (USE_WEBCTRL_RGB > OFF)
+                            _tmp += 4;
+                            if (_tmp > 50)
+                              { _tmp = 0; }
+                            //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
+                            ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
+                            ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
+                            ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
+                          #endif
 
 
-                      if(*RGBLED[0] == *RGBLED[1]) {}
-                        else
-                        {
-                          SOUT(" RGBLED changed 0/1 "); SOUTHEX((uint32_t) *RGBLED[0]);
-                          SOUT(" / "); SOUTHEXLN((uint32_t) *RGBLED[1]);
-                          *RGBLED[0] = *RGBLED[1];
-                          //ledcWrite(PWM_RGB_RED,   BrightCol(RGBLED[0][LED_RED],RGBLED[0][LED_BRIGHT]));
-                          //ledcWrite(PWM_RGB_GREEN, BrightCol(RGBLED[0][LED_GREEN],RGBLED[0][LED_BRIGHT]));
-                          //ledcWrite(PWM_RGB_BLUE, BrightCol()  BrightCol(RGBLED[0][LED_BLUE],RGBLED[0][LED_BRIGHT]));
-                          ledcWrite(PWM_RGB_RED,   Bright_x_Col(Red(RGBLED[0]->col24()),   RGBLED[0]->bright()));
-                          ledcWrite(PWM_RGB_GREEN, Bright_x_Col(Green(RGBLED[0]->col24()), RGBLED[0]->bright()));
-                          ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
-                        }
-                    #endif
-                #endif
+                        if(*RGBLED[0] == *RGBLED[1]) {}
+                          else
+                          {
+                            SOUT(" RGBLED changed 0/1 "); SOUTHEX((uint32_t) *RGBLED[0]);
+                            SOUT(" / "); SOUTHEXLN((uint32_t) *RGBLED[1]);
+                            *RGBLED[0] = *RGBLED[1];
+                            //ledcWrite(PWM_RGB_RED,   BrightCol(RGBLED[0][LED_RED],RGBLED[0][LED_BRIGHT]));
+                            //ledcWrite(PWM_RGB_GREEN, BrightCol(RGBLED[0][LED_GREEN],RGBLED[0][LED_BRIGHT]));
+                            //ledcWrite(PWM_RGB_BLUE, BrightCol()  BrightCol(RGBLED[0][LED_BLUE],RGBLED[0][LED_BRIGHT]));
+                            ledcWrite(PWM_RGB_RED,   Bright_x_Col(Red(RGBLED[0]->col24()),   RGBLED[0]->bright()));
+                            ledcWrite(PWM_RGB_GREEN, Bright_x_Col(Green(RGBLED[0]->col24()), RGBLED[0]->bright()));
+                            ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
+                          }
+                      #endif
+                  #endif
 
-              #if (USE_FAN_PWM > OFF)
-                  valFanPWM[0] += 1;
-                  valFanPWM[1] += 1;
-                  if (valFanPWM[1] >= 127) // -50%
-                    {
-                      valFanPWM[0] = 0;
-                      valFanPWM[1] = 0;
-                    }
+                #if (USE_FAN_PWM > OFF)
+                    valFanPWM[0] += 1;
+                    valFanPWM[1] += 1;
+                    if (valFanPWM[1] >= 127) // -50%
+                      {
+                        valFanPWM[0] = 0;
+                        valFanPWM[1] = 0;
+                      }
 
-                  #if (USE_POTICTRL_FAN > 0)
-                      valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                      valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                      //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
-                      valFanPWM[0] = valFan[INP_CNT_FAN_1];
-                      valFanPWM[1] = valFan[INP_CNT_FAN_2];
-                    #endif
+                    #if (USE_POTICTRL_FAN > 0)
+                        valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                        valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                        //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
+                        valFanPWM[0] = valFan[INP_CNT_FAN_1];
+                        valFanPWM[1] = valFan[INP_CNT_FAN_2];
+                      #endif
 
-                  ledcWrite(PWM_FAN_1, valFanPWM[0]);
-                  ledcWrite(PWM_FAN_2, valFanPWM[1]);
-                #endif
+                    ledcWrite(PWM_FAN_1, valFanPWM[0]);
+                    ledcWrite(PWM_FAN_2, valFanPWM[1]);
+                  #endif
 
-            //}
+              //}
         #endif
       // --- Display -------------------
       #if (USE_DISP > 0)
@@ -1429,6 +1285,8 @@
                 oled.sendBuffer();
               #endif // RUN_OLED_TEST
             oledIdx++;
+            outStr = "";
+            String tmpStr;
             switch (oledIdx)
               {
               case 1: // system output
@@ -1447,16 +1305,58 @@
 
               case 2: // webserver nu
                   #if (USE_WIFI > OFF)
-                      outStr = "IP 10.0.0.";
-                      outStr.concat((String) WiFi.localIP()[3]);
+                      outStr = WiFi.localIP().toString();
                   #else
                       outStr = "IP Offline";
                     #endif
                   dispText(outStr ,  0, 4, outStr.length());
                   #if (USE_WEBSERVER > OFF)
-                      //outStr = (String) (WiFi.localIP());
+                      if (newClient)
+                        {
+                          char ctmp[8] = "";
+                          // EL_TSLIDER
+                          outStr = "SVB1";
+                          outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
+                          pmdServ->updateAll(outStr);
+                          SOUTLN(outStr);
+                          outStr = "SVB2";
+                          outStr.concat(line2812[0]->bright());    // RGB-LED col24
+                          pmdServ->updateAll(outStr);
+                          SOUTLN(outStr);                              outStr = "SVB3";
+                          md_LEDPix24* ppix = outM2812[0].text->pix24;
+                          outStr.concat(ppix->bright());           // RGB-LED col24
+                          pmdServ->updateAll(outStr);
+                          SOUTLN(outStr);                              outStr = "SVB3";
+                              //tmpStr = "SVB4";
+                              //tmpStr.concat(line2812[0]->bright());    // RGB-LED col24
+                              //pmdServ->updateAll(tmpStr);
 
-                      //outStr = "TK1 ";
+                          // EL_TCOLOR
+                          outStr = "SVC1";
+                          colToHexStr(ctmp, RGBLED[0]->col24());
+                          outStr.concat(ctmp);    // RGB-LED col24
+                          pmdServ->updateAll(outStr);
+                          SOUTLN(outStr);
+                          outStr = "SVC2";
+                          colToHexStr(ctmp, line2812[0]->col24());
+                          outStr.concat(ctmp);    // RGB-LED col24
+                          pmdServ->updateAll(outStr);
+                          SOUTLN(outStr);
+                          outStr = "SVC3";
+                          ppix = outM2812[0].text->pix24;
+                          colToHexStr(ctmp, ppix->col24());
+                          outStr.concat(ctmp);    // RGB-LED col24
+                          pmdServ->updateAll(outStr);
+                          SOUTLN(outStr);
+                          outStr = "SVC4";
+                          ppix = outM2812[0].bmpB->pix24;
+                          colToHexStr(ctmp, ppix->col24());
+                          outStr.concat(ctmp);    // RGB-LED col24
+                          pmdServ->updateAll(outStr);
+                          SOUTLN(outStr);
+
+                          newClient = false;
+                        }
                     #endif
                 break;
 
@@ -1485,18 +1385,26 @@
                   #endif
                 break;
 
-              case 4: // gas sensor
+              case 4: // gas & light sensor
+                outStr = "";
                 #if (USE_MQ135_GAS_ADC > OFF)
-                  outStr = "";
                   //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
                   outStr = "CO2 ";
                   outStr.concat(gasValue);
-                  //outStr.concat(" (");
-                  //outStr.concat(_tmp);
-                  //outStr.concat(")");
-                  dispText(outStr ,  0, 1, outStr.length());
-                          //SOUT(outStr); SOUT("  ");
                   #endif
+                #if (USE_PHOTO_SENS > OFF)
+                    outStr.concat(" Light ");
+                    outStr.concat(phVal.getVal());
+                    #if (USE_WEBSERVER > OFF)
+                        tmpStr = "SVA";
+                        tmpStr.concat("3");
+                        tmpStr.concat(phVal.getVal());
+                        pmdServ->updateAll(tmpStr);
+                      #endif
+                  #endif
+                outStr.concat("  ");
+                dispText(outStr, 15, 0, outStr.length());
+                        //SOUTLN(outStr);
                 break;
 
               case 5: // temp sesor
@@ -1508,12 +1416,41 @@
                 break;
 
               case 6: // BME 280 temp, humidity, pressure
-                #if ( USE_BME280_I2C > OFF )
-                  outStr = getBME280Str();
-                          //SOUT(outStr); SOUT(" ");
-                  dispText(outStr , 0, 3, outStr.length());
-                  #endif
-                break;
+                  #if ( USE_BME280_I2C > OFF )
+                    outStr = "";
+                    for (uint8_t i = 0; i < 3 ; i++)
+                      {
+                        tmpStr = "SVA";
+                        tmpStr.concat(i);
+                        switch (i)
+                          {
+                            case 0:
+                              tmpStr.concat(bmeT.getVal());
+                              outStr.concat(bmeT.getVal());
+                              outStr.concat("° ");
+                              break;
+                            case 1:
+                              tmpStr.concat(bmeH.getVal());
+                              outStr.concat(bmeH.getVal());
+                              outStr.concat("% ");
+                              break;
+                            case 2:
+                              tmpStr.concat(bmeP.getVal());
+                              outStr.concat(bmeP.getVal());
+                              outStr.concat("mb");
+                              break;
+                            default:
+                              break;
+                          }
+                        // send to websocket
+                        #if (USE_WEBSERVER > OFF)
+                            pmdServ->updateAll(tmpStr);
+                          #endif
+                      }
+                            //SOUT(outStr); SOUT(" ");
+                    dispText(outStr , 0, 3, outStr.length());
+                    #endif
+                  	break;
 
               case 7: // test values
                 #if (USE_DIG_INP > OFF)
@@ -1522,6 +1459,7 @@
                 #if (USE_CTRL_POTI_ADC > OFF)
                     //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
                   #endif
+
                 break;
 
               case 8: // WS2812 lines
@@ -1603,7 +1541,7 @@
           }
         #endif // defined(DISP)
 
-    // --- system control --------------------------------
+      // --- system control --------------------------------
       #if (USE_COL16_BLINK_OUT > 0)
         if (ledT.TOut())    // handle touch output
           {
@@ -1632,9 +1570,11 @@
       anzUsCycles++;
       //usleep(250);
     }
-//
+
+// ----------------------------------------------------------------
 // --- subroutine and drivers ----------------
-  // --- user output-.
+// ----------------------------------------------------------------
+  // --- user output ---------------------
     // --- display
       void clearDisp()
         {
@@ -1779,10 +1719,96 @@
                 #endif
             #endif
         }
-    // --- WS2812 lines
+    // --- WS2812 LED
       #if (USE_WS2812_LINE_OUT > OFF)
+          void initWS2812Line()
+            {
+              uint32_t i32tmp = 0;
+              strip.begin();
+              strip.setBrightness(255);
+              strip.fill(strip.Color(200,0,0));
+              strip.show();
+              usleep(400000);
+              i32tmp = COL24_2812_L1 + (BRI_2812_L1 << 24);
+              SOUT(" strip BriCol org "); SOUTHEX(i32tmp);
+
+              line2812[0] = new md_LEDPix24();
+              line2812[1] = new md_LEDPix24(i32tmp);
+                  //(BRI_2812_L1,
+                  // (uint8_t) ((COL24_2812_L1 & 0x00ff0000) >> 16),
+                  // (uint8_t) ((COL24_2812_L1 & 0x0000ff00) >> 8),
+                  // (uint8_t) ( COL24_2812_L1 & 0x000000ff)
+                  //);
+                  //SOUT(" line[0]/[1] vor "); SOUTHEX((uint32_t)*line2812[0]); SOUT(" "); SOUTHEX((uint32_t)*line2812[1]);
+              *line2812[0] = *line2812[1];
+                  //SOUT(" line[0]/[1] nach "); SOUTHEX((uint32_t)*line2812[0]); SOUT(" "); SOUTHEXLN((uint32_t)*line2812[1]);
+                  //SOUT(" line[0].bright() "); SOUTHEX(line2812[0]->bright());
+                  //SOUT(" line[0].col24() "); SOUTHEXLN(line2812[0]->col24());
+                  //strip.setBrightness(line2812[0]->bright());
+              strip.setBrightness(5);
+              strip.fill(line2812[0]->col24());
+                  //strip.fill(strip.Color((uint8_t) ((line2812[0]->col24() & 0x00FF0000u) >> 16),
+                  //                       (uint8_t) ((line2812[0]->col24() & 0x0000FF00u) >> 8 ),
+                  //                       (uint8_t)  (line2812[0]->col24() & 0x000000FFu) ) );
+              strip.show();
+              SOUTLN("ok");
+            }
         #endif
 
+      #if (USE_WS2812_MATRIX_OUT > OFF)
+          void initWS2812Matrix()
+            {
+              md_LEDPix24* ppix = outM2812[1].bmpB->pix24;
+              //SOUT(" p_outM 0/1 "); SOUTHEX((uint32_t) &outM2812[0]);            SOUT(" / "); SOUTHEXLN ((uint32_t) &outM2812[1]);
+                //SOUT(" p_text 0/1 "); SOUTHEX((uint32_t) &outM2812[0].text);       SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].text);
+                //SOUT(" p_pix24 0/1 "); SOUTHEX((uint32_t) outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
+              ppix->col16(COL24_2812_BM1);
+              ppix->bright(BRI_2812_BM1);
+              outM2812[1].bmpB->bmp_num = MD_BITMAP_SMILY;
+              outM2812[0].bmpB = outM2812[1].bmpB;
+
+              ppix = outM2812[1].text->pix24;
+              ppix->col16(COL24_2812_M1);
+              ppix->bright(BRI_2812_M1);
+              outM2812[1].text->text = (char*) text2812;
+              outM2812[0].text = outM2812[1].text;
+
+              ppix = outM2812[1].bmpE->pix24;
+              ppix->col16(COL24_2812_BM1);
+              ppix->bright(BRI_2812_BM1);
+              outM2812[1].bmpE->bmp_num = MD_BITMAP_SMILY;
+              outM2812[0].bmpE = outM2812[1].bmpE;
+                //memcpy((char*) &outM2812[0], (char*) &outM2812[1], sizeof(outM2812[1]));
+                //SOUT(" outM bmpB 0/1 ");
+                //SOUTHEX(outM2812[0].bmpB->bmp_num); SOUT(" / "); SOUTHEX(outM2812[1].bmpB->bmp_num); SOUT(" - ");
+                //SOUTHEX((uint32_t) outM2812[0].bmpB->pix24);   SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
+                //SOUTHEX(*outM2812[0].bmpB->pix24);  SOUT(" / "); SOUTHEXLN(*outM2812[1].bmpB->pix24);
+                //SOUT(" outM text 0/1 ");
+                //SOUT(outM2812[0].text->text);       SOUT(" / "); SOUT(outM2812[1].text->text); SOUT(" - ");
+                //SOUTHEX((uint32_t) outM2812[0].text->pix24);   SOUT(" / "); SOUTHEXLN((uint32_t) outM2812[1].text->pix24);
+                //SOUTHEX(*outM2812[0].text->pix24);  SOUT(" / "); SOUTHEXLN(*outM2812[1].text->pix24);
+                //SOUT(" outM bmpE 0/1 ");
+                //SOUTHEX(outM2812[0].bmpE->bmp_num); SOUT(" / "); SOUTHEX(outM2812[1].bmpE->bmp_num); SOUT(" - ");
+                //SOUTHEX(*outM2812[0].bmpE->pix24);  SOUT(" / "); SOUTHEXLN(*outM2812[1].bmpE->pix24);
+
+                //SOUT(" p_outM 0/1 "); SOUTHEX((uint32_t) &outM2812[0]);            SOUT(" / "); SOUTHEXLN ((uint32_t) &outM2812[1]);
+                //SOUT(" p_text 0/1 "); SOUTHEX((uint32_t) &outM2812[0].text);       SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].text);
+                //SOUT(" p_pix24 0/1 "); SOUTHEX((uint32_t) outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
+
+              usleep(10000);
+                //outM2812[0].text = outM2812[1].text;
+                //outM2812[0].bmpE = outM2812[1].bmpE;
+              matrix_1.begin();
+              usleep(50000);
+              matrix_1.display_boxes();
+              usleep(1500000);
+                //matrix_1.start_scroll_task((scroll2812_t*) &outM2812, &posM2812);
+
+              SOUT(" start = "); SOUT(posM2812);
+              int16_t tmp = (strlen(text2812) * (uint8_t) COLCHAR_2812 + (uint8_t) OFFEND_2812_M1);
+              matrix_1.start_scroll_matrix(  (scroll2812_t*) outM2812, &posM2812, - tmp);
+            }
+        #endif
     // --- passive buzzer
       #ifdef PLAY_MUSIC
           void playSong(int8_t songIdx)
@@ -1829,7 +1855,7 @@
               ledc_channel_config(&ledc_channel);                                     // Configura o canal do LEDC
             }
         #endif
-  // --- user input
+  // --- user input ----------------------
     // --- keypad
       #if defined(KEYS)
           void startKeys()
@@ -1946,7 +1972,7 @@
             }
         #endif
 
-  // --- sensors
+  // --- sensors -------------------------
     // --- DS18B20
       String getDS18D20Str()
         {
@@ -1965,25 +1991,39 @@
           return outS;
         }
     // --- BME280
-      String getBME280Str()
-        {
-          String _outS = "";
-          #if ( USE_BME280_I2C > OFF )
-            bme.init();
-            usleep(1000);
-            _outS  = ((String) ((int) (bme.readTemperature()         + 0.5))) + "° ";
-            usleep(1000);
-            _outS += ((String) ((int) (bme.readHumidity()            + 0.5))) + "% ";
-            usleep(1000);
-            _outS += ((String) ((int) ((bme.readPressure() / 100.0F) + 0.5))) + "mb";
-            //outS += "  Alt~ " + (String) bme280.readAltitude(1013.25);
-
-                    //SOUT(" BME280 "); SOUTLN(_outS);
-            #endif
-          return _outS;
-        }
     // --- T-element type K
-  // ------ network -------------------------
+    // --- photo sensor
+  // --- memory --------------------------
+    void testFlash()
+      {
+        SOUTLN("mounting SPIFFS ... ");
+        if(!SPIFFS.begin(true))
+          {
+           SOUTLN("ERROR");
+            return;
+          }
+
+        uint32_t bFree = SPIFFS.totalBytes();
+        SOUT("found "); SOUT(bFree); SOUTLN(" bytes free");
+        /*
+        SOUTLN("dir:");
+        File file = SPIFFS.open("/test_example.txt");
+        if(!file)
+          {
+            SOUTLN("Failed to open file for reading");
+            return;
+          }
+
+        SOUTLN("File Content:");
+        while(file.available())
+          {
+            Serial.write(file.read());
+          }
+        file.close();
+        */
+      }
+
+  // --- network -------------------------
     // --- WIFI
       void startWIFI(bool startup)
         {
@@ -2020,7 +2060,31 @@
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
                                 SOUT(millis()); SOUTLN(" setup add WIFI 4");
                               #endif
-                      ipList.append(WIFI_FIXIP3, WIFI_GATEWAY4, WIFI_SUBNET, WIFI_SSID4, WIFI_SSID4_PW);
+                      ipList.append(WIFI_FIXIP4, WIFI_GATEWAY4, WIFI_SUBNET, WIFI_SSID4, WIFI_SSID4_PW);
+                    #endif
+                  #if (WIFI_ANZ_LOGIN > 5)
+                            #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                                SOUT(millis()); SOUTLN(" setup add WIFI 5");
+                              #endif
+                      ipList.append(WIFI_FIXIP5, WIFI_GATEWAY5, WIFI_SUBNET, WIFI_SSID5, WIFI_SSID5_PW);
+                    #endif
+                  #if (WIFI_ANZ_LOGIN > 6)
+                            #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                                SOUT(millis()); SOUTLN(" setup add WIFI 6");
+                              #endif
+                      ipList.append(WIFI_FIXIP6, WIFI_GATEWAY6, WIFI_SUBNET, WIFI_SSID6, WIFI_SSID6_PW);
+                    #endif
+                  #if (WIFI_ANZ_LOGIN > 7)
+                            #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                                SOUT(millis()); SOUTLN(" setup add WIFI 7");
+                              #endif
+                      ipList.append(WIFI_FIXIP7, WIFI_GATEWAY7, WIFI_SUBNET, WIFI_SSID7, WIFI_SSID7_PW);
+                    #endif
+                  #if (WIFI_ANZ_LOGIN > 8)
+                            #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
+                                SOUT(millis()); SOUTLN(" setup add WIFI 8");
+                              #endif
+                      ipList.append(WIFI_FIXIP8, WIFI_GATEWAY8, WIFI_SUBNET, WIFI_SSID8, WIFI_SSID8_PW);
                     #endif
                             SOUT(millis()); SOUTLN(" setup startWIFI locWIFI fertig");
 
@@ -2099,147 +2163,291 @@
 
     // --- webserver
       #if (USE_WEBSERVER > OFF)
-  /*
-    void    handleClient(AsyncWebSocketClient *client, void *arg, uint8_t *data, size_t len)
-      {
-        AwsFrameInfo *info = (AwsFrameInfo*)arg;
-        char* txt = (char*) data;
-        if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
-          { //  SOUT(" handleWebSocketMessage info->index "); SOUT(info->index); SOUT(" info->final "); SOUT(info->final); SOUT(" info->len "); SOUTLN(info->len);
-            data[len] = 0;
-            uint8_t type  = txt[0];  // extract obj type
-            uint8_t index = txt[1] - WS_IDX_OFFSET;  // extract index
-            int16_t value = atoi(&txt[2]);
-                      //SOUT(" Payload type "); SOUT(type);
-                      //SOUT(" index "); SOUT(index); SOUT(" len "); SOUT(len);
-                      //SOUT(" data '"); SOUT(&txt[2]); SOUT(" = "); SOUT(value);
-                      //SOUT(" ledList cnt "); SOUTLN(psliderList->count());
-
-            if (type == EL_TSLIDER)
+        void startWebServer()
+          {
+            bool ret = ISERR;
+            //if ((md_error & ERRBIT_SERVER) != 0)
+            if (getBit(md_error, ERRBIT_SERVER))
               {
-                md_slider* psl = (md_slider*) psliderList->pIndex(index);
-                      //SOUT(" psl "); SOUTHEX((uint32_t) psl);
-                if (psl != NULL)
+                dispStatus("start webserver");
+                SOUT("startServer ... ");
+                //if ((md_error & ERRBIT_WIFI) == 0)
+                if (!getBit(md_error, ERRBIT_WIFI))
                   {
-                    psl->destVal = value;
-                    SOUT(" slider "); SOUT((index+1)); SOUT("="); SOUTLN(value);
+                    ret = pmdServ->md_startServer();
+                        #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                            SOUT("ret="); SOUTLN(ret);
+                          #endif
+                  }
+                md_error = setBit(md_error, ERRBIT_SERVER, ret);
+                      #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                        // SOUT("  md_error="); SOUTLN(md_error);
+                      #endif
+
+                //if ((md_error & ERRBIT_SERVER) == 0)
+                if (!getBit(md_error, ERRBIT_SERVER))
+                  {
+                    dispStatus("Webserver online");
+                    SOUTLN("Webserver online");
+                  }
+                  else
+                  {
+                    dispStatus("Webserver ERROR");
+                    SOUTLN("Webserver ERROR");
                   }
               }
-
-            else if (type == EL_TSWITCH)
-              {
-                md_switch* psw = (md_switch*) pswitchList->pIndex(index);
-                while (psw != NULL)
-                  {
-                    psw->destVal = value; SOUT(" switch "); SOUTLN(value);
-                  }
-              }
-
-            else if (type == EL_TANALOG)
-              {
-                md_analog* pana = (md_analog*) panalogList->pIndex(index);
-                while (pana != NULL)
-                  {
-                    pana->destVal = value; SOUT(" analog "); SOUTLN(value);
-                  }
-              }
-
-            else { }
           }
-      }
-    */
-    /*
-          void handlingIncomingData()
-            {
+
+        void readMessage()
+          {
+            md_message *pM   = NULL;
+            int         itmp = 0;
+            char*       ctmp = NULL;
+            md_LEDPix24* ppix = NULL;
+            uint8_t     idx;
+            char        tval;
+            char        tdata;
+
+            if (inMsgs->count() > 0)
+              {
+                pM   = (md_message*) inMsgs->pFirst();
+                switch (pM->msgType())
+                  {
+                    case ME_TSOCKET:
+                      SOUT(" Socket ");
+                      break;
+
+                    case ME_TREQ:
+                      pmdServ->isRequest = true;
+                      break;
+
+                    case ME_TCONN:
+                      newClient = true;
+                      break;
+
+                    default:
+                      ctmp  = pM->payload();
+                      tdata = pM->dataType();
+                      tval  = ctmp[0];
+                      idx   = ctmp[1] - '0';
+                      ctmp += 2;
+                          SOUT(" msg client "); SOUT(pM->client());
+                          SOUT(" tMsg ");       SOUT(pM->msgType());
+                          SOUT(" tData ");      SOUT((char) pM->dataType());
+                          SOUT(" tval ");       SOUT(tval);
+                          SOUT(" payload ");    SOUT(pM->payload());
+                          SOUT(" idx ");        SOUTLN(idx);
+                          SOUT(" ctmp '");      SOUT(ctmp); SOUTLN("' ");
+                      if (tdata == MD_SINGLE)
+                        {
+                          SOUTLN("---- switch(tval) ----");
+                          switch (tval)
+                            {
+                              case EL_TANALOG:
+                                  SOUT(" Analog nu ");
+                                break;
+                              case EL_TSLIDER:
+                                  SOUTLN(" ---- Slider ----");
+                                  itmp  = (int)strtol(ctmp, NULL, 10);
+                                  switch (idx) // index of serverelement
+                                    {
+                                      case 1: // RGB-LED col24
+                                        SOUTLN("  ---- RGBLED bright ----"); SOUT(RGBLED[1]->bright()); SOUT(" neu ");
+                                        RGBLED[1]->bright(itmp);
+                                        SOUT(RGBLED[1]->bright()); SOUT(" ");
+                                        break;
+                                      case 2: // 2821 line col24
+                                        SOUTLN("  ---- line bright ----"); SOUT(line2812[1]->bright()); SOUT(" neu ");
+                                        line2812[1]->bright((uint8_t) itmp);
+                                        SOUT(line2812[1]->bright()); SOUT(" ");
+                                        break;
+                                      case 3:
+                                        ppix = outM2812[1].text->pix24;
+                                        SOUTLN("  ---- matrix bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
+                                        ppix->bright((uint8_t) itmp);
+                                        SOUTLN(ppix->bright());
+                                        break;
+                                      case 4:
+                                        ppix = outM2812[1].bmpB->pix24;
+                                        SOUTLN("  ---- smilyB bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
+                                        ppix->bright((uint8_t) itmp);
+                                        SOUTLN(ppix->bright());
+                                        ppix = outM2812[1].bmpE->pix24;
+                                        SOUTLN("  ---- smilyE bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
+                                        ppix->bright((uint8_t) itmp);
+                                        break;
+                                    }
+                                break;
+                              case EL_TCOLOR:
+                                  SOUTLN(" ---- Color ----");
+                                  itmp  = (int)strtol(ctmp, NULL, 16);
+                                  switch (idx) // index of serverelement
+                                    {
+                                      case 1: // RGB-LED col24
+                                        SOUTLN("  ---- RGBLED color ----"); SOUTHEX(RGBLED[1]->col24()); SOUT(" neu ");
+                                        RGBLED[1]->col24(itmp);
+                                        SOUTHEXLN(RGBLED[1]->col24());
+                                        break;
+                                      case 2: // 2821 line col24
+                                        SOUTLN(" ---- line2812 color24 ----"); SOUTHEX(line2812[1]->col24());
+                                        line2812[1]->col24(itmp);
+                                        SOUT(" neu 24/16"); SOUTHEX(line2812[1]->col24()); SOUT(" / "); SOUTLN(Col16(line2812[1]->col24()));
+                                        break;
+                                      case 3: // 2821 matrix col16
+                                        ppix = outM2812[1].text->pix24;
+                                        SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
+                                        ppix->col24(itmp);
+                                        SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                        break;
+                                      case 4: // 2821 matrix col16 bmp
+                                        ppix = outM2812[1].bmpB->pix24;
+                                        SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
+                                        ppix->col24(itmp);
+                                        SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                        ppix = outM2812[1].bmpE->pix24;
+                                        SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
+                                        ppix->col24(itmp);
+                                        SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                        break;
+                                    }
+                                break;
+                              case EL_TSWITCH:
+                                  SOUT(" Switch ");
+                                break;
+                              case EL_TTEXT:
+                                  SOUT(" Text ");
+                                break;
+                              case EL_TOFFSET:
+                                  SOUT(" Offset ");
+                                break;
+                              case EL_TGRAPH:
+                                  SOUT(" Graph ");
+                                break;
+                              case EL_TINDEX:
+                                  SOUT(" Index ");
+                                break;
+                              default:
+                                  SOUT(" ERROR ");
+                                break;
+                            }
+                        }
+                      break;
+                  }
+                SOUT("'"); SOUT(pM->payload()); SOUT("'");
+                inMsgs->rem();
+                SOUT(" inMsgs.count "); SOUTLN(inMsgs->count());
+              }
+          }/*
+        void    handleClient(AsyncWebSocketClient *client, void *arg, uint8_t *data, size_t len)
+          {
+            AwsFrameInfo *info = (AwsFrameInfo*)arg;
+            char* txt = (char*) data;
+            if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
+              { //  SOUT(" handleWebSocketMessage info->index "); SOUT(info->index); SOUT(" info->final "); SOUT(info->final); SOUT(" info->len "); SOUTLN(info->len);
+                data[len] = 0;
+                uint8_t type  = txt[0];  // extract obj type
+                uint8_t index = txt[1] - WS_IDX_OFFSET;  // extract index
+                int16_t value = atoi(&txt[2]);
+                          //SOUT(" Payload type "); SOUT(type);
+                          //SOUT(" index "); SOUT(index); SOUT(" len "); SOUT(len);
+                          //SOUT(" data '"); SOUT(&txt[2]); SOUT(" = "); SOUT(value);
+                          //SOUT(" ledList cnt "); SOUTLN(psliderList->count());
+
+                if (type == EL_TSLIDER)
+                  {
+                    md_slider* psl = (md_slider*) psliderList->pIndex(index);
+                          //SOUT(" psl "); SOUTHEX((uint32_t) psl);
+                    if (psl != NULL)
+                      {
+                        psl->destVal = value;
+                        SOUT(" slider "); SOUT((index+1)); SOUT("="); SOUTLN(value);
+                      }
+                  }
+
+                else if (type == EL_TSWITCH)
+                  {
+                    md_switch* psw = (md_switch*) pswitchList->pIndex(index);
+                    while (psw != NULL)
+                      {
+                        psw->destVal = value; SOUT(" switch "); SOUTLN(value);
+                      }
+                  }
+
+                else if (type == EL_TANALOG)
+                  {
+                    md_analog* pana = (md_analog*) panalogList->pIndex(index);
+                    while (pana != NULL)
+                      {
+                        pana->destVal = value; SOUT(" analog "); SOUTLN(value);
+                      }
+                  }
+
+                else { }
+              }
+          }
+          */
+          /*
+        void handlingIncomingData()
+          {
 
 
-              AwsFrameInfo *info = (AwsFrameInfo*)arg;
+            AwsFrameInfo *info = (AwsFrameInfo*)arg;
 
-              if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
-                {
-                  String hexColor = "";
-                  for (int i=0; i < len; i++)
-                    hexColor += ((char) data[i]);
+            if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
+              {
+                String hexColor = "";
+                for (int i=0; i < len; i++)
+                  hexColor += ((char) data[i]);
 
-                  Serial.println("Hex Color: " + hexColor);
+                Serial.println("Hex Color: " + hexColor);
 
-                  long n = strtol(&hexColor[0], NULL, 16);
-                  Serial.println(n);
-                  strip.fill(n);
-                  strip.show();
-                }
-            }
-    */
-          // Callback for incoming event
-          /*void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type,
+                long n = strtol(&hexColor[0], NULL, 16);
+                Serial.println(n);
+                strip.fill(n);
+                strip.show();
+              }
+          }
+          */
+        // Callback for incoming event
+        /*
+        void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type,
                        void * arg, uint8_t *data, size_t len)
-            {
-              switch(type)
-                {
-                  case WS_EVT_CONNECT:
-                    Serial.printf("Client connected: \n\tClient id:%u\n\tClient IP:%s\n",
-                         client->id(), client->remoteIP().toString().c_str());
-                    break;
-                  case WS_EVT_DISCONNECT:
-                    Serial.printf("Client disconnected:\n\tClient id:%u\n", client->id());
-                    break;
-                  case WS_EVT_DATA:
-                    handlingIncomingData(client, arg, data, len);
-                    break;
-                  case WS_EVT_PONG:
-                    Serial.printf("Pong:\n\tClient id:%u\n", client->id());
-                    break;
-                  case WS_EVT_ERROR:
-                    Serial.printf("Error:\n\tClient id:%u\n", client->id());
-                    break;
-                }
-            }
-            void configWebsite()
-            {
-              webMD.createElement(EL_TSLIDER, "LED red", "%");
-              webMD.createElement(EL_TSLIDER, "LED green", "%");
-              webMD.createElement(EL_TSLIDER, "LED blue", "%");
+          {
+            switch(type)
+              {
+                case WS_EVT_CONNECT:
+                  Serial.printf("Client connected: \n\tClient id:%u\n\tClient IP:%s\n",
+                       client->id(), client->remoteIP().toString().c_str());
+                  break;
+                case WS_EVT_DISCONNECT:
+                  Serial.printf("Client disconnected:\n\tClient id:%u\n", client->id());
+                  break;
+                case WS_EVT_DATA:
+                  handlingIncomingData(client, arg, data, len);
+                  break;
+                case WS_EVT_PONG:
+                  Serial.printf("Pong:\n\tClient id:%u\n", client->id());
+                  break;
+                case WS_EVT_ERROR:
+                  Serial.printf("Error:\n\tClient id:%u\n", client->id());
+                  break;
+              }
+          }
+        void configWebsite()
+          {
+            webMD.createElement(EL_TSLIDER, "LED red", "%");
+            webMD.createElement(EL_TSLIDER, "LED green", "%");
+            webMD.createElement(EL_TSLIDER, "LED blue", "%");
 
-              webMD.createElement(EL_TANALOG, "DS18B20 Temp", "°C");
-              webMD.createElement(EL_TANALOG, "Type-K Temp", "°C");
-              webMD.createElement(EL_TANALOG, "BME_Temp", "°C");
-              webMD.createElement(EL_TANALOG, "BME_Humidity", "%");
-              webMD.createElement(EL_TANALOG, "BME_Pressure", "mb");
-              webMD.createElement(EL_TANALOG, "Gaswert", "");
-            }
+            webMD.createElement(EL_TANALOG, "DS18B20 Temp", "°C");
+            webMD.createElement(EL_TANALOG, "Type-K Temp", "°C");
+            webMD.createElement(EL_TANALOG, "BME_Temp", "°C");
+            webMD.createElement(EL_TANALOG, "BME_Humidity", "%");
+            webMD.createElement(EL_TANALOG, "BME_Pressure", "mb");
+            webMD.createElement(EL_TANALOG, "Gaswert", "");
+          }
           */
 
-          void startWebServer()
-            {
-              bool ret = ISERR;
-              if ((md_error & ERRBIT_SERVER) != 0)
-                {
-                  dispStatus("start webserver");
-                  SOUT("startServer ... ");
-                  if ((md_error & ERRBIT_WIFI) == 0)
-                    {
-                      ret = webMD.md_startServer();
-                          #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                              SOUT("ret="); SOUTLN(ret);
-                            #endif
-                    }
-                  md_error = setBit(md_error, ERRBIT_SERVER, ret);
-                        #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                          // SOUT("  md_error="); SOUTLN(md_error);
-                        #endif
-
-                  if ((md_error & ERRBIT_SERVER) == 0)
-                    {
-                      dispStatus("Webserver online");
-                      SOUTLN("Webserver online");
-                    }
-                    else
-                    {
-                      dispStatus("Webserver ERROR");
-                      SOUTLN("Webserver ERROR");
-                    }
-                }
-            }
         #endif // USE_WEBSERVER
 
-// --- end of code --------------------------
+// --- end of code -----------------------------------------------
