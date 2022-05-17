@@ -6,32 +6,46 @@
 
   // ******************************************
   // --- project configuration
-    #define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
+    // --- board
+      //#define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+        #if (BOARD == MC_ESP32_Node)
+            #define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
+          #endif
+      //#define BOARD   MC_ESP32_D1_R32     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+        #if (BOARD == MC_ESP32_D1_R32)
+            #define PROJ_TITLE "ESP32-TEST using ESP32-D1-R32"
+          #endif
+      #define BOARD   MC_ESP32_D1_MINI  // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+        #if (BOARD == MC_ESP32_D1_MINI)
+            #define PROJ_TITLE "ESP32-TEST using ESP32-D1-Mini"
+          #endif
+      //#define BOARD   MC_AV_NANO_V3
+        #if (BOARD == MC_AV_NANO_V3)
+            #define PROJ_TITLE "ESP32-TEST using AV_NANO_V3"
+          #endif
+      //#define BOARD   MC_AV_UNO_V3
+        #if (BOARD == MC_AV_UNO_V3)
+            #define PROJ_TITLE "ESP32-TEST using AV_UNO_V3"
+          #endif
+
     // --- debugging
       #define DEBUG_MODE      CFG_DEBUG_STARTUP
         //#define DEBUG_MODE      CFG_DEBUG_NONE
         //#define DEBUG_MODE      CFG_DEBUG_ACTIONS
         //#define DEBUG_MODE      CFG_DEBUG_DETAILS
 
-    // --- board
-      #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-        //#define BOARD   MC_ESP32_D1_R32     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-        //#define BOARD   MC_ESP32_D1_MINI  // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-        //#define BOARD   MC_AV_NANO_V3
-        //#define BOARD   MC_AV_UNO_V3
-
     // --- SW config
       #define USE_TASKING           ON
       #define USE_LED_BLINK_OUT     ON
     // --- user output components
       #define USE_TRAFFIC_LED_OUT   OFF
-      #define USE_RGBLED_PWM        1
-      #define USE_DISP_I2C1         1
+      #define USE_RGBLED_PWM        OFF // 1
+      #define USE_DISP_I2C1         OFF // 1
       #define USE_DISP_I2C2         OFF
       #define USE_DISP_SPI          OFF
       #define USE_BUZZER_PWM        OFF
-      #define USE_FAN_PWM           2
-      #define USE_OUT_FREQ_PWM      1
+      #define USE_FAN_PWM           OFF // 2
+      #define USE_OUT_FREQ_PWM      OFF // 1
       #define USE_WS2812_MATRIX_OUT 1   // [0, 1..4]
       #define USE_WS2812_LINE_OUT   1     // [0, 1..4]
       #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
@@ -39,14 +53,14 @@
       #define USE_TOUCHSCREEN_SPI   OFF
       #define USE_TOUCHSCREEN_IO    OFF
       #define USE_KEYPADSHIELD_ADC  OFF
-      #define USE_FAN_CNT_INP       2
-      #define USE_FAN_PWM_INP       2
+      #define USE_FAN_CNT_INP       OFF // 2
+      #define USE_FAN_PWM_INP       OFF // 2
     // --- sensors
       #define USE_DS18B20_1W_IO     OFF   // [0, 1, ....] limited by 1W connections
-      #define USE_BME280_I2C        1     // [0, 1, ....] limited by I2C channels/addr
+      #define USE_BME280_I2C        OFF // 1     // [0, 1, ....] limited by I2C channels/addr
       #define USE_TYPE_K_SPI        OFF   // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ADC     OFF   // [0, 1, ....] limited by analog inputs
-      #define USE_PHOTO_SENS        ON
+      #define USE_PHOTO_SENS        OFF // ON
     // --- network  components
       #define USE_WIFI              ON
       #define USE_NTP_SERVER        ON
@@ -54,10 +68,10 @@
       #define USE_WEBSERVER         ON
     // --- memory components
       #define USE_FLASH_MEM         ON
-      #define USE_FRAM_I2C          1   // [0, 1, ...] limited by I2C channel/addr
+      #define USE_FRAM_I2C          OFF // 1   // [0, 1, ...] limited by I2C channel/addr
     // --- test components
       #define USE_CTRL_POTI_ADC     OFF   // [0, 1, ....] limited by analog inputs
-      #define USE_CTRL_SW_INP       1   // [0, 1, ....] limited by digital pins
+      #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins
     // --- system components
       #define USE_TASKING           ON
       #define USE_DISP_I2C          USE_DISP_I2C1 + USE_DISP_I2C2
@@ -90,7 +104,7 @@
                 // OLEDs     MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
                           // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
                 #if (USE_OLED_I2C > OFF)
-                    #define OLED1   MC_UO_OLED_130_AZ
+                    #define OLED1   MC_UO_OLED_066_AZ
                   #endif
                 #if (USE_OLED_I2C > 1)
                     #define OLED2   TRUE

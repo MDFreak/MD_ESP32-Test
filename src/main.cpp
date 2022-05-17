@@ -236,7 +236,8 @@
                 (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
             msTimer ws2812MT   = msTimer(UPD_2812_M1_MS);
           #endif
-        const char text2812[] = " # YES We Care ";
+//        const char text2812[] = " # YES We Care !!  Happy 2022 ";
+        const char text2812[] = " Im Herzen die Sonne - willkommen im Weltladen ";
         static scroll2812_t outM2812[2] = { scroll2812_t(), scroll2812_t() } ;
         static int16_t posM2812 = (int16_t) (COLPIX_2812_M1 + OFFBEG_2812_M1);
         unsigned long  ws2812_Malt = 0;
@@ -248,10 +249,10 @@
     #if (USE_WS2812_LINE_OUT > OFF)
         msTimer         ws2812LT    = msTimer(UPD_2812_L1_MS);
         Adafruit_NeoPixel strip = Adafruit_NeoPixel(COLPIX_2812_L1, PIN_WS2812_L1, (neoPixelType) COLORD_2812_L1 + NEO_KHZ800);
-        //static uint8_t ws2812_Lbright = (uint8_t) BRIGHT_2812_L1;
-        //static uint8_t ws2812_Lrt  = 100;
-        //static uint8_t ws2812_Lbl  = 100;
-        //static uint8_t ws2812_Lgr  = 100;
+          //static uint8_t ws2812_Lbright = (uint8_t) BRIGHT_2812_L1;
+          //static uint8_t ws2812_Lrt  = 100;
+          //static uint8_t ws2812_Lbl  = 100;
+          //static uint8_t ws2812_Lgr  = 100;
         unsigned long  ws2812_Lalt = 0;
         uint32_t       ws2812_Lcnt = 0;
         uint32_t       ws2812_Lv   = 0;
@@ -278,7 +279,7 @@
             #if !(OLED1_DRV ^ OLED_DRV_1106)
                 md_oled_1106 oled1 = md_oled_1106((uint8_t) I2C_ADDR_OLED1, (uint8_t) I2C_SDA_OLED1,
                                         (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
-              #else
+            #else
                 md_oled_1306 oled1 = md_oled_1306((uint8_t) I2C_ADDR_OLED1, (uint8_t) I2C_SDA_OLED1,
                                         (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
               #endif
@@ -1315,10 +1316,12 @@
                         {
                           char ctmp[8] = "";
                           // EL_TSLIDER
-                          outStr = "SVB1";
-                          outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
-                          pmdServ->updateAll(outStr);
-                          SOUTLN(outStr);
+                          #if (USE_RGBLED_PWM > OFF)
+                              outStr = "SVB1";
+                              outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
+                              pmdServ->updateAll(outStr);
+                              SOUTLN(outStr);
+                            #endif
                           outStr = "SVB2";
                           outStr.concat(line2812[0]->bright());    // RGB-LED col24
                           pmdServ->updateAll(outStr);
@@ -1332,9 +1335,11 @@
                               //pmdServ->updateAll(tmpStr);
 
                           // EL_TCOLOR
-                          outStr = "SVC1";
-                          colToHexStr(ctmp, RGBLED[0]->col24());
-                          outStr.concat(ctmp);    // RGB-LED col24
+                          #if (USE_RGBLED_PWM > OFF)
+                              outStr = "SVC1";
+                              colToHexStr(ctmp, RGBLED[0]->col24());
+                              outStr.concat(ctmp);    // RGB-LED col24
+                            #endif
                           pmdServ->updateAll(outStr);
                           SOUTLN(outStr);
                           outStr = "SVC2";
@@ -1759,7 +1764,7 @@
           void initWS2812Matrix()
             {
               md_LEDPix24* ppix = outM2812[1].bmpB->pix24;
-              //SOUT(" p_outM 0/1 "); SOUTHEX((uint32_t) &outM2812[0]);            SOUT(" / "); SOUTHEXLN ((uint32_t) &outM2812[1]);
+                //SOUT(" p_outM 0/1 "); SOUTHEX((uint32_t) &outM2812[0]);            SOUT(" / "); SOUTHEXLN ((uint32_t) &outM2812[1]);
                 //SOUT(" p_text 0/1 "); SOUTHEX((uint32_t) &outM2812[0].text);       SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].text);
                 //SOUT(" p_pix24 0/1 "); SOUTHEX((uint32_t) outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN ((uint32_t) outM2812[1].bmpB->pix24);
               ppix->col16(COL24_2812_BM1);
@@ -2252,9 +2257,11 @@
                                   switch (idx) // index of serverelement
                                     {
                                       case 1: // RGB-LED col24
-                                        SOUTLN("  ---- RGBLED bright ----"); SOUT(RGBLED[1]->bright()); SOUT(" neu ");
-                                        RGBLED[1]->bright(itmp);
-                                        SOUT(RGBLED[1]->bright()); SOUT(" ");
+                                        #if (USE_RGBLED_PWM > OFF)
+                                            SOUTLN("  ---- RGBLED bright ----"); SOUT(RGBLED[1]->bright()); SOUT(" neu ");
+                                            RGBLED[1]->bright(itmp);
+                                            SOUT(RGBLED[1]->bright()); SOUT(" ");
+                                          #endif
                                         break;
                                       case 2: // 2821 line col24
                                         SOUTLN("  ---- line bright ----"); SOUT(line2812[1]->bright()); SOUT(" neu ");
@@ -2284,9 +2291,11 @@
                                   switch (idx) // index of serverelement
                                     {
                                       case 1: // RGB-LED col24
-                                        SOUTLN("  ---- RGBLED color ----"); SOUTHEX(RGBLED[1]->col24()); SOUT(" neu ");
-                                        RGBLED[1]->col24(itmp);
-                                        SOUTHEXLN(RGBLED[1]->col24());
+                                        #if (USE_RGBLED_PWM > OFF)
+                                            SOUTLN("  ---- RGBLED color ----"); SOUTHEX(RGBLED[1]->col24()); SOUT(" neu ");
+                                            RGBLED[1]->col24(itmp);
+                                            SOUTHEXLN(RGBLED[1]->col24());
+                                          #endif
                                         break;
                                       case 2: // 2821 line col24
                                         SOUTLN(" ---- line2812 color24 ----"); SOUTHEX(line2812[1]->col24());

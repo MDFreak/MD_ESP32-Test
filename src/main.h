@@ -104,7 +104,7 @@
         #ifdef OLED1
             #if !(OLED1_DRV ^ OLED_DRV_1106)
                 #include "md_oled_SH1106.h"
-              #else
+            #else
                 #include "md_oled.h"
               #endif
           #endif

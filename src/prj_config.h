@@ -8,14 +8,14 @@
   // ******************************************
     // --- test features --------------------------------
       #define TEST_SOCKET_SERVER    OFF
-      #define TEST_RGBLED_PWM       ON
+      #define TEST_RGBLED_PWM       OFF
       #define USE_WEBCTRL_RGB       OFF
       #define USE_WEBCTRL_FAN       OFF
       #define USE_POTICTRL_RGB      OFF
       #define USE_POTICTRL_FAN      OFF
-      #define USE_SWCTRL_RGB        ON
-      #define USE_SWCTRL_FAN        ON
-      #define USE_SWCTRL_1812       ON
+      #define USE_SWCTRL_RGB        OFF
+      #define USE_SWCTRL_FAN        OFF
+      #define USE_SWCTRL_1812       OFF
   // ******************************************
   // --- board management
     #if !(BOARD ^ MC_ESP32_Node)
@@ -200,6 +200,7 @@
         // --- user input
           #if (USE_CTRL_POTI_ADC > OFF)
               #define PIN_INP_POTI_1 35   // ADC 1-5
+              #define ADC_INP_POTI_1 NU   // ADC 1-5
             #endif
 
           #if (USE_CTRL_SW_INP > OFF)
@@ -237,7 +238,7 @@
             #endif
 
           #if (USE_WS2812_MATRIX_OUT > OFF)
-              #define PIN_WS2812_M1      26
+              #define PIN_WS2812_M1      16
               #if (USE_WS2812_PWR_IN_SW > OFF)
                   #define PIN_WS2812_PWR_IN_SW 36
                 #endif
@@ -252,7 +253,7 @@
               #if (USE_WS2812_PWR_IN_SW > OFF)
                   #define PIN_WS2812_PWR_IN_SW 36
                 #endif
-              #define PIN_WS2812_L1      26
+              #define PIN_WS2812_L1      17
                 //#define PIN_WS2812_L2      17
                 //#define PIN_WS2812_L3  x
                 //#define PIN_WS2812_L4  x
@@ -284,6 +285,11 @@
             #endif
           #if (USE_MQ135_GAS_ADC > OFF)
               #define PIN_MQ135     36
+              #define ADC_MQ135     5   // ADC 1-3
+            #endif
+          #if (USE_PHOTO_SENS > OFF)
+              #define PIN_PHOTO_SENS 39
+              #define ADC_PHOTO_SENS 3
             #endif
 
         // --- PWM channels   0..15
@@ -429,7 +435,7 @@
         #define ERRBIT_WIFI      0x00000004     // WIFI connection
         #define ERRBIT_NTPTIME   0x00000008     // NTP timeserver connection
       // --- generic
-        #define SCAN_I2C   128
+        //#define SCAN_I2C   128
         #define CHECK_I2C_DEVICES
         //#define UTC_SEASONTIME UTC_WINTERTIME
         #define UTC_SEASONTIME UTC_SUMMERTIME
@@ -657,10 +663,12 @@
             #define COLBMP_2812    8
             #define ROWBMP_2812    8
             #define UPD_2812_M1_MS 70
-            #define COL24_2812_M1  0xFF0000u   // 0xB924u   // color r-g-b (5-6-5)
-            #define COL24_2812_BM1 0x00FF00u   // color r-g-b (5-6-5)
-            #define BRI_2812_M1    5
-            #define BRI_2812_BM1   5
+            //#define COL24_2812_M1  0xFF0000u   // 0xB924u   // color r-g-b (5-6-5)
+            //#define COL24_2812_BM1 0x00FF00u   // color r-g-b (5-6-5)
+            #define COL24_2812_M1 0xFF0080u   // color r-g-b (5-6-5) = 255,0,128
+            #define COL24_2812_BM1  0xF0B63Cu   // color r-g-b (5-6-5) = 240, 182, 56
+            #define BRI_2812_M1    255
+            #define BRI_2812_BM1   255
 
             #define ROW1_2812_M1   NEO_MATRIX_TOP
             #define COL1_2812_M1   NEO_MATRIX_LEFT
@@ -712,7 +720,7 @@
             #define BRI_2812_L1    5u
             #define TYPE_2812_L1   WS2812B
             #define COLORD_2812_L1 NEO_GRB
-            #define COLPIX_2812_L1 300
+            #define COLPIX_2812_L1 30
             #define ROWPIX_2812_L1 1
             #define COLTIL_2812_L1 4
             #define ROWTIL_2812_L1 1
@@ -941,22 +949,14 @@
 
             #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
             #if !(BOARD ^ MC_ESP32_Node)
-                #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20   lowest first
+                #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
             #elif !(BOARD ^ MC_ESP32_D1_MINI)
-                #if (USED_WS2812_LINE_OUT > OFF)
-                    #define WIFI_FIXIP0     0x1400000Aul // 10.0.0.20
-                  #else
-                    #define WIFI_FIXIP0     0x1500000Aul // 10.0.0.21
-                  #endif
+                  #define WIFI_FIXIP0   0x1800000Aul // 10.0.0.24
             #elif !(BOARD ^ MC_ESP32_D1_R32)
-                #define WIFI_FIXIP0     0x1A00000Aul // 10.0.0.26   lowest first
+                #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
               #endif
             #define WIFI_GATEWAY0   0x8B00000Aul // 10.0.0.139 // Moosgraben
-            #if (USED_WS2812_LINE_OUT > OFF)
-                #define WIFI_FIXIP1     0x1400000Aul // 10.0.0.20
-              #else
-                #define WIFI_FIXIP1     0x1500000Aul // 10.0.0.21
-              #endif
+            #define WIFI_FIXIP1     0x1800000Aul // 10.0.0.24
             #ifdef USE_LOCAL_IP
                 #define WIFI_GATEWAY1   0x8B00000Aul // 10.0.0.139      // Jungberg
                 #define WIFI_GATEWAY2   0x8a00000Aul // 10.0.0.138      // Weltladen
