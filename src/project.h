@@ -44,10 +44,10 @@
       #define USE_DISP_I2C2         OFF
       #define USE_DISP_SPI          OFF
       #define USE_BUZZER_PWM        OFF
-      #define USE_FAN_PWM           OFF // 2
-      #define USE_OUT_FREQ_PWM      OFF // 1
-      #define USE_WS2812_MATRIX_OUT 1   // [0, 1..4]
-      #define USE_WS2812_LINE_OUT   1     // [0, 1..4]
+      #define USE_FAN_PWM           1 // 2
+      #define USE_OUT_FREQ_PWM      1 // 1
+      #define USE_WS2812_MATRIX_OUT OFF   // [0, 1..4]
+      #define USE_WS2812_LINE_OUT   OFF     // [0, 1..4]
       #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
     // --- user input components
       #define USE_TOUCHSCREEN_SPI   OFF
