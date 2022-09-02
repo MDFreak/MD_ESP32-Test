@@ -44,8 +44,8 @@
       #define USE_DISP_I2C2         OFF
       #define USE_DISP_SPI          OFF
       #define USE_BUZZER_PWM        OFF
-      #define USE_FAN_PWM           1 // 2
-      #define USE_OUT_FREQ_PWM      1 // 1
+      #define USE_FAN_PWM           OFF // 2
+      #define USE_OUT_FREQ_PWM      OFF // 1
       #define USE_WS2812_MATRIX_OUT OFF   // [0, 1..4]
       #define USE_WS2812_LINE_OUT   OFF     // [0, 1..4]
       #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
@@ -53,7 +53,7 @@
       #define USE_TOUCHSCREEN_SPI   OFF
       #define USE_TOUCHSCREEN_IO    OFF
       #define USE_KEYPADSHIELD_ADC  OFF
-      #define USE_FAN_CNT_INP       OFF // 2
+      #define USE_FAN_CNT_INP       1 // 2
       #define USE_FAN_PWM_INP       OFF // 2
     // --- sensors
       #define USE_DS18B20_1W_IO     OFF   // [0, 1, ....] limited by 1W connections
@@ -62,10 +62,10 @@
       #define USE_MQ135_GAS_ADC     OFF   // [0, 1, ....] limited by analog inputs
       #define USE_PHOTO_SENS        OFF // ON
     // --- network  components
-      #define USE_WIFI              ON
-      #define USE_NTP_SERVER        ON
-      #define USE_LOCAL_IP          ON
-      #define USE_WEBSERVER         ON
+      #define USE_WIFI              OFF // ON
+      #define USE_NTP_SERVER        OFF // ON
+      #define USE_LOCAL_IP          OFF // ON
+      #define USE_WEBSERVER         OFF // ON
     // --- memory components
       #define USE_FLASH_MEM         ON
       #define USE_FRAM_I2C          OFF // 1   // [0, 1, ...] limited by I2C channel/addr
