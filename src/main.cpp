@@ -26,6 +26,7 @@
     static uint64_t anzUsCycles = 0ul;
     static uint64_t usLast      = 0ul;
     static uint64_t usPerCycle  = 0ul;
+    static char     cmsg[MSG_MAXLEN+1] = "";
       //static uint64_t anzMsCycles = 0;
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
@@ -61,11 +62,18 @@
       #endif
 
   // ------ user input ---------------
-    #if (USE_CNT_INP > OFF)
-      #endif
-
     #if (USE_TOUCHSCREEN > OFF)
-        md_touch touch = md_touch();
+        //         md_touch(uint8_t cspin, uint8_t tft_CS, uint8_t tft_DC, uint8_t tft_RST,
+        //                  uint8_t tft_LED, uint8_t led_ON); //, uint8_t spi_bus = VSPI);
+                  #define TFT_CS      5
+                  #define TFT_DC      4
+                  #define TFT_DC      22
+                  #define TFT_LED     15
+                  #define TOUCH_CS    14
+                  #define TOUCH_IRQ   27
+                  #define LED_ON      0
+
+        md_touch touch = md_touch(TOUCH_CS, TFT_CS, TFT_DC, TFT_DC);
       #endif
 
     #if (USE_KEYPADSHIELD > OFF)
@@ -798,7 +806,7 @@
                     }
                 }
               SOUTLN();
-              initFanPCNT();
+              initGenPCNT();
                       //attachInterrupt(digitalPinToInterrupt(PIN_PWM_FAN_1), &pcnt_intr_handler, FALLING);
 
               #ifdef USE_MCPWM
@@ -1882,7 +1890,7 @@
 
     // --- counter
       #if (USE_CNT_INP > OFF)
-          static void initFanPCNT()
+          static void initGenPCNT()
             {
               /* Initialize PCNT event queue and PCNT functions */
               pcnt_unit_t unit;

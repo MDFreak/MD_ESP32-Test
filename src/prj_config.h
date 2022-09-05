@@ -107,6 +107,18 @@
                   #define LCD_D5      16   // D5
                   #define LCD_D4      17   // D4
                 #endif
+              #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                  #define TFT_CS      5
+                  #define TFT_DC      4
+                  #define TFT_RST     22
+                  #define TFT_LED     15
+                  #define TOUCH_CS    14
+                  #define TOUCH_IRQ   27
+                  #define LED_ON      0
+                #endif
+              #if !(DISP_TFT ^ MC_UO_TFT1602_I2C_XA)
+                  #define ME
+                #endif
             #endif
 
           #if (USE_BUZZER_PWM > OFF)

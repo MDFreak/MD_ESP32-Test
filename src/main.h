@@ -129,10 +129,10 @@
         #include "md_lcd.h"
       #endif
 
-          #if (USE_CNT_INP > OFF)
-              static void initFanPCNT();
-              void getCNTIn();
-            #endif
+    #if (USE_CNT_INP > OFF)
+        static void initGenPCNT();
+        void getCNTIn();
+      #endif
   // --- user inputs
     #if (USE_CNT_INP > OFF)
       #endif
@@ -219,7 +219,7 @@
             #endif
         // --- counter input
           #if (USE_CNT_INP > OFF)
-              static void initFanPCNT();
+              static void initPCNT();
               void getCNTIn();
             #endif
       // --- sensors
