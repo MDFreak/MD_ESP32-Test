@@ -50,7 +50,7 @@
       #define USE_WS2812_LINE_OUT   OFF     // [0, 1..4]
       #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
     // --- user input components
-      #define USE_TOUCHSCREEN_SPI   OFF
+      #define USE_TOUCHSCREEN_SPI   1   // OFF
       #define USE_TOUCHSCREEN_IO    OFF
       #define USE_KEYPADSHIELD_ADC  OFF
       #define USE_GEN_CNT_INP       1
