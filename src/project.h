@@ -7,7 +7,7 @@
   // ******************************************
   // --- project configuration
     // --- board
-      //#define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+      #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
         #if (BOARD == MC_ESP32_Node)
             #define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
           #endif
@@ -15,7 +15,7 @@
         #if (BOARD == MC_ESP32_D1_R32)
             #define PROJ_TITLE "ESP32-TEST using ESP32-D1-R32"
           #endif
-      #define BOARD   MC_ESP32_D1_MINI  // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+      //#define BOARD   MC_ESP32_D1_MINI  // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
         #if (BOARD == MC_ESP32_D1_MINI)
             #define PROJ_TITLE "ESP32-TEST using ESP32-D1-Mini"
           #endif
@@ -40,7 +40,7 @@
     // --- user output components
       #define USE_TRAFFIC_LED_OUT   OFF
       #define USE_RGBLED_PWM        OFF // 1
-      #define USE_DISP_I2C1         OFF // 1
+      #define USE_DISP_I2C1         1   // OFF // 1
       #define USE_DISP_I2C2         OFF
       #define USE_DISP_SPI          OFF
       #define USE_BUZZER_PWM        OFF
@@ -53,8 +53,8 @@
       #define USE_TOUCHSCREEN_SPI   OFF
       #define USE_TOUCHSCREEN_IO    OFF
       #define USE_KEYPADSHIELD_ADC  OFF
-      #define USE_FAN_CNT_INP       1 // 2
-      #define USE_FAN_PWM_INP       OFF // 2
+      #define USE_GEN_CNT_INP       1
+      #define USE_GEN_PWM_INP       OFF // 2
     // --- sensors
       #define USE_DS18B20_1W_IO     OFF   // [0, 1, ....] limited by 1W connections
       #define USE_BME280_I2C        OFF // 1     // [0, 1, ....] limited by I2C channels/addr
@@ -73,14 +73,13 @@
       #define USE_CTRL_POTI_ADC     OFF   // [0, 1, ....] limited by analog inputs
       #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins
     // --- system components
-      #define USE_TASKING           ON
       #define USE_DISP_I2C          USE_DISP_I2C1 + USE_DISP_I2C2
     // usage of peripherals
       #define USE_I2C             USE_DISP_I2C
       #define USE_SPI             USE_DISP_SPI + USE_TOUCHSCREEN_SPI + USE_TYPE_K_SPI
-      #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_FAN_PWM + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
-      #define USE_CNT_INP         USE_FAN_CNT_INP     // max 2 * 8 independent
-      #define USE_PWM_INP         USE_FAN_PWM_INP
+      #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_GEN_PWM_OUT + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
+      #define USE_CNT_INP         USE_GEN_CNT_INP     // max 2 * 8 independent
+      #define USE_PWM_INP         USE_GEN_PWM_INP
       #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
       #define USE_ADC2            OFF // not to use
       #define USE_DIG_INP         USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
