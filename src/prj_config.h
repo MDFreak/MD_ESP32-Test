@@ -44,12 +44,14 @@
               #define PIN_INP_SW_1  32   // INPUT_PULLUP
             #endif
 
-          #if (USE_FAN_CNT_INP > OFF)
-              #define PIN_CNT_FAN_1 36
-              #define PIN_CNT_FAN_2 34
+          #if (USE_GEN_CNT_INP > OFF)
+              #define PIN_CNT_GEN_S0 4
+              #define PIN_CNT_GEN_C0 PCNT_PIN_NOT_USED
+              #define PIN_CNT_GEN_S1 17
+              #define PIN_CNT_GEN_C1 PCNT_PIN_NOT_USED
             #endif
           #if (USE_PWM_INP > OFF)
-                #define PIN_PWM_INP_1 PIN_CNT_FAN_2
+                #define PIN_PWM_INP_1 PIN_CNT_GEN_2
             #endif
         // --- user output
           #if (USE_TRAFFIC_LED_OUT > OFF)
@@ -64,9 +66,9 @@
               #define PIN_RGB_BLUE  14 //33   // RGB blue
             #endif
 
-          #if (USE_FAN_PWM > OFF)
-              #define PIN_PWM_FAN_1 0
-              #define PIN_PWM_FAN_2 4
+          #if (USE_GEN_PWM_OUT > OFF)
+              #define PIN_PWM_GEN_1 0
+              #define PIN_PWM_GEN_2 4
             #endif
 
           #if (USE_OUT_FREQ_PWM > OFF)
@@ -162,9 +164,30 @@
 
         // --- counter channels  0..7
           #if (USE_CNT_INP > OFF)
-              #if (USE_FAN_CNT_INP > OFF)
-                  #define CNT_FAN_1     0
-                  #define CNT_FAN_2     1
+              #define USE_CNT_UNIT       PCNT_UNIT_0
+              #if (USE_GEN_CNT_INP > OFF)
+                  #define CNT_UNIT_GEN0  PCNT_UNIT_0
+                  #define CNT_CH_GEN0    (PCNT_CHANNEL_0)
+                  #undef  USE_CNT_UNIT
+                  #define USE_CNT_UNIT   (CNT_UNIT_GEN0 + 1)
+                #endif
+              #if (USE_GEN_CNT_INP > 1)
+                  #define CNT_UNIT_GEN1  PCNT_UNIT_1
+                  #define CNT_CH_GEN1    (PCNT_CHANNEL_0)
+                  #undef  USE_CNT_UNIT
+                  #define USE_CNT_UNIT   (CNT_UNIT_GEN1 + 1)
+                #endif
+              #if (USE_GEN_CNT_INP > 2)
+                  #define CNT_UNIT_GEN2  PCNT_UNIT_2
+                  #define CNT_CH_GEN2    (PCNT_CHANNEL_0)
+                  #undef  USE_CNT_UNIT
+                  #define USE_CNT_UNIT   (CNT_UNIT_GEN2 + 1)
+                #endif
+              #if (USE_GEN_CNT_INP > 3)
+                  #define CNT_UNIT_GEN3  PCNT_UNIT_3
+                  #define CNT_CH_GEN3    (PCNT_CHANNEL_0)
+                  #undef  USE_CNT_UNIT
+                  #define USE_CNT_UNIT   (CNT_UNIT_GEN3 + 1)
                 #endif
             #endif
 

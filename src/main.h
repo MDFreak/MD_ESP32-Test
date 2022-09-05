@@ -20,7 +20,7 @@
         //#include "freertos/queue.h"
         //#include "driver/ledc.h"
         //#include "driver/mcpwm.h"
-        //#include "driver/pcnt.h"
+    #include "driver/pcnt.h"
         //#include "esp_attr.h"
         //#include "esp_log.h"
   // --- system components

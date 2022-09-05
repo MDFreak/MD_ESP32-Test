@@ -53,7 +53,7 @@
       #define USE_TOUCHSCREEN_SPI   1   // OFF
       #define USE_TOUCHSCREEN_IO    OFF
       #define USE_KEYPADSHIELD_ADC  OFF
-      #define USE_GEN_CNT_INP       1
+      #define USE_GEN_CNT_INP       OFF // 1
       #define USE_GEN_PWM_INP       OFF // 2
     // --- sensors
       #define USE_DS18B20_1W_IO     OFF   // [0, 1, ....] limited by 1W connections
@@ -111,11 +111,11 @@
                     #define OLED2_GEO    GEO_128_64
                   #endif
 
-              #define USE_TFT        0
+              #define USE_TFT        1
                 // TFTs
                 #if (USE_TFT > 0)
                     //#define DISP_TFT  MC_UO_TFT1602_GPIO_RO
-                    //#define DISP_TFT  MC_UO_TOUCHXPT2046_AZ
+                    #define DISP_TFT  MC_UO_TOUCHXPT2046_AZ
                     //#define DISP_TFT  MC_UO_TFT1602_I2C_XA
                   #endif
             #endif
