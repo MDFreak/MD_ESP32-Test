@@ -142,7 +142,8 @@
       #endif
 
     #if (USE_FLASH_MEM > OFF)
-        #include <SPIFFS.h>
+        #include <md_spiffs.h>
+        //#include <SPIFFS.h>
       #endif
   // --- network
     #if (USE_WIFI > OFF)

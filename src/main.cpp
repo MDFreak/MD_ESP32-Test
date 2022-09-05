@@ -63,17 +63,9 @@
 
   // ------ user input ---------------
     #if (USE_TOUCHSCREEN > OFF)
-        //         md_touch(uint8_t cspin, uint8_t tft_CS, uint8_t tft_DC, uint8_t tft_RST,
-        //                  uint8_t tft_LED, uint8_t led_ON); //, uint8_t spi_bus = VSPI);
-                  #define TFT_CS      5
-                  #define TFT_DC      4
-                  #define TFT_DC      22
-                  #define TFT_LED     15
-                  #define TOUCH_CS    14
-                  #define TOUCH_IRQ   27
-                  #define LED_ON      0
 
-        md_touch touch = md_touch(TOUCH_CS, TFT_CS, TFT_DC, TFT_DC);
+        md_touch  touch  =  md_touch(TOUCH_CS, TFT_CS, TFT_DC, TFT_RST, TFT_LED, LED_ON);
+        md_touch* ptouch =  &touch;
       #endif
 
     #if (USE_KEYPADSHIELD > OFF)
