@@ -519,6 +519,9 @@
 //      uint32_t i32tmp = 0;
       // --- system
         // start system
+          disableCore0WDT();
+          disableCore1WDT();
+          disableLoopWDT();
           Serial.begin(SER_BAUDRATE);
           usleep(30000); // power-up safety delay
           SOUTLN(); SOUTLN("setup start ...");
