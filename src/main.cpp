@@ -1760,32 +1760,33 @@
       void dispText(char* msg, uint8_t col, uint8_t row, uint8_t len)
         {
           #if (USE_DISP > 0)
-              #if (USE_TOUCHSCREEN > OFF)
-                touch.wrTouch(msg, col, row);
-                #endif
               #if defined(OLED1)
-                oled1.wrText(msg, col, row, len);
+                  oled1.wrText(msg, col, row, len);
                       #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
-                        SOUT("  md_error="); SOUTLN(md_error);
-                      #endif
+                          SOUT("  md_error="); SOUTLN(md_error);
+                        #endif
                 #endif
               #if defined(OLED2)
-                oled2.wrText(msg, col, row, len);
+                  oled2.wrText(msg, col, row, len);
                       #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                         SOUT("  md_error="); SOUTLN(md_error);
                       #endif
                 #endif
               #if (USE_TFT > 0)
-                mlcd.wrText(msg, row, col);
+                  #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
+                      mlcd.wrText(msg, row, col);
+                    #endif
+                  #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                      touch.wrText(msg, col, row, len);
+                    #endif
+                #endif
+              #if (USE_TOUCHSCREEN > OFF)
                 #endif
             #endif
         }
       void dispText(String msg, uint8_t col, uint8_t row, uint8_t len)
         {
           #if (USE_DISP > 0)
-              #if (USE_TOUCHSCREEN > OFF)
-                touch.wrTouch(msg, col, row);
-                #endif
               #if defined(OLED1)
                 oled1.wrText(msg, col, row, len);
                           //SOUT((uint32_t) millis); SOUT(" dispText oled1 '"); SOUT(msg); SOUTLN("'");
@@ -1795,7 +1796,12 @@
                           //SOUT((uint32_t) millis); SOUT(" dispText oled2 '"); SOUT(msg); SOUTLN("'");
                 #endif
               #if (USE_TFT > 0)
-                mlcd.wrText(msg, row, col);
+                  #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
+                      mlcd.wrText(msg, row, col);
+                    #endif
+                  #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                      touch.wrText(msg, col, row, len);
+                    #endif
                 #endif
             #endif
         }
@@ -1808,18 +1814,15 @@
                 #endif
 
               #if (USE_TFT > 0)
-                mlcd.start(plcd);
-                #endif
-
-              #if (USE_TOUCHSCREEN > OFF)
-                bool ret = touch.startTouch();
-                      #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                        SOUT("startTouch ret="); SOUT(ret);
-                      #endif
-                md_error = setBit(md_error, ERRBIT_TOUCH, ret);
-                      #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                        SOUT("  md_error="); SOUTLN(md_error);
-                      #endif
+                  #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
+                      mlcd.start(plcd);
+                    #endif
+                  #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                      touch.start(DISP_ORIENT, DISP_BCOL);
+                          #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                            SOUTLN("startTouch ");
+                          #endif
+                    #endif
                 #endif
 
               #if defined (OLED1)
