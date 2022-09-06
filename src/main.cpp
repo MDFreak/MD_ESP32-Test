@@ -1988,60 +1988,105 @@
             {
               /* Initialize PCNT event queue and PCNT functions */
               pcnt_unit_t unit;
+              esp_err_t   retESP;
               SOUT("init pcnt ");
               for (uint8_t i = 0 ; i < USE_CNT_INP ; i++)
                 {
+                  sprintf(cmsg, "pcnt_unit_config[%1i]",i);
                   // Initialize PCNT unit and  queue
-                    pcnt_unit_config(&config_cnt[i]);
-                    pcnt_evt_queue[i] = xQueueCreate(1, sizeof(pcnt_evt_t));
+                  cntFilt[i] = 0;
+                  //retESP = pcnt_unit_config(&config_cnt[i]);
+                  logESP(pcnt_unit_config(&config_cnt[i]), cmsg, i);
+                  pcnt_evt_queue[i] = xQueueCreate(1, sizeof(pcnt_evt_t));
                   switch (i)
                     {
+                      case 0:
+                        unit       = (pcnt_unit_t) PCNT0_UNIT;
+                        cntThresh[i]  = (uint16_t)    PCNT0_THRESH0_VAL;
+                        cntFakt[i] = (float)    PCNT0_CNT_FAKT;
+                        // Configure and enable the input filter
+                          pcnt_set_filter_value(unit, PCNT0_INP_FILT);
+                          pcnt_filter_enable(unit);
+                        // Set threshold 0 and 1 values and enable events to watch //
+                          pcnt_set_event_value(unit, PCNT0_EVT_0, PCNT0_THRESH0_VAL);
+                          pcnt_event_enable(unit, PCNT0_EVT_0);
+                              //pcnt_set_event_value(unit, PCNT_EVT_THRES_1, PCNT1_THRESH0_VAL);
+                              //pcnt_event_enable(unit, PCNT_EVT_THRES_1);
+                            // Enable events on zero, maximum and minimum limit values //
+                              //pcnt_event_enable(unit, PCNT1_EVT_ZERO);
+                              //pcnt_event_enable(unit, PCNT1_EVT_H_LIM);
+                              //pcnt_event_enable(unit, PCNT1_EVT_L_LIM);
+                        break;
                       #if (USE_CNT_INP > 1)
                           case 1:
+                            unit = (pcnt_unit_t) PCNT1_UNIT;
+                            cntThresh[i] = (uint16_t) PCNT1_THRESH0_VAL;
+                            // Configure and enable the input filter
+                              pcnt_set_filter_value(unit, PCNT1_INP_FILT);
+                              pcnt_filter_enable(unit);
+                            // Set threshold 0 and 1 values and enable events to watch //
+                              pcnt_set_event_value(unit, PCNT1_EVT_0, PCNT1_THRESH0_VAL);
+                              pcnt_event_enable(unit, PCNT1_EVT_0);
+                            break;
+                        #endif
+                      #if (USE_CNT_INP > 2)
+                          case 2:
                             unit = (pcnt_unit_t) PCNT2_UNIT;
                             // Configure and enable the input filter
                               pcnt_set_filter_value(unit, PCNT2_INP_FILT);
                               pcnt_filter_enable(unit);
                             // Set threshold 0 and 1 values and enable events to watch //
-                              pcnt_set_event_value(unit, PCNT_EVT_THRES_0, PCNT2_THRESH0_VAL);
-                              pcnt_event_enable(unit, PCNT_EVT_THRES_0);
-                              //pcnt_set_event_value(unit, PCNT_EVT_THRES_1, PCNT2_THRESH1_VAL);
-                              //pcnt_event_enable(unit, PCNT_EVT_THRES_1);
-                            // Enable events on zero, maximum and minimum limit values //
-                              //pcnt_event_enable(unit, PCNT_EVT_ZERO);
-                              //pcnt_event_enable(unit, PCNT_EVT_H_LIM);
-                              //pcnt_event_enable(unit, PCNT_EVT_L_LIM);
+                              pcnt_set_event_value(unit, PCNT_EVT_0, PCNT2_THRESH0_VAL);
+                              pcnt_event_enable(unit, PCNT_EVT_0);
                             break;
                         #endif
-                      default:  // = case 0
-                        unit = (pcnt_unit_t) PCNT1_UNIT;
-                        // Configure and enable the input filter
-                          pcnt_set_filter_value(unit, PCNT1_INP_FILT);
-                          pcnt_filter_enable(unit);
-                        // Set threshold 0 and 1 values and enable events to watch //
-                          pcnt_set_event_value(unit, PCNT_EVT_THRES_0, PCNT1_THRESH0_VAL);
-                          pcnt_event_enable(unit, PCNT_EVT_THRES_0);
-                          //pcnt_set_event_value(unit, PCNT_EVT_THRES_1, PCNT1_THRESH0_VAL);
-                          //pcnt_event_enable(unit, PCNT_EVT_THRES_1);
-                        // Enable events on zero, maximum and minimum limit values //
-                          //pcnt_event_enable(unit, PCNT1_EVT_ZERO);
-                          //pcnt_event_enable(unit, PCNT1_EVT_H_LIM);
-                          //pcnt_event_enable(unit, PCNT1_EVT_L_LIM);
+                      #if (USE_CNT_INP > 3)
+                          case 1:
+                            unit = (pcnt_unit_t) PCNT3_UNIT;
+                            // Configure and enable the input filter
+                              pcnt_set_filter_value(unit, PCNT3_INP_FILT);
+                              pcnt_filter_enable(unit);
+                            // Set threshold 0 and 1 values and enable events to watch //
+                              pcnt_set_event_value(unit, PCNT3_EVT_0, PCNT3_THRESH0_VAL);
+                              pcnt_event_enable(unit, PCNT3_EVT_0);
+                            break;
+                        #endif
+                      default:
                         break;
                     }
-                  SOUT(i); SOUT(" ");
                   // Initialize PCNT's counter //
-                    pcnt_counter_pause(unit);
-                    pcnt_counter_clear(unit);
+                  pcnt_counter_pause(unit);
+                  pcnt_counter_clear(unit);
 
                   // Install interrupt service and add isr callback handler //
-                  pcnt_isr_service_install(unit);
+                  sprintf(cmsg, "_unit %i pcnt_isr_service_install_ ", i);
+                  logESP(pcnt_isr_service_install(unit), cmsg, i);
                   switch (i)
                     {
+                      case 0:
+                        SOUTLN("  pcnt_isr_handler unit 0");
+                        sprintf(cmsg, "_unit %i pcnt_isr_handler_add_ ", i);
+                        logESP(pcnt_isr_handler_add(unit, pcnt0_intr_hdl, &unit), cmsg, i);
+                        break;
                       #if (USE_CNT_INP > 1)
-                          case 1: pcnt_isr_handler_add(unit, pcnt2_intr_hdl, &unit); break;
+                          case 1:
+                            SOUTLN("  pcnt_isr_handler unit 1");
+                            sprintf(cmsg, "_unit %i pcnt_isr_handler_add_ ", i);
+                            logESP(pcnt_isr_handler_add(unit, pcnt1_intr_hdl, &unit), cmsg, i);
+                            break;
                         #endif
-                      default: pcnt_isr_handler_add(unit, pcnt1_intr_hdl, &unit); break;
+                      #if (USE_CNT_INP > 2)
+                          case 2:
+                            pcnt_isr_handler_add(unit, pcnt2_intr_hdl, &unit);
+                            break;
+                        #endif
+                      #if (USE_CNT_INP > 3)
+                          case 3:
+                            pcnt_isr_handler_add(unit, pcnt3_intr_hdl, &unit);
+                            break;
+                        #endif
+                      default:
+                        break;
                     }
                   // Everything is set up, now go to counting //
                   pcnt_counter_resume(unit);
@@ -2561,4 +2606,23 @@
 
         #endif // USE_WEBSERVER
 
+  // --- error ESP -------------------------
+    void logESP(const esp_err_t _err, const char *_msg, uint8_t nr, bool _stop)
+      {
+        if (_err == ESP_OK) { return; }  // no error
+        // error
+        Serial.printf("\n  %i  ", nr);
+        SOUT(_msg);
+        Serial.printf(" %i - 0x%H\n", _err, _err);
+        usleep(500000);
+
+        if (_stop)
+          {
+            SOUTLN(); SOUTLN(" !!! STOP for ever ... goodby !!!");
+            while (1)
+              {
+                sleep(1000);
+              }
+          }
+      }
 // --- end of code -----------------------------------------------
