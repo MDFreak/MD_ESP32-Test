@@ -304,6 +304,9 @@
                   #define LCD_D5      16   // D5
                   #define LCD_D4      17   // D4
                 #endif
+              #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_A)
+                  #define Hallo
+                #endif
             #endif
           #if (USE_BUZZER_PWM > OFF)
               #define PIN_BUZZ      32
