@@ -518,10 +518,11 @@
     {
 //      uint32_t i32tmp = 0;
       // --- system
-        // start system
+        // disable watchdog
           disableCore0WDT();
           disableCore1WDT();
           disableLoopWDT();
+        // start system
           Serial.begin(SER_BAUDRATE);
           usleep(30000); // power-up safety delay
           SOUTLN(); SOUTLN("setup start ...");
@@ -582,6 +583,7 @@
             #endif
           startDisp();
           dispStatus("setup start ...");
+
 
         // WS2812 LEDs
           #if (USE_WS2812_MATRIX_OUT > OFF)
