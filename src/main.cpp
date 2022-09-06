@@ -1739,7 +1739,12 @@
                          //SOUT("  md_error="); SOUTLN(md_error);
                   #endif
                 #if (USE_TFT > 0)
-                    mlcd.wrStatus((char*) statOut);
+                    #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
+                        mlcd.wrStatus((char*) statOut);
+                      #endif
+                    #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                        touch.wrStatus((char*) statOut);
+                      #endif
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                             SOUT("  md_error="); SOUTLN(md_error);
                           #endif

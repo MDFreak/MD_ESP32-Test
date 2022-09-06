@@ -105,7 +105,7 @@
             #if !(OLED1_DRV ^ OLED_DRV_1106)
                 #include "md_oled_SH1106.h"
             #else
-                #include "md_oled.h"
+                #include <md_oled.h>
               #endif
           #endif
         #ifdef OLED2
@@ -126,8 +126,12 @@
       #endif
 
     #if (USE_TFT > OFF)
-
-        #include "md_lcd.h"
+        #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
+            #include "md_lcd.h"
+          #endif
+        #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+            #include <md_touch.h>
+          #endif
       #endif
 
     #if (USE_CNT_INP > OFF)
