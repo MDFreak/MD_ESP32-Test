@@ -163,11 +163,6 @@
           //static pcnt_evt_t tmpErg;
           //static uint64_t oldClk[USE_CNT_INP] = {NULL};
         static uint64_t oldUs[USE_CNT_INP];
-          //static uint16_t intCnt[USE_CNT_INP];
-          //static uint16_t anzNoCnt[2] = {0, 0};
-          //static uint64_t utmp64 = 0;
-          //uint32_t cntLowPulse[8];
-          //uint32_t cntHighPulse[8];
 
         /* Decode what PCNT's unit originated an interrupt
          * and pass this information together with the event type
@@ -177,33 +172,37 @@
         #ifndef USE_INT_EVTHDL
             #define USE_INT_EVTHDL
           #endif
-        //pcnt_unit_t pcnt_unit = PCNT_UNIT_0;
-          //int16_t count = 0;
-          //uint32_t pcnt_cnt[2] = {0, 0};
-          //pcnt_evt_t evt;
-          //pcnt_evt_t pcnt_evt;
-          //portBASE_TYPE res;
         portBASE_TYPE pcnt_res;
         //static const char *PCNTTAG = "pcnt_int ";
 
-        static void IRAM_ATTR pcnt1_intr_hdl(void *arg)
+        static void IRAM_ATTR pcnt0_intr_hdl(void *arg)
           {
-            //SOUTLN(" _int_1_ ");
-            BaseType_t port_status = pdFALSE;
+            BaseType_t port_status;
             pcnt_evt_t event;
-            port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT1_UNIT, &(event.pulsCnt));
-            event.usCnt  = micros();
-            //event.intCnt = intCnt[PCNT1_UNIT];
-            xQueueSendFromISR(pcnt_evt_queue[PCNT1_UNIT], &event, &port_status);
-            //xQueueOverwriteFromISR(pcnt_evt_queue[PCNT1_UNIT], &event, &port_status);
-            port_status = pcnt_counter_clear((pcnt_unit_t) PCNT1_UNIT);
-            //intCnt[0] = 0;
+            port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT0_UNIT, &(event.pulsCnt));
+            event.usCnt = micros() - oldUs[PCNT0_UNIT];
+            //event.count = isrCnt[PCNT0_UNIT];
+            pcnt_res = xQueueSendToBackFromISR(pcnt_evt_queue[PCNT0_UNIT], &event, &port_status);
+            oldUs[PCNT0_UNIT] = micros();
+            port_status = pcnt_counter_clear((pcnt_unit_t) PCNT0_UNIT);
           }
 
         #if (USE_CNT_INP > 1)
+            static void IRAM_ATTR pcnt1_intr_hdl(void *arg)
+              {
+                BaseType_t port_status;
+                pcnt_evt_t event;
+                port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT1_UNIT, &(event.pulsCnt));
+                event.usCnt = micros() - oldUs[PCNT1_UNIT];
+                //event.count = isrCnt[PCNT1_UNIT];
+                pcnt_res = xQueueSendToBackFromISR(pcnt_evt_queue[PCNT1_UNIT], &event, &port_status);
+                oldUs[PCNT1_UNIT] = micros();
+                port_status = pcnt_counter_clear((pcnt_unit_t) PCNT1_UNIT);
+              }
+          #endif
+        #if (USE_CNT_INP > 2)
             static void IRAM_ATTR pcnt2_intr_hdl(void *arg)
               {
-                //SOUTLN(" _int_2_ ");
                 BaseType_t port_status = pdFALSE;
                 pcnt_evt_t event;
                 port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT2_UNIT, &(event.pulsCnt));
@@ -212,6 +211,20 @@
                 xQueueSendFromISR(pcnt_evt_queue[PCNT2_UNIT], &event, &port_status);
                 //xQueueOverwriteFromISR(pcnt_evt_queue[PCNT2_UNIT], &event, &port_status);
                 port_status = pcnt_counter_clear((pcnt_unit_t) PCNT2_UNIT);
+                //intCnt[0] = 0;
+              }
+          #endif
+        #if (USE_CNT_INP > 3)
+            static void IRAM_ATTR pcnt3_intr_hdl(void *arg)
+              {
+                BaseType_t port_status = pdFALSE;
+                pcnt_evt_t event;
+                port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT3_UNIT, &(event.pulsCnt));
+                event.usCnt  = micros();
+                //event.intCnt = intCnt[PCNT3_UNIT];
+                xQueueSendFromISR(pcnt_evt_queue[PCNT3_UNIT], &event, &port_status);
+                //xQueueOverwriteFromISR(pcnt_evt_queue[PCNT3_UNIT], &event, &port_status);
+                port_status = pcnt_counter_clear((pcnt_unit_t) PCNT3_UNIT);
                 //intCnt[0] = 0;
               }
           #endif
@@ -268,7 +281,7 @@
                 (neoPixelType) COLORD_2812_M1 + NEO_KHZ800 );
             msTimer ws2812MT   = msTimer(UPD_2812_M1_MS);
           #endif
-//        const char text2812[] = " # YES We Care !!  Happy 2022 ";
+        // const char text2812[] = " # YES We Care !!  Happy 2022 ";
         const char text2812[] = " Im Herzen die Sonne - willkommen im Weltladen ";
         static scroll2812_t outM2812[2] = { scroll2812_t(), scroll2812_t() } ;
         static int16_t posM2812 = (int16_t) (COLPIX_2812_M1 + OFFBEG_2812_M1);
@@ -300,10 +313,10 @@
           #endif
       #endif // USE_BUZZER_PWM
 
-    #if (USE_FAN_PWM > OFF)
+    #if (USE_GEN_PWM_OUT > OFF)
         #if (USE_POTICTRL_FAN > OFF)
           #endif
-        uint32_t valFanPWM[USE_FAN_PWM];
+        uint32_t valFanPWM[USE_GEN_PWM_OUT];
       #endif
 
     #if (USE_OLED_I2C > OFF)
@@ -600,24 +613,24 @@
               startKeys();
             #endif
         // start fans
-          #if (USE_FAN_PWM > OFF)
+          #if (USE_GEN_PWM > OFF)
               // Fan 1
-                pinMode(PIN_PWM_FAN_1, OUTPUT);
-                ledcSetup(PWM_FAN_1, PWM_FAN_FREQ, PWM_FAN_RES);
-                ledcAttachPin(PIN_PWM_FAN_1, PWM_FAN_1);
-                ledcWrite(PWM_FAN_1, 255);
+                pinMode(PIN_PWM_GEN_1, OUTPUT);
+                ledcSetup(PWM_GEN_1, PWM_GEN_FREQ, PWM_GEN_RES);
+                ledcAttachPin(PIN_PWM_GEN_1, PWM_GEN_1);
+                ledcWrite(PWM_GEN_1, 255);
                 SOUTLN("Test Fan 1");
                 sleep(1);
-                ledcWrite(PWM_FAN_1, 0);
+                ledcWrite(PWM_GEN_1, 0);
 
               // Fan 2
-                pinMode(PIN_PWM_FAN_2, OUTPUT);
-                ledcSetup(PWM_FAN_2, PWM_FAN_FREQ, PWM_FAN_RES);
-                ledcAttachPin(PIN_PWM_FAN_2, PWM_FAN_2);
-                ledcWrite(PWM_FAN_2, 255);
+                pinMode(PIN_PWM_GEN_2, OUTPUT);
+                ledcSetup(PWM_GEN_2, PWM_GEN_FREQ, PWM_GEN_RES);
+                ledcAttachPin(PIN_PWM_GEN_2, PWM_GEN_2);
+                ledcWrite(PWM_GEN_2, 255);
                 SOUTLN("Test Fan 2");
                 sleep(1);
-                ledcWrite(PWM_FAN_2, 0);
+                ledcWrite(PWM_GEN_2, 0);
 
             #endif
 
@@ -822,9 +835,28 @@
                 {
                   switch (i)
                     {
-                      case 0: pinMode(PIN_CNT_FAN_1, INPUT_PULLUP); SOUT(PIN_CNT_FAN_1); SOUT(" "); break;
+                      case 0:
+                        //pinMode(PCNT0_SIO, INPUT_PULLUP);     SOUT(PCNT0_SIO); SOUT(" - ");
+                        pinMode(PCNT0_SIO, INPUT);     SOUT(PCNT0_SIO); SOUT(" - ");
+                        //pinMode(PCNT0_CIO, OUTPUT);           SOUT(PCNT0_CIO); SOUT(" ");
+                        break;
                       #if (USE_CNT_INP > 1)
-                          case 1: pinMode(PIN_CNT_FAN_2, INPUT_PULLUP); SOUT(PIN_CNT_FAN_2); SOUT(" "); break;
+                          case 1:
+                          pinMode(PCNT1_SIO, INPUT_PULLUP);   SOUT(PCNT1_SIO); SOUT(" - ");
+                          //pinMode(PCNT1_CIO, OUTPUT);         SOUT(PCNT1_CIO); SOUT(" ");
+                          break;
+                        #endif
+                      #if (USE_CNT_INP > 2)
+                          case 2:
+                          pinMode(PCNT2_SIO, INPUT_PULLUP); SOUT(PCNT2_CIO); SOUT(" ");
+                          //pinMode(PCNT2_CIO, OUTPUT); SOUT(PCNT2_CIO); SOUT(" ");
+                          break;
+                        #endif
+                      #if (USE_CNT_INP > 3)
+                          case 3:
+                          pinMode(PCNT3_SIO, INPUT_PULLUP); SOUT(PCNT3_CIO); SOUT(" ");
+                          //pinMode(PCNT3_CIO, OUTPUT); SOUT(PCNT3_CIO); SOUT(" ");
+                          break;
                         #endif
                       default: break;
                     }
@@ -933,90 +965,123 @@
         #endif
       // ----------------------
       #if (USE_CNT_INP > OFF)
+          uint64_t        lim  = 0ul;
+          pcnt_evt_type_t ev;
+          uint8_t         doIt = false;
+          pcnt_unit_t     unit;
+          sprintf(cmsg,"  loop/cnt_inp");
           for ( uint8_t i = 0; i < USE_CNT_INP ; i++ )
             {
-              uint64_t    tmp = micros();
-              uint64_t    lim = 0ul;
-              //pcnt_unit_t unit;
-                          //SOUT(tmp);
               switch (i)
                 {
+                  case 0:
+                    lim  = PCNT0_UFLOW;
+                    ev   = PCNT0_EVT_0;
+                    unit = PCNT0_UNIT;
+                    pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT0_UNIT], &cntErg[i], 0);
+                    break;
                   #if (USE_CNT_INP > 1)
                       case 1:
-                        lim = PCNT2_UFLOW;
-                        //unit = (pcnt_unit_t) PCNT2_UNIT;
-                        pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT2_UNIT], &tmpErg, 0);
-                          //SOUT(" res1 "); SOUT(pcnt_res);
+                        lim  = PCNT1_UFLOW;
+                        ev   = PCNT1_EVT_0;
+                        unit = PCNT1_UNIT;
+                        pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT1_UNIT], &cntErg[i], 0);
                         break;
                     #endif
                   #if (USE_CNT_INP > 2)
                       case 2:
-                        lim = PCNT3_UFLOW;
-                        pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT3_UNIT], &tmpErg, 0);
+                        lim  = PCNT2_UFLOW;
+                        ev   = PCNT2_EVT_0;
+                        unit = PCNT2_UNIT;
+                        pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT2_UNIT], &tmpErg, 0);
                         break;
                     #endif
                   #if (USE_CNT_INP > 3)
                       case 3:
-                        lim = PCNT4_UFLOW;
-                        pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT4_UNIT], &tmpErg, 0);
+                        lim  = PCNT3_UFLOW;
+                        ev   = PCNT3_EVT_0;
+                        unit = PCNT3_UNIT;
+                        pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT3_UNIT], &tmpErg, 0);
                         break;
                     #endif
-                  default:   // case 0
-                    lim = PCNT1_UFLOW;
-                    pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT1_UNIT], &tmpErg, 0);
-                          //SOUT(" res0 "); SOUT(pcnt_res);
+                  default:
                     break;
                 }
               if (pcnt_res == pdTRUE)
                 {
-                  cntErg[i].usCnt   = (tmpErg.usCnt - oldUs[i]);
-                  oldUs[i]          = tmpErg.usCnt;
-                  cntErg[i].pulsCnt = tmpErg.pulsCnt;
-                  //uint16_t pulsCnt  = tmpErg.pulsCnt;
-                  // check for auto range switching
-                    /*
-                    if (cntErg[i].usCnt > PNCT_AUTO_SWDN)
-                      {
-                        pulsCnt = (tmpErg.pulsCnt * 2) / 3;
-                        if (pulsCnt <= 0) pulsCnt = 1;
-                        SOUTLN(); SOUT(i); SOUT(" dn "); SOUT(cntErg[i].usCnt); SOUT(" "); SOUTLN(pulsCnt);
-                      }
-                    if ( (cntErg[i].usCnt < PNCT_AUTO_SWUP) && (pulsCnt > 0) )
-                      {
-                        pulsCnt = (tmpErg.pulsCnt * 3) / 2;
-                        SOUTLN(); SOUT(i); SOUT(" up "); SOUT(cntErg[i].usCnt); SOUT(" "); SOUTLN(pulsCnt);
-                      }
+                          //if (i == 0) { SOUT(cmsg); }
+                          //SOUT("  "); SOUT(millis()); SOUT("  "); SOUT(i);
+                          //SOUT(" "); SOUT("usCnt"); SOUT(" "); SOUT(cntErg[i].usCnt);
+                          //SOUT(" T "); SOUT(cntThresh[i]); Serial.flush();
 
-                    pcnt_event_disable(unit, PCNT_EVT_THRES_0);
-                    pcnt_set_event_value(unit, PCNT_EVT_THRES_0, pulsCnt);
-                    pcnt_event_enable(unit, PCNT_EVT_THRES_0);
-                    */
-
-                  if ( cntErg[i].usCnt > 55 )
-                    { // low freq
-                          //cntErg[i].usCnt /= tmpErg.pulsCnt;
-                      if ( (cntErg[i].usCnt > 0) && (cntErg[i].usCnt > tmpErg.pulsCnt) )
-                        {
-                          cntErg[i].freq = (uint32_t) (1000000ul / (cntErg[i].usCnt / tmpErg.pulsCnt) );
-                        }
-                          //SOUT(" l "); SOUT(cntErg[i].freq);
-                    }
-                    else
-                    { // high freq
-                      cntErg[i].freq = (uint32_t) (tmpErg.pulsCnt * 1000000ul / cntErg[i].usCnt);
-                          //SOUT(" h "); SOUT(cntErg[i].freq);
-                    }
-                }
-                else
-                {
-                  if ( tmp - oldUs[i] > lim )
+                  if ( (cntErg[i].usCnt > 0) )
                     {
-                      oldUs[i] = tmp;
+                      cntErg[i].freq = (uint16_t) (1000000ul * cntThresh[i] * cntFakt[i] / cntErg[i].usCnt);
+                        //cntErg[i].freq = (uint16_t) (cntErg[i].pulsCnt * 1000000ul / cntErg[i].usCnt);
+                      //SOUT(" "); SOUT(cntErg[i].freq); Serial.flush();
+                    }
+                  else
+                    {
                       cntErg[i].freq = 0;
                     }
+                          //SOUT(" "); SOUT(i); SOUT(" "); SOUT((uint32_t) cntErg[i].freq);
                 }
-                          //SOUT(" erg "); SOUT(i); SOUT(" "); SOUTLN(cntErg[i].freq);
+              // autorange
+              #if (USE_CNT_AUTORANGE > OFF)
+                  // check for auto range switching
+
+                  if (cntErg[i].usCnt > PNCT_AUTO_SWDN)
+                    { // low freq
+                      if (cntFilt[i] > -5)
+                        {
+                          SOUTLN(); SOUT("SWDN filt "); SOUTLN(cntFilt[i]);
+                          cntFilt[i]--;
+                          usleep(500000);
+                        }
+                      if ((cntThresh[i] > 1) && (cntFilt[i] > -5))
+                        {
+                          cntThresh[i] /= 2;
+                          doIt = true;
+                          SOUTLN(); SOUT("SWDN new "); SOUTLN(cntThresh[i]);
+                          usleep(500000);
+                        }
+                    }
+                  else if ( (cntErg[i].usCnt < PNCT_AUTO_SWUP) && (cntErg[i].pulsCnt > 0) )
+                    { // high freq
+                      if (cntFilt[i] < 5)
+                        {
+                          SOUTLN(); SOUT("SWUP filt "); SOUTLN(cntFilt[i]);
+                          cntFilt[i]++;
+                          usleep(500000);
+                        }
+                      if ((cntThresh[i] < 16) && (cntFilt[i] > 5))
+                        {
+                          cntThresh[i] *= 2;
+                          doIt = true;
+                          SOUTLN(); SOUT("SWUP new "); SOUTLN(cntThresh[i]);
+                          usleep(500000);
+                        }
+                    }
+                  else
+                    {
+                      cntFilt[i] = 0;
+                    }
+
+                  if (doIt)
+                    {
+                      pcnt_counter_pause(unit);
+                      logESP(pcnt_event_disable  (unit, ev),            cmsg, i);
+                      logESP(pcnt_set_event_value(unit, ev, cntThresh[i]), cmsg, i);
+                      pcnt_counter_clear(unit);
+                      pcnt_counter_resume(unit);
+                      logESP(pcnt_event_enable   (unit, ev),            cmsg, i);
+                      doIt = false;
+                      cntThresh[i] = 0;
+                    }
+                #endif // USE_CNT_AUTORANGE
             }
+
+                    //Serial.flush();
         #endif
       // ----------------------
       #if (USE_PWM_INP > OFF)
@@ -1525,14 +1590,19 @@
                       outStr = "              ";
                       dispText(outStr ,  0, 2, outStr.length());
                       outStr = "f";
+                      SOUT(millis());
                       for (uint8_t i = 0; i < USE_CNT_INP ; i++ )
                         {
-                          outStr += " ";
+                          outStr = "   f";
+                          outStr += (String) i;
+                          outStr += " = ";
                           outStr += (String) cntErg[i].freq;
-                                //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
+                          outStr += "     ";
+                          SOUT(outStr); SOUT(" Hz"); SOUT("/"); SOUT(" usCnt "); SOUT(cntErg[i].usCnt); SOUT(" ");
+                          dispText(outStr ,  0, i+1, outStr.length());
                         }
+                      SOUTLN();
                       //SOUT(outStr); SOUT(" "); //SOUT(valFanPWM[0]); SOUT(" ");
-                      dispText(outStr ,  0, 2, outStr.length());
                     #ifdef USE_MCPWM
                         outStr = "              ";
                         dispText(outStr ,  0, 0, outStr.length());
