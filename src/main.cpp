@@ -111,6 +111,34 @@
                   (pcnt_channel_t) PCNT2_CHAN  // the PCNT channel
                 },
               #endif
+            #if (USE_CNT_INP > 2)
+                {
+                  PCNT2_SIO,         // Pulse input GPIO number, if you want to use GPIO16, enter pulse_gpio_num = 16, a negative value will be ignored
+                  PCNT2_CIO,         // Control signal input GPIO number, a negative value will be ignored
+                  PCNT2_LCTRL_MODE,  // PCNT low control mode
+                  PCNT2_HCTRL_MODE,  // PCNT high control mode
+                  PCNT2_POS_MODE,    // PCNT positive edge count mode
+                  PCNT2_NEG_MODE,    // PCNT negative edge count mode
+                  PCNT2_H_NUM,       // Maximum counter value
+                  PCNT2_L_NUM,       // Minimum counter value
+                  (pcnt_unit_t)    PCNT2_UNIT,  // PCNT unit number
+                  (pcnt_channel_t) PCNT2_CHAN   // the PCNT channel
+                },
+              #endif
+            #if (USE_CNT_INP > 3)
+                {
+                  PCNT3_SIO,         // Pulse input GPIO number, if you want to use GPIO16, enter pulse_gpio_num = 16, a negative value will be ignored
+                  PCNT3_CIO,         // Control signal input GPIO number, a negative value will be ignored
+                  PCNT3_LCTRL_MODE,  // PCNT low control mode
+                  PCNT3_HCTRL_MODE,  // PCNT high control mode
+                  PCNT3_POS_MODE,    // PCNT positive edge count mode
+                  PCNT3_NEG_MODE,    // PCNT negative edge count mode
+                  PCNT3_H_NUM,       // Maximum counter value
+                  PCNT3_L_NUM,       // Minimum counter value
+                  (pcnt_unit_t)    PCNT3_UNIT,  // PCNT unit number
+                  (pcnt_channel_t) PCNT3_CHAN   // the PCNT channel
+                },
+              #endif
           };
         //typedef intr_handle_t pcnt_isr_handle_t;
 
@@ -128,7 +156,11 @@
 
         static xQueueHandle pcnt_evt_queue[USE_CNT_INP];   // A queue to handle pulse counter events
         static pcnt_evt_t cntErg[USE_CNT_INP];
-        static pcnt_evt_t tmpErg;
+        static int8_t     cntFilt[USE_CNT_INP];
+        static float      cntFakt[USE_CNT_INP];
+        static uint16_t   cntThresh[USE_CNT_INP];
+
+          //static pcnt_evt_t tmpErg;
           //static uint64_t oldClk[USE_CNT_INP] = {NULL};
         static uint64_t oldUs[USE_CNT_INP];
           //static uint16_t intCnt[USE_CNT_INP];
@@ -887,7 +919,7 @@
         #endif
       // ----------------------
       #if (USE_TOUCHSCREEN > OFF)
-        touch.runTouch(outBuf);
+        //touch.runTouch(outBuf);
         #endif // USE_TOUCHSCREEN
 
       // ----------------------
