@@ -16,7 +16,7 @@
     // --- board
       #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
       #if (BOARD == MC_ESP32_Node)
-          #define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
+          //#define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
         #endif
     // --- debugging
       #define DEBUG_MODE      CFG_DEBUG_STARTUP
@@ -55,7 +55,7 @@
       #define USE_WIFI              ON
       #define USE_NTP_SERVER        ON
       #define USE_LOCAL_IP          ON
-      #define USE_WEBSERVER         ON
+      #define USE_WEBSERVER         OFF
     // --- memory components
       #define USE_FLASH_MEM         ON
       #define USE_FRAM_I2C          OFF // 1   // [0, 1, ...] limited by I2C channel/addr
