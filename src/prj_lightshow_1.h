@@ -1,5 +1,5 @@
-#ifndef _PROJECT_H_
-  #define _PROJECT_H_
+#ifndef _PRJ_LIGHTSHOW_1_H_
+  #define _PRJ_LIGHTSHOW_1_H_
 
   #include <Arduino.h>
   #include <md_defines.h>
@@ -146,4 +146,4 @@
             #define TOUCHKEYS1       KEYS_TOUCHXPT2046_AZ_3V3
           #endif // USE_TOUCHSCREEN
 
-#endif // _PRJ_CONFIG_H_
+#endif // _PRJ_LIGHTSHOW_1_H_

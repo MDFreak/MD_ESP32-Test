@@ -1,34 +1,15 @@
-#ifndef _PRJ_CONFIG_H_
-  #define _PRJ_CONFIG_H_
+#ifndef _PRJ_CONF_TOUCHTEST_1_H_
+  #define _PRJ_CONF_TOUCHTEST_1_H_
 
   #include <Arduino.h>
   #include <md_defines.h>
   #include <project.h>
 
   // ******************************************
-    // --- test features --------------------------------
-      #define TEST_SOCKET_SERVER    OFF
-      #define TEST_RGBLED_PWM       OFF
-      #define USE_WEBCTRL_RGB       OFF
-      #define USE_WEBCTRL_FAN       OFF
-      #define USE_POTICTRL_RGB      OFF
-      #define USE_POTICTRL_FAN      OFF
-      #define USE_SWCTRL_RGB        OFF
-      #define USE_SWCTRL_FAN        OFF
-      #define USE_SWCTRL_1812       OFF
-  // ******************************************
   // --- board management
-    #if !(BOARD ^ MC_ESP32_Node)
+    #if (BOARD == MC_ESP32_Node)
       // --- system
         #define SER_BAUDRATE ESP_SER_BAUD
-        // --- network
-        // --- user output
-          // --- LEDs
-          // --- display
-          // --- acustic output
-        // --- user input
-        // --- sensors
-        // --- memories
       // --- pins, connections
         // --- system
           #if (USE_LED_BLINK_OUT > OFF)
@@ -1021,4 +1002,4 @@
           #endif
 
     // ******************************************
-#endif // _PRJ_CONFIG_H_
+#endif // _PRJ_CONF_TOUCHTEST_1_H_

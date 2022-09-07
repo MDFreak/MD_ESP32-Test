@@ -17,6 +17,24 @@
       #define USE_SWCTRL_FAN        OFF
       #define USE_SWCTRL_1812       OFF
   // ******************************************
+
+    #if (PROJECT == TOUCHTEST_1)
+        #include <prj_conf_touchtest_1.h>
+      #endif
+    #if (PROJECT == MEASFREQ_1)
+        #include <prj_conf_measfreq_1.h>
+      #endif
+    #if (PROJECT == LIGHTSHOW_1)
+        #include <prj_conf_lightshow_1.h>
+      #endif
+    #if (PROJECT == GEN_ESP32_NODE)
+        #include <prj_conf_gen_esp32_node.h>
+      #endif
+    #if (PROJECT == GEN_ESP32_D1_MINI)
+        #include <prj_conf_gen_esp32_d1_mini.h>
+      #endif
+
+#ifdef UNUSED
   // --- board management
     #if !(BOARD ^ MC_ESP32_Node)
       // --- system
@@ -1021,4 +1039,5 @@
           #endif
 
     // ******************************************
+  #endif // UNUSED
 #endif // _PRJ_CONFIG_H_

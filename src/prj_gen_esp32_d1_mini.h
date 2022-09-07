@@ -1,5 +1,5 @@
-#ifndef _PROJECT_H_
-  #define _PROJECT_H_
+#ifndef _PRJ_GEN_ESP32_D1_MINI_H_
+  #define _PRJ_GEN_ESP32_D1_MINI_H_
 
   #include <Arduino.h>
   #include <md_defines.h>
@@ -13,26 +13,10 @@
       #define PROJECT GEN_ESP32_NODE
       #define PROJECT GEN_ESP32_D1_MINI
     // --- board
-      #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-        #if (BOARD == MC_ESP32_Node)
-            #define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
-          #endif
-      //#define BOARD   MC_ESP32_D1_R32     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-        #if (BOARD == MC_ESP32_D1_R32)
-            #define PROJ_TITLE "ESP32-TEST using ESP32-D1-R32"
-          #endif
-      //#define BOARD   MC_ESP32_D1_MINI  // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-        #if (BOARD == MC_ESP32_D1_MINI)
-            #define PROJ_TITLE "ESP32-TEST using ESP32-D1-Mini"
-          #endif
-      //#define BOARD   MC_AV_NANO_V3
-        #if (BOARD == MC_AV_NANO_V3)
-            #define PROJ_TITLE "ESP32-TEST using AV_NANO_V3"
-          #endif
-      //#define BOARD   MC_AV_UNO_V3
-        #if (BOARD == MC_AV_UNO_V3)
-            #define PROJ_TITLE "ESP32-TEST using AV_UNO_V3"
-          #endif
+      #define BOARD   MC_ESP32_D1_MINI  // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+      #if (BOARD == MC_ESP32_D1_MINI)
+          #define PROJ_TITLE "ESP32-TEST using ESP32-D1-Mini"
+        #endif
 
     // --- debugging
       #define DEBUG_MODE      CFG_DEBUG_STARTUP
@@ -146,4 +130,4 @@
             #define TOUCHKEYS1       KEYS_TOUCHXPT2046_AZ_3V3
           #endif // USE_TOUCHSCREEN
 
-#endif // _PRJ_CONFIG_H_
+#endif // _PRJ_GEN_ESP32_D1_MINI_H_
