@@ -103,7 +103,7 @@
                 // OLEDs     MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
                           // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
                 #if (USE_OLED_I2C > OFF)
-                    #define OLED1   MC_UO_OLED_066_AZ
+                    #define OLED1   MC_UO_OLED_130_AZ
                   #endif
                 #if (USE_OLED_I2C > 1)
                     #define OLED2   TRUE
