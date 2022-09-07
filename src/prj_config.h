@@ -648,7 +648,7 @@
 
             #if ( USE_TFT > 0 )
                 #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
-                    #define DISP_ORIENT    0      // 0:USB oben, 1:USB links, 2:USB unten, 3:USB rechts
+                    #define DISP_ORIENT    3      // 0:USB oben, 1:USB links, 2:USB unten, 3:USB rechts
                     #define DATE_DISP_COL  0
                     #define DATE_DISP_LINE 9      // line on display for date / time
                     // text display area
