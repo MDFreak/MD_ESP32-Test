@@ -1,5 +1,5 @@
-#ifndef _PROJECT_H_
-  #define _PROJECT_H_
+#ifndef _PRJ_TOUCHTEST_1_H_
+  #define _PRJ_TOUCHTEST_1_H_
 
   #include <Arduino.h>
   #include <md_defines.h>
@@ -8,10 +8,11 @@
   // --- project configuration
     // --- projects
       #define PROJECT TOUCHTEST_1
-      #define PROJECT MEASFREQ_1
-      #define PROJECT LIGHTSHOW_1
-      #define PROJECT GEN_ESP32_NODE
-      #define PROJECT GEN_ESP32_D1_MINI
+        /* AZ-touch kit 2,4"
+         * ESP32_Node
+         * BME280 (I2C)
+
+         */
     // --- board
       #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
         #if (BOARD == MC_ESP32_Node)
