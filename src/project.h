@@ -7,16 +7,33 @@
   // ******************************************
   // --- project configuration
     // --- projects
-      #define PROJECT TOUCHTEST_1
-      #define PROJECT MEASFREQ_1
-      #define PROJECT LIGHTSHOW_1
-      #define PROJECT GEN_ESP32_NODE
-      #define PROJECT GEN_ESP32_D1_MINI
+      //#define PROJECT TOUCHTEST_1
+      //#define PROJECT MEASFREQ_1
+      //#define PROJECT LIGHTSHOW_1
+      //#define PROJECT GEN_ESP32_NODE
+      //#define PROJECT GEN_ESP32_D1_MINI
+
+      #if (PROJECT == TOUCHTEST_1)
+          #define PROJ_TITLE "Test Toucscreen"
+          #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+        #endif
+      #if (PROJECT == MEASFREQ_1)
+          #define PROJ_TITLE "Measure Frequency "
+          #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+        #endif
+      #if (PROJECT == TOUCHTEST_1)
+          #define PROJ_TITLE "Light Show"
+          #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+        #endif
+      #if (PROJECT == TOUCHTEST_1)
+          #define PROJ_TITLE "Generic ESP32-Node"
+          #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+        #endif
+      #if (PROJECT == TOUCHTEST_1)
+          #define PROJ_TITLE "Generic ESP32-D1-Mini"
+          #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+        #endif
     // --- board
-      #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-        #if (BOARD == MC_ESP32_Node)
-            #define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
-          #endif
       //#define BOARD   MC_ESP32_D1_R32     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
         #if (BOARD == MC_ESP32_D1_R32)
             #define PROJ_TITLE "ESP32-TEST using ESP32-D1-R32"
