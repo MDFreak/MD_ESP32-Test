@@ -48,14 +48,14 @@
     #if ( USE_DISP > 0 )
         msTimer       dispT  = msTimer(DISP_CYCLE);
         uint32_t      ze     = 1;      // aktuelle Schreibzeile
-        char          outBuf[DISP1_MAXCOLS + 1] = "";
+        char          outBuf[OLED1_MAXCOLS + 1] = "";
         String        outStr;
       #endif
 
         //
     #ifdef USE_STATUS
         msTimer     statT  = msTimer(STAT_TIMEDEF);
-        char        statOut[DISP1_MAXCOLS + 1] = "";
+        char        statOut[OLED1_MAXCOLS + 1] = "";
         bool        statOn = false;
         bool        statDate = false;
           //char        timeOut[STAT_LINELEN + 1] = "";
@@ -1708,9 +1708,9 @@
 
             if (statLen)
               {
-                if ( statLen > DISP1_MAXCOLS)
+                if ( statLen > OLED1_MAXCOLS)
                   {
-                    msg.remove(DISP1_MAXCOLS);
+                    msg.remove(OLED1_MAXCOLS);
                   }
                 statOn = true;
                 statT.startT();
@@ -1819,7 +1819,7 @@
         {
           #if (USE_DISP > 0)
               #ifdef USE_STATUS
-                statOut[DISP1_MAXCOLS] = 0;  // limit strlen
+                statOut[OLED1_MAXCOLS] = 0;  // limit strlen
                 #endif
 
               #if (USE_TFT > 0)
@@ -1835,7 +1835,7 @@
                 #endif
 
               #if defined (OLED1)
-                  oled1.begin((uint8_t) DISP1_MAXCOLS, (uint8_t) DISP1_MAXROWS);
+                  oled1.begin((uint8_t) OLED1_MAXCOLS, (uint8_t) OLED1_MAXROWS);
                 #endif
               #if defined (OLED2)
                   oled2.begin((uint8_t) DISP2_MAXCOLS, (uint8_t) DISP2_MAXROWS);

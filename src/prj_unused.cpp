@@ -26,9 +26,9 @@
 
           if (statLen)
             {
-              if ( statLen > DISP1_MAXCOLS)
+              if ( statLen > OLED1_MAXCOLS)
                 {
-                  msg.remove(DISP1_MAXCOLS);
+                  msg.remove(OLED1_MAXCOLS);
                 }
               statOn = true;
               statT.startT();
@@ -121,7 +121,7 @@
       {
         #if (USE_DISP > 0)
             #ifdef USE_STATUS
-              statOut[DISP1_MAXCOLS] = 0;  // limit strlen
+              statOut[OLED1_MAXCOLS] = 0;  // limit strlen
               #endif
 
             #if (USE_TFT > 0)
@@ -140,7 +140,7 @@
               #endif
 
             #if defined (OLED1)
-                oled1.begin((uint8_t) DISP1_MAXCOLS, (uint8_t) DISP1_MAXROWS);
+                oled1.begin((uint8_t) OLED1_MAXCOLS, (uint8_t) OLED1_MAXROWS);
               #endif
 
             #if defined (OLED2)

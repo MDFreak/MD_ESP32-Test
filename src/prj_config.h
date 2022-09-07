@@ -589,26 +589,26 @@
                           // MC_UO_OLED_096_AZ   GEO_128_64   OLED_DRV_1306
                           // MC_UO_OLED_130_AZ   GEO_128_64   OLED_DRV_1106
                     #if !(OLED1 ^ MC_UO_OLED_066_AZ)
-                        #define DISP1_MAXCOLS  OLED_066_MAXCOLS
-                        #define DISP1_MAXROWS  OLED_066_MAXROWS
+                        #define OLED1_MAXCOLS  OLED_066_MAXCOLS
+                        #define OLED1_MAXROWS  OLED_066_MAXROWS
                         #define OLED1_GEO      GEO_64_48
                         #define OLED1_DRV      OLED_DRV_1306
                       #endif
                     #if !(OLED1 ^ MC_UO_OLED_091_AZ)
-                        #define DISP1_MAXCOLS  OLED_091_MAXCOLS
-                        #define DISP1_MAXROWS  OLED_091_MAXROWS
+                        #define OLED1_MAXCOLS  OLED_091_MAXCOLS
+                        #define OLED1_MAXROWS  OLED_091_MAXROWS
                         #define OLED1_GEO      GEO_128_32
                         #define OLED1_DRV      OLED_DRV_1306
                       #endif
                     #if !(OLED1 ^ MC_UO_OLED_096_AZ)
-                        #define DISP1_MAXCOLS  OLED_096_MAXCOLS
-                        #define DISP1_MAXROWS  OLED_096_MAXROWS
+                        #define OLED1_MAXCOLS  OLED_096_MAXCOLS
+                        #define OLED1_MAXROWS  OLED_096_MAXROWS
                         #define OLED1_GEO      GEO_128_64
                         #define OLED1_DRV      OLED_DRV_1306
                       #endif
                     #if !(OLED1 ^ MC_UO_OLED_130_AZ)
-                        #define DISP1_MAXCOLS  OLED_130_MAXCOLS
-                        #define DISP1_MAXROWS  OLED_130_MAXROWS
+                        #define OLED1_MAXCOLS  OLED_130_MAXCOLS
+                        #define OLED1_MAXROWS  OLED_130_MAXROWS
                         #define OLED1_GEO      GEO_128_64
                         #define OLED1_DRV      OLED_DRV_1106
                       #endif
