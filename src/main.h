@@ -13,6 +13,22 @@
     #include <ip_list.hpp>
     #include <md_filter.hpp>
     #include <project.h>
+      #if (PROJECT == TOUCHTEST_1)
+          #include <prj_touchtest_1.h>
+        #endif
+      #if (PROJECT == MEASFREQ_1)
+          #include <prj_measfreq_1.h>
+        #endif
+      #if (PROJECT == LIGHTSHOW_1)
+          #include <prj_lightshow_1.h>
+        #endif
+      #if (PROJECT == GEN_ESP32_NODE)
+          #include <prj_gen_esp32_node.h>
+        #endif
+      #if (PROJECT == GEN_ESP32_D1_MINI)
+          #include <prj_gen_esp32_d1_mini.h>
+        #endif
+
     #include <prj_config.h>
         //#include <driver\gpio.h>
         //#include <driver\adc.h>

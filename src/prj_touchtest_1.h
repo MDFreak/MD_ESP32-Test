@@ -6,35 +6,18 @@
 
   // ******************************************
   // --- project configuration
-    // --- projects
-      #define PROJECT TOUCHTEST_1
-        /* AZ-touch kit 2,4"
-         * ESP32_Node
-         * BME280 (I2C)
-
-         */
+    // PROJECT TOUCHTEST_1
+      /* AZ-touch kit 2,4"
+       * ESP32_Node
+       * BME280 (I2C)
+       * OLED 091 (I2C)
+       * I2C  SDA=32 SCL=28
+       */
     // --- board
       #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
         #if (BOARD == MC_ESP32_Node)
             #define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
           #endif
-      //#define BOARD   MC_ESP32_D1_R32     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-        #if (BOARD == MC_ESP32_D1_R32)
-            #define PROJ_TITLE "ESP32-TEST using ESP32-D1-R32"
-          #endif
-      //#define BOARD   MC_ESP32_D1_MINI  // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-        #if (BOARD == MC_ESP32_D1_MINI)
-            #define PROJ_TITLE "ESP32-TEST using ESP32-D1-Mini"
-          #endif
-      //#define BOARD   MC_AV_NANO_V3
-        #if (BOARD == MC_AV_NANO_V3)
-            #define PROJ_TITLE "ESP32-TEST using AV_NANO_V3"
-          #endif
-      //#define BOARD   MC_AV_UNO_V3
-        #if (BOARD == MC_AV_UNO_V3)
-            #define PROJ_TITLE "ESP32-TEST using AV_UNO_V3"
-          #endif
-
     // --- debugging
       #define DEBUG_MODE      CFG_DEBUG_STARTUP
         //#define DEBUG_MODE      CFG_DEBUG_NONE
@@ -50,7 +33,7 @@
       #define USE_DISP_I2C1         1   // OFF // 1
       #define USE_DISP_I2C2         OFF
       #define USE_DISP_SPI          OFF
-      #define USE_BUZZER_PWM        OFF
+      #define USE_BUZZER_PWM        1
       #define USE_FAN_PWM           OFF // 2
       #define USE_OUT_FREQ_PWM      OFF // 1
       #define USE_WS2812_MATRIX_OUT OFF   // [0, 1..4]
@@ -64,15 +47,15 @@
       #define USE_GEN_PWM_INP       OFF // 2
     // --- sensors
       #define USE_DS18B20_1W_IO     OFF   // [0, 1, ....] limited by 1W connections
-      #define USE_BME280_I2C        OFF // 1     // [0, 1, ....] limited by I2C channels/addr
+      #define USE_BME280_I2C        1     // [0, 1, ....] limited by I2C channels/addr
       #define USE_TYPE_K_SPI        OFF   // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ADC     OFF   // [0, 1, ....] limited by analog inputs
       #define USE_PHOTO_SENS        OFF // ON
     // --- network  components
-      #define USE_WIFI              OFF // ON
-      #define USE_NTP_SERVER        OFF // ON
-      #define USE_LOCAL_IP          OFF // ON
-      #define USE_WEBSERVER         OFF // ON
+      #define USE_WIFI              ON
+      #define USE_NTP_SERVER        ON
+      #define USE_LOCAL_IP          ON
+      #define USE_WEBSERVER         ON
     // --- memory components
       #define USE_FLASH_MEM         ON
       #define USE_FRAM_I2C          OFF // 1   // [0, 1, ...] limited by I2C channel/addr
@@ -82,16 +65,16 @@
     // --- system components
       #define USE_DISP_I2C          USE_DISP_I2C1 + USE_DISP_I2C2
     // usage of peripherals
-      #define USE_I2C             USE_DISP_I2C
-      #define USE_SPI             USE_DISP_SPI + USE_TOUCHSCREEN_SPI + USE_TYPE_K_SPI
-      #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_GEN_PWM_OUT + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
-      #define USE_CNT_INP         USE_GEN_CNT_INP     // max 2 * 8 independent
-      #define USE_PWM_INP         USE_GEN_PWM_INP
-      #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
-      #define USE_ADC2            OFF // not to use
-      #define USE_DIG_INP         USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
-      #define USE_DIG_OUT         USE_WS2812_LINE_OUT + USE_LED_BLINK_OUT //
-      #define USE_DIG_IO          USE_DS18B20_1W_IO     //
+      #define USE_I2C       USE_DISP_I2C
+      #define USE_SPI       USE_DISP_SPI + USE_TOUCHSCREEN_SPI + USE_TYPE_K_SPI
+      #define USE_PWM_OUT   3 * USE_RGBLED_PWM + USE_GEN_PWM_OUT + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
+      #define USE_CNT_INP   USE_GEN_CNT_INP     // max 2 * 8 independent
+      #define USE_PWM_INP   USE_GEN_PWM_INP
+      #define USE_ADC1      USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
+      #define USE_ADC2      OFF // not to use
+      #define USE_DIG_INP   USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
+      #define USE_DIG_OUT   USE_WS2812_LINE_OUT + USE_LED_BLINK_OUT //
+      #define USE_DIG_IO    USE_DS18B20_1W_IO     //
       #if (USE_SPI > OFF)
           #define USED_SPI_PINS     USE_SPI + 3
         #else
@@ -110,7 +93,7 @@
                 // OLEDs     MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
                           // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
                 #if (USE_OLED_I2C > OFF)
-                    #define OLED1   MC_UO_OLED_130_AZ
+                    #define OLED1   MC_UO_OLED_096_AZ
                   #endif
                 #if (USE_OLED_I2C > 1)
                     #define OLED2   TRUE
