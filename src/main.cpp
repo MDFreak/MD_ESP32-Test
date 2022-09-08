@@ -584,7 +584,6 @@
           startDisp();
           dispStatus("setup start ...");
 
-
         // WS2812 LEDs
           #if (USE_WS2812_MATRIX_OUT > OFF)
               SOUTLN("start WS2812 matrix ...");
