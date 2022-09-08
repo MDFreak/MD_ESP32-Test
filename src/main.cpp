@@ -524,8 +524,8 @@
           disableLoopWDT();
         // start system
           Serial.begin(SER_BAUDRATE);
-          usleep(30000); // power-up safety delay
-          SOUTLN(); SOUTLN("setup start ...");
+          usleep(3000); // power-up safety delay
+          SOUTLN(); SOUT(millis()); SOUTLN(" setup start ...");
           #ifdef SCAN_I2C
               scanI2C(I2C1, 0, SCAN_I2C, PIN_I2C1_SDA, PIN_I2C1_SCL);
               #if (USE_I2C > 1)
@@ -1838,13 +1838,14 @@
                   #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
                       touch.start(DISP_ORIENT, DISP_BCOL);
                           #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                            SOUTLN("startTouch ");
+                            SOUT(millis()); SOUTLN(" startTouch ");
                           #endif
                     #endif
                 #endif
 
               #if defined (OLED1)
                   oled1.begin((uint8_t) OLED1_MAXCOLS, (uint8_t) OLED1_MAXROWS);
+                  SOUT(millis()); SOUTLN(" oled1 gestartet");
                 #endif
               #if defined (OLED2)
                   oled2.begin((uint8_t) DISP2_MAXCOLS, (uint8_t) DISP2_MAXROWS);
@@ -1947,7 +1948,7 @@
             {
               if (buzz.setSong(SONG0_LEN,(void*) SONG0_NOTES) == ISOK)
                 {
-                  #ifndef USE_SONGTASK
+                  #ifdef USE_SONGTASK
                     buzz.playSong();
                   #endif
                 }
