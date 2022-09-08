@@ -1759,19 +1759,27 @@
                         mlcd.wrStatus((char*) statOut);
                       #endif
                     #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
-                        #if ( USE_BME280_I2C > OFF )
-                              outStr[0] = 0;
-                              outStr.concat(bmeT.getVal());
-                              outStr.concat("° ");
-                              outStr.concat(bmeH.getVal());
-                              outStr.concat("% ");
-                              outStr.concat(bmeP.getVal());
-                              outStr.concat("mb ");
-                          #endif
-                        #if (USE_WEBSERVER > OFF)
-WiFi.localIP()
-
-                        touch.wrStatus((char*) statOut);
+                        if (info)
+                          {
+                            #if ( USE_BME280_I2C > OFF )
+                                outStr[0] = 0;
+                                outStr.concat(bmeT.getVal());
+                                outStr.concat("° ");
+                                outStr.concat(bmeH.getVal());
+                                outStr.concat("% ");
+                                outStr.concat(bmeP.getVal());
+                                outStr.concat("mb  ");
+                              #endif
+                          }
+                        outStr.concat((char*) statOut);
+                        if (info)
+                          {
+                            #if (USE_WEBSERVER > OFF)
+                                outStr.concat(" ");
+                                outStr.concat(WiFi.localIP().toString());
+                              #endif
+                          }
+                        touch.wrStatus(outStr);
                       #endif
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                             SOUT("  md_error="); SOUTLN(md_error);
