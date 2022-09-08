@@ -691,7 +691,7 @@
                               { dispStatus("WIFI not connected"); }
                           #endif
                       }
-                  usleep(500000);
+                  usleep(50000);
                 }
               #if (USE_NTP_SERVER > OFF)   // get time from NTP server
                   if ((md_error & ERRBIT_WIFI) == OK)
@@ -2202,7 +2202,7 @@
 
   // --- network -------------------------
     // --- WIFI
-      void startWIFI(bool startup)
+      ret_t startWIFI(bool startup)
         {
           #if (USE_WIFI > OFF)
               bool ret = ISERR;
