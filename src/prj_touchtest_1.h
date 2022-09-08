@@ -55,7 +55,7 @@
       #define USE_WIFI              ON
       #define USE_NTP_SERVER        ON
       #define USE_LOCAL_IP          ON
-      #define USE_WEBSERVER         OFF
+      #define USE_WEBSERVER         ON
     // --- memory components
       #define USE_FLASH_MEM         ON
       #define USE_FRAM_I2C          OFF // 1   // [0, 1, ...] limited by I2C channel/addr

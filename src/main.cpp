@@ -1424,14 +1424,19 @@
                               pmdServ->updateAll(outStr);
                               SOUTLN(outStr);
                             #endif
-                          outStr = "SVB2";
-                          outStr.concat(line2812[0]->bright());    // RGB-LED col24
-                          pmdServ->updateAll(outStr);
-                          SOUTLN(outStr);                              outStr = "SVB3";
-                          md_LEDPix24* ppix = outM2812[0].text->pix24;
-                          outStr.concat(ppix->bright());           // RGB-LED col24
-                          pmdServ->updateAll(outStr);
-                          SOUTLN(outStr);                              outStr = "SVB3";
+                          #if (USE_WS2812_LINE_OUT > OFF)
+                              outStr = "SVB2";
+                              outStr.concat(line2812[0]->bright());    // RGB-LED col24
+                              pmdServ->updateAll(outStr);
+                              SOUTLN(outStr);
+                            #endif
+                          #if (USE_WS2812_MATRIX_OUT > OFF)
+                              outStr = "SVB3";
+                              md_LEDPix24* ppix = outM2812[0].text->pix24;
+                              outStr.concat(ppix->bright());           // RGB-LED col24
+                              pmdServ->updateAll(outStr);
+                              SOUTLN(outStr);                              outStr = "SVB3";
+                            #endif
                               //tmpStr = "SVB4";
                               //tmpStr.concat(line2812[0]->bright());    // RGB-LED col24
                               //pmdServ->updateAll(tmpStr);
@@ -1441,26 +1446,30 @@
                               outStr = "SVC1";
                               colToHexStr(ctmp, RGBLED[0]->col24());
                               outStr.concat(ctmp);    // RGB-LED col24
+                              pmdServ->updateAll(outStr);
+                              SOUTLN(outStr);
                             #endif
-                          pmdServ->updateAll(outStr);
-                          SOUTLN(outStr);
-                          outStr = "SVC2";
-                          colToHexStr(ctmp, line2812[0]->col24());
-                          outStr.concat(ctmp);    // RGB-LED col24
-                          pmdServ->updateAll(outStr);
-                          SOUTLN(outStr);
-                          outStr = "SVC3";
-                          ppix = outM2812[0].text->pix24;
-                          colToHexStr(ctmp, ppix->col24());
-                          outStr.concat(ctmp);    // RGB-LED col24
-                          pmdServ->updateAll(outStr);
-                          SOUTLN(outStr);
-                          outStr = "SVC4";
-                          ppix = outM2812[0].bmpB->pix24;
-                          colToHexStr(ctmp, ppix->col24());
-                          outStr.concat(ctmp);    // RGB-LED col24
-                          pmdServ->updateAll(outStr);
-                          SOUTLN(outStr);
+                          #if (USE_WS2812_LINE_OUT > OFF)
+                              outStr = "SVC2";
+                              colToHexStr(ctmp, line2812[0]->col24());
+                              outStr.concat(ctmp);    // RGB-LED col24
+                              pmdServ->updateAll(outStr);
+                              SOUTLN(outStr);
+                            #endif
+                          #if (USE_WS2812_MATRIX_OUT > OFF)
+                              outStr = "SVC3";
+                              ppix = outM2812[0].text->pix24;
+                              colToHexStr(ctmp, ppix->col24());
+                              outStr.concat(ctmp);    // RGB-LED col24
+                              pmdServ->updateAll(outStr);
+                              SOUTLN(outStr);
+                              outStr = "SVC4";
+                              ppix = outM2812[0].bmpB->pix24;
+                              colToHexStr(ctmp, ppix->col24());
+                              outStr.concat(ctmp);    // RGB-LED col24
+                              pmdServ->updateAll(outStr);
+                              SOUTLN(outStr);
+                            #endif
 
                           newClient = false;
                         }
@@ -2371,7 +2380,9 @@
             md_message *pM   = NULL;
             int         itmp = 0;
             char*       ctmp = NULL;
-            md_LEDPix24* ppix = NULL;
+            #if (USE_WS2812_MATRIX_OUT > OFF)
+                md_LEDPix24* ppix = NULL;
+              #endif
             uint8_t     idx;
             char        tval;
             char        tdata;
@@ -2427,24 +2438,30 @@
                                           #endif
                                         break;
                                       case 2: // 2821 line col24
-                                        SOUTLN("  ---- line bright ----"); SOUT(line2812[1]->bright()); SOUT(" neu ");
-                                        line2812[1]->bright((uint8_t) itmp);
-                                        SOUT(line2812[1]->bright()); SOUT(" ");
+                                        #if (USE_WS2812_LINE_OUT >OFF)
+                                            SOUTLN("  ---- line bright ----"); SOUT(line2812[1]->bright()); SOUT(" neu ");
+                                            line2812[1]->bright((uint8_t) itmp);
+                                            SOUT(line2812[1]->bright()); SOUT(" ");
+                                          #endif
                                         break;
                                       case 3:
-                                        ppix = outM2812[1].text->pix24;
-                                        SOUTLN("  ---- matrix bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
-                                        ppix->bright((uint8_t) itmp);
-                                        SOUTLN(ppix->bright());
+                                        #if (USE_WS2812_MATRIX_OUT > OFF)
+                                            ppix = outM2812[1].text->pix24;
+                                            SOUTLN("  ---- matrix bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
+                                            ppix->bright((uint8_t) itmp);
+                                            SOUTLN(ppix->bright());
+                                          #endif
                                         break;
                                       case 4:
-                                        ppix = outM2812[1].bmpB->pix24;
-                                        SOUTLN("  ---- smilyB bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
-                                        ppix->bright((uint8_t) itmp);
-                                        SOUTLN(ppix->bright());
-                                        ppix = outM2812[1].bmpE->pix24;
-                                        SOUTLN("  ---- smilyE bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
-                                        ppix->bright((uint8_t) itmp);
+                                        #if (USE_WS2812_MATRIX_OUT > OFF)
+                                            ppix = outM2812[1].bmpB->pix24;
+                                            SOUTLN("  ---- smilyB bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
+                                            ppix->bright((uint8_t) itmp);
+                                            SOUTLN(ppix->bright());
+                                            ppix = outM2812[1].bmpE->pix24;
+                                            SOUTLN("  ---- smilyE bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
+                                            ppix->bright((uint8_t) itmp);
+                                          #endif
                                         break;
                                     }
                                 break;
@@ -2461,25 +2478,31 @@
                                           #endif
                                         break;
                                       case 2: // 2821 line col24
-                                        SOUTLN(" ---- line2812 color24 ----"); SOUTHEX(line2812[1]->col24());
-                                        line2812[1]->col24(itmp);
-                                        SOUT(" neu 24/16"); SOUTHEX(line2812[1]->col24()); SOUT(" / "); SOUTLN(Col16(line2812[1]->col24()));
+                                        #if (USE_WS2812_LINE_OUT >OFF)
+                                            SOUTLN(" ---- line2812 color24 ----"); SOUTHEX(line2812[1]->col24());
+                                            line2812[1]->col24(itmp);
+                                            SOUT(" neu 24/16"); SOUTHEX(line2812[1]->col24()); SOUT(" / "); SOUTLN(Col16(line2812[1]->col24()));
+                                          #endif
                                         break;
                                       case 3: // 2821 matrix col16
-                                        ppix = outM2812[1].text->pix24;
-                                        SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
-                                        ppix->col24(itmp);
-                                        SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                        #if (USE_WS2812_MATRIX_OUT > OFF)
+                                            ppix = outM2812[1].text->pix24;
+                                            SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
+                                            ppix->col24(itmp);
+                                            SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                          #endif
                                         break;
                                       case 4: // 2821 matrix col16 bmp
-                                        ppix = outM2812[1].bmpB->pix24;
-                                        SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
-                                        ppix->col24(itmp);
-                                        SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
-                                        ppix = outM2812[1].bmpE->pix24;
-                                        SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
-                                        ppix->col24(itmp);
-                                        SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                        #if (USE_WS2812_MATRIX_OUT > OFF)
+                                            ppix = outM2812[1].bmpB->pix24;
+                                            SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
+                                            ppix->col24(itmp);
+                                            SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                            ppix = outM2812[1].bmpE->pix24;
+                                            SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
+                                            ppix->col24(itmp);
+                                            SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                          #endif
                                         break;
                                     }
                                 break;
