@@ -55,7 +55,8 @@
         //
     #ifdef USE_STATUS
         msTimer     statT  = msTimer(STAT_TIMEDEF);
-        char        statOut[OLED1_MAXCOLS + 1] = "";
+        //char      statOut[OLED1_MAXCOLS + 1] = "";
+        char        statOut[60 + 1] = "";
         bool        statOn = false;
         bool        statDate = false;
           //char        timeOut[STAT_LINELEN + 1] = "";
@@ -1713,6 +1714,7 @@
           #ifdef USE_STATUS
             size_t statLen = msg.length();
             bool   doIt    = false;
+            bool   info    = false;
 
             if (statLen)
               {
@@ -1734,6 +1736,7 @@
                 #if (USE_NTP_SERVER > OFF)
                     sprintf(statOut,"%02d.%02d. %02d:%02d:%02d ", day(), month(), hour(), minute(), second());
                     msg = statOut;
+                    info = true;
                     doIt = true;
                   #endif
               }
@@ -1756,12 +1759,25 @@
                         mlcd.wrStatus((char*) statOut);
                       #endif
                     #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                        #if ( USE_BME280_I2C > OFF )
+                              outStr[0] = 0;
+                              outStr.concat(bmeT.getVal());
+                              outStr.concat("° ");
+                              outStr.concat(bmeH.getVal());
+                              outStr.concat("% ");
+                              outStr.concat(bmeP.getVal());
+                              outStr.concat("mb ");
+                          #endif
+                        #if (USE_WEBSERVER > OFF)
+WiFi.localIP()
+
                         touch.wrStatus((char*) statOut);
                       #endif
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                             SOUT("  md_error="); SOUTLN(md_error);
                           #endif
                   #endif // USE_DISP
+                info = false;
               }
             #endif // USE_STATUS
         }
