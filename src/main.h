@@ -265,7 +265,7 @@
     // ------ network -------------------------
       // --- WIFI
         #if (USE_WIFI > OFF)
-            void startWIFI(bool startup);
+            bool startWIFI(bool startup);
             void initNTPTime();
           #endif
 

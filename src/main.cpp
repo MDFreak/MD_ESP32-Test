@@ -2202,7 +2202,7 @@
 
   // --- network -------------------------
     // --- WIFI
-      ret_t startWIFI(bool startup)
+      bool startWIFI(bool startup)
         {
           #if (USE_WIFI > OFF)
               bool ret = ISERR;
@@ -2302,7 +2302,8 @@
                       SOUT("  md_error="); SOUTLN(md_error);
                       #endif
 
-              if ((md_error & ERRBIT_WIFI) == 0)
+                    //if ((md_error & ERRBIT_WIFI) == 0)
+              if (ret == ISOK)
                   dispStatus("WIFI connected");
                 else
                   dispStatus("WIFI error");
@@ -2313,6 +2314,7 @@
                       wifi.initNTP();
                 #endif
             #endif // USE_WIFI
+            return ret;
         }
 
     // --- NTP server
