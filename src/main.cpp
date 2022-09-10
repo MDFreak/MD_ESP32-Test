@@ -1779,7 +1779,9 @@
                                 outStr.concat(WiFi.localIP().toString());
                               #endif
                           }
-                        touch.wrStatus(outStr);
+                        #if (USE_TOUCHSCREEN > OFF)
+                            touch.wrStatus(outStr);
+                          #endif
                       #endif
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                             SOUT("  md_error="); SOUTLN(md_error);
@@ -1809,7 +1811,7 @@
                   #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                       mlcd.wrText(msg, row, col);
                     #endif
-                  #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                  #if (USE_TOUCHSCREEN > OFF)
                       touch.wrText(msg, col, row, len);
                     #endif
                 #endif
@@ -1858,7 +1860,7 @@
                   #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                       mlcd.start(plcd);
                     #endif
-                  #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                  #if (USE_TOUCHSCREEN_SPI > OFF)
                       touch.start(DISP_ORIENT, DISP_BCOL);
                           #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
                             SOUT(millis()); SOUTLN(" startTouch ");
