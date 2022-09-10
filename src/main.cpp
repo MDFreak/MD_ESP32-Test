@@ -2206,7 +2206,7 @@
 
         uint32_t bFree = SPIFFS.totalBytes();
         SOUT("found "); SOUT(bFree); SOUTLN(" bytes free");
-        /*
+        //*
         SOUTLN("dir:");
         File file = SPIFFS.open("/test_example.txt");
         if(!file)
@@ -2221,7 +2221,7 @@
             Serial.write(file.read());
           }
         file.close();
-        */
+        //*/
       }
 
   // --- network -------------------------
