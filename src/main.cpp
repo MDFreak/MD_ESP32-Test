@@ -1417,6 +1417,7 @@
                       if (newClient)
                         {
                           char ctmp[8] = "";
+                          SOUTLN("New client: ");
                           // EL_TSLIDER
                           #if (USE_RGBLED_PWM > OFF)
                               outStr = "SVB1";
