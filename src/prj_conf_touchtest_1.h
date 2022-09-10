@@ -95,7 +95,7 @@
                   #define TFT_LED     15
                   #define TOUCH_CS    14
                   #define TOUCH_IRQ   27
-                  #define LED_ON      0
+                  #define LED_ON      0    // activ low
                 #endif
               #if !(DISP_TFT ^ MC_UO_TFT1602_I2C_XA)
                   #define ME
