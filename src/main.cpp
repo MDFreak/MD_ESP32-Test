@@ -1712,7 +1712,7 @@
       void dispStatus(String msg, bool direct)
         {
           #ifdef USE_STATUS
-            //size_t statLen = msg.length();
+            size_t statLen = msg.length();
             bool   doIt    = false;
             bool   info    = false;
 
@@ -1733,12 +1733,16 @@
 
             if (!statOn) // disp def val and actual time
               {
-                #if (USE_NTP_SERVER > OFF)
-                    sprintf(statOut,"%02d.%02d. %02d:%02d:%02d ", day(), month(), hour(), minute(), second());
-                    msg = statOut;
-                    info = true;
-                    doIt = true;
-                  #endif
+                if (statN.TOut())
+                  {
+                    statN.startT();
+                    #if (USE_NTP_SERVER > OFF)
+                        sprintf(statOut,"%02d.%02d. %02d:%02d:%02d ", day(), month(), hour(), minute(), second());
+                        msg = statOut;
+                        info = true;
+                        doIt = true;
+                      #endif
+                  }
               }
             if (doIt)
               {
@@ -1758,31 +1762,31 @@
                     #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                         mlcd.wrStatus((char*) statOut);
                       #endif
-                    #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
-                        if (info)
-                          {
-                            #if ( USE_BME280_I2C > OFF )
-                                outStr[0] = 0;
-                                outStr.concat(bmeT.getVal());
-                                outStr.concat("° ");
-                                outStr.concat(bmeH.getVal());
-                                outStr.concat("% ");
-                                outStr.concat(bmeP.getVal());
-                                outStr.concat("mb  ");
-                              #endif
-                          }
-                        outStr.concat((char*) statOut);
-                        if (info)
-                          {
-                            #if (USE_WEBSERVER > OFF)
-                                outStr.concat(" ");
-                                outStr.concat(WiFi.localIP().toString());
-                              #endif
-                          }
-                        #if (USE_TOUCHSCREEN > OFF)
-                            touch.wrStatus(outStr);
-                          #endif
+                            //#if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                                 //if (info)
+                                 //  {
+                                 //    #if ( USE_BME280_I2C > OFF )
+                                 //        outStr[0] = 0;
+                                 //        outStr.concat(bmeT.getVal());
+                                 //        outStr.concat("° ");
+                                 //        outStr.concat(bmeH.getVal());
+                                 //        outStr.concat("% ");
+                                 //        outStr.concat(bmeP.getVal());
+                                 //        outStr.concat("mb  ");
+                                 //      #endif
+                                 //  }
+                                 // outStr.concat((char*) statOut);
+                                 // if (info)
+                                 // {
+                                 //   #if (USE_WEBSERVER > OFF)
+                                 //       outStr.concat(" ");
+                                 //       outStr.concat(WiFi.localIP().toString());
+                                 //     #endif
+                                 // }
+                    #if (USE_TOUCHSCREEN > OFF)
+                        touch.wrStatus(msg);
                       #endif
+                                // #endif
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                             SOUT("  md_error="); SOUTLN(md_error);
                           #endif
