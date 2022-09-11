@@ -54,7 +54,8 @@
 
         //
     #ifdef USE_STATUS
-        msTimer     statT  = msTimer(STAT_TIMEDEF);
+        msTimer     statT  = msTimer(STAT_DELTIME);
+        msTimer     statN  = msTimer(STAT_NEWTIME);
         //char      statOut[OLED1_MAXCOLS + 1] = "";
         char        statOut[60 + 1] = "";
         bool        statOn = false;
@@ -1709,7 +1710,7 @@
             #endif
         }
 
-      void dispStatus(String msg)
+      void dispStatus(String msg, bool direct)
         {
           #ifdef USE_STATUS
             size_t statLen = msg.length();
@@ -1791,7 +1792,7 @@
               }
             #endif // USE_STATUS
         }
-      void dispStatus(const char* msg)
+      void dispStatus(const char* msg, bool direct)
         {
           dispStatus((String) msg);
         }

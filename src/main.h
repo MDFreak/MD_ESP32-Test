@@ -193,8 +193,8 @@
       // --- user output
         // --- display
           void clearDisp();
-          void dispStatus(String msg);
-          void dispStatus(const char* msg);
+          void dispStatus(String msg, bool direct = false);
+          void dispStatus(const char* msg, bool direct = false);
           void dispText(char* msg, uint8_t col, uint8_t row, uint8_t len);
           void dispText(String msg, uint8_t col, uint8_t row, uint8_t len);
           void startDisp();
