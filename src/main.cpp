@@ -1729,10 +1729,9 @@
               }
             else // empty input
               {
-              if (statOn && statT.TOut())
-                statOn = false;
-
-
+                if (statOn && statT.TOut())
+                  statOn = false;
+              }
             if (!statOn) // disp def val and actual time
               {
                 if (statN.TOut())
