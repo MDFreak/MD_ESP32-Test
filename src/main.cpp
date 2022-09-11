@@ -1748,7 +1748,7 @@
             if (doIt)
               {
                 #if (USE_TOUCHSCREEN > OFF)
-                  touch.wrStatus(msg);
+                    touch.wrStatus(msg);
                   #endif
                 #if (USE_OLED_I2C > OFF)
                     #if defined( USE_STATUS1 )
@@ -1784,9 +1784,6 @@
                                  //       outStr.concat(WiFi.localIP().toString());
                                  //     #endif
                                  // }
-                    #if (USE_TOUCHSCREEN > OFF)
-                        touch.wrStatus(msg);
-                      #endif
                                 // #endif
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                             SOUT("  md_error="); SOUTLN(md_error);
@@ -1796,6 +1793,7 @@
               }
             #endif // USE_STATUS
         }
+
       void dispStatus(const char* msg, bool direct)
         {
           dispStatus((String) msg);
