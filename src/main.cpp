@@ -922,32 +922,32 @@
 
       // ----------------------
       #if (USE_NTP_SERVER > OFF)   // get time from NTP server
-        if (ntpT.TOut() == true)
-          {
-            setTime(++ntpTime);
-            if ((md_error & ERRBIT_WIFI) == OK)
-              { // WiFi online
-                #ifdef UNUSED
-                if (((md_error & ERRBIT_NTPTIME) > 0) || (year() < 2000))   // time not initialized
-                  {
-                    initNTPTime();
-                    ntpGet = true;
-                  }
-                #endif
-
-                if (ntpGet == true)
-                  {
-                    ntpGet = wifi.getNTPTime(&ntpTime);
-                    setTime(ntpTime);
-                    ////////////////////////////////SOUT(" NTP time "); SOUT(ntpTime);
-                  }
-              }
-            ntpT.startT();
-                  #if (DEBUG_MODE == CFG_DEBUG_DETAILS)
-                    //SOUT("Datum "); SOUT(day()); SOUT("."); SOUT(month()); SOUT("."); SOUT(year()); SOUT(" ");
-                    //SOUT("Zeit "); SOUT(hour()); SOUT("."); SOUT(minute()); SOUT(":"); SOUTLN(second());
+          if (ntpT.TOut() == true)
+            {
+              setTime(++ntpTime);
+              if ((md_error & ERRBIT_WIFI) == OK)
+                { // WiFi online
+                  #ifdef UNUSED
+                      if (((md_error & ERRBIT_NTPTIME) > 0) || (year() < 2000))   // time not initialized
+                        {
+                          initNTPTime();
+                          ntpGet = true;
+                        }
                     #endif
-          }
+
+                  if (ntpGet == true)
+                    {
+                      ntpGet = wifi.getNTPTime(&ntpTime);
+                      setTime(ntpTime);
+                      ////////////////////////////////SOUT(" NTP time "); SOUT(ntpTime);
+                    }
+                }
+              ntpT.startT();
+                    #if (DEBUG_MODE == CFG_DEBUG_DETAILS)
+                      //SOUT("Datum "); SOUT(day()); SOUT("."); SOUT(month()); SOUT("."); SOUT(year()); SOUT(" ");
+                      //SOUT("Zeit "); SOUT(hour()); SOUT("."); SOUT(minute()); SOUT(":"); SOUTLN(second());
+                      #endif
+            }
         #endif // USE_NTP_SERVER
       // ----------------------
       #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
