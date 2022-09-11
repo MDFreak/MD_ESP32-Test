@@ -584,7 +584,7 @@
 
             #endif
           startDisp();
-          dispStatus("setup start ...");
+          dispStatus("setup start ...", true);
 
         // WS2812 LEDs
           #if (USE_WS2812_MATRIX_OUT > OFF)
@@ -678,13 +678,13 @@
                   startWIFI(true);
                   if ((md_error & ERRBIT_WIFI) == OK)
                       {
-                        dispStatus("WIFI connected");
+                        dispStatus("WIFI connected",true);
                         break;
                       }
                     else
                       {
                         #if (WIFI_IS_DUTY > OFF)
-                            dispStatus("WIFI error -> halted");
+                            dispStatus("WIFI error -> halted", true);
                         #else
                             rep--;
                             if (rep > 0)
@@ -698,7 +698,7 @@
               #if (USE_NTP_SERVER > OFF)   // get time from NTP server
                   if ((md_error & ERRBIT_WIFI) == OK)
                     {
-                      dispStatus("init NTP time");
+                      dispStatus("init NTP time", true);
                       initNTPTime();
                       ntpGet = true;
                     }
@@ -722,7 +722,7 @@
                 #else
                     startWebServer();
                   #endif
-                  //md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
+                    //md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
 
               }
             #endif
@@ -888,7 +888,6 @@
               SOUT("... end setup -- error="); SOUTLN(md_error);
               SOUTLN();
               usleep(400000);
-              dispStatus("             ");
             #endif
     }
 
@@ -1713,7 +1712,7 @@
       void dispStatus(String msg, bool direct)
         {
           #ifdef USE_STATUS
-            size_t statLen = msg.length();
+            //size_t statLen = msg.length();
             bool   doIt    = false;
             bool   info    = false;
 
@@ -1732,7 +1731,7 @@
               if (statOn && statT.TOut())
                 statOn = false;
 
-            if (!statOn) // disp actual time
+            if (!statOn) // disp def val and actual time
               {
                 #if (USE_NTP_SERVER > OFF)
                     sprintf(statOut,"%02d.%02d. %02d:%02d:%02d ", day(), month(), hour(), minute(), second());
