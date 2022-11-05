@@ -15,11 +15,29 @@
       #define USE_TASKING           ON
       #define USE_LED_BLINK_OUT     ON
     // --- user output components
+      // --- displays
+        // OLEDs
+          // MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
+          // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
+        #define USE_DISP_I2C1         1   // OFF // 1
+          #define USE_OLED_I2C1       1 // [0, 1, 2] are possible
+            #define OLED11            MC_UO_OLED_130_AZ
+            //#define OLED12            MC_UO_OLED_130_AZ
+          #define USE_DISP_I2C2       OFF
+            //#define USE_OLED_I2C2     1 // [0, 1, 2] are possible
+            //#define OLED21            MC_UO_OLED_130_AZ
+            //#define OLED22            MC_UO_OLED_130_AZ
+        // TFTs
+          //#define DISP_TFT            MC_UO_TFT1602_GPIO_RO
+          //#define DISP_TFT            MC_UO_TOUCHXPT2046_AZ
+          //#define DISP_TFT            MC_UO_TFT1602_I2C_XA
+        #define USE_TFT               1
+          #define DISP_TFT          MC_UO_TOUCHXPT2046_AZ
+          #define USE_DISP_SPI      OFF
+        #define USE_DISP            USE_DISP_I2C + USE_DISP_SPI
+
       #define USE_TRAFFIC_LED_OUT   OFF
       #define USE_RGBLED_PWM        OFF // 1
-      #define USE_DISP_I2C1         1   // OFF // 1
-      #define USE_DISP_I2C2         OFF
-      #define USE_DISP_SPI          OFF
       #define USE_BUZZER_PWM        OFF
       #define USE_FAN_PWM           OFF // 2
       #define USE_OUT_FREQ_PWM      OFF // 1
@@ -73,29 +91,6 @@
           ERROR
         #endif
     // to be reorganised
-      #define USE_DISP            USE_DISP_I2C + USE_DISP_SPI
-        #if (USE_DISP > 0)
-          // --- displays
-                // OLEDs MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
-                //       MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
-              #define USE_OLED_I2C   1 // [0, 1, 2] are possible
-                #if (USE_OLED_I2C > OFF)
-                    #define OLED1   MC_UO_OLED_130_AZ
-                  #endif
-                #if (USE_OLED_I2C > 1)
-                    #define OLED2   TRUE
-                    #define OLED2_MC_UO_OLED_130_AZ
-                    #define OLED2_GEO    GEO_128_64
-                  #endif
-
-              #define USE_TFT        1
-                // TFTs
-                #if (USE_TFT > 0)
-                    //#define DISP_TFT  MC_UO_TFT1602_GPIO_RO
-                    #define DISP_TFT  MC_UO_TOUCHXPT2046_AZ
-                    //#define DISP_TFT  MC_UO_TFT1602_I2C_XA
-                  #endif
-            #endif
       #define USE_AOUT            USE_BUZZER_PWM
         #if (USE_AOUT > OFF)
             // --- speakers ...
