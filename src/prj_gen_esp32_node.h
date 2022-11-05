@@ -23,29 +23,29 @@
       #define USE_BUZZER_PWM        OFF
       #define USE_FAN_PWM           OFF // 2
       #define USE_OUT_FREQ_PWM      OFF // 1
-      #define USE_WS2812_MATRIX_OUT OFF   // [0, 1..4]
-      #define USE_WS2812_LINE_OUT   OFF     // [0, 1..4]
+      #define USE_WS2812_MATRIX_OUT OFF // [0, 1..4]
+      #define USE_WS2812_LINE_OUT   OFF // [0, 1..4]
       #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
     // --- user input components
-      #define USE_TOUCHSCREEN_SPI   1   // OFF
+      #define USE_TOUCHSCREEN_SPI   OFF
       #define USE_TOUCHSCREEN_IO    OFF
       #define USE_KEYPADSHIELD_ADC  OFF
       #define USE_GEN_CNT_INP       OFF // 1
       #define USE_GEN_PWM_INP       OFF // 2
     // --- sensors
-      #define USE_DS18B20_1W_IO     OFF   // [0, 1, ....] limited by 1W connections
-      #define USE_BME280_I2C        OFF // 1     // [0, 1, ....] limited by I2C channels/addr
-      #define USE_TYPE_K_SPI        OFF   // [0, 1, ....] limited by Pins
-      #define USE_MQ135_GAS_ADC     OFF   // [0, 1, ....] limited by analog inputs
-      #define USE_PHOTO_SENS        OFF // ON
+      #define USE_DS18B20_1W_IO     OFF // [0, 1, ....] limited by 1W connections
+      #define USE_BME280_I2C        1   // [0, 1, ....] limited by I2C channels/addr
+      #define USE_TYPE_K_SPI        OFF // [0, 1, ....] limited by Pins
+      #define USE_MQ135_GAS_ADC     OFF // [0, 1, ....] limited by analog inputs
+      #define USE_PHOTO_SENS        ON  // ON
     // --- network  components
-      #define USE_WIFI              OFF // ON
-      #define USE_NTP_SERVER        OFF // ON
-      #define USE_LOCAL_IP          OFF // ON
-      #define USE_WEBSERVER         OFF // ON
+      #define USE_WIFI              ON  // ON
+      #define USE_NTP_SERVER        ON  // ON
+      #define USE_LOCAL_IP          ON  // ON
+      #define USE_WEBSERVER         ON  // ON
     // --- memory components
       #define USE_FLASH_MEM         ON
-      #define USE_FRAM_I2C          OFF // 1   // [0, 1, ...] limited by I2C channel/addr
+      #define USE_FRAM_I2C          ON // 1   // [0, 1, ...] limited by I2C channel/addr
     // --- test components
       #define USE_CTRL_POTI_ADC     OFF   // [0, 1, ....] limited by analog inputs
       #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins
@@ -76,9 +76,9 @@
       #define USE_DISP            USE_DISP_I2C + USE_DISP_SPI
         #if (USE_DISP > 0)
           // --- displays
+                // OLEDs MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
+                //       MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
               #define USE_OLED_I2C   1 // [0, 1, 2] are possible
-                // OLEDs     MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
-                          // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
                 #if (USE_OLED_I2C > OFF)
                     #define OLED1   MC_UO_OLED_130_AZ
                   #endif
