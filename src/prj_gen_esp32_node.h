@@ -18,24 +18,16 @@
       // --- displays
         #define USE_DISP            1
           // OLEDs
-            // MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
-            // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
-          #define USE_DISP_I2C1         1   // OFF // 1
-            #define USE_OLED_I2C1       1 // [0, 1, 2] are possible
-              #define OLED11            MC_UO_OLED_130_AZ
-              //#define OLED12            MC_UO_OLED_130_AZ
-            #define USE_DISP_I2C2       OFF
-              //#define USE_OLED_I2C2     1 // [0, 1, 2] are possible
-              //#define OLED21            MC_UO_OLED_130_AZ
-              //#define OLED22            MC_UO_OLED_130_AZ
+            #define DISP_I2C11      MC_UO_OLED_130_AZ  // OLED1 on I2C1
+            #define DISP_I2C12      OFF  // OLED2 on I2C1
+            #define DISP_I2C21      OFF  // OLED1 on I2C2
+            #define DISP_I2C21      OFF  // OLED2 on I2C2
+              // MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
+              // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
           // TFTs
-            //#define DISP_TFT            MC_UO_TFT1602_GPIO_RO
-            //#define DISP_TFT            MC_UO_TOUCHXPT2046_AZ
-            //#define DISP_TFT            USE_TOUCHSCREEN_SPI
-            //#define DISP_TFT            MC_UO_TFT1602_I2C_XA
-          #define USE_TFT               OFF
-            #define DISP_TFT          MC_UO_TOUCHXPT2046_AZ
-            #define USE_DISP_SPI      OFF
+            #define DISP_TFT        OFF
+              // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT2046_AZ
+              // MC_UO_TXPT2046_AZ_SPI, MC_UO_TFT1602_I2C_XA
 
       #define USE_TRAFFIC_LED_OUT   OFF
       #define USE_RGBLED_PWM        OFF // 1
@@ -71,7 +63,32 @@
       #define USE_CTRL_POTI_ADC     OFF   // [0, 1, ....] limited by analog inputs
       #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins
     // --- system components
-      #define USE_DISP_I2C          USE_DISP_I2C1 + USE_DISP_I2C2
+      // usage of busses
+        // I2C
+          //I2C1
+            #if ((DISP_I2C11 > OFF) && (DISP_I2C12 > OFF))
+                #define USE_DISP_I2C1   2
+            #elif ((DISP_I2C11 > OFF) || (DISP_I2C12 > OFF))
+                #define USE_DISP_I2C1   1
+            #else
+                #define USE_DISP_I2C1   OFF
+              #endif
+          //I2C2
+            #if ((DISP_I2C21 > OFF) && (DISP_I2C22 > OFF))
+                #define USE_DISP_I2C2   2
+            #elif ((DISP_I2C21 > OFF) || (DISP_I2C22 > OFF))
+                #define USE_DISP_I2C2   1
+            #else
+                #define USE_DISP_I2C1   OFF
+              #endif
+        // SPI
+          #define USE_DISP_TFT      DISP_TFT
+          #define USE_SPI           USE_DISP_TFT + USE_TOUCHSCREEN_SPI + USE_TYPE_K_SPI
+          #if (USE_SPI > OFF)
+            #define USED_SPI_PINS     USE_SPI + 3
+          #else
+              #define USED_SPI_PINS   OFF
+            #endif
     // usage of peripherals
       #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_GEN_PWM_OUT + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
       #define USE_CNT_INP         USE_GEN_CNT_INP     // max 2 * 8 independent
@@ -87,16 +104,6 @@
           ERROR
         #endif
 
-    // usage of busses
-      #if ((USE_DISP_SPI > OFF) )
-          #define USE_SPI             USE_DISP_SPI + USE_TOUCHSCREEN_SPI + USE_TYPE_K_SPI
-          #define USED_SPI_PINS     USE_SPI + 3
-        #else
-          #define USED_SPI_PINS   OFF
-        #endif
-      #if ((USE_DISP_I2C1 > OFF) || (USE_DISP_I2C2 > OFF))
-          #define USE_I2C
-        #endif
     // to be reorganised
       #if (USE_AOUT > OFF)
           // --- speaker ...
