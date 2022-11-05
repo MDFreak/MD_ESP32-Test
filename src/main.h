@@ -170,7 +170,7 @@
     #if (USE_CNT_INP > OFF)
       #endif
   // --- memory
-    #if (USE_FRAM_I2C > OFF)
+    #if (USE_FRAM_I2C1 > OFF)
         #include <md_FRAM.h>
       #endif
 
@@ -190,7 +190,7 @@
         #include <DallasTemperature.h>
       #endif
 
-    #if ( USE_BME280_I2C > OFF )
+    #if ( USE_BME280_I2C1 > OFF )
         #include <Adafruit_Sensor.h>
         #include <Adafruit_BME280.h>
       #endif

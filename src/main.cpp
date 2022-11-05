@@ -21,7 +21,6 @@
                                + ERRBIT_TOUCH
                              #endif
                              ;
-    TwoWire i2c1 = TwoWire(0);
 	    // cycletime measurement
     static uint64_t anzUsCycles = 0ul;
     static uint64_t usLast      = 0ul;
@@ -36,13 +35,16 @@
 
     //static uint32_t msPerCycle  = 0;
 
-    #if ( USE_I2C > 1 )
+    #if ( USE_I2C1 > OFF )
+        TwoWire i2c1 = TwoWire(0);
+      #endif
+    #if ( USE_I2C2 > OFF )
         TwoWire i2c2 = TwoWire(1);
       #endif
 
     #if ( USE_LED_BLINK_OUT > 0 )
         msTimer ledT = msTimer(BLINKTIME_MS);
-        uint8_t SYS_LED_ON = OFF;
+        uint8_t SYS_LED_ON = ON;
       #endif
 
     #if ( USE_DISP > 0 )
@@ -321,8 +323,8 @@
         uint32_t valFanPWM[USE_GEN_PWM_OUT];
       #endif
 
-    #if (USE_OLED_I2C > OFF)
-        #ifdef OLED1
+    #if ((USE_DISP_I2C1 + USE_DISP_I2C2) > OFF)
+        #if (DISP_I2C11 > OFF)
             #if !(OLED1_DRV ^ OLED_DRV_1106)
                 md_oled_1106 oled1 = md_oled_1106((uint8_t) I2C_ADDR_OLED1, (uint8_t) I2C_SDA_OLED1,
                                         (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
@@ -331,7 +333,7 @@
                                         (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
               #endif
           #endif
-        #ifdef OLED2
+        #if (DISP_I2C21 > OFF)
             #if !(OLED2_DRV ^ OLED_DRV_1106)
                 md_oled_1106 oled2 = md_oled_1106((uint8_t) I2C_ADDR_OLED2, (uint8_t) I2C_SDA_OLED2,
                                         (uint8_t) I2C_SCL_OLED2, (OLEDDISPLAY_GEOMETRY) OLED2_GEO);
@@ -342,7 +344,7 @@
           #endif
         msTimer oledT   = msTimer(DISP_CYCLE);
         uint8_t oledIdx = 0;
-      #endif //USE_OLED_I2C
+      #endif
 
     #if (defined(USE_TFT1602_GPIO_RO_3V3) || defined(USE_TFT1602_GPIO_RO_3V3))
         LiquidCrystal  lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
@@ -456,7 +458,7 @@
         msTimer outpT   = msTimer(OUTPUT_CYCLE_MS);
       #endif
 
-    #if (USE_BME280_I2C > OFF)
+    #if (USE_BME280_I2C1 > OFF)
         Adafruit_BME280 bme;
         md_val<int16_t> bmeT;
         md_val<uint16_t> bmeP;
@@ -509,7 +511,7 @@
         #include <SPIFFS.h>
       #endif
 
-    #if (USE_FRAM_I2C > OFF)
+    #if (USE_FRAM_I2C1 > OFF)
         md_FRAM fram = md_FRAM();
       #endif
 
@@ -816,7 +818,7 @@
               testFlash();
             #endif
 
-          #if (USE_FRAM_I2C > OFF)
+          #if (USE_FRAM_I2C1 > OFF)
             // Read the first byte
             SOUT("FRAM addr "); SOUTHEX(I2C_ADDR_FRAM1);
             dispStatus("init FRAM");

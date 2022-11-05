@@ -205,11 +205,9 @@
 
         // --- I2C
           // --- board connection
-            #define USE_I2C1          1
             #define PIN_I2C1_SDA      21
             #define PIN_I2C1_SCL      22
             #if ( USE_I2C > 1 )
-                #define USE_I2C2      2
                 #define PIN_I2C2_SDA  25
                 #define PIN_I2C2_SCL  26
               #endif
@@ -263,7 +261,7 @@
             #define I2C_SDA_OLED4   PIN_I2C2_SDA
           #endif
 
-        #if (USE_FRAM_I2C > OFF)
+        #if (USE_FRAM_I2C1 > OFF)
             #define I2C_ADDR_FRAM1          I2C_FRAM_50
             #define I2C_FRAM1_USE_I2C1
             #if defined( I2C_FRAM1_USE_I2C1 )
@@ -275,7 +273,7 @@
                 #define I2C_SCL_FRAM1     PIN_I2C2_SCL
                 #define I2C_SDA_FRAM1     PIN_I2C2_SDA
               #endif
-            #if (( USE_I2C > 1 ) && ( USE_FRAM_I2C > 1 ))
+            #if (( USE_I2C > 1 ) && ( USE_FRAM_I2C1 > 1 ))
                 #define I2C_ADDR_FRAM2        I2C_FRAM_50
                 #define I2C_FRAM2_USE_I2C2
                 #if defined( I2C_FRAM2_USE_I2C1 )
@@ -647,7 +645,7 @@
 
     // --- memories
       // --- FRAM
-        #if (USE_FRAM_I2C > OFF)
+        #if (USE_FRAM_I2C1 > OFF)
             #define SIZE_FRAM     0x8000
           #endif
     // --- sensors
