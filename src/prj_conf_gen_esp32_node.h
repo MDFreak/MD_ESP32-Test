@@ -288,31 +288,15 @@
               #endif
           #endif
 
-        #if ( USE_BME280_I2C > OFF )
-            #define I2C_ADDR_BME2801        I2C_BME280
-            #define I2C_BME2801_USE_I2C1
-            #if defined( I2C_BME2801_USE_I2C1 )
-              #define I2C_BME2801         I2C1
-              #define I2C_SCL_BME2801     PIN_I2C1_SCL
-              #define I2C_SDA_BME2801     PIN_I2C1_SDA
-            #else
-                #define I2C_BME2801       I2C2
-                #define I2C_SCL_BME2801   PIN_I2C2_SCL
-                #define I2C_SDA_BME2801   PIN_I2C2_SDA
-              #endif
-            #if (( USE_I2C > 1 ) && ( USE_BME280_I2C > 1 ))
-                #define I2C_ADDR_BME2802      I2C_BME280
-                #define I2C_BME2802_USE_I2C2
-                #if defined( I2C_BME2802_USE_I2C1 )
-                  #define I2C_BME2802       I2C1
-                  #define I2C_SCL_BME2802   I2C1_SCL
-                  #define I2C_SDA_BME2802   I2C1_SDA
-                #else
-                    #define I2C_BME2802     I2C2
-                    #define I2C_SCL_BME2802 I2C2_SCL
-                    #define I2C_SDA_BME2802 I2C2_SDA
-                  #endif
-              #endif
+        #if ( USE_BME280_I2C1 > OFF )
+            #define I2C_BME2801         I2C1
+            #define I2C_SCL_BME2801     PIN_I2C1_SCL
+            #define I2C_SDA_BME2801     PIN_I2C1_SDA
+          #endif
+        #if ( USE_BME280_I2C2 > OFF )
+            #define I2C_BME2802         I2C2
+            #define I2C_SCL_BME2802     I2C2_SCL
+            #define I2C_SDA_BME2802     I2C2_SDA
           #endif
 
     // --- user interface
@@ -359,27 +343,27 @@
                         #define OLED1_DRV      OLED_DRV_1106
                       #endif
                   #endif
-                #if defined( OLED2 )
+                #if ( DISP_I2C12 > OFF )
                     #define USE_STATUS2
-                    #if !(OLED2 ^ MC_UO_OLED_066_AZ)
+                    #if !(DISP_I2C12 ^ MC_UO_OLED_066_AZ)
                         #define DISP2_MAXCOLS  OLED_066_MAXCOLS
                         #define DISP2_MAXROWS  OLED_066_MAXROWS
                         #define OLED2_GEO      GEO_64_48
                         #define OLED2_DRV      OLED_DRV_1306
                       #endif
-                    #if !(OLED2 ^ MC_UO_OLED_091_AZ)
+                    #if !(DISP_I2C12 ^ MC_UO_OLED_091_AZ)
                         #define DISP2_MAXCOLS  OLED_091_MAXCOLS
                         #define DISP2_MAXROWS  OLED_091_MAXROWS
                         #define OLED2_GEO      GEO_128_32
                         #define OLED2_DRV      OLED_DRV_1306
                       #endif
-                    #if !(OLED2 ^ MC_UO_OLED_096_AZ)
+                    #if !(DISP_I2C12 ^ MC_UO_OLED_096_AZ)
                         #define DISP2_MAXCOLS  OLED_096_MAXCOLS
                         #define DISP2_MAXROWS  OLED_096_MAXROWS
                         #define OLED2_GEO      GEO_128_64
                         #define OLED2_DRV      OLED_DRV_1306
                       #endif
-                    #if !(OLED2 ^ MC_UO_OLED_130_AZ)
+                    #if !(DISP_I2C12 ^ MC_UO_OLED_130_AZ)
                         #define DISP2_MAXCOLS  OLED_130_MAXCOLS
                         #define DISP2_MAXROWS  OLED_130_MAXROWS
                         #define OLED2_GEO      GEO_128_64
@@ -645,7 +629,7 @@
 
     // --- memories
       // --- FRAM
-        #if (USE_FRAM_I2C1 > OFF)
+        #if ((USE_FRAM_I2C1 > OFF) || (USE_FRAM_I2C1 > OFF))
             #define SIZE_FRAM     0x8000
           #endif
     // --- sensors
@@ -657,7 +641,7 @@
             #endif
         #endif
 
-      #if (USE_BME280_I2C > OFF)
+      #if (USE_BME280_I2C1 > OFF)
           #define BME280T_FILT    0
           #define BME280T_Drop    0
           #define BME280P_FILT    0

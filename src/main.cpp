@@ -458,14 +458,11 @@
         msTimer outpT   = msTimer(OUTPUT_CYCLE_MS);
       #endif
 
-    #if (USE_BME280_I2C1 > OFF)
+    #if ((USE_BME280_I2C1 > OFF) || (USE_BME280_I2C2 > OFF))
         Adafruit_BME280 bme;
         md_val<int16_t> bmeT;
         md_val<uint16_t> bmeP;
         md_val<uint16_t> bmeH;
-        //Adafruit_Sensor *bme_temp  = bme.getTemperatureSensor();
-        //Adafruit_Sensor *bme_press = bme.getPressureSensor();
-        //Adafruit_Sensor *bme_humid = bme.getHumiditySensor();
       #endif
 
     #if (USE_DS18B20_1W_IO > OFF)
@@ -740,15 +737,15 @@
                   SOUTLN(DS18Str);
             #endif
         // BME280 temperature, pessure, humidity
-          #if ( USE_BME280_I2C > OFF )
+          #if ((USE_BME280_I2C1 > OFF) || (USE_BME280_I2C1 > OFF))
                     SOUT(millis()); SOUT(" BME280 ... " );
                 dispStatus("init BME280");
                 bool bmeda = false;
-                #if defined( I2C_BME2801_USE_I2C1 )
-                    bmeda = bme.begin(I2C_ADDR_BME2801, &i2c1);
+                #if (USE_BME280_I2C1 > OFF)
+                    bmeda = bme.begin(I2C_BME280, &i2c1);
                   #endif
-                #if defined( I2C_BME2801_USE_I2C2 )
-                    bmeda = bme280.begin(I2C_ADDR_BME2801, &i2c2);
+                #if (USE_BME280_I2C2 > OFF)
+                    bmeda = bme.begin(I2C_BME280, &i2c2);
                   #endif
                 if (bmeda)
                     {
