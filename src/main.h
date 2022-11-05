@@ -112,7 +112,7 @@
             uint16_t blue;
           } outRGBVal_t;
       #endif
-    #if (USE_BUZZER_PWM > OFF)
+    #if (BUZZER1 > OFF)
         #include "md_buzzer.h"
       #endif // USE_BUZZER_PWM
 
@@ -153,8 +153,8 @@
         #include <Adafruit_NeoPixel.h>
       #endif
 
-    #if (USE_TFT > OFF)
-        #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
+    #if (USE_DISP_TFT > OFF)
+        #if !(USE_DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
             #include "md_lcd.h"
           #endif
         #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)

@@ -431,7 +431,7 @@
           #endif // DISP
 
       // --- acoustic output
-        #if (USE_BUZZER_PWM > OFF)
+        #if (USE_AOUT > OFF)
             #if !(BUZZER1 ^ AOUT_PAS_BUZZ_3V5V)
                 #define PLAY_MUSIC
                 #define MUSIC_BASE_OCTA 5        // base oktave for musik

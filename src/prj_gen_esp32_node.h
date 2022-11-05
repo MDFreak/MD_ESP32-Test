@@ -26,23 +26,27 @@
               // MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
               // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
           // TFTs
-            #define DISP_TFT        OFF
+            #define USE_DISP_TFT    OFF
               // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT2046_AZ_UNO, MC_UO_TXPT2046_AZ_SPI
               // MC_UO_TFT1602_I2C_XA,  MC_UO_Keypad_ANA0_RO
-
       #define USE_TRAFFIC_LED_OUT   OFF
       #define USE_RGBLED_PWM        OFF // 1
       #define USE_AOUT              OFF
-        #define USE_BUZZER_PWM      OFF
+        // buzzer
+          #define BUZZER1           OFF
+          // AOUT_PAS_BUZZ_3V5V
       #define USE_FAN_PWM           OFF // 2
       #define USE_OUT_FREQ_PWM      OFF // 1
       #define USE_WS2812_MATRIX_OUT OFF // [0, 1..4]
       #define USE_WS2812_LINE_OUT   OFF // [0, 1..4]
       #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
     // --- user input components
-      #define USE_TOUCHSCREEN_SPI   OFF
-      #define USE_TOUCHSCREEN_IO    OFF
-      #define USE_KEYPADSHIELD_ADC  OFF
+      // --- touchscreen ---
+        #define USE_TOUCHSCREEN     OFF
+        // MC_UI_TXPT2046_AZ_SPI, MC_UI_TXPT2046_AZ_UNO
+      // --- keypads ---
+        #define USE_KEYPADSHIELD    OFF
+        // MC_UI_Keypad_ANA0_RO
       #define USE_GEN_CNT_INP       OFF // 1
       #define USE_GEN_PWM_INP       OFF // 2
     // --- sensors
@@ -59,7 +63,7 @@
       #define USE_WEBSERVER         ON  // ON
     // --- memory components
       #define USE_FLASH_MEM         ON
-      #define USE_FRAM_I2C          ON // 1   // [0, 1, ...] limited by I2C channel/addr
+      #define USE_FRAM_I2C1         ON // 1   // [0, 1, ...] limited by I2C channel/addr
     // --- test components
       #define USE_CTRL_POTI_ADC     OFF   // [0, 1, ....] limited by analog inputs
       #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins
@@ -83,7 +87,6 @@
                 #define USE_DISP_I2C2   OFF
               #endif
         // SPI
-          #define USE_DISP_TFT      DISP_TFT
           #define USE_SPI           USE_DISP_TFT + USE_TOUCHSCREEN_SPI + USE_TYPE_K_SPI
           #if (USE_SPI > OFF)
             #define USED_SPI_PINS     USE_SPI + 3
@@ -106,20 +109,13 @@
         #endif
 
     // to be reorganised
-      #if (USE_AOUT > OFF)
-          // --- speaker ...
-            #if (USE_BUZZER_PWM > OFF)
-                #define BUZZER1  AOUT_PAS_BUZZ_3V5V
-              #endif
-        #endif
-      #define USE_KEYPADSHIELD    USE_KEYPADSHIELD_ADC
         #if (USE_KEYPADSHIELD > OFF)
             #define USE_TFT1602_GPIO_RO_V5  // used by KEYPADSHIELD
             #define KEYS_Keypad_ANA0_RO_V5        // used by KEYPADSHIELD
             #define KEYS            ?
           #endif // USE_KEYPADSHIELD
 
-      #define USE_TOUCHSCREEN     (3 * USE_TRAFFIC_LED_OUT) +USE_TOUCHSCREEN_SPI + USE_TOUCHSCREEN_OUT
+        //  #define USE_TOUCHSCREEN     (3 * USE_TRAFFIC_LED_OUT) +USE_TOUCHSCREEN_SPI + USE_TOUCHSCREEN_OUT
         #if (USE_TOUCHSCREEN > OFF)
             #define TOUCHSCREEN1     TOUCHXPT2046_AZ_3V3
             #define TOUCHKEYS1       KEYS_TOUCHXPT2046_AZ_3V3
