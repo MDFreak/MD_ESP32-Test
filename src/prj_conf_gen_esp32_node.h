@@ -3,7 +3,7 @@
 
   #include <Arduino.h>
   #include <md_defines.h>
-  #include <project.h>
+  #include <prj_gen_esp32_node.h>
 
   // ******************************************
     // --- test features --------------------------------
@@ -241,11 +241,9 @@
 
     // --- I2C interface
       // --- address configuration
-        #if (USE_OLED_I2C > OFF)
-            #define I2C_ADDR_OLED1      I2C_OLED_3C
-            #define I2C_OLED1_USE_I2C1
-            #if defined( I2C_OLED1_USE_I2C1 )
-                #define I2C_OLED1       I2C1
+        #if (DISP_I2C11 > OFF)
+            #define I2C_ADDR_OLED1     I2C_OLED_3C
+            #define I2C_OLED1          I2C1
                 #define I2C_SCL_OLED1   PIN_I2C1_SCL
                 #define I2C_SDA_OLED1   PIN_I2C1_SDA
             #else
@@ -333,7 +331,7 @@
       // --- display
         #if (USE_DISP > 0)
             #define USE_STATUS
-            #if (USE_OLED_I2C > OFF)
+            #if (USE_DISP_I2C1 > OFF)
                 #if ( OLED1  > OFF )
                     #define USE_STATUS1
                           // select OLED - device & GEO   GEO_RAWMODE?

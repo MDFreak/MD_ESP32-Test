@@ -3,6 +3,7 @@
 
   #include <Arduino.h>
   #include <md_defines.h>
+  #include <project.h>
 
   // ******************************************
     // --- debugging
@@ -26,8 +27,8 @@
               // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
           // TFTs
             #define DISP_TFT        OFF
-              // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT2046_AZ
-              // MC_UO_TXPT2046_AZ_SPI, MC_UO_TFT1602_I2C_XA
+              // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT2046_AZ_UNO, MC_UO_TXPT2046_AZ_SPI
+              // MC_UO_TFT1602_I2C_XA,  MC_UO_Keypad_ANA0_RO
 
       #define USE_TRAFFIC_LED_OUT   OFF
       #define USE_RGBLED_PWM        OFF // 1
@@ -79,7 +80,7 @@
             #elif ((DISP_I2C21 > OFF) || (DISP_I2C22 > OFF))
                 #define USE_DISP_I2C2   1
             #else
-                #define USE_DISP_I2C1   OFF
+                #define USE_DISP_I2C2   OFF
               #endif
         // SPI
           #define USE_DISP_TFT      DISP_TFT
