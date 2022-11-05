@@ -5,19 +5,6 @@
   #include <md_defines.h>
 
   // ******************************************
-  // --- project configuration
-    // PROJECT TOUCHTEST_1
-      /* AZ-touch kit 2,4"
-       * ESP32_Node
-       * BME280 (I2C)
-       * OLED 091 (I2C)
-       * I2C  SDA=32 SCL=26
-       */
-    // --- board
-      #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-      #if (BOARD == MC_ESP32_Node)
-          //#define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
-        #endif
     // --- debugging
       #define DEBUG_MODE      CFG_DEBUG_STARTUP
         //#define DEBUG_MODE      CFG_DEBUG_NONE

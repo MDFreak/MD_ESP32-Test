@@ -5,19 +5,6 @@
   #include <md_defines.h>
 
   // ******************************************
-  // --- project configuration
-    // --- projects
-      #define PROJECT TOUCHTEST_1
-      #define PROJECT MEASFREQ_1
-      #define PROJECT LIGHTSHOW_1
-      #define PROJECT GEN_ESP32_NODE
-      #define PROJECT GEN_ESP32_D1_MINI
-    // --- board
-      #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-      #if (BOARD == MC_ESP32_Node)
-          #define PROJ_TITLE "ESP32-TEST using ESP32-Device-KitC 38 pins"
-        #endif
-
     // --- debugging
       #define DEBUG_MODE      CFG_DEBUG_STARTUP
         //#define DEBUG_MODE      CFG_DEBUG_NONE
