@@ -23,7 +23,7 @@
           #include <prj_lightshow_1.h>
         #endif
       #if (PROJECT == GEN_ESP32_NODE)
-          #include <prj_gen_esp32_node.h>
+          #include <prj_conf_gen_esp32_node.h>
         #endif
       #if (PROJECT == GEN_ESP32_D1_MINI)
           #include <prj_gen_esp32_d1_mini.h>
@@ -116,20 +116,32 @@
         #include "md_buzzer.h"
       #endif // USE_BUZZER_PWM
 
-    #if (USE_OLED_I2C > OFF)
-        #ifdef OLED1
-            #if !(OLED1_DRV ^ OLED_DRV_1106)
-                #include "md_oled_SH1106.h"
-            #else
-                #include <md_oled.h>
-              #endif
+    #if (DISP_I2C11 > OFF)
+        #if !(OLED1_DRV ^ OLED_DRV_1106)
+            #include "md_oled_SH1106.h"
+        #else
+            #include <md_oled.h>
           #endif
-        #ifdef OLED2
-            #if !(OLED2_DRV ^ OLED_DRV_1106)
-                #include "md_oled_SH1106.h"
-              #else
-                #include "md_oled.h"
-              #endif
+      #endif
+    #if (DISP_I2C12 > OFF)
+        #if !(OLED2_DRV ^ OLED_DRV_1106)
+            #include "md_oled_SH1106.h"
+        #else
+            #include <md_oled.h>
+          #endif
+      #endif
+    #if (DISP_I2C21 > OFF)
+        #if !(OLED3_DRV ^ OLED_DRV_1106)
+            #include "md_oled_SH1106.h"
+        #else
+            #include <md_oled.h>
+          #endif
+      #endif
+    #if (DISP_I2C22 > OFF)
+        #if !(OLED4_DRV ^ OLED_DRV_1106)
+            #include "md_oled_SH1106.h"
+        #else
+            #include <md_oled.h>
           #endif
       #endif // USE_OLED_I2C
 

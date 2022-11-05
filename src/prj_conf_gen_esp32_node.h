@@ -242,28 +242,25 @@
     // --- I2C interface
       // --- address configuration
         #if (DISP_I2C11 > OFF)
-            #define I2C_ADDR_OLED1     I2C_OLED_3C
-            #define I2C_OLED1          I2C1
-                #define I2C_SCL_OLED1   PIN_I2C1_SCL
-                #define I2C_SDA_OLED1   PIN_I2C1_SDA
-            #else
-                #define I2C_OLED1     I2C
-                #define I2C_SCL_OLED1 PIN_I2C2_SCL
-                #define I2C_SDA_OLED1 PIN_I2C2_SDA
-              #endif
-            #if (( USE_I2C > 1 ) && ( USE_OLED_I2C > 1 ))
-                #define I2C_ADDR_OLED2      I2C_OLED
-                #define I2C_OLED2_USE_I2C2
-                  #if defined( I2C_OLED2_USE_I2C1 )
-                    #define I2C_OLED2       I2C1
-                    #define I2C_SCL_OLED2   PIN_I2C1_SCL
-                    #define I2C_SDA_OLED2   PIN_I2C1_SDA
-                  #else
-                      #define I2C_OLED2     I2C2
-                      #define I2C_SCL_OLED2 PIN_I2C2_SCL
-                      #define I2C_SDA_OLED2 PIN_I2C2_SDA
-                    #endif
-              #endif
+            #define I2C_ADDR_OLED1  I2C_OLED_3C
+            #define I2C_SCL_OLED1   PIN_I2C1_SCL
+            #define I2C_SDA_OLED1   PIN_I2C1_SDA
+            //#define I2C_OLED1          I2C1
+          #endif
+        #if (DISP_I2C12 > OFF)
+            #define I2C_ADDR_OLED2  I2C_OLED_3C
+            #define I2C_SCL_OLED2   PIN_I2C1_SCL
+            #define I2C_SDA_OLED2   PIN_I2C1_SDA
+          #endif
+        #if (DISP_I2C21 > OFF)
+            #define I2C_ADDR_OLED3  I2C_OLED_3C
+            #define I2C_SCL_OLED3   PIN_I2C2_SCL
+            #define I2C_SDA_OLED3   PIN_I2C2_SDA
+          #endif
+        #if (DISP_I2C22 > OFF)
+            #define I2C_ADDR_OLED4  I2C_OLED_3C
+            #define I2C_SCL_OLED4   PIN_I2C2_SCL
+            #define I2C_SDA_OLED4   PIN_I2C2_SDA
           #endif
 
         #if (USE_FRAM_I2C > OFF)
@@ -332,32 +329,32 @@
         #if (USE_DISP > 0)
             #define USE_STATUS
             #if (USE_DISP_I2C1 > OFF)
-                #if ( OLED1  > OFF )
+                #if ( DISP_I2C11 > OFF )
                     #define USE_STATUS1
                           // select OLED - device & GEO   GEO_RAWMODE?
                           // MC_UO_OLED_066_AZ   GEO_64_48    OLED_DRV_1306
                           // MC_UO_OLED_091_AZ   GEO_128_32   OLED_DRV_1306
                           // MC_UO_OLED_096_AZ   GEO_128_64   OLED_DRV_1306
                           // MC_UO_OLED_130_AZ   GEO_128_64   OLED_DRV_1106
-                    #if !(OLED1 ^ MC_UO_OLED_066_AZ)
+                    #if !(DISP_I2C11 ^ MC_UO_OLED_066_AZ)
                         #define OLED1_MAXCOLS  OLED_066_MAXCOLS
                         #define OLED1_MAXROWS  OLED_066_MAXROWS
                         #define OLED1_GEO      GEO_64_48
                         #define OLED1_DRV      OLED_DRV_1306
                       #endif
-                    #if !(OLED1 ^ MC_UO_OLED_091_AZ)
+                    #if !(DISP_I2C11 ^ MC_UO_OLED_091_AZ)
                         #define OLED1_MAXCOLS  OLED_091_MAXCOLS
                         #define OLED1_MAXROWS  OLED_091_MAXROWS
                         #define OLED1_GEO      GEO_128_32
                         #define OLED1_DRV      OLED_DRV_1306
                       #endif
-                    #if !(OLED1 ^ MC_UO_OLED_096_AZ)
+                    #if !(DISP_I2C11 ^ MC_UO_OLED_096_AZ)
                         #define OLED1_MAXCOLS  OLED_096_MAXCOLS
                         #define OLED1_MAXROWS  OLED_096_MAXROWS
                         #define OLED1_GEO      GEO_128_64
                         #define OLED1_DRV      OLED_DRV_1306
                       #endif
-                    #if !(OLED1 ^ MC_UO_OLED_130_AZ)
+                    #if !(DISP_I2C11 ^ MC_UO_OLED_130_AZ)
                         #define OLED1_MAXCOLS  OLED_130_MAXCOLS
                         #define OLED1_MAXROWS  OLED_130_MAXROWS
                         #define OLED1_GEO      GEO_128_64
