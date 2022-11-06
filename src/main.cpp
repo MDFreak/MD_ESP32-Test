@@ -1308,6 +1308,8 @@
                         ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
                       }
                   #endif
+                // update changes from webserver to
+                RGBLED[0]->col24();
               #endif
 
             #if (USE_FAN_PWM > OFF)
@@ -2550,116 +2552,117 @@
                 inMsgs->rem();
                 SOUT(" inMsgs.count "); SOUTLN(inMsgs->count());
               }
-          }/*
-        void    handleClient(AsyncWebSocketClient *client, void *arg, uint8_t *data, size_t len)
-          {
-            AwsFrameInfo *info = (AwsFrameInfo*)arg;
-            char* txt = (char*) data;
-            if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
-              { //  SOUT(" handleWebSocketMessage info->index "); SOUT(info->index); SOUT(" info->final "); SOUT(info->final); SOUT(" info->len "); SOUTLN(info->len);
-                data[len] = 0;
-                uint8_t type  = txt[0];  // extract obj type
-                uint8_t index = txt[1] - WS_IDX_OFFSET;  // extract index
-                int16_t value = atoi(&txt[2]);
-                          //SOUT(" Payload type "); SOUT(type);
-                          //SOUT(" index "); SOUT(index); SOUT(" len "); SOUT(len);
-                          //SOUT(" data '"); SOUT(&txt[2]); SOUT(" = "); SOUT(value);
-                          //SOUT(" ledList cnt "); SOUTLN(psliderList->count());
-
-                if (type == EL_TSLIDER)
-                  {
-                    md_slider* psl = (md_slider*) psliderList->pIndex(index);
-                          //SOUT(" psl "); SOUTHEX((uint32_t) psl);
-                    if (psl != NULL)
-                      {
-                        psl->destVal = value;
-                        SOUT(" slider "); SOUT((index+1)); SOUT("="); SOUTLN(value);
-                      }
-                  }
-
-                else if (type == EL_TSWITCH)
-                  {
-                    md_switch* psw = (md_switch*) pswitchList->pIndex(index);
-                    while (psw != NULL)
-                      {
-                        psw->destVal = value; SOUT(" switch "); SOUTLN(value);
-                      }
-                  }
-
-                else if (type == EL_TANALOG)
-                  {
-                    md_analog* pana = (md_analog*) panalogList->pIndex(index);
-                    while (pana != NULL)
-                      {
-                        pana->destVal = value; SOUT(" analog "); SOUTLN(value);
-                      }
-                  }
-
-                else { }
-              }
           }
-          */
           /*
-        void handlingIncomingData()
-          {
-
-
-            AwsFrameInfo *info = (AwsFrameInfo*)arg;
-
-            if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
+            void    handleClient(AsyncWebSocketClient *client, void *arg, uint8_t *data, size_t len)
               {
-                String hexColor = "";
-                for (int i=0; i < len; i++)
-                  hexColor += ((char) data[i]);
+                AwsFrameInfo *info = (AwsFrameInfo*)arg;
+                char* txt = (char*) data;
+                if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
+                  { //  SOUT(" handleWebSocketMessage info->index "); SOUT(info->index); SOUT(" info->final "); SOUT(info->final); SOUT(" info->len "); SOUTLN(info->len);
+                    data[len] = 0;
+                    uint8_t type  = txt[0];  // extract obj type
+                    uint8_t index = txt[1] - WS_IDX_OFFSET;  // extract index
+                    int16_t value = atoi(&txt[2]);
+                              //SOUT(" Payload type "); SOUT(type);
+                              //SOUT(" index "); SOUT(index); SOUT(" len "); SOUT(len);
+                              //SOUT(" data '"); SOUT(&txt[2]); SOUT(" = "); SOUT(value);
+                              //SOUT(" ledList cnt "); SOUTLN(psliderList->count());
 
-                Serial.println("Hex Color: " + hexColor);
+                    if (type == EL_TSLIDER)
+                      {
+                        md_slider* psl = (md_slider*) psliderList->pIndex(index);
+                              //SOUT(" psl "); SOUTHEX((uint32_t) psl);
+                        if (psl != NULL)
+                          {
+                            psl->destVal = value;
+                            SOUT(" slider "); SOUT((index+1)); SOUT("="); SOUTLN(value);
+                          }
+                      }
 
-                long n = strtol(&hexColor[0], NULL, 16);
-                Serial.println(n);
-                strip.fill(n);
-                strip.show();
+                    else if (type == EL_TSWITCH)
+                      {
+                        md_switch* psw = (md_switch*) pswitchList->pIndex(index);
+                        while (psw != NULL)
+                          {
+                            psw->destVal = value; SOUT(" switch "); SOUTLN(value);
+                          }
+                      }
+
+                    else if (type == EL_TANALOG)
+                      {
+                        md_analog* pana = (md_analog*) panalogList->pIndex(index);
+                        while (pana != NULL)
+                          {
+                            pana->destVal = value; SOUT(" analog "); SOUTLN(value);
+                          }
+                      }
+
+                    else { }
+                  }
               }
-          }
-          */
-        // Callback for incoming event
-        /*
-        void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type,
-                       void * arg, uint8_t *data, size_t len)
-          {
-            switch(type)
+            */
+          /*
+            void handlingIncomingData()
               {
-                case WS_EVT_CONNECT:
-                  Serial.printf("Client connected: \n\tClient id:%u\n\tClient IP:%s\n",
-                       client->id(), client->remoteIP().toString().c_str());
-                  break;
-                case WS_EVT_DISCONNECT:
-                  Serial.printf("Client disconnected:\n\tClient id:%u\n", client->id());
-                  break;
-                case WS_EVT_DATA:
-                  handlingIncomingData(client, arg, data, len);
-                  break;
-                case WS_EVT_PONG:
-                  Serial.printf("Pong:\n\tClient id:%u\n", client->id());
-                  break;
-                case WS_EVT_ERROR:
-                  Serial.printf("Error:\n\tClient id:%u\n", client->id());
-                  break;
-              }
-          }
-        void configWebsite()
-          {
-            webMD.createElement(EL_TSLIDER, "LED red", "%");
-            webMD.createElement(EL_TSLIDER, "LED green", "%");
-            webMD.createElement(EL_TSLIDER, "LED blue", "%");
 
-            webMD.createElement(EL_TANALOG, "DS18B20 Temp", "°C");
-            webMD.createElement(EL_TANALOG, "Type-K Temp", "°C");
-            webMD.createElement(EL_TANALOG, "BME_Temp", "°C");
-            webMD.createElement(EL_TANALOG, "BME_Humidity", "%");
-            webMD.createElement(EL_TANALOG, "BME_Pressure", "mb");
-            webMD.createElement(EL_TANALOG, "Gaswert", "");
-          }
-          */
+
+                AwsFrameInfo *info = (AwsFrameInfo*)arg;
+
+                if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
+                  {
+                    String hexColor = "";
+                    for (int i=0; i < len; i++)
+                      hexColor += ((char) data[i]);
+
+                    Serial.println("Hex Color: " + hexColor);
+
+                    long n = strtol(&hexColor[0], NULL, 16);
+                    Serial.println(n);
+                    strip.fill(n);
+                    strip.show();
+                  }
+              }
+            */
+            // Callback for incoming event
+          /*
+            void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type,
+                           void * arg, uint8_t *data, size_t len)
+              {
+                switch(type)
+                  {
+                    case WS_EVT_CONNECT:
+                      Serial.printf("Client connected: \n\tClient id:%u\n\tClient IP:%s\n",
+                           client->id(), client->remoteIP().toString().c_str());
+                      break;
+                    case WS_EVT_DISCONNECT:
+                      Serial.printf("Client disconnected:\n\tClient id:%u\n", client->id());
+                      break;
+                    case WS_EVT_DATA:
+                      handlingIncomingData(client, arg, data, len);
+                      break;
+                    case WS_EVT_PONG:
+                      Serial.printf("Pong:\n\tClient id:%u\n", client->id());
+                      break;
+                    case WS_EVT_ERROR:
+                      Serial.printf("Error:\n\tClient id:%u\n", client->id());
+                      break;
+                  }
+              }
+            void configWebsite()
+              {
+                webMD.createElement(EL_TSLIDER, "LED red", "%");
+                webMD.createElement(EL_TSLIDER, "LED green", "%");
+                webMD.createElement(EL_TSLIDER, "LED blue", "%");
+
+                webMD.createElement(EL_TANALOG, "DS18B20 Temp", "°C");
+                webMD.createElement(EL_TANALOG, "Type-K Temp", "°C");
+                webMD.createElement(EL_TANALOG, "BME_Temp", "°C");
+                webMD.createElement(EL_TANALOG, "BME_Humidity", "%");
+                webMD.createElement(EL_TANALOG, "BME_Pressure", "mb");
+                webMD.createElement(EL_TANALOG, "Gaswert", "");
+              }
+            */
 
         #endif // USE_WEBSERVER
 
