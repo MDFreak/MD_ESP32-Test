@@ -1699,7 +1699,7 @@
       void clearDisp()
         {
           #if (USE_DISP > 0)
-              #if defined(OLED1)
+              #if (DISP_I2C11 > OFF)
                 oled1.clear();
                 #endif
               #if defined(OLED2)
@@ -1801,7 +1801,7 @@
       void dispText(String msg, uint8_t col, uint8_t row, uint8_t len)
         {
           #if (USE_DISP > 0)
-              #if defined(OLED1)
+              #if (DISP_I2C11 > OFF)
                 oled1.wrText(msg, col, row, len);
                           //SOUT((uint32_t) millis); SOUT(" dispText oled1 '"); SOUT(msg); SOUTLN("'");
                 #endif
@@ -1825,7 +1825,7 @@
           dispText((String) msg, col, row, len);
             /*
                 #if (USE_DISP > 0)
-                    #if defined(OLED1)
+                    #if (DISP_I2C11 > OFF)
                         oled1.wrText(msg, col, row, len);
                             #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                                 SOUT("  md_error="); SOUTLN(md_error);
@@ -1870,11 +1870,11 @@
                     #endif
                 #endif
 
-              #if defined (OLED1)
+              #if (DISP_I2C11 > OFF)
                   oled1.begin((uint8_t) OLED1_MAXCOLS, (uint8_t) OLED1_MAXROWS);
                   SOUT(millis()); SOUTLN(" oled1 gestartet");
                 #endif
-              #if defined (OLED2)
+              #if defined(OLED2)
                   oled2.begin((uint8_t) DISP2_MAXCOLS, (uint8_t) DISP2_MAXROWS);
                 #endif
             #endif

@@ -9,7 +9,7 @@
     void clearDisp()
       {
         #if (USE_DISP > 0)
-            #if defined(OLED1)
+            #if (DISP_I2C11 > OFF)
               oled1.clear();
               #endif
             #if defined(OLED2)
@@ -79,7 +79,7 @@
             #if (USE_TOUCHSCREEN > OFF)
               touch.wrTouch(msg, col, row);
               #endif
-            #if defined(OLED1)
+            #if (DISP_I2C11 > OFF)
               oled1.wrText(msg, col, row, len);
                     #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                       SOUT("  md_error="); SOUTLN(md_error);
@@ -102,7 +102,7 @@
             #if (USE_TOUCHSCREEN > OFF)
               touch.wrTouch(msg, col, row);
               #endif
-            #if defined(OLED1)
+            #if (DISP_I2C11 > OFF)
               oled1.wrText(msg, col, row, len);
                         //SOUT((uint32_t) millis); SOUT(" dispText oled1 '"); SOUT(msg); SOUTLN("'");
               #endif
@@ -139,7 +139,7 @@
                     #endif
               #endif
 
-            #if defined (OLED1)
+            #if (DISP_I2C11 > OFF)
                 oled1.begin((uint8_t) OLED1_MAXCOLS, (uint8_t) OLED1_MAXROWS);
               #endif
 
