@@ -138,7 +138,6 @@ function initWebSocket()
 
 function onOpen(event)
   {
-
     console.log('Connection opened');
   }
 
@@ -213,8 +212,6 @@ function setDefaultValue()
 function getCurrentValues()
   {
     var s;
-
-
     /*
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function()
