@@ -245,6 +245,7 @@
     #if (USE_RGBLED_PWM > OFF)
         outRGBVal_t outValRGB[USE_RGBLED_PWM];
         md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1), new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
+        uint8_t      LEDout    = 0;
         #if (TEST_RGBLED_PWM > OFF)
             //uint8_t  colRGBLED = 0;
             //uint16_t incRGBLED = 10;
@@ -1309,10 +1310,16 @@
                       }
                   #endif
                 // update changes from webserver
-                map()
-                ledcWrite(PWM_RGB_GREEN, Green(RGBLED[1]->col24()));
-                ledcWrite(PWM_RGB_RED,   Red(RGBLED[1]->col24()));
-                ledcWrite(PWM_RGB_BLUE,  Blue(RGBLED[1]->col24()));
+                //long map(long x, long in_min, long in_max, long out_min, long out_max) {
+                LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
+                                        0, Green(RGBLED[1]->col24()));
+                ledcWrite(PWM_RGB_GREEN, LEDout);
+                LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
+                                        0, Red(RGBLED[1]->col24()));
+                ledcWrite(PWM_RGB_RED, LEDout);
+                LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
+                                        0, Blue(RGBLED[1]->col24()));
+                ledcWrite(PWM_RGB_BLUE, LEDout);
               #endif
 
             #if (USE_FAN_PWM > OFF)
