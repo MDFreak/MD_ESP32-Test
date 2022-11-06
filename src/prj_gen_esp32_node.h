@@ -30,7 +30,7 @@
               // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT2046_AZ_UNO, MC_UO_TXPT2046_AZ_SPI
               // MC_UO_TFT1602_I2C_XA,  MC_UO_Keypad_ANA0_RO
       #define USE_TRAFFIC_LED_OUT   OFF
-      #define USE_RGBLED_PWM        OFF // 1
+      #define USE_RGBLED_PWM        1
       #define USE_AOUT              OFF
         // buzzer
           #define BUZZER1           OFF

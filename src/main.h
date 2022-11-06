@@ -105,6 +105,7 @@
             Duty range: `0 to (2 ** 13) - 1 = 8191` where 0 is 0% and 8191 is 100%.
        **/
     #if (USE_RGBLED_PWM > OFF)
+        #include <md_leds.h>
         typedef struct
           {
             uint16_t red;
@@ -173,7 +174,6 @@
     #if ((USE_FRAM_I2C1 > OFF) || (USE_FRAM_I2C1 > OFF))
         #include <md_FRAM.h>
       #endif
-
     #if (USE_FLASH_MEM > OFF)
         #include <md_spiffs.h>
         //#include <SPIFFS.h>

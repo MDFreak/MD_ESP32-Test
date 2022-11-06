@@ -244,8 +244,8 @@
   // ------ user output ---------------
     #if (USE_RGBLED_PWM > OFF)
         outRGBVal_t outValRGB[USE_RGBLED_PWM];
+        md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1), new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
         #if (TEST_RGBLED_PWM > OFF)
-            md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1), new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
             //uint8_t  colRGBLED = 0;
             //uint16_t incRGBLED = 10;
             //uint32_t RGBLED_gr = 64;
@@ -809,12 +809,11 @@
             #endif
 
       // --- memories
-        // FRAM
-
+        // FLASH memory
           #if (USE_FLASH_MEM > OFF)
               testFlash();
             #endif
-
+        // FRAM
           #if (USE_FRAM_I2C1 > OFF)
             // Read the first byte
             SOUT("FRAM addr "); SOUTHEX(I2C_ADDR_FRAM1);
@@ -831,7 +830,6 @@
               }
             #endif
 
-        // FLASH memory
       // --- services using interrupt
         // start counter
           #if (USE_CNT_INP > OFF)
@@ -2219,9 +2217,8 @@
             return;
           }
 
-        int8_t n = 0;
-        //char   c = '_';
         SOUT("File Content: ");
+        int8_t n = 0;
         while(n >= 0)
           {
             n = file.read();
