@@ -2211,7 +2211,7 @@
         uint32_t bFree = SPIFFS.totalBytes();
         SOUT("found "); SOUT(bFree); SOUTLN(" bytes free");
         //*
-        SOUTLN("dir:");
+        SOUTLN("dir: test_example.txt");
         File file = SPIFFS.open("/test_example.txt");
         if(!file)
           {
@@ -2219,11 +2219,15 @@
             return;
           }
 
-        SOUTLN("File Content:");
-        while(file.available())
+        int8_t n = 0;
+        //char   c = '_';
+        SOUT("File Content: ");
+        while(n >= 0)
           {
-            Serial.write(file.read());
+            n = file.read();
+            if (n > 0) SOUT((char) n);
           }
+        SOUTLN();
         file.close();
         //*/
       }
