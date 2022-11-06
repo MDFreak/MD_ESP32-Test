@@ -1308,8 +1308,11 @@
                         ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
                       }
                   #endif
-                // update changes from webserver to
-                RGBLED[0]->col24();
+                // update changes from webserver
+                map()
+                ledcWrite(PWM_RGB_GREEN, Green(RGBLED[1]->col24()));
+                ledcWrite(PWM_RGB_RED,   Red(RGBLED[1]->col24()));
+                ledcWrite(PWM_RGB_BLUE,  Blue(RGBLED[1]->col24()));
               #endif
 
             #if (USE_FAN_PWM > OFF)
