@@ -200,13 +200,13 @@ function setDefaultValue()
     document.getElementById("valLEDV_4").innerHTML = 0;
     document.getElementById("LEDV_4").value = '?';
     document.getElementById("valANAL_0").innerHTML = '?';
-    document.getElementById("lANAL_0").innerHTML = 'temp = ';
+    document.getElementById("lANAL_0").innerHTML = 'Temperatur = ';
     document.getElementById("valANAL_1").innerHTML = '?';
-    document.getElementById("lANAL_1").innerHTML = 'humid = ';
+    document.getElementById("lANAL_1").innerHTML = 'rel. Feuchte = ';
     document.getElementById("valANAL_2").innerHTML = '?';
-    document.getElementById("lANAL_2").innerHTML = 'press = ';
+    document.getElementById("lANAL_2").innerHTML = 'Luftdruck = ';
     document.getElementById("valANAL_3").innerHTML = '?';
-    document.getElementById("lANAL_3").innerHTML = 'light = ';
+    document.getElementById("lANAL_3").innerHTML = 'Helligkeit = ';
   }
 
 function getCurrentValues()

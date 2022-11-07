@@ -25,7 +25,7 @@
       <div id="content">
         <div id="sidebar">
           <input type="checkbox" id="nav-toggle-cb" checked="checked">
-          <nav id="menu1">
+          <nav id="menu">
             <!-- RGB LED controllers -->
             <div class="input-group" id="quality-group">
               <div class="buttons">
@@ -73,7 +73,8 @@
             </div>
           </nav>
         </div>
-          <nav id="menu">
+        <div id="sidebar">
+          <nav id="menu1">
             <div class="input-group" id="switch-group">
               <div class="switch">
                 <input type="checkbox" id="SLSW_1" class="default-action"
@@ -81,6 +82,8 @@
                 <label class="slider" for="SLSW_1"></label>
               </div>
               <label for="SLSW_1">| SW1</label>
+            </div>
+            <div class="input-group" id="switch-group">
               <div class="switch">
                 <input type="checkbox" id="SLSW_2" class="default-action"
                        oninput="updateVal(this)">
@@ -95,6 +98,8 @@
                 <label class="slider" for="SLSW_3"></label>
               </div>
               <label for="SLSW_3">| SW3</label>
+            </div>
+            <div class="input-group" id="switch-group">
               <div class="switch">
                 <input type="checkbox" id="SLSW_4" class="default-action"
                        oninput="updateVal(this)">
