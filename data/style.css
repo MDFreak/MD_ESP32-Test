@@ -22,37 +22,11 @@ section.main
     flex-direction:column
   }
 
-#menu1
+#menu
   {
     display:none;
     flex-wrap:nowrap;
     min-width:75px;
-    background:#363636;
-    color: #61d144;
-    padding:8px;
-    border-radius:4px;
-    margin-top:-10px;
-    margin-right:10px
-  }
-
-#menu2
-  {
-    display:none;
-    flex-wrap:nowrap;
-    min-width:60px;
-    background:#363636;
-    color: #61d144;
-    padding:8px;
-    border-radius:4px;
-    margin-top:-10px;
-    margin-right:10px
-  }
-
-#menu3
-  {
-    display:none;
-    flex-wrap:nowrap;
-    min-width:70px;
     background:#363636;
     color: #61d144;
     padding:8px;
