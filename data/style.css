@@ -24,12 +24,38 @@ section.main
 
 #menu
   {
-    display:none;
+    /*display:none;*/
     flex-wrap:nowrap;
     min-width:75px;
     background:#363636;
     color: #61d144;
     padding:8px;
+    border-radius:4px;
+    margin-top:-10px;
+    margin-right:10px
+  }
+
+#menu1
+  {
+    /*display:none;*/
+    flex-wrap:nowrap;
+    min-width:75px;
+    background:#363636;
+    color: #61d144;
+    padding:18px;
+    border-radius:4px;
+    margin-top:-10px;
+    margin-right:10px
+  }
+
+#menu2
+  {
+    /*display:none;*/
+    flex-wrap:nowrap;
+    min-width:75px;
+    background:#363636;
+    color: #61d144;
+    padding:22px;
     border-radius:4px;
     margin-top:-10px;
     margin-right:10px
