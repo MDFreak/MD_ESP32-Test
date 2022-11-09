@@ -188,6 +188,7 @@ function onMessage(event)
 function setDefaultValue()
   {
     document.getElementById("LEDC_1").value = 0;
+    document.getElementById("lLEDV_1").innerHTML = '_RGB LED';
     document.getElementById("valLEDV_1").innerHTML = 0;
     document.getElementById("LEDV_1").value = '?';
     document.getElementById("LEDC_2").value = 0;
@@ -203,6 +204,7 @@ function setDefaultValue()
     document.getElementById("lANAL_0").innerHTML = 'Temperatur = ';
     document.getElementById("valANAL_1").innerHTML = '?';
     document.getElementById("lANAL_1").innerHTML = 'rel. Feuchte = ';
+    //document.getElementById("lANAL_1").innerHTML = 'rel. Feuchte = ';
     document.getElementById("valANAL_2").innerHTML = '?';
     document.getElementById("lANAL_2").innerHTML = 'Luftdruck = ';
     document.getElementById("valANAL_3").innerHTML = '?';

@@ -32,7 +32,8 @@
                   <input type="color" id="LEDC_1" class="default-action"
                          onchange="updateVal(this)">
               </div>
-              <label for="LEDV_1">| RGB LED</label>
+              <!-- <label for="LEDV_1">| RGB LED</label> -->
+              <span id="lLEDV_1"> ANAL_1 </span>
               <input type="range" id="LEDV_1" class="LEDslider"
                      oninput="updateVal(this)"
                      min="0" max="255" value="10" step="1">
@@ -148,8 +149,8 @@
             <div class="input-group" id="analog-group">
               <div class="analogs">
                 <!-- <label for="ANAL_1"> -->
-                <span id="ANAL_1"> ANAL_1 </span>
-                <span id="lANAL_1"> ? </span>
+                <span id="lANAL_1"> ANAL_1 </span>
+                <!-- <span id="lANAL_1"> ? </span> -->
               </div>
               <div class="valANAL" id="valANAL">
                 <span id="valANAL_1"></span> %
