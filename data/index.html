@@ -25,47 +25,54 @@
       <div id="content">
         <div id="sidebar">
           <input type="checkbox" id="nav-toggle-cb" checked="checked">
-          <nav id="menu">
+          <nav id="menu0">
             <!-- RGB LED controllers -->
-            <div class="input-group" id="quality-group">
+            <div class="input-group" id="leds-group">
               <div class="buttons">
                   <input type="color" id="LEDC_1" class="default-action"
                          onchange="updateVal(this)">
               </div>
-              <!-- <label for="LEDV_1">| RGB LED</label> -->
-              <span id="lLEDV_1"> ANAL_1 </span>
+              <div class="buttons">
+                  <input type="color" id="LEDC_2" class="default-action"
+                         onchange="updateVal(this)">
+              </div>
+              <div class="buttons">
+                  <input type="color" id="LEDC_3" class="default-action"
+                         onchange="updateVal(this)">
+              </div>
+              <div class="buttons">
+                  <input type="color" id="LEDC_4" class="default-action"
+                         onchange="updateVal(this)">
+              </div>
+            </div>
+          </nav>
+        </div>
+        <div id="sidebar">
+          <nav id="menu">
+            <div class="input-group" id="label-group">
+              <span id="lLEDV_1">_LEDV_1 </span>
+            </div>
+            <div class="input-group" id="label-group">
               <input type="range" id="LEDV_1" class="LEDslider"
                      oninput="updateVal(this)"
                      min="0" max="255" value="10" step="1">
               <div class="valLEDV"><span id="valLEDV_1"></span></div>
             </div>
-            <div class="input-group" id="brightness-group">
-              <div class="buttons">
-                  <input type="color" id="LEDC_2" class="default-action"
-                         onchange="updateVal(this)">
-              </div>
+            <div class="input-group" id="leds-group">
               <label for="LEDV_2">| 2812 Line</label>
               <input type="range" id="LEDV_2" class="BrightSlider"
                      oninput="updateVal(this)"
                      min="0" max="255" value="15" step="1">
               <div class="valLEDV"><span id="valLEDV_2"></span></div>
             </div>
-            <div class="input-group" id="brightness-group">
-              <div class="buttons">
-                  <input type="color" id="LEDC_3" class="default-action"
-                         onchange="updateVal(this)">
-              </div>
+            <div class="input-group" id="leds-group">
               <label for="LEDV_3">| 2812 Matrix</label>
               <input type="range" id="LEDV_3" class="BrightSlider"
                      oninput="updateVal(this)"
                      min="0" max="255" value="15" step="1">
               <div class="valLEDV"><span id="valLEDV_3"></span></div>
             </div>
-            <div class="input-group" id="brightness-group">
-              <div class="buttons">
-                  <input type="color" id="LEDC_4" class="default-action"
-                         onchange="updateVal(this)">
-              </div>
+            <div class="input-group" id="leds-group">
               <label for="LEDV_4">| 2812 Smilies</label>
               <input type="range" id="LEDV_4" class="BrightSlider"
                      oninput="updateVal(this)"

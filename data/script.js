@@ -188,7 +188,7 @@ function onMessage(event)
 function setDefaultValue()
   {
     document.getElementById("LEDC_1").value = 0;
-    document.getElementById("lLEDV_1").innerHTML = '_RGB LED';
+    document.getElementById("lLEDV_1").innerHTML = '_RGBLED';
     document.getElementById("valLEDV_1").innerHTML = 0;
     document.getElementById("LEDV_1").value = '?';
     document.getElementById("LEDC_2").value = 0;

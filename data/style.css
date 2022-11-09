@@ -22,11 +22,24 @@ section.main
     flex-direction:column
   }
 
+#menu0
+  {
+    display:none;
+    flex-wrap:nowrap;
+    min-width:25px;
+    background:#363636;
+    color: #61d144;
+    padding:8px;
+    border-radius:4px;
+    margin-top:-10px;
+    margin-right:10px
+  }
+
 #menu
   {
     /*display:none;*/
     flex-wrap:nowrap;
-    min-width:75px;
+    min-width:45px;
     background:#363636;
     color: #61d144;
     padding:8px;
