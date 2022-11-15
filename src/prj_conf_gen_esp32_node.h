@@ -46,7 +46,7 @@
 
           #if (USE_DIG_INP > OFF)
               #if (USE_GEN_SW_INP > OFF)
-                  #define PIN_PUINP_REED_1 15
+                  #define PIN_INP_REED_1 15
                 #endif
             #endif
 
@@ -634,10 +634,13 @@
               #endif
             #if (USE_CTRL_SW_INP > OFF)
                 #define INP_SW_CTRL  0
+                #define ACT_SW_CTRL  HIGH // LOW, HIGH
+                #define MOD_SW_CTRL  INPUT_PULLUP // INPUT, INPUT_PULLDOWN
               #endif
             #if (USE_GEN_SW_INP > OFF)
                 #define INP_REED_1   0
-                #define INV_REED_1   TRUE
+                #define POL_REED_1   LOW // LOW, HIGH
+                #define MOD_REED_1   INPUT_PULLUP // INPUT, INPUT_PULLDOWN
               #endif
           #endif
 

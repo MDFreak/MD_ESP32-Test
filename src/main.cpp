@@ -83,8 +83,9 @@
       #endif
 
     #if (USE_DIG_INP > OFF)
-        uint8_t  inpValDig[USE_DIG_INP];
-        #if
+        uint8_t  valInpDig[USE_DIG_INP];
+        uint8_t  pinInpDig[USE_DIG_INP];
+        uint8_t  polmodInpDig[USE_DIG_INP];
       #endif
 
     #if (USE_CNT_INP > OFF)
@@ -643,6 +644,17 @@
                   pinMode(PIN_WS2812_PWR_IN_SW, INPUT_PULLUP);
                   SOUT(PIN_WS2812_PWR_IN_SW); SOUT(" ");
                 #endif
+              #if (USE_CTRL_SW_INP > OFF)
+                  actInpDig[INP_SW_CTRL] = ACT_SW_CTRL;
+                  modInpDig[INP_SW_CTRL] = MOD_REED_1;
+                #endif
+              #if (USE_GEN_SW_INP > OFF)
+                  pinInpDig[INP_REED_1] = PIN_INP_REED_1;
+                  polmodInpDig[INP_REED_1] = POL_REED_1 >> 4 + ;
+                  modInpDig[INP_REED_1] = MOD_REED_1;
+
+                #endif
+
               for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
                 {
                   pinMode(PIN_DIG_INP[i], INPUT_PULLUP);
@@ -1575,7 +1587,7 @@
 
               case 7: // test values
                 #if (USE_DIG_INP > OFF)
-                    //SOUT("SW1 "); SOUT(inpValDig[INP_SW_CTRL]); SOUT(" ");
+                    //SOUT("SW1 "); SOUT(valInpDig[INP_SW_CTRL]); SOUT(" ");
                   #endif
                 #if (USE_CTRL_POTI_ADC > OFF)
                     //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
