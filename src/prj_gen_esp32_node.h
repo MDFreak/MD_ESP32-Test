@@ -35,7 +35,7 @@
         // buzzer
           #define BUZZER1           OFF
           // AOUT_PAS_BUZZ_3V5V
-      #define USE_FAN_PWM           OFF // 2
+      #define USE_FAN_PWM           1   // 2
       #define USE_OUT_FREQ_PWM      OFF // 1
       #define USE_WS2812_MATRIX_OUT OFF // [0, 1..4]
       #define USE_WS2812_LINE_OUT   OFF // [0, 1..4]

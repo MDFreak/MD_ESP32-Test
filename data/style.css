@@ -22,59 +22,18 @@ section.main
     flex-direction:column
   }
 
-#menu0
-  {
-    display:none;
-    flex-wrap:nowrap;
-    min-width:25px;
-    background:#363636;
-    color: #61d144;
-    padding:8px;
-    border-radius:4px;
-    margin-top:-10px;
-    margin-right:10px
-  }
-
 #menu
-  {
-    /*display:none;*/
-    flex-wrap:nowrap;
-    min-width:45px;
-    background:#363636;
-    color: #61d144;
-    padding:8px;
-    border-radius:4px;
-    margin-top:-10px;
-    margin-right:10px
-  }
-
-#menu1
-  {
-    /*display:none;*/
-    flex-wrap:nowrap;
-    min-width:50px;
-    background:#363636;
-    color: #61d144;
-    padding:9px;
-    border-radius:4px;
-    margin-top:0px;
-    margin-right:10px
-  }
-
-#menu2
   {
     /*display:flex;*/
     flex-wrap:nowrap;
-    min-width:50px;
+    min-width:60px;
     background:#363636;
     color: #61d144;
-    padding:18px;
+    padding:8px;
     border-radius:4px;
-    margin-top:0px;
-    margin-left:2px;
+    margin-top:-10px;
     margin-right:10px
   }
-
 #content
   {
     display:flex;
