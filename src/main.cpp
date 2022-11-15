@@ -607,10 +607,10 @@
               startKeys();
             #endif
         // start fans
-          #if (USE_GEN_PWM > OFF)
+          #if (USE_FAN_PWM > OFF)
               // Fan 1
                 pinMode(PIN_PWM_GEN_1, OUTPUT);
-                ledcSetup(PWM_GEN_1, PWM_GEN_FREQ, PWM_GEN_RES);
+                ledcSetup(PWM_FAN_1, PWM_FAN_FREQ, PWM_FAN_RES);
                 ledcAttachPin(PIN_PWM_GEN_1, PWM_GEN_1);
                 ledcWrite(PWM_GEN_1, 255);
                 SOUTLN("Test Fan 1");
