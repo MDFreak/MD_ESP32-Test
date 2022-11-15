@@ -44,6 +44,12 @@
               #define PIN_INP_SW_1  32   // INPUT_PULLUP
             #endif
 
+          #if (USE_DIG_INP > OFF)
+              #if (USE_GEN_SW_INP > OFF)
+                  #define PIN_PUINP_REED_1 15
+                #endif
+            #endif
+
           #if (USE_GEN_CNT_INP > OFF)
               #define PIN_CNT_GEN_S0 4
               #define PIN_CNT_GEN_C0 PCNT_PIN_NOT_USED
@@ -626,7 +632,8 @@
             #ifndef USE_MEASURE_CYCLE
                 #define USE_MEASURE_CYCLE
               #endif
-            #define INP_SW_CTRL  0
+            //#define INP_SW_CTRL  0
+            #define INP_REED_1     0
           #endif
 
     // --- memories

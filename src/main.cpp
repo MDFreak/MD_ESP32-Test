@@ -321,7 +321,7 @@
         #if (USE_POTICTRL_FAN > OFF)
           #endif
         uint32_t valFanPWM[USE_FAN_PWM];
-        uint8_t  fanIdx = 0;
+        uint16_t fanIdx = 0;
       #endif
 
     #if ((USE_DISP_I2C1 + USE_DISP_I2C2) > OFF)
@@ -1328,7 +1328,7 @@
               #endif
 
             #if (USE_FAN_PWM > OFF)
-                if (fanIdx++ > 200)
+                if (fanIdx++ > 1000)
                   {
                     fanIdx = 0;
                     for (uint8_t i=0 ; i < USE_FAN_PWM ; i++)
