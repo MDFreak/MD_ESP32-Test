@@ -632,8 +632,12 @@
             #ifndef USE_MEASURE_CYCLE
                 #define USE_MEASURE_CYCLE
               #endif
-            //#define INP_SW_CTRL  0
-            #define INP_REED_1     0
+            #if (USE_CTRL_SW_INP > OFF)
+                #define INP_SW_CTRL  0
+              #endif
+            #if (USE_GEN_SW_INP > OFF)
+                #define INP_REED_1   0
+              #endif
           #endif
 
     // --- memories
