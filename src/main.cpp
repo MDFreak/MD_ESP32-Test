@@ -321,6 +321,7 @@
         #if (USE_POTICTRL_FAN > OFF)
           #endif
         uint32_t valFanPWM[USE_FAN_PWM];
+        uint8_t  fanIdx = 0;
       #endif
 
     #if ((USE_DISP_I2C1 + USE_DISP_I2C2) > OFF)
@@ -609,22 +610,23 @@
         // start fans
           #if (USE_FAN_PWM > OFF)
               // Fan 1
-                pinMode(PIN_PWM_GEN_1, OUTPUT);
+                pinMode(PIN_PWM_FAN_1, OUTPUT);
                 ledcSetup(PWM_FAN_1, PWM_FAN_FREQ, PWM_FAN_RES);
-                ledcAttachPin(PIN_PWM_GEN_1, PWM_GEN_1);
-                ledcWrite(PWM_GEN_1, 255);
+                ledcAttachPin(PIN_PWM_FAN_1, PWM_FAN_1);
+                ledcWrite(PWM_FAN_1, 255);
                 SOUTLN("Test Fan 1");
                 sleep(1);
-                ledcWrite(PWM_GEN_1, 0);
-
+                ledcWrite(PWM_FAN_1, 0);
               // Fan 2
-                pinMode(PIN_PWM_GEN_2, OUTPUT);
-                ledcSetup(PWM_GEN_2, PWM_GEN_FREQ, PWM_GEN_RES);
-                ledcAttachPin(PIN_PWM_GEN_2, PWM_GEN_2);
-                ledcWrite(PWM_GEN_2, 255);
-                SOUTLN("Test Fan 2");
-                sleep(1);
-                ledcWrite(PWM_GEN_2, 0);
+                #if (USE_FAN_PWM > 1)
+                    pinMode(PIN_PWM_FAN_2, OUTPUT);
+                    ledcSetup(PWM_FAN_2, PWM_FAN_FREQ, PWM_FAN_RES);
+                    ledcAttachPin(PIN_PWM_FAN_2, PWM_FAN_2);
+                    ledcWrite(PWM_FAN_2, 255);
+                    SOUTLN("Test Fan 2");
+                    sleep(1);
+                    ledcWrite(PWM_FAN_2, 0);
+                  #endif
 
             #endif
 
@@ -1326,26 +1328,30 @@
               #endif
 
             #if (USE_FAN_PWM > OFF)
-                for (uint8_t i=0 ; i < USE_FAN_PWM ; i++)
+                if (fanIdx++ > 200)
                   {
-                    valFanPWM[i] += 1;
-                    if (valFanPWM[i] >= 255) { valFanPWM[i] = 0; } // -50%
-                  }
+                    fanIdx = 0;
+                    for (uint8_t i=0 ; i < USE_FAN_PWM ; i++)
+                      {
+                        valFanPWM[i] += 1;
+                        if (valFanPWM[i] >= 255) { valFanPWM[i] = 0; } // -50%
+                      }
 
-                #if (USE_POTICTRL_FAN > 0)
-                    valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                    //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
-                    valFanPWM[0] = valFan[INP_CNT_FAN_1];
-                    #if (USE_POTICTRL_FAN > 1)
-                        valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                        valFanPWM[1] = valFan[INP_CNT_FAN_2];
+                    #if (USE_POTICTRL_FAN > 0)
+                        valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                        //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
+                        valFanPWM[0] = valFan[INP_CNT_FAN_1];
+                        #if (USE_POTICTRL_FAN > 1)
+                            valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                            valFanPWM[1] = valFan[INP_CNT_FAN_2];
+                          #endif
                       #endif
-                  #endif
 
-                ledcWrite(PWM_FAN_1, valFanPWM[0]);
-                #if (USE_FAN_PWM > 1)
-                    ledcWrite(PWM_FAN_2, valFanPWM[1]);
-                  #endif
+                    ledcWrite(PWM_FAN_1, valFanPWM[0]);
+                    #if (USE_FAN_PWM > 1)
+                        ledcWrite(PWM_FAN_2, valFanPWM[1]);
+                      #endif
+                  }
               #endif
                   //}
           #endif

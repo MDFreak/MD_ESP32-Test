@@ -47,6 +47,7 @@
       // --- keypads ---
         #define USE_KEYPADSHIELD    OFF
         // MC_UI_Keypad_ANA0_RO
+      #define USE_GEN_SW_INP        1   // 1
       #define USE_GEN_CNT_INP       OFF // 1
       #define USE_GEN_PWM_INP       OFF // 2
     // --- sensors
@@ -110,7 +111,7 @@
       #define USE_PWM_INP         USE_GEN_PWM_INP
       #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
       #define USE_ADC2            OFF // not to use
-      #define USE_DIG_INP         USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
+      #define USE_DIG_INP         USE_GEN_SW_INP + USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
       #define USE_DIG_OUT         USE_WS2812_LINE_OUT + USE_LED_BLINK_OUT //
       #define USE_DIG_IO          USE_DS18B20_1W_IO     //
       #define USED_IOPINS         USE_DIG_INP + USE_DIG_OUT + USE_DIG_IO + (2 * USE_I2C) + USED_SPI_PINS + USE_PWM_OUT + USE_CNT_INP + USE_ADC1

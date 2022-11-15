@@ -67,8 +67,8 @@
             #endif
 
           #if (USE_FAN_PWM > OFF)
-              #define PIN_PWM_GEN_1 0
-              #define PIN_PWM_GEN_2 4
+              #define PIN_PWM_FAN_1 0
+              #define PIN_PWM_FAN_2 4
             #endif
 
           #if (USE_OUT_FREQ_PWM > OFF)
