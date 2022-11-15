@@ -84,6 +84,7 @@
 
     #if (USE_DIG_INP > OFF)
         uint8_t  inpValDig[USE_DIG_INP];
+        #if
       #endif
 
     #if (USE_CNT_INP > OFF)
@@ -642,12 +643,9 @@
                   pinMode(PIN_WS2812_PWR_IN_SW, INPUT_PULLUP);
                   SOUT(PIN_WS2812_PWR_IN_SW); SOUT(" ");
                 #endif
-
-                //PIN_INP_SW_1,   NO_PIN,
-
-              //for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
-                //{
-                  //pinMode(PIN_DIG_INP[i], INPUT_PULLUP);
+              for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
+                {
+                  pinMode(PIN_DIG_INP[i], INPUT_PULLUP);
                   //SOUT(PIN_DIG_INP[i]); SOUT(" ");
                 //}
               SOUTLN();

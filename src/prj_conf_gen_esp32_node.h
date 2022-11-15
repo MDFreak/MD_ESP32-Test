@@ -637,6 +637,7 @@
               #endif
             #if (USE_GEN_SW_INP > OFF)
                 #define INP_REED_1   0
+                #define INV_REED_1   TRUE
               #endif
           #endif
 
