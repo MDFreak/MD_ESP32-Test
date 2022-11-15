@@ -84,7 +84,7 @@
               #define PIN_RGB_BLUE  14 //33   // RGB blue
             #endif
 
-          #if (USE_GEN_PWM_OUT > OFF)
+          #if (USE_FAN_PWM > OFF)
               #define PIN_PWM_GEN_1 0
               #define PIN_PWM_GEN_2 4
             #endif

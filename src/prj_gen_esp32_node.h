@@ -105,7 +105,7 @@
               #define USED_SPI_PINS   OFF
             #endif
     // usage of peripherals
-      #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_GEN_PWM_OUT + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
+      #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_FAN_PWM + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
       #define USE_CNT_INP         USE_GEN_CNT_INP     // max 2 * 8 independent
       #define USE_PWM_INP         USE_GEN_PWM_INP
       #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS

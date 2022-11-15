@@ -43,7 +43,6 @@
     #if (USE_PWM_OUT > OFF)
         #include <driver\ledc.h>
       #endif
-
   // --- user inputs
     #if (USE_TOUCHSCREEN > OFF)
         #include "md_touch.h"
