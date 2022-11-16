@@ -1165,7 +1165,6 @@
                   #endif
                 #if (USE_ESPHALL > OFF)
                     valHall = hallRead();
-                    SOUT("Hall = "); SOUTLN(valHall);
                   #endif
                 #if (USE_MCPWM > OFF)
                     getCNTIn();
@@ -1591,7 +1590,10 @@
                     	break;
 
                 case 8:  // digital inputs
-                  #if (USE_DIG_INP > OFF)
+                    #if (USE_ESPHALL > OFF)
+                        int32_t valHall = 0;
+                      #endif
+                    #if (USE_DIG_INP > OFF)
                       //SOUT(" SWD ");
                       outStr = "";
                       for (uint8_t i = 0 ; i < USE_GEN_SW_INP; i++)
