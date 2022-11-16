@@ -23,6 +23,7 @@
 	    // cycletime measurement
     static uint64_t anzUsCycles = 0ul;
     static uint64_t usLast      = 0ul;
+    static uint64_t usTmp       = 0ul;
     static uint64_t usPerCycle  = 0ul;
     static char     cmsg[MSG_MAXLEN+1] = "";
       //static uint64_t anzMsCycles = 0;
@@ -1400,21 +1401,22 @@
               String tmpStr;
               switch (oledIdx)
                 {
-                case 1: // system output
-                    usPerCycle = ((micros() - usLast) / anzUsCycles);
-                    usLast      = micros();
-                    //SOUT(usLast); SOUT(" "); SOUT(micros()); SOUT(" "); SOUTLN(usPerCycle);
-                    outStr = "          ";
-                    dispText(outStr ,  22, 4, outStr.length());
-                    outStr = "";
-                    outStr.concat((unsigned long) usPerCycle);
-                    outStr.concat("us    ");
-                    dispText(outStr ,  22, 4, outStr.length());
-                    //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
+                case 1:  // system output
+                    usTmp      = micros();
+                    usPerCycle = (usTmp - usLast) / anzUsCycles;
+                    usLast      = usTmp;
+                      //SOUT(usLast); SOUT(" "); SOUT(micros()); SOUT(" "); SOUTLN(usPerCycle);
+                      //outStr = "          ";
+                      //dispText(outStr ,  22, 4, outStr.length());
+                      //outStr = "";
+                      //outStr.concat((unsigned long) usPerCycle);
+                      //outStr.concat("us    ");
+                      //dispText(outStr ,  22, 4, outStr.length());
+                      //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
                     anzUsCycles = 0ul;
                   break;
 
-                case 2: // webserver nu
+                case 2:  // webserver nu
                     #if (USE_WIFI > OFF)
                         outStr = WiFi.localIP().toString();
                     #else
@@ -1484,7 +1486,7 @@
                       #endif
                   break;
 
-                case 3: // k-type sensor
+                case 3:  // k-type sensor
                   #if (USE_TYPE_K_SPI > OFF)
                     outStr = "";
                     outStr = "TK1 ";
@@ -1509,15 +1511,22 @@
                     #endif
                   break;
 
-                case 4: // gas & light sensor
-                  outStr = "";
+                case 4:  // gas sensor
                   #if (USE_MQ135_GAS_ADC > OFF)
                     //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
                     outStr = "CO2 ";
                     outStr.concat(gasValue);
+                    outStr.concat("  ");
+                    dispText(outStr, 17, 3, outStr.length());
+                          //SOUTLN(outStr);
                     #endif
+                  break;
+
+                case 5:  // light sensor
                   #if (USE_PHOTO_SENS > OFF)
-                      outStr.concat(" Light ");
+                      outStr = "          ";
+                      dispText(outStr, 12, 4, outStr.length());
+                      outStr = "";
                       outStr.concat(phVal.getVal());
                       #if (USE_WEBSERVER > OFF)
                           tmpStr = "SVA";
@@ -1527,11 +1536,11 @@
                         #endif
                     #endif
                   outStr.concat("  ");
-                  dispText(outStr, 15, 0, outStr.length());
+                  dispText(outStr, 12, 4, outStr.length());
                           //SOUTLN(outStr);
                   break;
 
-                case 5: // temp sesor
+                case 6:  // temp sensor
                   #if (USE_DS18B20_1W_IO > OFF)
                     outStr = "";
                     outStr = getDS18D20Str();
@@ -1539,7 +1548,7 @@
                     #endif
                   break;
 
-                case 6: // BME 280 temp, humidity, pressure
+                case 7:  // BME 280 temp, humidity, pressure
                     #if ( USE_BME280_I2C1 > OFF )
                       outStr = "";
                       for (uint8_t i = 0; i < 3 ; i++)
@@ -1576,7 +1585,7 @@
                       #endif
                     	break;
 
-                case 7: // digital inputs
+                case 8:  // digital inputs
                   #if (USE_DIG_INP > OFF)
                       //SOUT(" SWD ");
                       outStr = "";
@@ -1602,7 +1611,7 @@
 
                   break;
 
-                case 8: // WS2812 lines
+                case 9:  // WS2812 lines
                   #if ((USE_WS2812_MATRIX_OUT > OFF) || (USE_WS2812_LINE_OUT > OFF))
                       outStr = "              ";
                       dispText(outStr ,  0, 0, outStr.length());
@@ -1623,7 +1632,7 @@
                       dispText(outStr ,  0, 0, outStr.length());
                     #endif
                   break;
-                case 9: // counter values
+                case 10:  // counter values
                   #if (USE_CNT_INP > OFF)
                         outStr = "              ";
                         dispText(outStr ,  0, 2, outStr.length());
@@ -1652,7 +1661,7 @@
                         #endif
                     #endif
                   break;
-                case 10: // pwm counter values
+                case 11: // pwm counter values
                   #if (USE_PWM_INP > OFF)
                         outStr = "              ";
                         dispText(outStr ,  0, 1, outStr.length());
@@ -1713,7 +1722,8 @@
             firstrun = false;
           }
         anzUsCycles++;
-        //usleep(250);
+        //usleep(20);
+        //delay(1);
     }
 
 // ----------------------------------------------------------------

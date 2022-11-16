@@ -46,7 +46,7 @@
 
           #if (USE_DIG_INP > OFF)
               #if (USE_GEN_SW_INP > OFF)
-                  #define PIN_INP_REED_1 16
+                  #define PIN_INP_REED_1 15
                 #endif
             #endif
 
