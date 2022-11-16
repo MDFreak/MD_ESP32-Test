@@ -5,7 +5,6 @@
 // --- declarations
 // ----------------------------------------------------------------
   // ------ system -----------------------
-    //static uint64_t _tmp = 0ul;
     static bool firstrun = true;
     static uint16_t     md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
                              #if (USE_WIFI > OFF)
@@ -32,8 +31,6 @@
 
 	    //static uint32_t anzMsCycles = 0;
 	    //static uint64_t msLast      = 0;
-
-    //static uint32_t msPerCycle  = 0;
 
     #if ( USE_I2C1 > OFF )
         TwoWire i2c1 = TwoWire(0);
@@ -919,8 +916,6 @@
                   }
               }
           #endif // USE_WIFI
-
-        // ----------------------
         #if (USE_NTP_SERVER > OFF)   // get time from NTP server
             if (ntpT.TOut() == true)
               {
@@ -949,7 +944,6 @@
                         #endif
               }
           #endif // USE_NTP_SERVER
-        // ----------------------
         #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
             // read only 1 message / cycle for cycle time
             readMessage();
@@ -959,7 +953,6 @@
           //touch.runTouch(outBuf);
           #endif // USE_TOUCHSCREEN
 
-        // ----------------------
         #if (USE_KEYPADSHIELD > OFF)
           key = getKey();
           if (key)
@@ -968,7 +961,6 @@
               dispStatus(outBuf);
             }
           #endif
-        // ----------------------
         #if (USE_CNT_INP > OFF)
             uint64_t        lim  = 0ul;
             pcnt_evt_type_t ev;
@@ -1088,7 +1080,6 @@
 
                       //Serial.flush();
           #endif
-        // ----------------------
         #if (USE_PWM_INP > OFF)
             mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 1);
             pwmInVal->lowVal = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0);
@@ -1101,7 +1092,6 @@
             if (measT.TOut())
               {
                 measT.startT();
-
                 #if (USE_MQ135_GAS_ADC > OFF)
                     gasValue = analogRead(PIN_MQ135);
                           //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
@@ -1367,363 +1357,363 @@
                   //}
           #endif
       // --- Display -------------------
-      #if (USE_DISP > 0)
-        if (dispT.TOut())    // handle touch output
-          {
-            #ifdef RUN_OLED_TEST
-                oled.clearBuffer();
-                switch (oledIdx)
-                  {
-                    case 0:
-                      oled.prepare();
-                      oled.box_frame();
-                      break;
-                    case 1:
-                      oled.disc_circle();
-                      oled.sendBuffer();
-                      break;
-                    case 2:
-                      oled.r_frame_box();
-                      break;
-                    case 3:
-                      oled.prepare();
-                      oled.string_orientation();
-                      oledIdx--;
-                      break;
-                    case 4:
-                      oled.line();
-                      break;
-                    case 5:
-                      oled.triangle();
-                      break;
-                    case 6:
-                      oled.bitmap();
-                      break;
-                    default:
-                      break;
-                  }
-                if (++oledIdx > 6) { oledIdx = 0; }
-                oled.sendBuffer();
-              #endif // RUN_OLED_TEST
-            oledIdx++;
-            outStr = "";
-            String tmpStr;
-            switch (oledIdx)
-              {
-              case 1: // system output
-                  usPerCycle = ((micros() - usLast) / anzUsCycles);
-                  usLast      = micros();
-                  //SOUT(usLast); SOUT(" "); SOUT(micros()); SOUT(" "); SOUTLN(usPerCycle);
-                  outStr = "          ";
-                  dispText(outStr ,  22, 4, outStr.length());
-                  outStr = "";
-                  outStr.concat((unsigned long) usPerCycle);
-                  outStr.concat("us    ");
-                  dispText(outStr ,  22, 4, outStr.length());
-                  //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
-                  anzUsCycles = 0ul;
-                break;
+        #if (USE_DISP > 0)
+          if (dispT.TOut())    // handle touch output
+            {
+              #ifdef RUN_OLED_TEST
+                  oled.clearBuffer();
+                  switch (oledIdx)
+                    {
+                      case 0:
+                        oled.prepare();
+                        oled.box_frame();
+                        break;
+                      case 1:
+                        oled.disc_circle();
+                        oled.sendBuffer();
+                        break;
+                      case 2:
+                        oled.r_frame_box();
+                        break;
+                      case 3:
+                        oled.prepare();
+                        oled.string_orientation();
+                        oledIdx--;
+                        break;
+                      case 4:
+                        oled.line();
+                        break;
+                      case 5:
+                        oled.triangle();
+                        break;
+                      case 6:
+                        oled.bitmap();
+                        break;
+                      default:
+                        break;
+                    }
+                  if (++oledIdx > 6) { oledIdx = 0; }
+                  oled.sendBuffer();
+                #endif // RUN_OLED_TEST
+              oledIdx++;
+              outStr = "";
+              String tmpStr;
+              switch (oledIdx)
+                {
+                case 1: // system output
+                    usPerCycle = ((micros() - usLast) / anzUsCycles);
+                    usLast      = micros();
+                    //SOUT(usLast); SOUT(" "); SOUT(micros()); SOUT(" "); SOUTLN(usPerCycle);
+                    outStr = "          ";
+                    dispText(outStr ,  22, 4, outStr.length());
+                    outStr = "";
+                    outStr.concat((unsigned long) usPerCycle);
+                    outStr.concat("us    ");
+                    dispText(outStr ,  22, 4, outStr.length());
+                    //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
+                    anzUsCycles = 0ul;
+                  break;
 
-              case 2: // webserver nu
-                  #if (USE_WIFI > OFF)
-                      outStr = WiFi.localIP().toString();
-                  #else
-                      outStr = "IP Offline";
-                    #endif
-                  dispText(outStr ,  0, 4, outStr.length());
-                  #if (USE_WEBSERVER > OFF)
-                      if (newClient)
-                        {
-                          char ctmp[8] = "";
-                          // EL_TSLIDER
-                          #if (USE_RGBLED_PWM > OFF)
-                              outStr = "SVB1";
-                              outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
-                              pmdServ->updateAll(outStr);
-                              SOUTLN(outStr);
-                            #endif
-                          #if (USE_WS2812_LINE_OUT > OFF)
-                              outStr = "SVB2";
-                              outStr.concat(line2812[0]->bright());    // RGB-LED col24
-                              pmdServ->updateAll(outStr);
-                              SOUTLN(outStr);
-                            #endif
-                          #if (USE_WS2812_MATRIX_OUT > OFF)
-                              outStr = "SVB3";
-                              md_LEDPix24* ppix = outM2812[0].text->pix24;
-                              outStr.concat(ppix->bright());           // RGB-LED col24
-                              pmdServ->updateAll(outStr);
-                              SOUTLN(outStr);                              outStr = "SVB3";
-                            #endif
-                              //tmpStr = "SVB4";
-                              //tmpStr.concat(line2812[0]->bright());    // RGB-LED col24
-                              //pmdServ->updateAll(tmpStr);
-
-                          // EL_TCOLOR
-                          #if (USE_RGBLED_PWM > OFF)
-                              outStr = "SVC1";
-                              colToHexStr(ctmp, RGBLED[0]->col24());
-                              outStr.concat(ctmp);    // RGB-LED col24
-                              pmdServ->updateAll(outStr);
-                              SOUTLN(outStr);
-                            #endif
-                          #if (USE_WS2812_LINE_OUT > OFF)
-                              outStr = "SVC2";
-                              colToHexStr(ctmp, line2812[0]->col24());
-                              outStr.concat(ctmp);    // RGB-LED col24
-                              pmdServ->updateAll(outStr);
-                              SOUTLN(outStr);
-                            #endif
-                          #if (USE_WS2812_MATRIX_OUT > OFF)
-                              outStr = "SVC3";
-                              ppix = outM2812[0].text->pix24;
-                              colToHexStr(ctmp, ppix->col24());
-                              outStr.concat(ctmp);    // RGB-LED col24
-                              pmdServ->updateAll(outStr);
-                              SOUTLN(outStr);
-                              outStr = "SVC4";
-                              ppix = outM2812[0].bmpB->pix24;
-                              colToHexStr(ctmp, ppix->col24());
-                              outStr.concat(ctmp);    // RGB-LED col24
-                              pmdServ->updateAll(outStr);
-                              SOUTLN(outStr);
-                            #endif
-
-                          newClient = false;
-                        }
-                    #endif
-                break;
-
-              case 3: // k-type sensor
-                #if (USE_TYPE_K_SPI > OFF)
-                  outStr = "";
-                  outStr = "TK1 ";
-                  outStr.concat(tk1Val);
-                  outStr.concat("°");
-                  //dispText(outStr ,  0, 1, outStr.length());
-                  #if (USE_TYPE_K_SPI > 1)
-                      //outStr = "";
-                      outStr.concat(" TK2 ");
-                      outStr.concat(tk2Val);
-                      outStr.concat("° ");
-                    #endif
-                  dispText(outStr ,  0, 2, outStr.length());
-                  outStr.concat(" (");
-                  outStr.concat(tk1ValRef);
-                  #if (USE_TYPE_K > 1)
-                      outStr.concat("° / ");
-                      outStr.concat(tk2ValRef);
-                    #endif
-                  outStr.concat("°)");
-                          SOUTLN(outStr); SOUT(" ");
-                  #endif
-                break;
-
-              case 4: // gas & light sensor
-                outStr = "";
-                #if (USE_MQ135_GAS_ADC > OFF)
-                  //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
-                  outStr = "CO2 ";
-                  outStr.concat(gasValue);
-                  #endif
-                #if (USE_PHOTO_SENS > OFF)
-                    outStr.concat(" Light ");
-                    outStr.concat(phVal.getVal());
+                case 2: // webserver nu
+                    #if (USE_WIFI > OFF)
+                        outStr = WiFi.localIP().toString();
+                    #else
+                        outStr = "IP Offline";
+                      #endif
+                    dispText(outStr ,  0, 4, outStr.length());
                     #if (USE_WEBSERVER > OFF)
-                        tmpStr = "SVA";
-                        tmpStr.concat("3");
-                        tmpStr.concat(phVal.getVal());
-                        pmdServ->updateAll(tmpStr);
-                      #endif
-                  #endif
-                outStr.concat("  ");
-                dispText(outStr, 15, 0, outStr.length());
-                        //SOUTLN(outStr);
-                break;
-
-              case 5: // temp sesor
-                #if (USE_DS18B20_1W_IO > OFF)
-                  outStr = "";
-                  outStr = getDS18D20Str();
-                  dispText(outStr ,  0, 4, outStr.length());
-                  #endif
-                break;
-
-              case 6: // BME 280 temp, humidity, pressure
-                  #if ( USE_BME280_I2C1 > OFF )
-                    outStr = "";
-                    for (uint8_t i = 0; i < 3 ; i++)
-                      {
-                        tmpStr = "SVA";
-                        tmpStr.concat(i);
-                        switch (i)
+                        if (newClient)
                           {
-                            case 0:
-                              tmpStr.concat(bmeT.getVal());
-                              outStr.concat(bmeT.getVal());
-                              outStr.concat("°  ");
-                              break;
-                            case 1:
-                              tmpStr.concat(bmeH.getVal());
-                              outStr.concat(bmeH.getVal());
-                              outStr.concat("%  ");
-                              break;
-                            case 2:
-                              tmpStr.concat(bmeP.getVal());
-                              outStr.concat(bmeP.getVal());
-                              outStr.concat("mb");
-                              break;
-                            default:
-                              break;
+                            char ctmp[8] = "";
+                            // EL_TSLIDER
+                            #if (USE_RGBLED_PWM > OFF)
+                                outStr = "SVB1";
+                                outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
+                                pmdServ->updateAll(outStr);
+                                SOUTLN(outStr);
+                              #endif
+                            #if (USE_WS2812_LINE_OUT > OFF)
+                                outStr = "SVB2";
+                                outStr.concat(line2812[0]->bright());    // RGB-LED col24
+                                pmdServ->updateAll(outStr);
+                                SOUTLN(outStr);
+                              #endif
+                            #if (USE_WS2812_MATRIX_OUT > OFF)
+                                outStr = "SVB3";
+                                md_LEDPix24* ppix = outM2812[0].text->pix24;
+                                outStr.concat(ppix->bright());           // RGB-LED col24
+                                pmdServ->updateAll(outStr);
+                                SOUTLN(outStr);                              outStr = "SVB3";
+                              #endif
+                                //tmpStr = "SVB4";
+                                //tmpStr.concat(line2812[0]->bright());    // RGB-LED col24
+                                //pmdServ->updateAll(tmpStr);
+
+                            // EL_TCOLOR
+                            #if (USE_RGBLED_PWM > OFF)
+                                outStr = "SVC1";
+                                colToHexStr(ctmp, RGBLED[0]->col24());
+                                outStr.concat(ctmp);    // RGB-LED col24
+                                pmdServ->updateAll(outStr);
+                                SOUTLN(outStr);
+                              #endif
+                            #if (USE_WS2812_LINE_OUT > OFF)
+                                outStr = "SVC2";
+                                colToHexStr(ctmp, line2812[0]->col24());
+                                outStr.concat(ctmp);    // RGB-LED col24
+                                pmdServ->updateAll(outStr);
+                                SOUTLN(outStr);
+                              #endif
+                            #if (USE_WS2812_MATRIX_OUT > OFF)
+                                outStr = "SVC3";
+                                ppix = outM2812[0].text->pix24;
+                                colToHexStr(ctmp, ppix->col24());
+                                outStr.concat(ctmp);    // RGB-LED col24
+                                pmdServ->updateAll(outStr);
+                                SOUTLN(outStr);
+                                outStr = "SVC4";
+                                ppix = outM2812[0].bmpB->pix24;
+                                colToHexStr(ctmp, ppix->col24());
+                                outStr.concat(ctmp);    // RGB-LED col24
+                                pmdServ->updateAll(outStr);
+                                SOUTLN(outStr);
+                              #endif
+
+                            newClient = false;
                           }
-                        // send to websocket
-                        #if (USE_WEBSERVER > OFF)
-                            pmdServ->updateAll(tmpStr);
-                          #endif
-                      }
-                            //SOUT(outStr); SOUT(" ");
-                    dispText(outStr , 0, 3, outStr.length());
-                    #endif
-                  	break;
-
-              case 7: // digital inputs
-                #if (USE_DIG_INP > OFF)
-                    //SOUT(" SWD ");
-                    outStr = "";
-                    for (uint8_t i = 0 ; i < USE_GEN_SW_INP; i++)
-                      {
-                        //SOUT(i); SOUT("="); SOUT(valInpDig[i]); SOUT(" ");
-                        tmpStr = "SWD";
-                        tmpStr.concat(i);
-                        tmpStr.concat(valInpDig[i]);
-                        outStr.concat(valInpDig[i]);
-                        outStr.concat(" ");
-                        // send to websocket
-                        #if (USE_WEBSERVER > OFF)
-                            pmdServ->updateAll(tmpStr);
-                          #endif
-                      }
-                    dispText(outStr , 17, 3, outStr.length());
-                    //SOUTLN();
-                  #endif
-                #if (USE_CTRL_POTI_ADC > OFF)
-                    //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
-                  #endif
-
-                break;
-
-              case 8: // WS2812 lines
-                #if ((USE_WS2812_MATRIX_OUT > OFF) || (USE_WS2812_LINE_OUT > OFF))
-                    outStr = "              ";
-                    dispText(outStr ,  0, 0, outStr.length());
-                    //outStr = "LED ";
-                    outStr = "";
-                        //outStr += (String) ws2812_Mcnt; outStr += " ";
-                    ws2812_Mv = millis() - ws2812_Malt; // dispT.getTout();
-                    ws2812_Malt = millis();
-                    if (ws2812_Mcnt > 0)
-                      {
-                        ws2812_Mv = ws2812_Mv / ws2812_Mcnt;
-                        ws2812_Mcnt = 0;
-                      }
-                    outStr += (String) ws2812_Mv;
-                    outStr += ("ms");
-                          //SOUT((uint32_t) millis()); SOUT(" ");
-                              //SOUT(outStr); SOUT(" ");
-                    dispText(outStr ,  0, 0, outStr.length());
-                  #endif
-                break;
-              case 9: // counter values
-                #if (USE_CNT_INP > OFF)
-                      outStr = "              ";
-                      dispText(outStr ,  0, 2, outStr.length());
-                      outStr = "f";
-                      SOUT(millis());
-                      for (uint8_t i = 0; i < USE_CNT_INP ; i++ )
-                        {
-                          outStr = "   f";
-                          outStr += (String) i;
-                          outStr += " = ";
-                          outStr += (String) cntErg[i].freq;
-                          outStr += "     ";
-                          SOUT(outStr); SOUT(" Hz"); SOUT("/"); SOUT(" usCnt "); SOUT(cntErg[i].usCnt); SOUT(" ");
-                          dispText(outStr ,  0, i+1, outStr.length());
-                        }
-                      SOUTLN();
-                      //SOUT(outStr); SOUT(" "); //SOUT(valFanPWM[0]); SOUT(" ");
-                    #ifdef USE_MCPWM
-                        outStr = "              ";
-                        dispText(outStr ,  0, 0, outStr.length());
-                        outStr = "LH ";
-                        outStr += (String) cntLowPulse[0]; outStr += (" ");
-                        outStr += (String) cntHighPulse[0];
-                                  SOUT(outStr); SOUT(" ");
-                        dispText(outStr ,  0, 2, outStr.length());
                       #endif
-                  #endif
-                break;
-              case 10: // pwm counter values
-                #if (USE_PWM_INP > OFF)
-                      outStr = "              ";
-                      dispText(outStr ,  0, 1, outStr.length());
-                      outStr = "pwm ";
-                      for (uint8_t i = 0; i < USE_PWM_INP ; i++ )
+                  break;
+
+                case 3: // k-type sensor
+                  #if (USE_TYPE_K_SPI > OFF)
+                    outStr = "";
+                    outStr = "TK1 ";
+                    outStr.concat(tk1Val);
+                    outStr.concat("°");
+                    //dispText(outStr ,  0, 1, outStr.length());
+                    #if (USE_TYPE_K_SPI > 1)
+                        //outStr = "";
+                        outStr.concat(" TK2 ");
+                        outStr.concat(tk2Val);
+                        outStr.concat("° ");
+                      #endif
+                    dispText(outStr ,  0, 2, outStr.length());
+                    outStr.concat(" (");
+                    outStr.concat(tk1ValRef);
+                    #if (USE_TYPE_K > 1)
+                        outStr.concat("° / ");
+                        outStr.concat(tk2ValRef);
+                      #endif
+                    outStr.concat("°)");
+                            SOUTLN(outStr); SOUT(" ");
+                    #endif
+                  break;
+
+                case 4: // gas & light sensor
+                  outStr = "";
+                  #if (USE_MQ135_GAS_ADC > OFF)
+                    //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
+                    outStr = "CO2 ";
+                    outStr.concat(gasValue);
+                    #endif
+                  #if (USE_PHOTO_SENS > OFF)
+                      outStr.concat(" Light ");
+                      outStr.concat(phVal.getVal());
+                      #if (USE_WEBSERVER > OFF)
+                          tmpStr = "SVA";
+                          tmpStr.concat("3");
+                          tmpStr.concat(phVal.getVal());
+                          pmdServ->updateAll(tmpStr);
+                        #endif
+                    #endif
+                  outStr.concat("  ");
+                  dispText(outStr, 15, 0, outStr.length());
+                          //SOUTLN(outStr);
+                  break;
+
+                case 5: // temp sesor
+                  #if (USE_DS18B20_1W_IO > OFF)
+                    outStr = "";
+                    outStr = getDS18D20Str();
+                    dispText(outStr ,  0, 4, outStr.length());
+                    #endif
+                  break;
+
+                case 6: // BME 280 temp, humidity, pressure
+                    #if ( USE_BME280_I2C1 > OFF )
+                      outStr = "";
+                      for (uint8_t i = 0; i < 3 ; i++)
                         {
-                          outStr += " ";
-                          outStr += (String) pwmInVal[i].lowVal;
-                          outStr += " ";
-                          outStr += (String) pwmInVal[i].highVal;
-                                //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
+                          tmpStr = "SVA";
+                          tmpStr.concat(i);
+                          switch (i)
+                            {
+                              case 0:
+                                tmpStr.concat(bmeT.getVal());
+                                outStr.concat(bmeT.getVal());
+                                outStr.concat("°  ");
+                                break;
+                              case 1:
+                                tmpStr.concat(bmeH.getVal());
+                                outStr.concat(bmeH.getVal());
+                                outStr.concat("%  ");
+                                break;
+                              case 2:
+                                tmpStr.concat(bmeP.getVal());
+                                outStr.concat(bmeP.getVal());
+                                outStr.concat("mb");
+                                break;
+                              default:
+                                break;
+                            }
+                          // send to websocket
+                          #if (USE_WEBSERVER > OFF)
+                              pmdServ->updateAll(tmpStr);
+                            #endif
                         }
-                      //SOUT(outStr); SOUT(" ");
-                      //dispText(outStr ,  0, 1, outStr.length());
-                  #endif
-                break;
+                              //SOUT(outStr); SOUT(" ");
+                      dispText(outStr , 0, 3, outStr.length());
+                      #endif
+                    	break;
 
-              default:
-                //SOUT("disp end "); SOUT(" "); SOUTLN(millis());
-                if (SYS_LED_ON == ON) { SYS_LED_ON = OFF; }
-                else                  { SYS_LED_ON = ON ; }
-                digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
+                case 7: // digital inputs
+                  #if (USE_DIG_INP > OFF)
+                      //SOUT(" SWD ");
+                      outStr = "";
+                      for (uint8_t i = 0 ; i < USE_GEN_SW_INP; i++)
+                        {
+                          //SOUT(i); SOUT("="); SOUT(valInpDig[i]); SOUT(" ");
+                          tmpStr = "SWD";
+                          tmpStr.concat(i);
+                          tmpStr.concat(valInpDig[i]);
+                          outStr.concat(valInpDig[i]);
+                          outStr.concat(" ");
+                          // send to websocket
+                          #if (USE_WEBSERVER > OFF)
+                              pmdServ->updateAll(tmpStr);
+                            #endif
+                        }
+                      dispText(outStr , 17, 3, outStr.length());
+                      //SOUTLN();
+                    #endif
+                  #if (USE_CTRL_POTI_ADC > OFF)
+                      //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
+                    #endif
 
-                oledIdx = 0;
-                dispT.startT();
-                break;
-              }
-            #ifdef USE_STATUS
-                dispStatus("");
-              #endif
-          }
-        #endif // defined(DISP)
+                  break;
+
+                case 8: // WS2812 lines
+                  #if ((USE_WS2812_MATRIX_OUT > OFF) || (USE_WS2812_LINE_OUT > OFF))
+                      outStr = "              ";
+                      dispText(outStr ,  0, 0, outStr.length());
+                      //outStr = "LED ";
+                      outStr = "";
+                          //outStr += (String) ws2812_Mcnt; outStr += " ";
+                      ws2812_Mv = millis() - ws2812_Malt; // dispT.getTout();
+                      ws2812_Malt = millis();
+                      if (ws2812_Mcnt > 0)
+                        {
+                          ws2812_Mv = ws2812_Mv / ws2812_Mcnt;
+                          ws2812_Mcnt = 0;
+                        }
+                      outStr += (String) ws2812_Mv;
+                      outStr += ("ms");
+                            //SOUT((uint32_t) millis()); SOUT(" ");
+                                //SOUT(outStr); SOUT(" ");
+                      dispText(outStr ,  0, 0, outStr.length());
+                    #endif
+                  break;
+                case 9: // counter values
+                  #if (USE_CNT_INP > OFF)
+                        outStr = "              ";
+                        dispText(outStr ,  0, 2, outStr.length());
+                        outStr = "f";
+                        SOUT(millis());
+                        for (uint8_t i = 0; i < USE_CNT_INP ; i++ )
+                          {
+                            outStr = "   f";
+                            outStr += (String) i;
+                            outStr += " = ";
+                            outStr += (String) cntErg[i].freq;
+                            outStr += "     ";
+                            SOUT(outStr); SOUT(" Hz"); SOUT("/"); SOUT(" usCnt "); SOUT(cntErg[i].usCnt); SOUT(" ");
+                            dispText(outStr ,  0, i+1, outStr.length());
+                          }
+                        SOUTLN();
+                        //SOUT(outStr); SOUT(" "); //SOUT(valFanPWM[0]); SOUT(" ");
+                      #ifdef USE_MCPWM
+                          outStr = "              ";
+                          dispText(outStr ,  0, 0, outStr.length());
+                          outStr = "LH ";
+                          outStr += (String) cntLowPulse[0]; outStr += (" ");
+                          outStr += (String) cntHighPulse[0];
+                                    SOUT(outStr); SOUT(" ");
+                          dispText(outStr ,  0, 2, outStr.length());
+                        #endif
+                    #endif
+                  break;
+                case 10: // pwm counter values
+                  #if (USE_PWM_INP > OFF)
+                        outStr = "              ";
+                        dispText(outStr ,  0, 1, outStr.length());
+                        outStr = "pwm ";
+                        for (uint8_t i = 0; i < USE_PWM_INP ; i++ )
+                          {
+                            outStr += " ";
+                            outStr += (String) pwmInVal[i].lowVal;
+                            outStr += " ";
+                            outStr += (String) pwmInVal[i].highVal;
+                                  //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
+                          }
+                        //SOUT(outStr); SOUT(" ");
+                        //dispText(outStr ,  0, 1, outStr.length());
+                    #endif
+                  break;
+
+                default:
+                  //SOUT("disp end "); SOUT(" "); SOUTLN(millis());
+                  if (SYS_LED_ON == ON) { SYS_LED_ON = OFF; }
+                  else                  { SYS_LED_ON = ON ; }
+                  digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
+
+                  oledIdx = 0;
+                  dispT.startT();
+                  break;
+                }
+              #ifdef USE_STATUS
+                  dispStatus("");
+                #endif
+            }
+          #endif // defined(DISP)
 
       // --- system control --------------------------------
-      #if (USE_COL16_BLINK_OUT > 0)
-        if (ledT.TOut())    // handle touch output
-          {
-            ledT.startT();
-            if (SYS_LED_ON == TRUE)
-                {
-                  digitalWrite(PIN_BOARD_LED, OFF);
-                  SYS_LED_ON = OFF;
-                }
-              else
-                {
-                  digitalWrite(PIN_BOARD_LED, ON);
-                  SYS_LED_ON = ON;
-                }
-          }
-        #endif
+        #if (USE_COL16_BLINK_OUT > 0)
+          if (ledT.TOut())    // handle touch output
+            {
+              ledT.startT();
+              if (SYS_LED_ON == TRUE)
+                  {
+                    digitalWrite(PIN_BOARD_LED, OFF);
+                    SYS_LED_ON = OFF;
+                  }
+                else
+                  {
+                    digitalWrite(PIN_BOARD_LED, ON);
+                    SYS_LED_ON = ON;
+                  }
+            }
+          #endif
 
-      if (firstrun == true)
-        {
-          String taskMessage = "loop task running on core ";
-          taskMessage = taskMessage + xPortGetCoreID();
-          SOUTLN(taskMessage);
-          usLast = micros();
-          firstrun = false;
-        }
-      anzUsCycles++;
-      //usleep(250);
+        if (firstrun == true)
+          {
+            String taskMessage = "loop task running on core ";
+            taskMessage = taskMessage + xPortGetCoreID();
+            SOUTLN(taskMessage);
+            usLast = micros();
+            firstrun = false;
+          }
+        anzUsCycles++;
+        //usleep(250);
     }
 
 // ----------------------------------------------------------------
@@ -1746,85 +1736,88 @@
       void dispStatus(String msg, bool direct)
         {
           #ifdef USE_STATUS
-            size_t statLen = msg.length();
-            bool   doIt    = false;
-            bool   info    = false;
+              size_t statLen = msg.length();
+              bool   doIt    = false;
+              bool   info    = false;
 
-            if (statLen)
-              {
-                if ( statLen > OLED1_MAXCOLS)
-                  {
-                    msg.remove(OLED1_MAXCOLS);
-                  }
-                statOn = true;
-                statT.startT();
-                doIt = true;    // output statOut
-                statT.startT();
-              }
-            else // empty input
-              {
-                if (statOn && statT.TOut())
-                  statOn = false;
-              }
-            if (!statOn) // disp def val and actual time
-              {
-                if (statN.TOut())
-                  {
-                    statN.startT();
-                    #if (USE_NTP_SERVER > OFF)
-                        sprintf(statOut,"%02d.%02d. %02d:%02d:%02d ", day(), month(), hour(), minute(), second());
-                        msg = statOut;
-                        info = true;
-                        doIt = true;
-                      #endif
-                  }
-              }
-            if (doIt)
-              {
-                #if (USE_TOUCHSCREEN > OFF)
-                    touch.wrStatus(msg);
-                  #endif
-                #if (USE_OLED_I2C > OFF)
-                    #if defined( USE_STATUS1 )
-                        oled1.wrStatus(msg);
-                      #endif
-                    #if defined( USE_STATUS2 )
-                        oled2.wrStatus(msg);
-                      #endif
-                         //SOUT("  md_error="); SOUTLN(md_error);
-                  #endif
-                #if (USE_TFT > 0)
-                    #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
-                        mlcd.wrStatus((char*) statOut);
-                      #endif
-                            //#if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
-                                 //if (info)
-                                 //  {
-                                 //    #if ( USE_BME280_I2C > OFF )
-                                 //        outStr[0] = 0;
-                                 //        outStr.concat(bmeT.getVal());
-                                 //        outStr.concat("° ");
-                                 //        outStr.concat(bmeH.getVal());
-                                 //        outStr.concat("% ");
-                                 //        outStr.concat(bmeP.getVal());
-                                 //        outStr.concat("mb  ");
-                                 //      #endif
-                                 //  }
-                                 // outStr.concat((char*) statOut);
-                                 // if (info)
-                                 // {
-                                 //   #if (USE_WEBSERVER > OFF)
-                                 //       outStr.concat(" ");
-                                 //       outStr.concat(WiFi.localIP().toString());
-                                 //     #endif
-                                 // }
-                                // #endif
-                        #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
-                            SOUT("  md_error="); SOUTLN(md_error);
-                          #endif
-                  #endif // USE_DISP
-                info = false;
-              }
+              if (statLen)
+                {
+                  if ( statLen > OLED1_MAXCOLS)
+                    {
+                      msg.remove(OLED1_MAXCOLS);
+                    }
+                  statOn = true;
+                  statT.startT();
+                  doIt = true;    // output statOut
+                  statT.startT();
+                }
+              else // empty input
+                {
+                  if (statOn && statT.TOut())
+                    statOn = false;
+                }
+              if (!statOn) // disp def val and actual time
+                {
+                  if (statN.TOut())
+                    {
+                      statN.startT();
+                      #if (USE_NTP_SERVER > OFF)
+                          sprintf(statOut,"%02d.%02d. %02d:%02d:%02d ", day(), month(), hour(), minute(), second());
+                          msg = statOut;
+                          msg.concat(" ");
+                          msg.concat((unsigned long) usPerCycle);
+                          msg.concat("us");
+                          info = true;
+                          doIt = true;
+                        #endif
+                    }
+                }
+              if (doIt)
+                {
+                  #if (USE_TOUCHSCREEN > OFF)
+                      touch.wrStatus(msg);
+                    #endif
+                  #if (DISP_I2C11 > OFF)
+                      #if defined( USE_STATUS1 )
+                          oled1.wrStatus(msg);
+                        #endif
+                      #if defined( USE_STATUS2 )
+                          oled2.wrStatus(msg);
+                        #endif
+                           //SOUT("  md_error="); SOUTLN(md_error);
+                    #endif
+                  #if (USE_TFT > 0)
+                      #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
+                          mlcd.wrStatus((char*) statOut);
+                        #endif
+                              //#if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                                   //if (info)
+                                   //  {
+                                   //    #if ( USE_BME280_I2C > OFF )
+                                   //        outStr[0] = 0;
+                                   //        outStr.concat(bmeT.getVal());
+                                   //        outStr.concat("° ");
+                                   //        outStr.concat(bmeH.getVal());
+                                   //        outStr.concat("% ");
+                                   //        outStr.concat(bmeP.getVal());
+                                   //        outStr.concat("mb  ");
+                                   //      #endif
+                                   //  }
+                                   // outStr.concat((char*) statOut);
+                                   // if (info)
+                                   // {
+                                   //   #if (USE_WEBSERVER > OFF)
+                                   //       outStr.concat(" ");
+                                   //       outStr.concat(WiFi.localIP().toString());
+                                   //     #endif
+                                   // }
+                                  // #endif
+                          #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
+                              SOUT("  md_error="); SOUTLN(md_error);
+                            #endif
+                    #endif // USE_DISP
+                  info = false;
+                }
             #endif // USE_STATUS
         }
 
@@ -2192,7 +2185,7 @@
                 }
             #endif
         #endif
-
+    // --- digital input
       #if (USE_DIG_INP > OFF)
           void getDIGIn()
             {
@@ -2217,7 +2210,7 @@
                 #endif
             }
         #endif
-
+    // --- analog input
       #if (USE_CTRL_POTI_ADC > OFF)
           void getADCIn()
             {

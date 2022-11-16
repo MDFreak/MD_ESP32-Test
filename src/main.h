@@ -143,7 +143,7 @@
         #else
             #include <md_oled.h>
           #endif
-      #endif // USE_OLED_I2C
+      #endif //
 
     #if (USE_WS2812_MATRIX_OUT > OFF)
         #include <md_leds.h>
