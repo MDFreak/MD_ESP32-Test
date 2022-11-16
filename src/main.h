@@ -244,7 +244,7 @@
               uint8_t getKey();
             #endif
         // --- digital input
-          #if (USE_CTRL_SW_INP > OFF)
+          #if (USE_DIG_INP > OFF)
               void getDIGIn();
             #endif
           #if (USE_CTRL_POTI_ADC > OFF)

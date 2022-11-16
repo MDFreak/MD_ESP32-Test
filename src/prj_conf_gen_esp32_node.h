@@ -634,12 +634,12 @@
               #endif
             #if (USE_CTRL_SW_INP > OFF)
                 #define INP_SW_CTRL  0
-                #define ACT_SW_CTRL  HIGH // LOW, HIGH
+                #define POL_SW_CTRL  HIGH // LOW, HIGH
                 #define MOD_SW_CTRL  INPUT_PULLUP // INPUT, INPUT_PULLDOWN
               #endif
             #if (USE_GEN_SW_INP > OFF)
                 #define INP_REED_1   0
-                #define POL_REED_1   LOW // LOW, HIGH
+                #define POL_REED_1   HIGH // LOW, HIGH
                 #define MOD_REED_1   INPUT_PULLUP // INPUT, INPUT_PULLDOWN
               #endif
           #endif

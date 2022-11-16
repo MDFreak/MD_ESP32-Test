@@ -645,21 +645,19 @@
                   SOUT(PIN_WS2812_PWR_IN_SW); SOUT(" ");
                 #endif
               #if (USE_CTRL_SW_INP > OFF)
-                  actInpDig[INP_SW_CTRL] = ACT_SW_CTRL;
-                  modInpDig[INP_SW_CTRL] = MOD_REED_1;
+                  pinInpDig[INP_SW_CTRL] = PIN_INP_SW_1;
+                  polmodInpDig[INP_SW_CTRL] = POL_SW_CTRL >> 4 + MOD_SW_CTRL;
                 #endif
               #if (USE_GEN_SW_INP > OFF)
                   pinInpDig[INP_REED_1] = PIN_INP_REED_1;
-                  polmodInpDig[INP_REED_1] = POL_REED_1 >> 4 + ;
-                  modInpDig[INP_REED_1] = MOD_REED_1;
-
+                  polmodInpDig[INP_REED_1] = POL_REED_1 >> 4 + MOD_REED_1;
+                  SOUT(" polmodInpDig 0x"); SOUTHEX(polmodInpDig[INP_REED_1]); SOUT(" ");
                 #endif
-
               for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
                 {
-                  pinMode(PIN_DIG_INP[i], INPUT_PULLUP);
-                  //SOUT(PIN_DIG_INP[i]); SOUT(" ");
-                //}
+                  pinMode(pinInpDig[i], polmodInpDig[i] & 0x0F);
+                  SOUT(pinInpDig[i]); SOUT("-"); SOUTHEX(polmodInpDig[i] & 0x0F);
+                }
               SOUTLN();
             #endif
         // start dutycycle (pwm) inputs
