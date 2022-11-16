@@ -51,6 +51,7 @@
       #define USE_GEN_CNT_INP       OFF // 1
       #define USE_GEN_PWM_INP       OFF // 2
     // --- sensors
+      #define USE_ESPHALL           ON
       #define USE_DS18B20_1W_IO     OFF // [0, 1, ....] limited by 1W connections
       #define USE_BME280_I2C1       1   // [0, 1, ....] limited by I2C channels/addr
       #define USE_BME280_I2C2       OFF // [0, 1, ....] limited by I2C channels/addr

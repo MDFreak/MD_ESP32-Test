@@ -62,7 +62,9 @@
         bool        statDate = false;
           //char        timeOut[STAT_LINELEN + 1] = "";
       #endif
-
+    #if (USE_ESPHALL > OFF)
+        int32_t valHall = 0;
+      #endif
   // ------ user input ---------------
     #if (USE_TOUCHSCREEN > OFF)
 
@@ -1161,7 +1163,10 @@
                 #if (USE_DIG_INP > OFF)
                     getDIGIn();
                   #endif
-
+                #if (USE_ESPHALL > OFF)
+                    valHall = hallRead();
+                    SOUT("Hall = "); SOUTLN(valHall);
+                  #endif
                 #if (USE_MCPWM > OFF)
                     getCNTIn();
                   #endif
