@@ -85,7 +85,8 @@
     #if (USE_DIG_INP > OFF)
         uint8_t  valInpDig[USE_DIG_INP];
         uint8_t  pinInpDig[USE_DIG_INP];
-        uint8_t  polmodInpDig[USE_DIG_INP];
+        uint8_t  polInpDig[USE_DIG_INP];
+        uint8_t  modInpDig[USE_DIG_INP];
       #endif
 
     #if (USE_CNT_INP > OFF)
@@ -650,13 +651,15 @@
                 #endif
               #if (USE_GEN_SW_INP > OFF)
                   pinInpDig[INP_REED_1] = PIN_INP_REED_1;
-                  polmodInpDig[INP_REED_1] = POL_REED_1 >> 4 + MOD_REED_1;
-                  SOUT(" polmodInpDig 0x"); SOUTHEX(polmodInpDig[INP_REED_1]); SOUT(" ");
+                  polInpDig[INP_REED_1] = POL_REED_1;
+                  modInpDig[INP_REED_1] = MOD_REED_1;
+                  SOUT(" polInpDig "); SOUT(polInpDig[INP_REED_1]); SOUT(" ");
+                  SOUT(" modInpDig "); SOUT(modInpDig[INP_REED_1]); SOUT(" ");
                 #endif
               for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
                 {
-                  pinMode(pinInpDig[i], polmodInpDig[i] & 0x0F);
-                  SOUT(pinInpDig[i]); SOUT("-"); SOUTHEX(polmodInpDig[i] & 0x0F);
+                  pinMode(pinInpDig[i], modInpDig[i]);
+                  SOUT(pinInpDig[i]); SOUT("-"); SOUTHEX(modInpDig[i] & 0x0F);
                 }
               SOUTLN();
             #endif
@@ -2180,6 +2183,7 @@
               #if USE_WS2812_PWR_IN_SW
                   ws2812_pwr = digitalRead(PIN_WS2812_PWR_IN_SW);
                 #endif
+
             }
         #endif
 
