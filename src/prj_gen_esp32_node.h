@@ -85,7 +85,6 @@
                  || (USE_DISP_I2C1 > OFF) )
                 #define USE_I2C1        ON
               #endif
-
           //I2C2
             #if ((DISP_I2C21 > OFF) && (DISP_I2C22 > OFF))
                 #define USE_DISP_I2C2   2
