@@ -1411,7 +1411,8 @@
             switch (oledIdx)
               {
               case 1: // system output
-                  usPerCycle = (micros() - usLast) / anzUsCycles;
+                  usPerCycle = ((micros() - usLast) / anzUsCycles);
+                  usLast      = micros();
                   //SOUT(usLast); SOUT(" "); SOUT(micros()); SOUT(" "); SOUTLN(usPerCycle);
                   outStr = "          ";
                   dispText(outStr ,  22, 4, outStr.length());
@@ -1419,7 +1420,6 @@
                   outStr.concat((unsigned long) usPerCycle);
                   outStr.concat("us    ");
                   dispText(outStr ,  22, 4, outStr.length());
-                  usLast      = millis();
                   //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
                   anzUsCycles = 0ul;
                 break;
@@ -1588,38 +1588,23 @@
 
               case 7: // digital inputs
                 #if (USE_DIG_INP > OFF)
-                    SOUT(" SWD ");
+                    //SOUT(" SWD ");
+                    outStr = "";
                     for (uint8_t i = 0 ; i < USE_GEN_SW_INP; i++)
                       {
-                        SOUT(i); SOUT("="); SOUT(valInpDig[i]); SOUT(" ");
+                        //SOUT(i); SOUT("="); SOUT(valInpDig[i]); SOUT(" ");
                         tmpStr = "SWD";
                         tmpStr.concat(i);
-                        switch (i)
-                          {
-                            case 0:
-                              tmpStr.concat(bmeT.getVal());
-                              outStr.concat(bmeT.getVal());
-                              outStr.concat("°  ");
-                              break;
-                            case 1:
-                              tmpStr.concat(bmeH.getVal());
-                              outStr.concat(bmeH.getVal());
-                              outStr.concat("%  ");
-                              break;
-                            case 2:
-                              tmpStr.concat(bmeP.getVal());
-                              outStr.concat(bmeP.getVal());
-                              outStr.concat("mb");
-                              break;
-                            default:
-                              break;
-                          }
+                        tmpStr.concat(valInpDig[i]);
+                        outStr.concat(valInpDig[i]);
+                        outStr.concat(" ");
+                        // send to websocket
+                        #if (USE_WEBSERVER > OFF)
+                            pmdServ->updateAll(tmpStr);
+                          #endif
                       }
-                    SOUTLN();
-                    // send to websocket
-                    #if (USE_WEBSERVER > OFF)
-                        pmdServ->updateAll(tmpStr);
-                      #endif
+                    dispText(outStr , 17, 3, outStr.length());
+                    //SOUTLN();
                   #endif
                 #if (USE_CTRL_POTI_ADC > OFF)
                     //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
