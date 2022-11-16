@@ -46,7 +46,7 @@
 
           #if (USE_DIG_INP > OFF)
               #if (USE_GEN_SW_INP > OFF)
-                  #define PIN_INP_REED_1 15
+                  #define PIN_INP_REED_1 16
                 #endif
             #endif
 
@@ -639,7 +639,7 @@
               #endif
             #if (USE_GEN_SW_INP > OFF)
                 #define INP_REED_1   0
-                #define POL_REED_1   HIGH // LOW, HIGH
+                #define POL_REED_1   LOW // LOW, HIGH
                 #define MOD_REED_1   INPUT_PULLUP // INPUT, INPUT_PULLDOWN
               #endif
           #endif

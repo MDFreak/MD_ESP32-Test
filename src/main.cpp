@@ -1586,9 +1586,40 @@
                     #endif
                   	break;
 
-              case 7: // test values
+              case 7: // digital inputs
                 #if (USE_DIG_INP > OFF)
-                    //SOUT("SW1 "); SOUT(valInpDig[INP_SW_CTRL]); SOUT(" ");
+                    SOUT(" SWD ");
+                    for (uint8_t i = 0 ; i < USE_GEN_SW_INP; i++)
+                      {
+                        SOUT(i); SOUT("="); SOUT(valInpDig[i]); SOUT(" ");
+                        tmpStr = "SWD";
+                        tmpStr.concat(i);
+                        switch (i)
+                          {
+                            case 0:
+                              tmpStr.concat(bmeT.getVal());
+                              outStr.concat(bmeT.getVal());
+                              outStr.concat("°  ");
+                              break;
+                            case 1:
+                              tmpStr.concat(bmeH.getVal());
+                              outStr.concat(bmeH.getVal());
+                              outStr.concat("%  ");
+                              break;
+                            case 2:
+                              tmpStr.concat(bmeP.getVal());
+                              outStr.concat(bmeP.getVal());
+                              outStr.concat("mb");
+                              break;
+                            default:
+                              break;
+                          }
+                      }
+                    SOUTLN();
+                    // send to websocket
+                    #if (USE_WEBSERVER > OFF)
+                        pmdServ->updateAll(tmpStr);
+                      #endif
                   #endif
                 #if (USE_CTRL_POTI_ADC > OFF)
                     //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
@@ -2183,7 +2214,22 @@
               #if USE_WS2812_PWR_IN_SW
                   ws2812_pwr = digitalRead(PIN_WS2812_PWR_IN_SW);
                 #endif
-
+              #if (USE_GEN_SW_INP > OFF)
+                  uint8_t tmp;
+                  for (uint8_t i = 0; i < USE_GEN_SW_INP ; i++)
+                    {
+                      tmp = digitalRead(pinInpDig[i]);
+                      valInpDig[i] = tmp;
+                      if (!polInpDig[i])
+                        if (tmp == valInpDig[i])
+                          if (tmp == digitalRead(pinInpDig[i]))
+                            valInpDig[i] = !tmp;
+                      else
+                        if (tmp != valInpDig[i])
+                          if (tmp == digitalRead(pinInpDig[i]))
+                            valInpDig[i] = tmp;
+                    }
+                #endif
             }
         #endif
 
