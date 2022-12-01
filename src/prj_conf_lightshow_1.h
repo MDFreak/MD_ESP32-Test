@@ -1,9 +1,9 @@
-#ifndef _PRJ_CONFIG_H_
-  #define _PRJ_CONFIG_H_
+#ifndef _PRJ_CONFIG_LIGHTSHOW_1_H_
+  #define _PRJ_CONFIG_LIGHTSHOW_1_H_
 
   #include <Arduino.h>
   #include <md_defines.h>
-  #include <project.h>
+  #include <prj_conf_lightshow_1.h>
 
   // ******************************************
     // --- test features --------------------------------
