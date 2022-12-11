@@ -57,6 +57,7 @@
       #define USE_BME280_I2C2       OFF // [0, 1, ....] limited by I2C channels/addr
       #define USE_TYPE_K_SPI        OFF // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ADC     OFF // [0, 1, ....] limited by analog inputs
+      #define USE_MQ135_GAS_ADC     OFF // [0, 1, ....] limited by analog inputs
       #define USE_PHOTO_SENS        ON  // ON
     // --- network  components
       #define USE_WIFI              ON  // ON
