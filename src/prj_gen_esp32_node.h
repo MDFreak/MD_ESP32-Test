@@ -53,12 +53,16 @@
     // --- sensors
       #define USE_ESPHALL           OFF
       #define USE_DS18B20_1W_IO     OFF // [0, 1, ....] limited by 1W connections
-      #define USE_BME280_I2C1       1   // [0, 1, ....] limited by I2C channels/addr
+      #define USE_BME280_I2C1       ON   // [0, 1, ....] limited by I2C channels/addr
       #define USE_BME280_I2C2       OFF // [0, 1, ....] limited by I2C channels/addr
       #define USE_TYPE_K_SPI        OFF // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ADC     OFF // [0, 1, ....] limited by analog inputs
-      #define USE_MQ135_GAS_ADC     OFF // [0, 1, ....] limited by analog inputs
+      #define USE_MQ135_GAS_1115    OFF // [0, 1, ....] limited by analog inputs
+      #define USE_MQ3_GAS_ADC       OFF // [0, 1, ....] limited by analog inputs
+      #define USE_MQ3_GAS_1115      OFF // [0, 1, ....] limited by analog inputs
       #define USE_PHOTO_SENS        ON  // ON
+      #define USE_ADC1115_I2C1      ON  // ADC 4 channels 16Bit
+      #define USE_ADC1115_I2C2      OFF // ADC 4 channels 16Bit
     // --- network  components
       #define USE_WIFI              ON  // ON
       #define USE_NTP_SERVER        ON  // ON
@@ -112,6 +116,7 @@
       #define USE_PWM_INP         USE_GEN_PWM_INP
       #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
       #define USE_ADC2            OFF // not to use
+      #define USE_ADC1115         USE_ADC1115_I2C1 + USE_ADC1115_I2C2
       #define USE_DIG_INP         USE_GEN_SW_INP + USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
       #define USE_DIG_OUT         USE_WS2812_LINE_OUT + USE_LED_BLINK_OUT //
       #define USE_DIG_IO          USE_DS18B20_1W_IO     //

@@ -260,6 +260,9 @@
           #if (USE_DS18B20_1W_IO > OFF)
               String getDS18D20Str();
             #endif
+          #if (USE_ADC1115 > OFF)
+              #include <Adafruit_ADS1X15.h>
+            #endif
         // --- MQ135 gas sensor
           #if (USE_MQ135_GAS_ADC > OFF)
               int16_t getGasValue();
