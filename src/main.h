@@ -217,7 +217,10 @@
             #endif
 
         // --- traffic Light of gas sensor
-          #if (USE_MQ135_GAS_ADC > OFF)
+          #if (USE_MQ135_GAS_ADC > OFF) || (USE_MQ135_GAS_1115 > OFF)
+              int16_t showTrafficLight(int16_t inval, int16_t inthres);
+            #endif
+          #if (USE_MQ3_ALK_ADC > OFF) || (USE_MQ3_ALK_1115 > OFF)
               int16_t showTrafficLight(int16_t inval, int16_t inthres);
             #endif
 

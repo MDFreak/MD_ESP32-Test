@@ -58,8 +58,8 @@
       #define USE_TYPE_K_SPI        OFF // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ADC     OFF // [0, 1, ....] limited by analog inputs
       #define USE_MQ135_GAS_1115    OFF // [0, 1, ....] limited by analog inputs
-      #define USE_MQ3_GAS_ADC       OFF // [0, 1, ....] limited by analog inputs
-      #define USE_MQ3_GAS_1115      OFF // [0, 1, ....] limited by analog inputs
+      #define USE_MQ3_ALK_ADC       OFF // [0, 1, ....] limited by analog inputs
+      #define USE_MQ3_ALK_1115      ON  // [0, 1, ....] limited by analog inputs
       #define USE_PHOTO_SENS        ON  // ON
       #define USE_ADC1115_I2C1      ON  // ADC 4 channels 16Bit
       #define USE_ADC1115_I2C2      OFF // ADC 4 channels 16Bit
