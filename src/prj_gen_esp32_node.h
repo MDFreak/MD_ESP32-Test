@@ -59,18 +59,11 @@
       #define USE_MQ135_GAS_ADC     OFF // [0, 1, ....] limited by analog inputs
       #define USE_MQ135_GAS_1115    OFF // [0, 1, ....] limited by analog inputs
       #define USE_MQ3_ALK_ADC       OFF // [0, 1, ....] limited by analog inputs
-      #define USE_MQ3_ALK_1115      ON  // [0, 1, ....] limited by analog inputs
-      #define USE_PHOTO_SENS        ON  // ON
-      #define USE_ACS712_1115_1     ON
-      #define USE_ACS712_1115_2     OFF
-      #define USE_ACS712_1115_3     OFF
-      #define USE_ACS712_1115_4     OFF
-      #define USE_ADC1115_I2C1      ON  // ADC 4 channels 16Bit
-      #define USE_ADC1115_I2C2      OFF // ADC 4 channels 16Bit
-      #define USE_ANA_GEN_1115_1    ON
-      #define USE_ANA_GEN_1115_2    OFF
-      #define USE_ANA_GEN_1115_3    OFF
-      #define USE_ANA_GEN_1115_4    OFF
+      #define USE_MQ3_ALK_1115      1   // [0, 1, ....] limited by analog inputs
+      #define USE_PHOTO_SENS        1   // ON
+      #define USE_ACS712_1115       1
+      #define USE_ADC1115_I2C       1  // ADC 4 channels 16Bit
+      #define USE_ANA_GEN_1115      2
     // --- network  components
       #define USE_WIFI              ON  // ON
       #define USE_NTP_SERVER        ON  // ON
