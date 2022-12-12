@@ -49,7 +49,6 @@
                   #define PIN_INP_REED_1 15
                 #endif
             #endif
-
           #if (USE_GEN_CNT_INP > OFF)
               #define PIN_CNT_GEN_S0 4
               #define PIN_CNT_GEN_C0 PCNT_PIN_NOT_USED
@@ -274,41 +273,29 @@
           #endif
 
         #if (USE_FRAM_I2C > OFF)
-            #define I2C_ADDR_FRAM1          I2C_FRAM_50
-            #define I2C_FRAM1_USE_I2C1
-            #if defined( I2C_FRAM1_USE_I2C1 )
-              #define I2C_FRAM1           I2C1
-              #define I2C_SCL_FRAM1       PIN_I2C1_SCL
-              #define I2C_SDA_FRAM1       PIN_I2C1_SDA
-            #else
-                #define I2C_FRAM1         I2C2
-                #define I2C_SCL_FRAM1     PIN_I2C2_SCL
-                #define I2C_SDA_FRAM1     PIN_I2C2_SDA
-              #endif
-            #if (( USE_I2C > 1 ) && ( USE_FRAM_I2C1 > 1 ))
-                #define I2C_ADDR_FRAM2        I2C_FRAM_50
-                #define I2C_FRAM2_USE_I2C2
-                #if defined( I2C_FRAM2_USE_I2C1 )
-                  #define I2C_FRAM2       I2C1
-                  #define I2C_SCL_FRAM2   I2C1_SCL
-                  #define I2C_SDA_FRAM2   I2C1_SDA
-                #else
-                    #define I2C_FRAM2     I2C2
-                    #define I2C_SCL_FRAM2 I2C2_SCL
-                    #define I2C_SDA_FRAM2 I2C2_SDA
-                  #endif
+            #define FRAM1_I2C_ADDR      I2C_FRAM_50
+            #define FRAM1_SIZE          0x8000
+            #define FRAM1_I2C           I2C1
+            #define FRAM1_I2C_SCL       PIN_I2C1_SCL
+            #define FRAM1_I2C_SDA       PIN_I2C1_SDA
+            #if (USE_FRAM_I2C > 1 )
+                #define FRAM2_I2C_ADDR  I2C_FRAM_50
+                #define FRAM1_SIZE      0x8000
+                #define FRAM2_I2C       I2C2
+                #define FRAM2_I2C_SCL   I2C1_SCL
+                #define FRAM2_I2C_SDA   I2C1_SDA
               #endif
           #endif
 
-        #if ( USE_BME280_I2C1 > OFF )
-            #define I2C_BME2801         I2C1
-            #define I2C_SCL_BME2801     PIN_I2C1_SCL
-            #define I2C_SDA_BME2801     PIN_I2C1_SDA
-          #endif
-        #if ( USE_BME280_I2C2 > OFF )
-            #define I2C_BME2802         I2C2
-            #define I2C_SCL_BME2802     I2C2_SCL
-            #define I2C_SDA_BME2802     I2C2_SDA
+        #if ( USE_BME280_I2C > OFF )
+            #define BME2801_I2C         I2C1
+            #define BME2801_I2C_SCL     PIN_I2C1_SCL
+            #define BME2801_I2C_SDA     PIN_I2C1_SDA
+            #if ( USE_BME280_I2C > 1 )
+                #define BME2802_I2C       I2C2
+                #define BME2802_I2C_SCL   PIN_I2C2_SCL
+                #define BME2802_I2C_SDA   PIN_I2C2_SDA
+              #endif
           #endif
 
     // --- user interface
@@ -649,10 +636,6 @@
           #endif
 
     // --- memories
-      // --- FRAM
-        #if (USE_FRAM_I2C > OFF)
-            #define SIZE_FRAM     0x8000
-          #endif
     // --- sensors
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION   9

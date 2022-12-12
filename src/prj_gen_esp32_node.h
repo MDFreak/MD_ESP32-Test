@@ -86,9 +86,8 @@
             #else
                 #define USE_DISP_I2C1   OFF
               #endif
-            #if (   (USE_BME280_I2C1 > OFF) || (USE_FRAM_I2C1 > OFF) \
-                 || (USE_DISP_I2C1 > OFF) )
-                #define USE_I2C1        ON
+            #if (   (USE_BME280_I2C > OFF) || (USE_FRAM_I2C > OFF) \
+                 || (USE_DISP_I2C > OFF)   || (USE_ADC1115_I2C > OFF))
               #endif
           //I2C2
             #if ((DISP_I2C21 > OFF) && (DISP_I2C22 > OFF))
@@ -98,7 +97,7 @@
             #else
                 #define USE_DISP_I2C2   OFF
               #endif
-            #if (   (USE_BME280_I2C2 > OFF) || (USE_FRAM_I2C2 > OFF) \
+            #if (   (USE_BME280_I2C2 > OFF) || (USE_FRAM_I2C > OFF) \
                  || (USE_DISP_I2C2 > OFF) )
                 #define USE_I2C2        ON
               #endif
