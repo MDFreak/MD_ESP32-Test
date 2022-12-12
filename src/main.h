@@ -170,7 +170,7 @@
     #if (USE_CNT_INP > OFF)
       #endif
   // --- memory
-    #if ((USE_FRAM_I2C1 > OFF) || (USE_FRAM_I2C1 > OFF))
+    #if (USE_FRAM_I2C > OFF)
         #include <md_FRAM.h>
       #endif
     #if (USE_FLASH_MEM > OFF)

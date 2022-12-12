@@ -502,7 +502,7 @@
     #if (USE_FLASH_MEM > OFF)
         #include <SPIFFS.h>
       #endif
-    #if (USE_FRAM_I2C1 > OFF)
+    #if (USE_FRAM_I2C > OFF)
         md_FRAM fram = md_FRAM();
       #endif
 // ----------------------------------------------------------------
@@ -816,7 +816,7 @@
               testFlash();
             #endif
         // FRAM
-          #if (USE_FRAM_I2C1 > OFF)
+          #if (USE_FRAM_I2C > OFF)
             // Read the first byte
             SOUT("FRAM addr "); SOUTHEX(I2C_ADDR_FRAM1);
             dispStatus("init FRAM");

@@ -273,7 +273,7 @@
             #define I2C_SDA_OLED4   PIN_I2C2_SDA
           #endif
 
-        #if (USE_FRAM_I2C1 > OFF)
+        #if (USE_FRAM_I2C > OFF)
             #define I2C_ADDR_FRAM1          I2C_FRAM_50
             #define I2C_FRAM1_USE_I2C1
             #if defined( I2C_FRAM1_USE_I2C1 )
@@ -650,7 +650,7 @@
 
     // --- memories
       // --- FRAM
-        #if ((USE_FRAM_I2C1 > OFF) || (USE_FRAM_I2C1 > OFF))
+        #if (USE_FRAM_I2C > OFF)
             #define SIZE_FRAM     0x8000
           #endif
     // --- sensors

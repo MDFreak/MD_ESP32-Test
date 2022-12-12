@@ -71,8 +71,7 @@
       #define USE_WEBSERVER         ON  // ON
     // --- memory components
       #define USE_FLASH_MEM         ON
-      #define USE_FRAM_I2C1         ON  // 1   // [0, 1, ...] limited by I2C channel/addr
-      #define USE_FRAM_I2C2         OFF // 1   // [0, 1, ...] limited by I2C channel/addr
+      #define USE_FRAM_I2C          1   // 1   // [0, 1, ...] limited by I2C channel/addr
     // --- test components
       #define USE_CTRL_POTI_ADC     OFF   // [0, 1, ....] limited by analog inputs
       #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins
