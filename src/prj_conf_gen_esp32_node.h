@@ -144,6 +144,10 @@
               #define PIN_MQ135     35
               #define ADC_MQ135     5   // ADC 1-3
             #endif
+          #if (USE_MQ3_ALK_ADC > OFF)
+              #define PIN_MQ135     35
+              #define ADC_MQ135     5   // ADC 1-3
+            #endif
 
           #if (USE_PHOTO_SENS > OFF)
               #define PIN_PHOTO_SENS 39
@@ -231,7 +235,7 @@
         #define ERRBIT_WIFI      0x00000004     // WIFI connection
         #define ERRBIT_NTPTIME   0x00000008     // NTP timeserver connection
       // --- generic
-        #define SCAN_I2C         OFF // 128
+        #define SCAN_I2C         ON // 128
         #define CHECK_I2C_DEVICES
         //#define UTC_SEASONTIME UTC_WINTERTIME
         #define UTC_SEASONTIME UTC_SUMMERTIME
@@ -670,11 +674,18 @@
             #endif
         #endif
 
-      #if (USE_MQ135_GAS_ADC > OFF)
+      #if (USE_MQ135_GAS_ADC > OFF) || (USE_MQ135_GAS_1115 > OFF)
           #define MQ135_FILT      15       // floating  measure filtering
           //#define MQ135_ThresFilt 25       // threshold measure filtering
           #define MQ135_EM_WIN    100      // window for traffic light
           //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
+          #ifndef USE_MEASURE_CYCLE
+              #define USE_MEASURE_CYCLE
+            #endif
+        #endif
+      #if (USE_MQ3_ALK_ADC > OFF) || (USE_MQ3_ALK_1115 > OFF)
+          #define MQ3_FILT      15       // floating  measure filtering
+          #define MQ3_EM_WIN    100      // window for traffic light
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
