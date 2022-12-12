@@ -19,12 +19,7 @@
       // --- displays
         #define USE_DISP            1
           // OLEDs
-            #define DISP_I2C11      MC_UO_OLED_130_AZ  // OLED1 on I2C1
-            #define DISP_I2C12      OFF  // OLED2 on I2C1
-            #define DISP_I2C21      OFF  // OLED1 on I2C2
-            #define DISP_I2C21      OFF  // OLED2 on I2C2
-              // MC_UO_OLED_066_AZ, MC_UO_OLED_091_AZ
-              // MC_UO_OLED_096_AZ, MC_UO_OLED_130_AZ
+            #define USE_DISP_OLED   1
           // TFTs
             #define USE_DISP_TFT    OFF
               // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT2046_AZ_UNO, MC_UO_TXPT2046_AZ_SPI
@@ -62,8 +57,8 @@
       #define USE_MQ3_ALK_1115      1   // [0, 1, ....] limited by analog inputs
       #define USE_PHOTO_SENS        1   // ON
       #define USE_ACS712_1115       1
-      #define USE_ADC1115_I2C       1  // ADC 4 channels 16Bit
       #define USE_ANA_GEN_1115      2
+      #define USE_ADC1115_I2C       1  // ADC 4 channels 16Bit
     // --- network  components
       #define USE_WIFI              ON  // ON
       #define USE_NTP_SERVER        ON  // ON
@@ -78,52 +73,19 @@
     // --- system components
       // usage of busses
         // I2C
-          //I2C1
-            #if ((DISP_I2C11 > OFF) && (DISP_I2C12 > OFF))
-                #define USE_DISP_I2C1   2
-            #elif ((DISP_I2C11 > OFF) || (DISP_I2C12 > OFF))
-                #define USE_DISP_I2C1   1
-            #else
-                #define USE_DISP_I2C1   OFF
-              #endif
-            #if (   (USE_BME280_I2C > OFF) || (USE_FRAM_I2C > OFF) \
-                 || (USE_DISP_I2C > OFF)   || (USE_ADC1115_I2C > OFF))
-              #endif
-          //I2C2
-            #if ((DISP_I2C21 > OFF) && (DISP_I2C22 > OFF))
-                #define USE_DISP_I2C2   2
-            #elif ((DISP_I2C21 > OFF) || (DISP_I2C22 > OFF))
-                #define USE_DISP_I2C2   1
-            #else
-                #define USE_DISP_I2C2   OFF
-              #endif
-            #if (   (USE_BME280_I2C2 > OFF) || (USE_FRAM_I2C > OFF) \
-                 || (USE_DISP_I2C2 > OFF) )
-                #define USE_I2C2        ON
-              #endif
-
+          #define USE_I2C         1
         // SPI
-          #define USE_SPI           USE_DISP_TFT + USE_TOUCHSCREEN_SPI + USE_TYPE_K_SPI
-          #if (USE_SPI > OFF)
-            #define USED_SPI_PINS     USE_SPI + 3
-          #else
-              #define USED_SPI_PINS   OFF
-            #endif
+          #define USE_SPI         OFF
     // usage of peripherals
       #define USE_PWM_OUT         3 * USE_RGBLED_PWM + USE_FAN_PWM + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
       #define USE_CNT_INP         USE_GEN_CNT_INP     // max 2 * 8 independent
       #define USE_PWM_INP         USE_GEN_PWM_INP
       #define USE_ADC1            USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
       #define USE_ADC2            OFF // not to use
-      #define USE_ADC1115         USE_ADC1115_I2C1 + USE_ADC1115_I2C2
       #define USE_DIG_INP         USE_GEN_SW_INP + USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
       #define USE_DIG_OUT         USE_WS2812_LINE_OUT + USE_LED_BLINK_OUT //
       #define USE_DIG_IO          USE_DS18B20_1W_IO     //
       #define USED_IOPINS         USE_DIG_INP + USE_DIG_OUT + USE_DIG_IO + (2 * USE_I2C) + USED_SPI_PINS + USE_PWM_OUT + USE_CNT_INP + USE_ADC1
-      #if (USED_IOPINS > 15)
-          #define ERROR !!! zuviele IOs verwendet !!!
-          ERROR
-        #endif
 
     // to be reorganised
         #if (USE_KEYPADSHIELD > OFF)

@@ -33,11 +33,11 @@
 	    //static uint32_t anzMsCycles = 0;
 	    //static uint64_t msLast      = 0;
 
-    #if ( USE_I2C1 > OFF )
+    #if ( USE_I2C > OFF )
         TwoWire i2c1 = TwoWire(0);
-      #endif
-    #if ( USE_I2C2 > OFF )
-        TwoWire i2c2 = TwoWire(1);
+        #if ( USE_I2C > 1 )
+            TwoWire i2c2 = TwoWire(1);
+          #endif
       #endif
 
     #if ( USE_LED_BLINK_OUT > 0 )

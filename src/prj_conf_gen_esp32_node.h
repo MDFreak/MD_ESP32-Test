@@ -309,7 +309,7 @@
       // --- display
         #if (USE_DISP > 0)
             #define USE_STATUS
-            #if (USE_DISP_I2C1 > OFF)
+            #if (USE_DISP_OLED > OFF)
                 #if ( DISP_I2C11 > OFF )
                     #define USE_STATUS1
                           // select OLED - device & GEO   GEO_RAWMODE?
