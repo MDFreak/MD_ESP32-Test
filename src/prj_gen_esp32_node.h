@@ -67,6 +67,10 @@
       #define USE_ACS712_1115_4     OFF
       #define USE_ADC1115_I2C1      ON  // ADC 4 channels 16Bit
       #define USE_ADC1115_I2C2      OFF // ADC 4 channels 16Bit
+      #define USE_ANA_GEN_1115_1    ON
+      #define USE_ANA_GEN_1115_2    OFF
+      #define USE_ANA_GEN_1115_3    OFF
+      #define USE_ANA_GEN_1115_4    OFF
     // --- network  components
       #define USE_WIFI              ON  // ON
       #define USE_NTP_SERVER        ON  // ON
