@@ -74,7 +74,8 @@
     #if ((USE_ADC1 > OFF) || (USE_ADC2 > OFF))
         #include <driver\adc.h>
       #endif
-
+    #if (USE_ADC1115_I2C > OFF)
+        #include <>
   // --- user outputs
     // --- PWM
       /** ### Configure the project ------------------------

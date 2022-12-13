@@ -949,7 +949,7 @@
       #if (USE_PHOTO_SENS > OFF)
         #define PHOTO_FILT        7
         #define PHOTO_DROP        0
-        #define ATT_PHOTO_SENS    3 // 2 = ADC_ATTEN_DB_6; 3 = ADC_ATTEN_DB_11
+        #define PHOTO_SENS_ATT    3 // 2 = ADC_ATTEN_DB_6; 3 = ADC_ATTEN_DB_11
         #ifndef USE_MEASURE_CYCLE
             #define USE_MEASURE_CYCLE
           #endif

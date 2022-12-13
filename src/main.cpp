@@ -476,7 +476,7 @@
         int16_t gasThres;
       #endif
 
-    #if ((USE_MQ3_ALK_ADC > OFF) || (USE_MQ3_ALK_1115 > OFF)
+    #if ((USE_MQ3_ALK_ADC > OFF) || (USE_MQ3_ALK_1115 > OFF))
         int16_t alkValue;
         filterValue valAlk(MQ3_FILT, 1);
       #endif
@@ -779,7 +779,7 @@
             phVal.begin(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
             pinMode(PIN_PHOTO_SENS, INPUT);
             adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO_SENS,
-                                      (adc_atten_t)    ATT_PHOTO_SENS);
+                                      (adc_atten_t)    PHOTO_SENS_ATT);
             SOUTLN(" ready");
             #endif
 
