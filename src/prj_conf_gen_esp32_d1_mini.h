@@ -276,16 +276,16 @@
           #endif
 
         #if (USE_FRAM_I2C1 > OFF)
-            #define I2C_ADDR_FRAM1          I2C_FRAM_50
+            #define FRAM1_I2C_ADDR          I2C_FRAM_50
             #define I2C_FRAM1_USE_I2C1
             #if defined( I2C_FRAM1_USE_I2C1 )
               #define I2C_FRAM1           I2C1
-              #define I2C_SCL_FRAM1       PIN_I2C1_SCL
-              #define I2C_SDA_FRAM1       PIN_I2C1_SDA
+              #define FRAM1_I2C_SCL       PIN_I2C1_SCL
+              #define FRAM1_I2C_SDA       PIN_I2C1_SDA
             #else
                 #define I2C_FRAM1         I2C2
-                #define I2C_SCL_FRAM1     PIN_I2C2_SCL
-                #define I2C_SDA_FRAM1     PIN_I2C2_SDA
+                #define FRAM1_I2C_SCL     PIN_I2C2_SCL
+                #define FRAM1_I2C_SDA     PIN_I2C2_SDA
               #endif
             #if (( USE_I2C > 1 ) && ( USE_FRAM_I2C1 > 1 ))
                 #define I2C_ADDR_FRAM2        I2C_FRAM_50

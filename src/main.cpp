@@ -327,23 +327,23 @@
         uint16_t fanIdx = 0;
       #endif
 
-    #if (OLED_I2C > OFF)
+    #if (OLED1_I2C > OFF)
         #if (OLED1_I2C > OFF)
             #if !(OLED1_DRV ^ OLED_DRV_1106)
-                md_oled_1106 oled1 = md_oled_1106((uint8_t) I2C_ADDR_OLED1, (uint8_t) I2C_SDA_OLED1,
-                                        (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
+                md_oled_1106 oled1 = md_oled_1106((uint8_t) OLED1_I2C_ADDR, (uint8_t) OLED1_I2C_SDA,
+                                        (uint8_t) OLED1_I2C_SCL, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
             #else
-                md_oled_1306 oled1 = md_oled_1306((uint8_t) I2C_ADDR_OLED1, (uint8_t) I2C_SDA_OLED1,
-                                        (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
+                md_oled_1306 oled1 = md_oled_1306((uint8_t) OLED1_I2C_ADDR, (uint8_t) OLED1_I2C_SDA,
+                                        (uint8_t) OLED1_I2C_SCL, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
               #endif
           #endif
         #if (DISP_I2C21 > OFF)
             #if !(OLED2_DRV ^ OLED_DRV_1106)
-                md_oled_1106 oled2 = md_oled_1106((uint8_t) I2C_ADDR_OLED2, (uint8_t) I2C_SDA_OLED2,
-                                        (uint8_t) I2C_SCL_OLED2, (OLEDDISPLAY_GEOMETRY) OLED2_GEO);
+                md_oled_1106 oled2 = md_oled_1106((uint8_t) OLED2_I2C_ADDR, (uint8_t) OLED2_I2C_SDA,
+                                        (uint8_t) OLED2_I2C_SCL, (OLEDDISPLAY_GEOMETRY) OLED2_GEO);
               #else
-                md_oled_1306 oled2 = md_oled_1306((uint8_t) I2C_ADDR_OLED2, (uint8_t) I2C_SDA_OLED2,
-                                        (uint8_t) I2C_SCL_OLED2, (OLEDDISPLAY_GEOMETRY) OLED2_GEO);
+                md_oled_1306 oled2 = md_oled_1306((uint8_t) OLED2_I2C_ADDR, (uint8_t) OLED2_I2C_SDA,
+                                        (uint8_t) OLED2_I2C_SCL, (OLEDDISPLAY_GEOMETRY) OLED2_GEO);
               #endif
           #endif
         msTimer oledT   = msTimer(DISP_CYCLE);
@@ -818,9 +818,9 @@
         // FRAM
           #if (USE_FRAM_I2C > OFF)
             // Read the first byte
-            SOUT("FRAM addr "); SOUTHEX(I2C_ADDR_FRAM1);
+            SOUT("FRAM addr "); SOUTHEX(FRAM1_I2C_ADDR);
             dispStatus("init FRAM");
-            bool ret = !fram.begin(I2C_SDA_FRAM1, I2C_SCL_FRAM1, I2C_ADDR_FRAM1);
+            bool ret = !fram.begin(FRAM1_I2C_SDA, FRAM1_I2C_SCL, FRAM1_I2C_ADDR);
             if (ret == ISOK)
               {
                 SOUT(" ok ProdID= ");

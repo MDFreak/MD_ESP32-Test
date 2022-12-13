@@ -116,34 +116,20 @@
         #include "md_buzzer.h"
       #endif // USE_BUZZER_PWM
 
-    #if (DISP_I2C11 > OFF)
+    #if (USE_OLED_I2C > OFF)
         #if !(OLED1_DRV ^ OLED_DRV_1106)
             #include "md_oled_SH1106.h"
         #else
             #include <md_oled.h>
           #endif
-      #endif
-    #if (DISP_I2C12 > OFF)
-        #if !(OLED2_DRV ^ OLED_DRV_1106)
-            #include "md_oled_SH1106.h"
-        #else
-            #include <md_oled.h>
+        #if (USE_OLED_I2C > 1)
+            #if !(OLED2_DRV ^ OLED_DRV_1106)
+                #include "md_oled_SH1106.h"
+            #else
+                #include <md_oled.h>
+              #endif
           #endif
       #endif
-    #if (DISP_I2C21 > OFF)
-        #if !(OLED3_DRV ^ OLED_DRV_1106)
-            #include "md_oled_SH1106.h"
-        #else
-            #include <md_oled.h>
-          #endif
-      #endif
-    #if (DISP_I2C22 > OFF)
-        #if !(OLED4_DRV ^ OLED_DRV_1106)
-            #include "md_oled_SH1106.h"
-        #else
-            #include <md_oled.h>
-          #endif
-      #endif //
 
     #if (USE_WS2812_MATRIX_OUT > OFF)
         #include <md_leds.h>
