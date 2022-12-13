@@ -615,11 +615,14 @@
               #endif
           #endif
       // --- external adc input using ADS1115 (I2C)
-        #if (USE_ADS1115_I2C > OFF)
+        #if (USE_ADC1115_I2C > OFF)
             #ifndef USE_MEASURE_CYCLE
                 #define USE_MEASURE_CYCLE
               #endif
-            ADS
+            #define ADC1115_1_CHAN        4
+            #if (USE_ADC1115_I2C > 1)
+                #define ADC1115_2_CHAN        4
+              #endif
           #endif
 
       // --- internal digital input
