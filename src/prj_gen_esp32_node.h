@@ -19,7 +19,7 @@
       // --- displays
         #define USE_DISP            1
           // OLEDs
-            #define USE_DISP_OLED   1
+            #define USE_OLED_I2C    1
           // TFTs
             #define USE_DISP_TFT    OFF
               // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT2046_AZ_UNO, MC_UO_TXPT2046_AZ_SPI

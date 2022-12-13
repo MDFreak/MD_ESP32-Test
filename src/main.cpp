@@ -327,8 +327,8 @@
         uint16_t fanIdx = 0;
       #endif
 
-    #if ((USE_DISP_I2C1 + USE_DISP_I2C2) > OFF)
-        #if (DISP_I2C11 > OFF)
+    #if (OLED_I2C > OFF)
+        #if (OLED1_I2C > OFF)
             #if !(OLED1_DRV ^ OLED_DRV_1106)
                 md_oled_1106 oled1 = md_oled_1106((uint8_t) I2C_ADDR_OLED1, (uint8_t) I2C_SDA_OLED1,
                                         (uint8_t) I2C_SCL_OLED1, (OLEDDISPLAY_GEOMETRY) OLED1_GEO);
