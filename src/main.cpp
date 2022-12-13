@@ -1794,11 +1794,11 @@
                   #if (USE_TOUCHSCREEN > OFF)
                       touch.wrStatus(msg);
                     #endif
-                  #if (USE_OLED1_I2C > OFF)
-                      #if defined( USE_STATUS1 )
+                  #if (USE_OLED_I2C > OFF)
+                      #if ( USE_STATUS1 > OFF )
                           oled1.wrStatus(msg);
                         #endif
-                      #if defined( USE_STATUS2 )
+                      #if ( USE_STATUS2 > OFF)
                           oled2.wrStatus(msg);
                         #endif
                            //SOUT("  md_error="); SOUTLN(md_error);

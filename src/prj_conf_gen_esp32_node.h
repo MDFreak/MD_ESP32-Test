@@ -308,7 +308,7 @@
                           // MC_UO_OLED_130_AZ   GEO_128_64   OLED_DRV_1106
                 #define OLED1_I2C_TYP MC_UO_OLED_130_AZ  // OLED1 on I2C1
                 #if ( USE_OLED_I2C > OFF )
-                    #define USE_STATUS1
+                    #define USE_STATUS1     ON
                     #if !(OLED1_I2C_TYP ^ MC_UO_OLED_066_AZ)
                         #define OLED1_MAXCOLS  OLED_066_MAXCOLS
                         #define OLED1_MAXROWS  OLED_066_MAXROWS
@@ -335,7 +335,7 @@
                       #endif
                     #if ( USE_OLED_I2C > 1 )
                         #define OLED2_I2C_TYP         MC_UO_OLED_130_AZ  // OLED1 on I2C1
-                        #define USE_STATUS2
+                        #define USE_STATUS2           ON
                         #if !(OLED2_I2C_TYP ^ MC_UO_OLED_066_AZ)
                             #define OLED2_MAXCOLS OLED_066_MAXCOLS
                             #define OLED2_MAXROWS OLED_066_MAXROWS
