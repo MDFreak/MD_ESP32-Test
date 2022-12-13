@@ -46,19 +46,20 @@
       #define USE_GEN_CNT_INP       OFF // 1
       #define USE_GEN_PWM_INP       OFF // 2
     // --- sensors
+      #define USE_ADC1115_I2C       1   // ADC 4 channels 16Bit
       #define USE_ESPHALL           OFF
       #define USE_DS18B20_1W_IO     OFF // [0, 1, ....] limited by 1W connections
       #define USE_BME280_I2C1       ON   // [0, 1, ....] limited by I2C channels/addr
       #define USE_BME280_I2C2       OFF // [0, 1, ....] limited by I2C channels/addr
       #define USE_TYPE_K_SPI        OFF // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ADC     OFF // [0, 1, ....] limited by analog inputs
-      #define USE_MQ135_GAS_1115    OFF // [0, 1, ....] limited by analog inputs
+      #define USE_MQ135_GAS_1115    OFF // connected with ana-in ADS1115
       #define USE_MQ3_ALK_ADC       OFF // [0, 1, ....] limited by analog inputs
-      #define USE_MQ3_ALK_1115      1   // [0, 1, ....] limited by analog inputs
+      #define USE_MQ3_ALK_1115      1   // connected with ana-in ADS1115
       #define USE_PHOTO_SENS        1   // ON
-      #define USE_ACS712_1115       1
-      #define USE_ANA_GEN_1115      2
-      #define USE_ADC1115_I2C       1  // ADC 4 channels 16Bit
+      #define USE_ACS712_1115       1   // connected with ana-in ADS1115
+      #define USE_POTI_1115         2   // connected with ana-in ADS1115
+      #define USE_ADC1115_I2C       1   // ADC 4 channels 16Bit
     // --- network  components
       #define USE_WIFI              ON  // ON
       #define USE_NTP_SERVER        ON  // ON

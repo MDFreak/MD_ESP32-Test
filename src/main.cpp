@@ -469,8 +469,15 @@
         float dsTemp[DS18B20_ANZ];
       #endif
 
-    #if (USE_MQ135_GAS_ADC > OFF)
+    #if ((USE_MQ135_GAS_ADC > OFF) || (USE_MQ135_GAS_1115 > OFF))
         filterValue valGas(MQ135_FILT, 1);
+        //filterValue tholdGas(MQ135_ThresFilt,1);
+        int16_t gasValue;
+        int16_t gasThres;
+      #endif
+
+    #if ((USE_MQ3_ALK_ADC > OFF) || (USE_MQ3_ALK_1115 > OFF)
+        filterValue valGas(MQ3_FILT, 1);
         //filterValue tholdGas(MQ135_ThresFilt,1);
         int16_t gasValue;
         int16_t gasThres;
