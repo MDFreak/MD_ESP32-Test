@@ -301,7 +301,7 @@
         #if (USE_DISP > 0)
             #define USE_STATUS
             #if (USE_OLED_I2C > OFF)
-                          // select OLED - device & GEO   GEO_RAWMODE?
+                // select OLED - device & GEO   GEO_RAWMODE?
                           // MC_UO_OLED_066_AZ   GEO_64_48    OLED_DRV_1306
                           // MC_UO_OLED_091_AZ   GEO_128_32   OLED_DRV_1306
                           // MC_UO_OLED_096_AZ   GEO_128_64   OLED_DRV_1306
@@ -607,14 +607,22 @@
           #endif
       // --- dutycycle (pwm) input
         #if (USE_PWM_INP > OFF)
-            //
           #endif
+      // --- internal adc input
         #if (USE_ADC1 > OFF)
             #ifndef USE_MEASURE_CYCLE
                 #define USE_MEASURE_CYCLE
               #endif
           #endif
+      // --- external adc input using ADS1115 (I2C)
+        #if (USE_ADS1115_I2C > OFF)
+            #ifndef USE_MEASURE_CYCLE
+                #define USE_MEASURE_CYCLE
+              #endif
+            ADS
+          #endif
 
+      // --- internal digital input
         #if (USE_DIG_INP > OFF)
             #ifndef USE_MEASURE_CYCLE
                 #define USE_MEASURE_CYCLE

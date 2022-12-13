@@ -477,10 +477,12 @@
       #endif
 
     #if ((USE_MQ3_ALK_ADC > OFF) || (USE_MQ3_ALK_1115 > OFF)
-        filterValue valGas(MQ3_FILT, 1);
-        //filterValue tholdGas(MQ135_ThresFilt,1);
-        int16_t gasValue;
-        int16_t gasThres;
+        int16_t alkValue;
+        filterValue valAlk(MQ3_FILT, 1);
+      #endif
+
+    #if (USE_POTI_1115 > OFF)
+
       #endif
 
     #if (USE_PHOTO_SENS > OFF)
