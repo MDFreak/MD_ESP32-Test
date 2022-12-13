@@ -1741,11 +1741,11 @@
       void clearDisp()
         {
           #if (USE_DISP > 0)
-              #if (DISP_I2C11 > OFF)
-                oled1.clear();
-                #endif
-              #if defined(OLED2)
-                oled2.clear();
+              #if (USE_OLED_I2C > OFF)
+                  oled1.clear();
+                  #if (USE_OLED_I2C > 1)
+                      oled2.clear();
+                    #endif
                 #endif
             #endif
         }
@@ -1794,7 +1794,7 @@
                   #if (USE_TOUCHSCREEN > OFF)
                       touch.wrStatus(msg);
                     #endif
-                  #if (DISP_I2C11 > OFF)
+                  #if (USE_OLED1_I2C > OFF)
                       #if defined( USE_STATUS1 )
                           oled1.wrStatus(msg);
                         #endif
@@ -1846,13 +1846,13 @@
       void dispText(String msg, uint8_t col, uint8_t row, uint8_t len)
         {
           #if (USE_DISP > 0)
-              #if (DISP_I2C11 > OFF)
-                oled1.wrText(msg, col, row, len);
-                          //SOUT((uint32_t) millis); SOUT(" dispText oled1 '"); SOUT(msg); SOUTLN("'");
-                #endif
-              #if defined(OLED2)
-                oled2.wrText(msg, col, row, len);
-                          //SOUT((uint32_t) millis); SOUT(" dispText oled2 '"); SOUT(msg); SOUTLN("'");
+              #if (USE_OLED_I2C > OFF)
+                  oled1.wrText(msg, col, row, len);
+                            //SOUT((uint32_t) millis); SOUT(" dispText oled1 '"); SOUT(msg); SOUTLN("'");
+                  #if (USE_OLED_I2C > 1)
+                      oled2.wrText(msg, col, row, len);
+                            //SOUT((uint32_t) millis); SOUT(" dispText oled2 '"); SOUT(msg); SOUTLN("'");
+                    #endif
                 #endif
               #if (USE_TFT > 0)
                   #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
@@ -1870,7 +1870,7 @@
           dispText((String) msg, col, row, len);
             /*
                 #if (USE_DISP > 0)
-                    #if (DISP_I2C11 > OFF)
+                    #if (USE_OLED1_I2C > OFF)
                         oled1.wrText(msg, col, row, len);
                             #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                                 SOUT("  md_error="); SOUTLN(md_error);
@@ -1915,12 +1915,12 @@
                     #endif
                 #endif
 
-              #if (DISP_I2C11 > OFF)
+              #if (USE_OLED_I2C > OFF)
                   oled1.begin((uint8_t) OLED1_MAXCOLS, (uint8_t) OLED1_MAXROWS);
                   SOUT(millis()); SOUTLN(" oled1 gestartet");
-                #endif
-              #if defined(OLED2)
-                  oled2.begin((uint8_t) DISP2_MAXCOLS, (uint8_t) DISP2_MAXROWS);
+                  #if (USE_OLED_I2C > 1)
+                      oled2.begin((uint8_t) OLED2_MAXCOLS, (uint8_t) OLED2_MAXROWS);
+                    #endif
                 #endif
             #endif
         }
