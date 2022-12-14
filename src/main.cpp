@@ -733,7 +733,6 @@
                     startWebServer();
                   #endif
                     //md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
-
               }
             #endif
 
@@ -771,8 +770,6 @@
                       SOUT(" nicht gefunden");
                     }
             #endif
-
-
         // photo sensor
           #if (USE_PHOTO_SENS > OFF)
             SOUT("init poto sensor ... ");
@@ -782,7 +779,6 @@
                                       (adc_atten_t)    PHOTO_SENS_ATT);
             SOUTLN(" ready");
             #endif
-
         // K-type thermoelementation
           #if ( USE_TYPE_K_SPI > 0)
                     SOUT(millis()); SOUT(" Tcouple1 ... " );
@@ -818,7 +814,6 @@
                           }
                   #endif
             #endif
-
       // --- memories
         // FLASH memory
           #if (USE_FLASH_MEM > OFF)
@@ -840,7 +835,6 @@
                 SOUTLN(" FRAM selftest "); SOUTLN(fram.selftest());
               }
             #endif
-
       // --- services using interrupt
         // start counter
           #if (USE_CNT_INP > OFF)
@@ -964,7 +958,6 @@
         #if (USE_TOUCHSCREEN > OFF)
           //touch.runTouch(outBuf);
           #endif // USE_TOUCHSCREEN
-
         #if (USE_KEYPADSHIELD > OFF)
           key = getKey();
           if (key)
@@ -1089,7 +1082,6 @@
                       }
                   #endif // USE_CNT_AUTORANGE
               }
-
                       //Serial.flush();
           #endif
         #if (USE_PWM_INP > OFF)
@@ -1114,7 +1106,6 @@
                     //gasThres = (int16_t) tholdGas.value((double) gasThres);
                           //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
                   #endif
-
                 #if ( USE_BME280_I2C1 > OFF )
                     bme.init();
                     usleep(1000);
@@ -1122,11 +1113,9 @@
                     bmeH.doVal((uint16_t) (bme.readHumidity() + 0.5));
                     bmeP.doVal((uint16_t) ((bme.readPressure() / 100.0F) + 0.5));
                   #endif
-
                 #if (USE_PHOTO_SENS > OFF)
                     phVal.doVal(analogRead(PIN_PHOTO_SENS));
                   #endif
-
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
                         getCNTIn();
@@ -2244,6 +2233,13 @@
                 {
                   inpValADC[i] = analogRead(PIN_ADC_CONF[i].pin);
                 }
+            }
+        #endif
+
+      #if (USE_ADC1115_I2C > OFF)
+          static void init1115_chan(uint8_t unit, uint8_t chan, uint8_t mode, uint8_t att)
+            {
+
             }
         #endif
 

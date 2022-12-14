@@ -229,12 +229,12 @@
   // --- specification
     // --- system
       // --- error status bits
-        #define ERRBIT_TOUCH     0x00000001     // touchscreen
-        #define ERRBIT_SERVER    0x00000002     // webserver
-        #define ERRBIT_WIFI      0x00000004     // WIFI connection
-        #define ERRBIT_NTPTIME   0x00000008     // NTP timeserver connection
+        #define ERRBIT_TOUCH      0x00000001     // touchscreen
+        #define ERRBIT_SERVER     0x00000002     // webserver
+        #define ERRBIT_WIFI       0x00000004     // WIFI connection
+        #define ERRBIT_NTPTIME    0x00000008     // NTP timeserver connection
       // --- generic
-        #define SCAN_I2C         OFF // 128
+        #define SCAN_I2C          ON // 128
         #define CHECK_I2C_DEVICES
         //#define UTC_SEASONTIME UTC_WINTERTIME
         #define UTC_SEASONTIME UTC_SUMMERTIME

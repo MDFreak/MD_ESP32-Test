@@ -75,7 +75,8 @@
         #include <driver\adc.h>
       #endif
     #if (USE_ADC1115_I2C > OFF)
-        #include <>
+        #include <Adafruit_ADS1X15.h>
+      #endif
   // --- user outputs
     // --- PWM
       /** ### Configure the project ------------------------
@@ -250,8 +251,8 @@
           #if (USE_DS18B20_1W_IO > OFF)
               String getDS18D20Str();
             #endif
-          #if (USE_ADC1115 > OFF)
-              #include <Adafruit_ADS1X15.h>
+          #if (USE_ADC1115_I2C > OFF)
+              static void init1115_chan(uint8_t unit, uint8_t chan, uint8_t mode, uint8_t att);
             #endif
         // --- MQ135 gas sensor
           #if (USE_MQ135_GAS_ADC > OFF)
