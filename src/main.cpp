@@ -530,7 +530,7 @@
           usleep(3000); // power-up safety delay
           SOUTLN(); SOUT(millis()); SOUTLN(" setup start ...");
           #if (SCAN_I2C > OFF)
-              scanI2C(I2C1, 0, SCAN_I2C, PIN_I2C1_SDA, PIN_I2C1_SCL);
+              scanI2C(I2C1, PIN_I2C1_SDA, PIN_I2C1_SCL);
               #if (USE_I2C > 1)
                   scanI2C(I2C2, 0, SCAN_I2C, PIN_I2C2_SDA, PIN_I2C2_SCL);
                 #endif
