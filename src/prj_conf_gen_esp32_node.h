@@ -702,17 +702,41 @@
             #endif
         #endif
 
+      /* ADC channels
+          #define ***_ADC_ATT     2  ///< ADC_ATTEN_DB_6
+          #define ***_ADC_ATT     3  ///< ADC_ATTEN_DB_11
+        */
       #if (USE_POTI_ADC > OFF)
           #define POTI1_ADC_FILT    7
-          #define POTI1_ADC_ATT     3 // 2 = ADC_ATTEN_DB_6; 3 = ADC_ATTEN_DB_11
+          #define POTI1_ADC_ATT     3 // 3 = ADC_ATTEN_DB_11
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
         #endif
 
+      /* ADS1115 channels
+          #define ADS1115_ATT_6_144V (0x0000) ///< +/-6.144V range = Gain 2/3
+          #define ADS1115_ATT_4_096V (0x0200) ///< +/-4.096V range = Gain 1
+          #define ADS1115_ATT_2_048V (0x0400) ///< +/-2.048V range = Gain 2 (default)
+          #define ADS1115_ATT_1_024V (0x0600) ///< +/-1.024V range = Gain 4
+          #define ADS1115_ATT_0_512V (0x0800) ///< +/-0.512V range = Gain 8
+          #define ADS1115_ATT_0_256V (0x0A00) ///< +/-0.256V range = Gain 16
+        */
       #if (USE_POTI_1115 > OFF)
           #define POTI1_1115_FILT   7
-          #define POTI1_1115_ATT    3 //
+          #define POTI1_1115_ATT    ADS1115_ATT_6_144V
+          #if (USE_POTI_1115 > 1)
+              #define POTI2_1115_FILT   7
+              #define POTI2_1115_ATT    ADS1115_ATT_6_144V
+              #if (USE_POTI_1115 > 2)
+                  #define POTI3_1115_FILT   7
+                  #define POTI3_1115_ATT    ADS1115_ATT_6_144V
+                  #if (USE_POTI_1115 > 3)
+                      #define POTI4_1115_FILT   7
+                      #define POTI4_1115_ATT    ADS1115_ATT_6_144V
+                    #endif
+                #endif
+            #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
