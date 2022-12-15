@@ -10,6 +10,7 @@
     "istream": "cpp",
     "ostream": "cpp",
     "sstream": "cpp",
-    "map": "cpp"
+    "map": "cpp",
+    "list": "cpp"
   }
 }
