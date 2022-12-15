@@ -205,10 +205,10 @@
             #endif
 
         // --- traffic Light of gas sensor
-          #if (USE_MQ135_GAS_ADC > OFF) || (USE_MQ135_GAS_1115 > OFF)
+          #if (USE_MQ135_GAS > OFF)
               int16_t showTrafficLight(int16_t inval, int16_t inthres);
             #endif
-          #if (USE_MQ3_ALK_ADC > OFF) || (USE_MQ3_ALK_1115 > OFF)
+          #if (USE_MQ3_ALK > OFF)
               int16_t showTrafficLight(int16_t inval, int16_t inthres);
             #endif
 
@@ -255,7 +255,7 @@
               static void init1115_chan(uint8_t unit, uint8_t chan, uint8_t mode, uint8_t att);
             #endif
         // --- MQ135 gas sensor
-          #if (USE_MQ135_GAS_ADC > OFF)
+          #if (USE_MQ135_GAS > OFF)
               int16_t getGasValue();
               int16_t getGasThres();
             #endif

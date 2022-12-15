@@ -139,11 +139,11 @@
               #define TYPEK1_CS_PIN  16
               #define TYPEK2_CS_PIN  17
             #endif
-          #if (USE_MQ135_GAS_ADC > OFF)
+          #if (USE_MQ135_GAS > OFF)
               #define PIN_MQ135     35
               #define ADC_MQ135     5   // ADC 1-3
             #endif
-          #if (USE_MQ3_ALK_ADC > OFF)
+          #if (USE_MQ3_ALK > OFF)
               #define PIN_MQ135     35
               #define ADC_MQ135     5   // ADC 1-3
             #endif
