@@ -11,6 +11,9 @@
     "ostream": "cpp",
     "sstream": "cpp",
     "map": "cpp",
-    "list": "cpp"
+    "list": "cpp",
+    "bitset": "cpp",
+    "string_view": "cpp",
+    "regex": "cpp"
   }
 }

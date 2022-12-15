@@ -712,7 +712,7 @@
 
       #if (USE_POTI_1115 > OFF)
           #define POTI1_1115_FILT   7
-          #define POTI1_1115_ATT    3 // 2 = ADC_ATTEN_DB_6; 3 = ADC_ATTEN_DB_11
+          #define POTI1_1115_ATT    3 //
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif

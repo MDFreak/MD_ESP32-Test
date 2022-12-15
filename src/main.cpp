@@ -477,18 +477,20 @@
       #endif
 
     #if ((USE_MQ3_ALK_ADC > OFF) || (USE_MQ3_ALK_1115 > OFF))
-        int16_t alkValue;
+        int16_t alkVal;
         filterValue valAlk(MQ3_FILT, 1);
-      #endif
-
-    #if (USE_POTI_1115 > OFF)
-
       #endif
 
     #if (USE_PHOTO_SENS > OFF)
         filterValue valPhoto(PHOTO_FILT, 1);
-        md_val<uint16_t> phVal;
+        md_val<uint16_t> PhotoVal;
       #endif
+
+    #if (USE_POTI_1115 > OFF)
+        filterValue valPoti(POTI_FILT, 1);
+        md_val<int16_t> potiVal;
+      #endif
+
     #if (USE_TYPE_K_SPI > 0)
         //SPIClass* tkSPI = new SPIClass();
         //md_31855_ktype TypeK1(TYPEK1_CS_PIN, tkSPI);
@@ -773,7 +775,7 @@
         // photo sensor
           #if (USE_PHOTO_SENS > OFF)
             SOUT("init poto sensor ... ");
-            phVal.begin(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
+            PhotoVal.begin(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
             pinMode(PIN_PHOTO_SENS, INPUT);
             adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO_SENS,
                                       (adc_atten_t)    PHOTO_SENS_ATT);
@@ -1114,7 +1116,7 @@
                     bmeP.doVal((uint16_t) ((bme.readPressure() / 100.0F) + 0.5));
                   #endif
                 #if (USE_PHOTO_SENS > OFF)
-                    phVal.doVal(analogRead(PIN_PHOTO_SENS));
+                    PhotoVal.doVal(analogRead(PIN_PHOTO_SENS));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
@@ -1529,11 +1531,11 @@
                       outStr = "          ";
                       dispText(outStr, 12, 4, outStr.length());
                       outStr = "";
-                      outStr.concat(phVal.getVal());
+                      outStr.concat(PhotoVal.getVal());
                       #if (USE_WEBSERVER > OFF)
                           tmpStr = "SVA";
                           tmpStr.concat("3");
-                          tmpStr.concat(phVal.getVal());
+                          tmpStr.concat(PhotoVal.getVal());
                           pmdServ->updateAll(tmpStr);
                         #endif
                     #endif

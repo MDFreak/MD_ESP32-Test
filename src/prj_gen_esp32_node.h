@@ -57,8 +57,8 @@
       #define USE_MQ3_ALK_ADC       OFF // [0, 1, ....] limited by analog inputs
       #define USE_MQ3_ALK_1115      1   // connected with ana-in ADS1115
       #define USE_PHOTO_SENS        1   // ON
-      #define USE_ACS712_1115       1   // connected with ana-in ADS1115
-      #define USE_POTI_1115         2   // connected with ana-in ADS1115
+      #define USE_ACS712_1115       1   // connected with ana-in ADS1115 (max 4)
+      #define USE_POTI_1115         2   // connected with ana-in ADS1115 (max 4)
       #define USE_ADC1115_I2C       1   // ADC 4 channels 16Bit
     // --- network  components
       #define USE_WIFI              ON  // ON
