@@ -454,10 +454,26 @@
         msTimer outpT   = msTimer(OUTPUT_CYCLE_MS);
       #endif
     #if (USE_BME280_I2C > OFF)
-        Adafruit_BME280 bme;
-        md_val<int16_t> bmeT;
-        md_val<uint16_t> bmeP;
-        md_val<uint16_t> bmeH;
+        Adafruit_BME280  bme1;
+        #if (BME2801_I2C == I2C1)
+            TwoWire* pbme1i2c = &i2c1;
+          #else
+            TwoWire* pbme1i2c = &i2c2;
+          #endif
+        md_val<int16_t>  bme1T;
+        md_val<uint16_t> bme1P;
+        md_val<uint16_t> bme1H;
+        #if (USE_BME280_I2C > 1)
+            #if (BME2802_I2C == I2C1)
+                TwoWire* pbme2i2c = &i2c1;
+              #else
+                TwoWire* pbme2i2c = &i2c2;
+              #endif
+            Adafruit_BME280 bme2;
+            md_val<int16_t> bme2T;
+            md_val<uint16_t> bme2P;
+            md_val<uint16_t> bme2H;
+          #endif
       #endif
     #if (USE_DS18B20_1W_IO > OFF)
         OneWire dsOneWire(DS_ONEWIRE_PIN);
@@ -748,26 +764,50 @@
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
                     SOUT(millis()); SOUT(" BME280 ... " );
-                dispStatus("init BME280");
-                bool bmeda = false;
-                #if (USE_BME280_I2C > OFF)
-                    bmeda = bme.begin(I2C_BME280, &i2c1);
-                    #if (USE_BME280_I2C > 1)
-                        bmeda = bme.begin(I2C_BME280, &i2c2);
-                      #endif
-                  #endif
-                if (bmeda)
-                    {
-                      bme.setSampling(bme.MODE_SLEEP);
-                            SOUTLN(" gefunden");
-                      bmeT.begin(BME280T_FILT, BME280T_Drop, FILT_NU);
-                      bmeP.begin(BME280P_FILT, BME280P_Drop, FILT_NU);
-                      bmeH.begin(BME280H_FILT, BME280H_Drop, FILT_NU);
-                    }
-                  else
-                    {
-                      SOUT(" nicht gefunden");
-                    }
+              dispStatus("init BME2801");
+              bool bmeda = false;
+              #if (USE_BME280_I2C > OFF)
+                  #if (BME2801_I2C == I2C1)
+                      bmeda = bme1.begin(I2C_BME280, &i2c1);
+                    #else
+                      bmeda = bme2.begin(I2C_BME280, &i2c2);
+                    #endif
+                #endif
+              if (bmeda)
+                  {
+                    bme1.setSampling(bme1.MODE_SLEEP);
+                          SOUTLN(" gefunden");
+                    bme1T.begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
+                    bme1P.begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
+                    bme1H.begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
+                  }
+                else
+                  {
+                    SOUT(" nicht gefunden");
+                  }
+              #if (USE_BME280_I2C > 1)
+                        SOUT(millis()); SOUT(" BME280 ... " );
+                  dispStatus("init BME280");
+                  bool bmeda = false;
+                  #if (USE_BME280_I2C > OFF)
+                      bmeda = bme.begin(I2C_BME280, &i2c1);
+                      #if (USE_BME280_I2C > 1)
+                          bmeda = bme.begin(I2C_BME280, &i2c2);
+                        #endif
+                    #endif
+                  if (bmeda)
+                      {
+                        bme.setSampling(bme.MODE_SLEEP);
+                              SOUTLN(" gefunden");
+                        bmeT.begin(BME280T_FILT, BME280T_Drop, FILT_NU);
+                        bmeP.begin(BME280P_FILT, BME280P_Drop, FILT_NU);
+                        bmeH.begin(BME280H_FILT, BME280H_Drop, FILT_NU);
+                      }
+                    else
+                      {
+                        SOUT(" nicht gefunden");
+                      }
+                #endif
             #endif
         // photo sensor
           #if (USE_PHOTO_SENS_ANA > OFF)
@@ -1792,7 +1832,7 @@
                       touch.wrStatus(msg);
                     #endif
                   #if (USE_OLED_I2C > OFF)
-                      #if ( USE_STATUS1 > OFF )
+                      #if ( OLED1_STATUS > OFF )
                           oled1.wrStatus(msg);
                         #endif
                       #if ( USE_STATUS2 > OFF)

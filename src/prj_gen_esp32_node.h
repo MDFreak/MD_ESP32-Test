@@ -61,7 +61,7 @@
     // --- sensors
       #define USE_ESPHALL           OFF
       #define USE_DS18B20_1W_IO     OFF // [0, 1, ....] limited by 1W connections
-      #define USE_BME280_I2C            1   // [0, 1, ....] limited by I2C channels/addr
+      #define USE_BME280_I2C        1   // [0, 1, ....] limited by I2C channels/addr
       #define USE_TYPE_K_SPI        OFF // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ANA     OFF // [0, 1, ....] limited by analog inputs
       #define USE_MQ3_ALK_ANA       1   // ADC or ADS1115

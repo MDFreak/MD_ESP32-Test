@@ -86,60 +86,60 @@
                           // MC_UO_OLED_096_AZ   GEO_128_64   OLED_DRV_1306
                           // MC_UO_OLED_130_AZ   GEO_128_64   OLED_DRV_1106
                 #define OLED1_I2C_TYP MC_UO_OLED_130_AZ  // OLED1 on I2C1
-                #if ( USE_OLED_I2C > OFF )
-                    #define USE_STATUS1     ON
-                    #if !(OLED1_I2C_TYP ^ MC_UO_OLED_066_AZ)
-                        #define OLED1_MAXCOLS  OLED_066_MAXCOLS
-                        #define OLED1_MAXROWS  OLED_066_MAXROWS
-                        #define OLED1_GEO      GEO_64_48
-                        #define OLED1_DRV      OLED_DRV_1306
-                      #endif
-                    #if !(OLED1_I2C_TYP ^ MC_UO_OLED_091_AZ)
-                        #define OLED1_MAXCOLS  OLED_091_MAXCOLS
-                        #define OLED1_MAXROWS  OLED_091_MAXROWS
-                        #define OLED1_GEO      GEO_128_32
-                        #define OLED1_DRV      OLED_DRV_1306
-                      #endif
-                    #if !(OLED1_I2C_TYP ^ MC_UO_OLED_096_AZ)
-                        #define OLED1_MAXCOLS  OLED_096_MAXCOLS
-                        #define OLED1_MAXROWS  OLED_096_MAXROWS
-                        #define OLED1_GEO      GEO_128_64
-                        #define OLED1_DRV      OLED_DRV_1306
-                      #endif
-                    #if !(OLED1_I2C_TYP ^ MC_UO_OLED_130_AZ)
-                        #define OLED1_MAXCOLS         OLED_130_MAXCOLS
-                        #define OLED1_MAXROWS         OLED_130_MAXROWS
-                        #define OLED1_GEO             GEO_128_64
-                        #define OLED1_DRV             OLED_DRV_1106
-                      #endif
-                    #if ( USE_OLED_I2C > 1 )
-                        #define OLED2_I2C_TYP         MC_UO_OLED_130_AZ  // OLED1 on I2C1
-                        #define USE_STATUS2           ON
-                        #if !(OLED2_I2C_TYP ^ MC_UO_OLED_066_AZ)
-                            #define OLED2_MAXCOLS OLED_066_MAXCOLS
-                            #define OLED2_MAXROWS OLED_066_MAXROWS
-                            #define OLED2_GEO     GEO_64_48
-                            #define OLED2_DRV     OLED_DRV_1306
-                          #endif
-                        #if !(OLED2_I2C_TYP ^ MC_UO_OLED_091_AZ)
-                            #define OLED2_MAXCOLS OLED_091_MAXCOLS
-                            #define OLED2_MAXROWS OLED_091_MAXROWS
-                            #define OLED2_GEO     GEO_128_32
-                            #define OLED2_DRV     OLED_DRV_1306
-                          #endif
-                        #if !(OLED2_I2C_TYP ^ MC_UO_OLED_096_AZ)
-                            #define OLED2_MAXCOLS  OLED_096_MAXCOLS
-                            #define OLED2_MAXROWS  OLED_096_MAXROWS
-                            #define OLED2_GEO      GEO_128_64
-                            #define OLED2_DRV      OLED_DRV_1306
-                          #endif
-                        #if !(OLED2_I2C_TYP ^ MC_UO_OLED_130_AZ)
-                            #define OLED2_MAXCOLS  OLED_130_MAXCOLS
-                            #define OLED2_MAXROWS  OLED_130_MAXROWS
-                            #define OLED2_GEO      GEO_128_64
-                            #define OLED2_DRV      OLED_DRV_1106
-                          #endif
+                #define OLED1_STATUS     ON
+                #define OLED1_I2C        I2C1
+                #if !(OLED1_I2C_TYP ^ MC_UO_OLED_066_AZ)
+                    #define OLED1_MAXCOLS  OLED_066_MAXCOLS
+                    #define OLED1_MAXROWS  OLED_066_MAXROWS
+                    #define OLED1_GEO      GEO_64_48
+                    #define OLED1_DRV      OLED_DRV_1306
+                  #endif
+                #if !(OLED1_I2C_TYP ^ MC_UO_OLED_091_AZ)
+                    #define OLED1_MAXCOLS  OLED_091_MAXCOLS
+                    #define OLED1_MAXROWS  OLED_091_MAXROWS
+                    #define OLED1_GEO      GEO_128_32
+                    #define OLED1_DRV      OLED_DRV_1306
+                  #endif
+                #if !(OLED1_I2C_TYP ^ MC_UO_OLED_096_AZ)
+                    #define OLED1_MAXCOLS  OLED_096_MAXCOLS
+                    #define OLED1_MAXROWS  OLED_096_MAXROWS
+                    #define OLED1_GEO      GEO_128_64
+                    #define OLED1_DRV      OLED_DRV_1306
+                  #endif
+                #if !(OLED1_I2C_TYP ^ MC_UO_OLED_130_AZ)
+                    #define OLED1_MAXCOLS         OLED_130_MAXCOLS
+                    #define OLED1_MAXROWS         OLED_130_MAXROWS
+                    #define OLED1_GEO             GEO_128_64
+                    #define OLED1_DRV             OLED_DRV_1106
+                  #endif
 
+                #if ( USE_OLED_I2C > 1 )
+                    #define OLED2_I2C_TYP         MC_UO_OLED_130_AZ  // OLED1 on I2C1
+                    #define USE_STATUS2           ON
+                    #define OLED1_I2C        I2C1
+                    #if !(OLED2_I2C_TYP ^ MC_UO_OLED_066_AZ)
+                        #define OLED2_MAXCOLS OLED_066_MAXCOLS
+                        #define OLED2_MAXROWS OLED_066_MAXROWS
+                        #define OLED2_GEO     GEO_64_48
+                        #define OLED2_DRV     OLED_DRV_1306
+                      #endif
+                    #if !(OLED2_I2C_TYP ^ MC_UO_OLED_091_AZ)
+                        #define OLED2_MAXCOLS OLED_091_MAXCOLS
+                        #define OLED2_MAXROWS OLED_091_MAXROWS
+                        #define OLED2_GEO     GEO_128_32
+                        #define OLED2_DRV     OLED_DRV_1306
+                      #endif
+                    #if !(OLED2_I2C_TYP ^ MC_UO_OLED_096_AZ)
+                        #define OLED2_MAXCOLS  OLED_096_MAXCOLS
+                        #define OLED2_MAXROWS  OLED_096_MAXROWS
+                        #define OLED2_GEO      GEO_128_64
+                        #define OLED2_DRV      OLED_DRV_1306
+                      #endif
+                    #if !(OLED2_I2C_TYP ^ MC_UO_OLED_130_AZ)
+                        #define OLED2_MAXCOLS  OLED_130_MAXCOLS
+                        #define OLED2_MAXROWS  OLED_130_MAXROWS
+                        #define OLED2_GEO      GEO_128_64
+                        #define OLED2_DRV      OLED_DRV_1106
                       #endif
                   #else
                     #define OLED2_I2C       OFF  //
@@ -428,12 +428,22 @@
         #endif
 
       #if (USE_BME280_I2C > OFF)
-          #define BME280T_FILT    0
-          #define BME280T_Drop    0
-          #define BME280P_FILT    0
-          #define BME280P_Drop    0
-          #define BME280H_FILT    0
-          #define BME280H_Drop    0
+          #define BME2801_I2C      I2C1
+          #define BME2801T_FILT    0
+          #define BME2801T_Drop    0
+          #define BME2801P_FILT    0
+          #define BME2801P_Drop    0
+          #define BME2801H_FILT    0
+          #define BME2801H_Drop    0
+          #if (USE_BME280_I2C > 1)
+              #define BME2802_I2C      I2C2
+              #define BME2802T_FILT    0
+              #define BME2802T_Drop    0
+              #define BME2802P_FILT    0
+              #define BME2802P_Drop    0
+              #define BME2802H_FILT    0
+              #define BME2802H_Drop    0
+            #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
