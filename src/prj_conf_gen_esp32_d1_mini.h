@@ -302,7 +302,7 @@
               #endif
           #endif
 
-        #if ( USE_BME280_I2C1 > OFF )
+        #if ( USE_BME280 > OFF )
             #define I2C_BME2801         I2C1
             #define I2C_SCL_BME2801     PIN_I2C1_SCL
             #define I2C_SDA_BME2801     PIN_I2C1_SDA
@@ -664,7 +664,7 @@
             #endif
         #endif
 
-      #if (USE_BME280_I2C1 > OFF)
+      #if (USE_BME280 > OFF)
           #define BME280T_FILT    0
           #define BME280T_Drop    0
           #define BME280P_FILT    0

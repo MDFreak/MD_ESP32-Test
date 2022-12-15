@@ -67,7 +67,6 @@
       #endif
   // ------ user input ---------------
     #if (USE_TOUCHSCREEN > OFF)
-
         md_touch  touch  =  md_touch(TOUCH_CS, TFT_CS, TFT_DC, TFT_RST, TFT_LED, LED_ON);
         md_touch* ptouch =  &touch;
       #endif
@@ -77,9 +76,8 @@
         uint8_t key;
       #endif // USE_KEYPADSHIELD
 
-
-    #if (USE_CTRL_POTI_ADC > OFF)
-        uint16_t inpValADC[USE_CTRL_POTI_ADC];
+    #if (USE_CTRL_POTI > OFF)
+        uint16_t inpValADC[USE_CTRL_POTI];
       #endif
 
     #if (USE_DIG_INP > OFF)
@@ -148,7 +146,6 @@
               #endif
           };
         //typedef intr_handle_t pcnt_isr_handle_t;
-
 
         /* A sample structure to pass events from the PCNT
          * interrupt handler to the main program.
@@ -456,7 +453,7 @@
     #ifdef USE_OUTPUT_CYCLE
         msTimer outpT   = msTimer(OUTPUT_CYCLE_MS);
       #endif
-    #if ((USE_BME280_I2C1 > OFF) || (USE_BME280_I2C2 > OFF))
+    #if (USE_BME280_I2C > OFF)
         Adafruit_BME280 bme;
         md_val<int16_t> bmeT;
         md_val<uint16_t> bmeP;
@@ -469,24 +466,24 @@
         float dsTemp[DS18B20_ANZ];
       #endif
 
-    #if (USE_MQ135_GAS > OFF)
+    #if (USE_MQ135_GAS_ANA > OFF)
         filterValue valGas(MQ135_FILT, 1);
         //filterValue tholdGas(MQ135_ThresFilt,1);
         int16_t gasValue;
         int16_t gasThres;
       #endif
 
-    #if (USE_MQ3_ALK > OFF)
+    #if (USE_MQ3_ALK_ANA > OFF)
         int16_t alkVal;
         filterValue valAlk(MQ3_FILT, 1);
       #endif
 
-    #if (USE_PHOTO_SENS > OFF)
+    #if (USE_PHOTO_SENS_ANA > OFF)
         filterValue valPhoto(PHOTO_FILT, 1);
         md_val<uint16_t> PhotoVal;
       #endif
 
-    #if (USE_POTI_1115 > OFF)
+    #if (USE_POTI_ANA > OFF)
         filterValue valPoti(POTI_FILT, 1);
         md_val<int16_t> potiVal;
       #endif
@@ -749,15 +746,15 @@
                   SOUTLN(DS18Str);
             #endif
         // BME280 temperature, pessure, humidity
-          #if ((USE_BME280_I2C1 > OFF) || (USE_BME280_I2C1 > OFF))
+          #if (USE_BME280_I2C > OFF)
                     SOUT(millis()); SOUT(" BME280 ... " );
                 dispStatus("init BME280");
                 bool bmeda = false;
-                #if (USE_BME280_I2C1 > OFF)
+                #if (USE_BME280_I2C > OFF)
                     bmeda = bme.begin(I2C_BME280, &i2c1);
-                  #endif
-                #if (USE_BME280_I2C2 > OFF)
-                    bmeda = bme.begin(I2C_BME280, &i2c2);
+                    #if (USE_BME280_I2C > 1)
+                        bmeda = bme.begin(I2C_BME280, &i2c2);
+                      #endif
                   #endif
                 if (bmeda)
                     {
@@ -773,7 +770,7 @@
                     }
             #endif
         // photo sensor
-          #if (USE_PHOTO_SENS > OFF)
+          #if (USE_PHOTO_SENS_ANA > OFF)
             SOUT("init poto sensor ... ");
             PhotoVal.begin(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
             pinMode(PIN_PHOTO_SENS, INPUT);
@@ -1098,7 +1095,7 @@
             if (measT.TOut())
               {
                 measT.startT();
-                #if (USE_MQ135_GAS_ADC > OFF)
+                #if (USE_MQ135_GAS_ANA > OFF)
                     gasValue = analogRead(PIN_MQ135);
                           //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
                     gasValue = (int16_t) valGas.value((double) gasValue);
@@ -1108,14 +1105,14 @@
                     //gasThres = (int16_t) tholdGas.value((double) gasThres);
                           //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
                   #endif
-                #if ( USE_BME280_I2C1 > OFF )
+                #if ( USE_BME280_I2C > OFF )
                     bme.init();
                     usleep(1000);
                     bmeT.doVal((int16_t) (bme.readTemperature() + 0.5));
                     bmeH.doVal((uint16_t) (bme.readHumidity() + 0.5));
                     bmeP.doVal((uint16_t) ((bme.readPressure() / 100.0F) + 0.5));
                   #endif
-                #if (USE_PHOTO_SENS > OFF)
+                #if (USE_PHOTO_SENS_ANA > OFF)
                     PhotoVal.doVal(analogRead(PIN_PHOTO_SENS));
                   #endif
                 #if (USE_CNT_INP > OFF)
@@ -1516,7 +1513,7 @@
                   break;
 
                 case 4:  // gas sensor
-                  #if (USE_MQ135_GAS_ADC > OFF)
+                  #if (USE_MQ135_GAS_ANA > OFF)
                     //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
                     outStr = "CO2 ";
                     outStr.concat(gasValue);
@@ -1527,7 +1524,7 @@
                   break;
 
                 case 5:  // light sensor
-                  #if (USE_PHOTO_SENS > OFF)
+                  #if (USE_PHOTO_SENS_ANA > OFF)
                       outStr = "          ";
                       dispText(outStr, 12, 4, outStr.length());
                       outStr = "";
@@ -1553,7 +1550,7 @@
                   break;
 
                 case 7:  // BME 280 temp, humidity, pressure
-                    #if ( USE_BME280_I2C1 > OFF )
+                    #if ( USE_BME280_I2C > OFF )
                       outStr = "";
                       for (uint8_t i = 0; i < 3 ; i++)
                         {
@@ -1612,7 +1609,7 @@
                       dispText(outStr , 17, 3, outStr.length());
                       //SOUTLN();
                     #endif
-                  #if (USE_CTRL_POTI_ADC > OFF)
+                  #if (USE_CTRL_POTI)
                       //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
                     #endif
 
@@ -2228,7 +2225,7 @@
             }
         #endif
     // --- analog input
-      #if (USE_CTRL_POTI_ADC > OFF)
+      #if (USE_CTRL_POTI > OFF)
           void getADCIn()
             {
               for (uint8_t i = 0 ; i < USE_CTRL_SW_INP ; i++ )

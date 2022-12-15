@@ -40,9 +40,6 @@
         //#include "esp_attr.h"
         //#include "esp_log.h"
   // --- system components
-    #if (USE_PWM_OUT > OFF)
-        #include <driver\ledc.h>
-      #endif
   // --- user inputs
     #if (USE_TOUCHSCREEN > OFF)
         #include "md_touch.h"
@@ -52,7 +49,7 @@
         #include "md_keypadshield.h"
       #endif // USE_KEYPADSHIELD
 
-    #if (USE_CTRL_POTI_ADC > OFF)
+    #if (USE_CTRL_POTI > OFF)
         // nothing to do
       #endif
 
@@ -71,10 +68,10 @@
         #include <esp_attr.h>
       #endif
 
-    #if ((USE_ADC1 > OFF) || (USE_ADC2 > OFF))
+    #if (DEV_ADC_INT > OFF)
         #include <driver\adc.h>
       #endif
-    #if (USE_ADC1115_I2C > OFF)
+    #if (DEV_ADC_ADS1115 > OFF)
         #include <Adafruit_ADS1X15.h>
       #endif
   // --- user outputs
@@ -105,7 +102,8 @@
           - If duty resolution is 13 bits:
             Duty range: `0 to (2 ** 13) - 1 = 8191` where 0 is 0% and 8191 is 100%.
        **/
-    #if (USE_RGBLED_PWM > OFF)
+    #if (DEV_PWM_OUTPUT > OFF)
+        #include <driver\ledc.h>
         #include <md_leds.h>
         typedef struct
           {
@@ -177,7 +175,7 @@
         #include <DallasTemperature.h>
       #endif
 
-    #if (( USE_BME280_I2C1 > OFF ) || ( USE_BME280_I2C2 > OFF ))
+    #if ( USE_BME280_I2C > OFF )
         #include <Adafruit_Sensor.h>
         #include <Adafruit_BME280.h>
       #endif
@@ -205,10 +203,10 @@
             #endif
 
         // --- traffic Light of gas sensor
-          #if (USE_MQ135_GAS > OFF)
+          #if (USE_MQ135_GAS_ANA > OFF)
               int16_t showTrafficLight(int16_t inval, int16_t inthres);
             #endif
-          #if (USE_MQ3_ALK > OFF)
+          #if (USE_MQ3_ALK_ANA > OFF)
               int16_t showTrafficLight(int16_t inval, int16_t inthres);
             #endif
 
@@ -238,7 +236,7 @@
           #if (USE_DIG_INP > OFF)
               void getDIGIn();
             #endif
-          #if (USE_CTRL_POTI_ADC > OFF)
+          #if (USE_CTRL_POTI > OFF)
               void getADCIn();
             #endif
         // --- counter input
@@ -255,7 +253,7 @@
               static void init1115_chan(uint8_t unit, uint8_t chan, uint8_t mode, uint8_t att);
             #endif
         // --- MQ135 gas sensor
-          #if (USE_MQ135_GAS > OFF)
+          #if (USE_MQ135_GAS_ANA > OFF)
               int16_t getGasValue();
               int16_t getGasThres();
             #endif

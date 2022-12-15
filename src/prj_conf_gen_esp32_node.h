@@ -17,216 +17,8 @@
       #define USE_SWCTRL_FAN        OFF
       #define USE_SWCTRL_1812       OFF
   // ******************************************
-  // --- board management
-    #if !(BOARD ^ MC_ESP32_Node)
-      // --- system
-        #define SER_BAUDRATE ESP_SER_BAUD
-        // --- network
-        // --- user output
-          // --- LEDs
-          // --- display
-          // --- acustic output
-        // --- user input
-        // --- sensors
-        // --- memories
-      // --- pins, connections
-        // --- system
-          #if (USE_LED_BLINK_OUT > OFF)
-              #define PIN_BOARD_LED 2
-            #endif
-        // --- user input
-          #if (USE_CTRL_POTI_ADC > OFF)
-              #define PIN_INP_POTI_1 35   // ADC 1-5
-              #define ADC_INP_POTI_1 NU   // ADC 1-5
-            #endif
-
-          #if (USE_CTRL_SW_INP > OFF)
-              #define PIN_INP_SW_1  32   // INPUT_PULLUP
-            #endif
-
-          #if (USE_DIG_INP > OFF)
-              #if (USE_GEN_SW_INP > OFF)
-                  #define PIN_INP_REED_1 15
-                #endif
-            #endif
-          #if (USE_GEN_CNT_INP > OFF)
-              #define PIN_CNT_GEN_S0 4
-              #define PIN_CNT_GEN_C0 PCNT_PIN_NOT_USED
-              #define PIN_CNT_GEN_S1 17
-              #define PIN_CNT_GEN_C1 PCNT_PIN_NOT_USED
-            #endif
-          #if (USE_PWM_INP > OFF)
-                #define PIN_PWM_INP_1 PIN_CNT_GEN_2
-            #endif
-        // --- user output
-          #if (USE_TRAFFIC_LED_OUT > OFF)
-              #define PIN_TL_RED    26   // RGB red
-              #define PIN_TL_YELLOW 25   // RGB green
-              #define PIN_TL_GREEN  33   // RGB blue
-            #endif
-
-          #if (USE_RGBLED_PWM > OFF)
-              #define PIN_RGB_RED   33 //26   // RGB red
-              #define PIN_RGB_GREEN 26   // RGB blue
-              #define PIN_RGB_BLUE  14 //33   // RGB blue
-            #endif
-
-          #if (USE_FAN_PWM > OFF)
-              #define PIN_PWM_FAN_1 0
-              #define PIN_PWM_FAN_2 4
-            #endif
-
-          #if (USE_OUT_FREQ_PWM > OFF)
-              #define PIN_FREQ_1    26
-            #endif
-
-          #if (USE_WS2812_MATRIX_OUT > OFF)
-              #define PIN_WS2812_M1      16
-              #if (USE_WS2812_PWR_IN_SW > OFF)
-                  #define PIN_WS2812_PWR_IN_SW 36
-                #endif
-              #if (USE_WS2812_MATRIX_OUT > 1)
-                  #define PIN_WS2812_M2  17
-                #endif
-                //#define PIN_WS2812_M3  x
-                //#define PIN_WS2812_M4  x
-            #endif
-
-          #if (USE_WS2812_LINE_OUT > OFF)
-              #if (USE_WS2812_PWR_IN_SW > OFF)
-                  #define PIN_WS2812_PWR_IN_SW 36
-                #endif
-              #define PIN_WS2812_L1      17
-                //#define PIN_WS2812_L2      17
-                //#define PIN_WS2812_L3  x
-                //#define PIN_WS2812_L4  x
-            #endif
-
-          #if (USE_TFT > OFF)
-              #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
-                  #define LCD_BL      5    // D10/SS  ARDUINO
-                  #define LCD_EN      13   // D9
-                  #define LCD_RS      12   // D8
-                  #define LCD_D7      14   // D7
-                  #define LCD_D6      27   // D6
-                  #define LCD_D5      16   // D5
-                  #define LCD_D4      17   // D4
-                #endif
-              #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
-                  #define TFT_CS      5
-                  #define TFT_DC      4
-                  #define TFT_RST     22
-                  #define TFT_LED     15
-                  #define TOUCH_CS    14
-                  #define TOUCH_IRQ   27
-                  #define LED_ON      0
-                #endif
-              #if !(DISP_TFT ^ MC_UO_TFT1602_I2C_XA)
-                  #define ME
-                #endif
-            #endif
-
-          #if (USE_BUZZER_PWM > OFF)
-              #define PIN_BUZZ      32
-            #endif
-        // --- sensors
-          #if (USE_DS18B20_1W_IO > OFF)
-              #define DS_ONEWIRE_PIN 27
-            #endif
-          #if (USE_TYPE_K_SPI > OFF)
-              #define TYPEK_DATA_PIN 19   // SPI MISO
-              #define TYPEK_CLK_PIN  18   // SPI CLK
-              #define TYPEK1_CS_PIN  16
-              #define TYPEK2_CS_PIN  17
-            #endif
-          #if (USE_MQ135_GAS > OFF)
-              #define PIN_MQ135     35
-              #define ADC_MQ135     5   // ADC 1-3
-            #endif
-          #if (USE_MQ3_ALK > OFF)
-              #define PIN_MQ135     35
-              #define ADC_MQ135     5   // ADC 1-3
-            #endif
-
-          #if (USE_PHOTO_SENS > OFF)
-              #define PIN_PHOTO_SENS 39
-              #define ADC_PHOTO_SENS 3
-            #endif
-
-        // --- PWM channels   0..15
-          #if (USE_PWM_OUT > OFF)
-              #if (USE_AOUT > OFF)
-                  #if (USE_BUZZER_PWM > OFF)
-                      #define PWM_BUZZ  0
-                    #endif
-                #endif
-
-              #if (USE_TRAFFIC_LED_OUT > OFF)
-                  #define PWM_TL_GREEN  1
-                  #define PWM_TL_YELLOW 2
-                  #define PWM_TL_RED    3
-                #endif
-
-              #if (USE_RGBLED_PWM > OFF)
-                  #define PWM_RGB_RED   1
-                  #define PWM_RGB_GREEN 2
-                  #define PWM_RGB_BLUE  3
-                #endif
-
-              #if (USE_FAN_PWM > OFF)
-                  #define PWM_FAN_1     4
-                  #if (USE_FAN_PWM > 1)
-                      #define PWM_FAN_2     5
-                    #endif
-                #endif
-
-              #if (USE_OUT_FREQ_PWM > OFF)
-                  #define PWM_FREQ_1    6
-                #endif
-            #endif
-
-        // --- counter channels  0..7
-          #if (USE_CNT_INP > OFF)
-              #define USE_CNT_UNIT       PCNT_UNIT_0
-              #if (USE_GEN_CNT_INP > OFF)
-                  #define CNT_UNIT_GEN0  PCNT_UNIT_0
-                  #define CNT_CH_GEN0    (PCNT_CHANNEL_0)
-                  #undef  USE_CNT_UNIT
-                  #define USE_CNT_UNIT   (CNT_UNIT_GEN0 + 1)
-                #endif
-              #if (USE_GEN_CNT_INP > 1)
-                  #define CNT_UNIT_GEN1  PCNT_UNIT_1
-                  #define CNT_CH_GEN1    (PCNT_CHANNEL_0)
-                  #undef  USE_CNT_UNIT
-                  #define USE_CNT_UNIT   (CNT_UNIT_GEN1 + 1)
-                #endif
-              #if (USE_GEN_CNT_INP > 2)
-                  #define CNT_UNIT_GEN2  PCNT_UNIT_2
-                  #define CNT_CH_GEN2    (PCNT_CHANNEL_0)
-                  #undef  USE_CNT_UNIT
-                  #define USE_CNT_UNIT   (CNT_UNIT_GEN2 + 1)
-                #endif
-              #if (USE_GEN_CNT_INP > 3)
-                  #define CNT_UNIT_GEN3  PCNT_UNIT_3
-                  #define CNT_CH_GEN3    (PCNT_CHANNEL_0)
-                  #undef  USE_CNT_UNIT
-                  #define USE_CNT_UNIT   (CNT_UNIT_GEN3 + 1)
-                #endif
-            #endif
-
-        // --- I2C
-          // --- board connection
-            #define PIN_I2C1_SDA      21
-            #define PIN_I2C1_SCL      22
-            #if ( USE_I2C > 1 )
-                #define PIN_I2C2_SDA  25
-                #define PIN_I2C2_SCL  26
-              #endif
-
-      #endif
-
   // ******************************************
-  // --- specification
+  // --- specification first to define device config
     // --- system
       // --- error status bits
         #define ERRBIT_TOUCH      0x00000001     // touchscreen
@@ -252,13 +44,9 @@
       // --- address configuration
         #if (USE_OLED_I2C > OFF)
             #define OLED1_I2C_ADDR  I2C_OLED_3C
-            #define OLED1_I2C_SCL   PIN_I2C1_SCL
-            #define OLED1_I2C_SDA   PIN_I2C1_SDA
             #define OLED1_I2C       I2C1
             #if (USE_OLED_I2C > 1)
                 #define OLED2_I2C_ADDR  I2C_OLED_3C
-                #define OLED2_I2C_SCL   PIN_I2C1_SCL
-                #define OLED2_I2C_SDA   PIN_I2C1_SDA
                 #define OLED2_I2C       I2C2
               #endif
           #endif
@@ -267,25 +55,16 @@
             #define FRAM1_I2C_ADDR      I2C_FRAM_50
             #define FRAM1_SIZE          0x8000
             #define FRAM1_I2C           I2C1
-            #define FRAM1_I2C_SCL       PIN_I2C1_SCL
-            #define FRAM1_I2C_SDA       PIN_I2C1_SDA
             #if (USE_FRAM_I2C > 1 )
                 #define FRAM2_I2C_ADDR  I2C_FRAM_50
                 #define FRAM1_SIZE      0x8000
                 #define FRAM2_I2C       I2C2
-                #define FRAM2_I2C_SCL   I2C1_SCL
-                #define FRAM2_I2C_SDA   I2C1_SDA
               #endif
           #endif
-
         #if ( USE_BME280_I2C > OFF )
             #define BME2801_I2C         I2C1
-            #define BME2801_I2C_SCL     PIN_I2C1_SCL
-            #define BME2801_I2C_SDA     PIN_I2C1_SDA
             #if ( USE_BME280_I2C > 1 )
-                #define BME2802_I2C       I2C2
-                #define BME2802_I2C_SCL   PIN_I2C2_SCL
-                #define BME2802_I2C_SDA   PIN_I2C2_SDA
+                #define BME2802_I2C     I2C2
               #endif
           #endif
 
@@ -579,8 +358,6 @@
             // counter 1
             #define PCNT1_INP_FILT      10  // glitch filter (clock 80 MHz)
             #define PCNT1_UFLOW         3000000ul  // timedelay due to 0 Hz [us]
-            #define PCNT1_INP_SIG_IO    PIN_CNT_FAN_1       // Pulse Input GPIO
-            #define PCNT1_INP_CTRL_IO   PIN_CNT_FAN_1       // Control GPIO HIGH=count up, LOW=count down
             //#define PCNT1_THRESH1_VAL   5
             #define PCNT1_THRESH0_VAL   3
             #define PCNT1_EVT_0         PCNT_EVT_THRES_0
@@ -592,8 +369,6 @@
                 // counter 2
                 #define PCNT2_INP_FILT      10  // glitch filter (clock 80 MHz)
                 #define PCNT2_UFLOW         3000000ul  // timedelay due to 0 Hz [us]
-                #define PCNT2_INP_SIG_IO    PIN_CNT_FAN_2   // Pulse Input GPIO
-                #define PCNT2_INP_CTRL_IO   PIN_CNT_FAN_2       // Control GPIO HIGH=count up, LOW=count down
                 //#define PCNT2_THRESH1_VAL   2
                 #define PCNT2_THRESH0_VAL   400
                 #define PCNT2_EVT_0         PCNT_EVT_THRES_0
@@ -652,7 +427,7 @@
             #endif
         #endif
 
-      #if (USE_BME280_I2C1 > OFF)
+      #if (USE_BME280_I2C > OFF)
           #define BME280T_FILT    0
           #define BME280T_Drop    0
           #define BME280P_FILT    0
@@ -664,7 +439,7 @@
             #endif
         #endif
 
-      #if (USE_MQ135_GAS_ADC > OFF) || (USE_MQ135_GAS_1115 > OFF)
+      #if (USE_MQ135_GAS_ANA > OFF)
           #define MQ135_FILT      15       // floating  measure filtering
           //#define MQ135_ThresFilt 25       // threshold measure filtering
           #define MQ135_EM_WIN    100      // window for traffic light
@@ -673,7 +448,7 @@
               #define USE_MEASURE_CYCLE
             #endif
         #endif
-      #if (USE_MQ3_ALK_ADC > OFF) || (USE_MQ3_ALK_1115 > OFF)
+      #if (USE_MQ3_ALK_ANA > OFF)
           #define MQ3_FILT      15       // floating  measure filtering
           #define MQ3_EM_WIN    100      // window for traffic light
           #ifndef USE_MEASURE_CYCLE
@@ -693,7 +468,7 @@
             #endif
         #endif
 
-      #if (USE_PHOTO_SENS > OFF)
+      #if (USE_PHOTO_SENS_ANA > OFF)
           #define PHOTO_FILT        7
           #define PHOTO_DROP        0
           #define PHOTO_SENS_ATT    3 // 2 = ADC_ATTEN_DB_6; 3 = ADC_ATTEN_DB_11
@@ -706,7 +481,7 @@
           #define ***_ADC_ATT     2  ///< ADC_ATTEN_DB_6
           #define ***_ADC_ATT     3  ///< ADC_ATTEN_DB_11
         */
-      #if (USE_POTI_ADC > OFF)
+      #if (USE_POTI_ANA > OFF)
           #define POTI1_ADC_FILT    7
           #define POTI1_ADC_ATT     3 // 3 = ADC_ATTEN_DB_11
           #ifndef USE_MEASURE_CYCLE
@@ -722,16 +497,16 @@
           #define ADS1115_ATT_0_512V (0x0800) ///< +/-0.512V range = Gain 8
           #define ADS1115_ATT_0_256V (0x0A00) ///< +/-0.256V range = Gain 16
         */
-      #if (USE_POTI_1115 > OFF)
+      #if (USE_POTI_ANA > OFF)
           #define POTI1_1115_FILT   7
           #define POTI1_1115_ATT    ADS1115_ATT_6_144V
-          #if (USE_POTI_1115 > 1)
+          #if (USE_POTI_ANA > 1)
               #define POTI2_1115_FILT   7
               #define POTI2_1115_ATT    ADS1115_ATT_6_144V
-              #if (USE_POTI_1115 > 2)
+              #if (USE_POTI_ANA > 2)
                   #define POTI3_1115_FILT   7
                   #define POTI3_1115_ATT    ADS1115_ATT_6_144V
-                  #if (USE_POTI_1115 > 3)
+                  #if (USE_POTI_ANA > 3)
                       #define POTI4_1115_FILT   7
                       #define POTI4_1115_ATT    ADS1115_ATT_6_144V
                     #endif
@@ -806,6 +581,245 @@
         #if (USE_WEBSERVER > OFF)
             #define WEBSERVER_CYCLE 1000ul  // Intervallzeit [us]
           #endif
+
+  // ----------------------------------------------------------------
+  // --- board management
+  // ----------------------------------------------------------------
+    #if !(BOARD ^ MC_ESP32_Node)
+      // --- system
+        #define SER_BAUDRATE ESP_SER_BAUD
+        // --- network
+        // --- user output
+          // --- LEDs
+          // --- display
+          // --- acustic output
+        // --- user input
+        // --- sensors
+        // --- memories
+      // --- pins, connections
+        // --- system
+          #if (USE_LED_BLINK_OUT > OFF)
+              #define PIN_BOARD_LED 2
+            #endif
+        // --- user input
+          #if (USE_CTRL_POTI > OFF)
+              #define PIN_INP_POTI_1 35   // ADC 1-5
+              #define ADC_INP_POTI_1 NU   // ADC 1-5
+            #endif
+
+          #if (USE_CTRL_SW_INP > OFF)
+              #define PIN_INP_SW_1  32   // INPUT_PULLUP
+            #endif
+
+          #if (USE_DIG_INP > OFF)
+              #if (USE_GEN_SW_INP > OFF)
+                  #define PIN_INP_REED_1 15
+                #endif
+            #endif
+          #if (USE_GEN_CNT_INP > OFF)
+              #define PIN_CNT_GEN_S0 4
+              #define PIN_CNT_GEN_C0 PCNT_PIN_NOT_USED
+              #define PIN_CNT_GEN_S1 17
+              #define PIN_CNT_GEN_C1 PCNT_PIN_NOT_USED
+            #endif
+          #if (USE_PWM_INP > OFF)
+                #define PIN_PWM_INP_1 PIN_CNT_GEN_2
+            #endif
+        // --- counter
+          #if (USE_CNT_INP > OFF)
+              #define PCNT1_INP_SIG_IO    PIN_CNT_FAN_1       // Pulse Input GPIO
+              #define PCNT1_INP_CTRL_IO   PIN_CNT_FAN_1       // Control GPIO HIGH=count up, LOW=count down
+              #if (USE_CNT_INP > 1)
+                  // counter 2
+                  #define PCNT2_INP_SIG_IO    PIN_CNT_FAN_2   // Pulse Input GPIO
+                  #define PCNT2_INP_CTRL_IO   PIN_CNT_FAN_2       // Control GPIO HIGH=count up, LOW=count down
+                #endif
+              #ifndef USE_MEASURE_CYCLE
+                  #define USE_MEASURE_CYCLE
+                #endif
+            #endif
+        // --- user output
+          #if (USE_TRAFFIC_LED_OUT > OFF)
+              #define PIN_TL_RED    26   // RGB red
+              #define PIN_TL_YELLOW 25   // RGB green
+              #define PIN_TL_GREEN  33   // RGB blue
+            #endif
+
+          #if (USE_RGBLED_PWM > OFF)
+              #define PIN_RGB_RED   33 //26   // RGB red
+              #define PIN_RGB_GREEN 26   // RGB blue
+              #define PIN_RGB_BLUE  14 //33   // RGB blue
+            #endif
+
+          #if (USE_FAN_PWM > OFF)
+              #define PIN_PWM_FAN_1 0
+              #define PIN_PWM_FAN_2 4
+            #endif
+
+          #if (USE_OUT_FREQ_PWM > OFF)
+              #define PIN_FREQ_1    26
+            #endif
+
+          #if (USE_WS2812_MATRIX_OUT > OFF)
+              #define PIN_WS2812_M1      16
+              #if (USE_WS2812_PWR_IN_SW > OFF)
+                  #define PIN_WS2812_PWR_IN_SW 36
+                #endif
+              #if (USE_WS2812_MATRIX_OUT > 1)
+                  #define PIN_WS2812_M2  17
+                #endif
+                //#define PIN_WS2812_M3  x
+                //#define PIN_WS2812_M4  x
+            #endif
+
+          #if (USE_WS2812_LINE_OUT > OFF)
+              #if (USE_WS2812_PWR_IN_SW > OFF)
+                  #define PIN_WS2812_PWR_IN_SW 36
+                #endif
+              #define PIN_WS2812_L1      17
+                //#define PIN_WS2812_L2      17
+                //#define PIN_WS2812_L3  x
+                //#define PIN_WS2812_L4  x
+            #endif
+
+          #if (USE_TFT > OFF)
+              #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
+                  #define LCD_BL      5    // D10/SS  ARDUINO
+                  #define LCD_EN      13   // D9
+                  #define LCD_RS      12   // D8
+                  #define LCD_D7      14   // D7
+                  #define LCD_D6      27   // D6
+                  #define LCD_D5      16   // D5
+                  #define LCD_D4      17   // D4
+                #endif
+              #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
+                  #define TFT_CS      5
+                  #define TFT_DC      4
+                  #define TFT_RST     22
+                  #define TFT_LED     15
+                  #define TOUCH_CS    14
+                  #define TOUCH_IRQ   27
+                  #define LED_ON      0
+                #endif
+              #if !(DISP_TFT ^ MC_UO_TFT1602_I2C_XA)
+                  #define ME
+                #endif
+            #endif
+
+          #if (USE_BUZZER_PWM > OFF)
+              #define PIN_BUZZ      32
+            #endif
+        // --- sensors
+          #if (USE_DS18B20_1W_IO > OFF)
+              #define DS_ONEWIRE_PIN 27
+            #endif
+          #if (USE_TYPE_K_SPI > OFF)
+              #define TYPEK_DATA_PIN 19   // SPI MISO
+              #define TYPEK_CLK_PIN  18   // SPI CLK
+              #define TYPEK1_CS_PIN  16
+              #define TYPEK2_CS_PIN  17
+            #endif
+          #if (USE_MQ135_GAS_ANA > OFF)
+              #define PIN_MQ135     35
+              #define ADC_MQ135     5   // ADC 1-3
+            #endif
+          #if (USE_MQ3_ALK_ANA > OFF)
+              #define PIN_MQ135     35
+              #define ADC_MQ135     5   // ADC 1-3
+            #endif
+
+          #if (USE_PHOTO_SENS_ANA > OFF)
+              #define PIN_PHOTO_SENS 39
+              #define ADC_PHOTO_SENS 3
+            #endif
+
+        // --- PWM channels   0..15
+          #if (USE_PWM_OUT > OFF)
+              #if (USE_AOUT > OFF)
+                  #if (USE_BUZZER_PWM > OFF)
+                      #define PWM_BUZZ  0
+                    #endif
+                #endif
+
+              #if (USE_TRAFFIC_LED_OUT > OFF)
+                  #define PWM_TL_GREEN  1
+                  #define PWM_TL_YELLOW 2
+                  #define PWM_TL_RED    3
+                #endif
+
+              #if (USE_RGBLED_PWM > OFF)
+                  #define PWM_RGB_RED   1
+                  #define PWM_RGB_GREEN 2
+                  #define PWM_RGB_BLUE  3
+                #endif
+
+              #if (USE_FAN_PWM > OFF)
+                  #define PWM_FAN_1     4
+                  #if (USE_FAN_PWM > 1)
+                      #define PWM_FAN_2     5
+                    #endif
+                #endif
+
+              #if (USE_OUT_FREQ_PWM > OFF)
+                  #define PWM_FREQ_1    6
+                #endif
+            #endif
+
+        // --- counter channels  0..7
+          #if (USE_CNT_INP > OFF)
+              #define USE_CNT_UNIT       PCNT_UNIT_0
+              #if (USE_GEN_CNT_INP > OFF)
+                  #define CNT_UNIT_GEN0  PCNT_UNIT_0
+                  #define CNT_CH_GEN0    (PCNT_CHANNEL_0)
+                  #undef  USE_CNT_UNIT
+                  #define USE_CNT_UNIT   (CNT_UNIT_GEN0 + 1)
+                #endif
+              #if (USE_GEN_CNT_INP > 1)
+                  #define CNT_UNIT_GEN1  PCNT_UNIT_1
+                  #define CNT_CH_GEN1    (PCNT_CHANNEL_0)
+                  #undef  USE_CNT_UNIT
+                  #define USE_CNT_UNIT   (CNT_UNIT_GEN1 + 1)
+                #endif
+              #if (USE_GEN_CNT_INP > 2)
+                  #define CNT_UNIT_GEN2  PCNT_UNIT_2
+                  #define CNT_CH_GEN2    (PCNT_CHANNEL_0)
+                  #undef  USE_CNT_UNIT
+                  #define USE_CNT_UNIT   (CNT_UNIT_GEN2 + 1)
+                #endif
+              #if (USE_GEN_CNT_INP > 3)
+                  #define CNT_UNIT_GEN3  PCNT_UNIT_3
+                  #define CNT_CH_GEN3    (PCNT_CHANNEL_0)
+                  #undef  USE_CNT_UNIT
+                  #define USE_CNT_UNIT   (CNT_UNIT_GEN3 + 1)
+                #endif
+            #endif
+
+        // --- I2C
+          // --- board connection
+            #define PIN_I2C1_SDA      21
+            #define PIN_I2C1_SCL      22
+            #if ( USE_I2C > 1 )
+                #define PIN_I2C2_SDA  25
+                #define PIN_I2C2_SCL  26
+              #endif
+            #if (USE_OLED_I2C > OFF)
+                #define OLED1_I2C_SCL   PIN_I2C1_SCL
+                #define OLED1_I2C_SDA   PIN_I2C1_SDA
+                #if (USE_OLED_I2C > 1)
+                    #define OLED2_I2C_SCL   PIN_I2C1_SCL
+                    #define OLED2_I2C_SDA   PIN_I2C1_SDA
+                  #endif
+              #endif
+
+            #if (USE_FRAM_I2C > OFF)
+                #define FRAM1_I2C_SCL       PIN_I2C1_SCL
+                #define FRAM1_I2C_SDA       PIN_I2C1_SDA
+                #if (USE_FRAM_I2C > 1 )
+                    #define FRAM2_I2C_SCL   I2C1_SCL
+                    #define FRAM2_I2C_SDA   I2C1_SDA
+                  #endif
+              #endif
+      #endif
 
     // ******************************************
 #endif // _PRJ_CONFIG_H_
