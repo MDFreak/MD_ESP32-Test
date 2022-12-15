@@ -33,11 +33,11 @@
 	    //static uint32_t anzMsCycles = 0;
 	    //static uint64_t msLast      = 0;
 
-    #if ( USE_I2C > OFF )
+    #if ( DEV_I2C1 > OFF )
         TwoWire i2c1 = TwoWire(0);
-        #if ( USE_I2C > 1 )
-            TwoWire i2c2 = TwoWire(1);
-          #endif
+      #endif
+    #if ( USE_I2C2 > OFF )
+        TwoWire i2c2 = TwoWire(1);
       #endif
 
     #if ( USE_LED_BLINK_OUT > 0 )
@@ -529,9 +529,9 @@
           usleep(3000); // power-up safety delay
           SOUTLN(); SOUT(millis()); SOUTLN(" setup start ...");
           #if (SCAN_I2C > OFF)
-              scanI2C(I2C1, PIN_I2C1_SDA, PIN_I2C1_SCL);
+              scanI2C(&i2c1, PIN_I2C1_SDA, PIN_I2C1_SCL);
               #if (USE_I2C > 1)
-                  scanI2C(I2C2, 0, SCAN_I2C, PIN_I2C2_SDA, PIN_I2C2_SCL);
+                  scanI2C(&i2c2, 0, SCAN_I2C, PIN_I2C2_SDA, PIN_I2C2_SCL);
                 #endif
             #endif
 
