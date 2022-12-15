@@ -498,16 +498,16 @@
           #define ADS1115_ATT_0_256V (0x0A00) ///< +/-0.256V range = Gain 16
         */
       #if (USE_POTI_ANA > OFF)
-          #define POTI1_1115_FILT   7
+          #define POTI1_FILT        7
           #define POTI1_1115_ATT    ADS1115_ATT_6_144V
           #if (USE_POTI_ANA > 1)
-              #define POTI2_1115_FILT   7
+              #define POTI2_FILT        7
               #define POTI2_1115_ATT    ADS1115_ATT_6_144V
               #if (USE_POTI_ANA > 2)
-                  #define POTI3_1115_FILT   7
+                  #define POTI3_FILT        7
                   #define POTI3_1115_ATT    ADS1115_ATT_6_144V
                   #if (USE_POTI_ANA > 3)
-                      #define POTI4_1115_FILT   7
+                      #define POTI4_FILT        7
                       #define POTI4_1115_ATT    ADS1115_ATT_6_144V
                     #endif
                 #endif

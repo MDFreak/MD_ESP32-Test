@@ -484,7 +484,7 @@
       #endif
 
     #if (USE_POTI_ANA > OFF)
-        filterValue valPoti(POTI_FILT, 1);
+        filterValue valPoti[USE_POTI_ANA];
         md_val<int16_t> potiVal;
       #endif
 
