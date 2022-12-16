@@ -465,6 +465,13 @@
           ***_1115_ATT GAIN_FOUR       -->  range +/-1.024V
           ***_1115_ATT GAIN_EIGHT       -->  range +/-0.512V
           ***_1115_ATT GAIN_SIXTEEN     -->  range +/-0.256V
+
+        scaling parameters and calculation
+        *PdWert = (  (*PdWert + (double).OffsetRaw)
+                   * (double).Faktor_mul
+                   / (double).Faktor_div
+                   + (double).OffsetReal
+                  )
         */
       #if (USE_MQ135_GAS_ANA > OFF)
           #define MQ135_GAS_ADC    ON
