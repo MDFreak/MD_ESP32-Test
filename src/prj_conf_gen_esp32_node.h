@@ -521,20 +521,20 @@
                 #define PHOTO1_1115_CHAN 0
               #endif
           #if (USE_PHOTO_SENS_ANA > 1)
-              #define PHOTO1_FILT          7
-              #define PHOTO1_DROP          0
-              #define PHOTO1_SCAL          OFF
-              #define PHOTO1_SCAL_MIN      0
-              #define PHOTO1_SCAL_MAX      100
-              #define PHOTO1_ADC           ON
-                #if (PHOTO1_ADC > OFF)
-                    #define PHOTO1_ADC_ATT   ADC_ATTEN_DB_11
+              #define PHOTO2_FILT          7
+              #define PHOTO2_DROP          0
+              #define PHOTO2_SCAL          OFF
+              #define PHOTO2_SCAL_MIN      0
+              #define PHOTO2_SCAL_MAX      100
+              #define PHOTO2_ADC           ON
+                #if (PHOTO2_ADC > OFF)
+                    #define PHOTO2_ADC_ATT   ADC_ATTEN_DB_11
                   #endif
-              #define PHOTO1_1115          OFF
-                #if (PHOTO1_1115 > OFF)
-                    #define PHOTO1_1115_ATT  GAIN_ONE
-                    #define PHOTO1_1115_DEV  0
-                    #define PHOTO1_1115_CHAN 0
+              #define PHOTO2_1115          OFF
+                #if (PHOTO2_1115 > OFF)
+                    #define PHOTO2_1115_ATT  GAIN_ONE
+                    #define PHOTO2_1115_DEV  0
+                    #define PHOTO2_1115_CHAN 0
                   #endif
             #endif
           #ifndef USE_MEASURE_CYCLE
@@ -543,38 +543,58 @@
         #endif
 
       #if (USE_POTI_ANA > OFF)
+          #define POTI1_FILT          7
+          #define POTI1_DROP          0
+          #define POTI1_SCAL          OFF
+          #define POTI1_SCAL_MIN      0
+          #define POTI1_SCAL_MAX      100
           #define POTI1_ADC           ON
-          #if (PHOTO_ADC > OFF)
-              #define PHOTO1_ADC_ATT   ADC_ATTEN_DB_11
-              #if (PHOTO_ADC > 1)
-                  #define PHOTO2_ADC_ATT   ADC_ATTEN_DB_11
-                #endif
+            #if (POTI1_ADC > OFF)
+                #define POTI1_ADC_ATT   ADC_ATTEN_DB_11
+              #endif
+          #define POTI1_1115          OFF
+            #if (POTI1_1115 > OFF)
+                #define POTI1_1115_ATT  GAIN_ONE
+                #define POTI1_1115_DEV  0
+                #define POTI1_1115_CHAN 0
+              #endif
+          #if (USE_POTI_ANA > 1)
+              #define POTI2_FILT          7
+              #define POTI2_DROP          0
+              #define POTI2_SCAL          OFF
+              #define POTI2_SCAL_MIN      0
+              #define POTI2_SCAL_MAX      100
+              #define POTI2_ADC           ON
+                #if (POTI2_ADC > OFF)
+                    #define POTI2_ADC_ATT   ADC_ATTEN_DB_11
+                  #endif
+              #define POTI2_1115          OFF
+                #if (POTI2_1115 > OFF)
+                    #define POTI2_1115_ATT  GAIN_ONE
+                    #define POTI2_1115_DEV  0
+                    #define POTI2_1115_CHAN 0
+                  #endif
             #endif
-          #define POTI1_ADC_FILT    7
-          #define POTI1_ADC_ATT     ADC_ATTEN_DB_11
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
         #endif
-
-      #if (USE_POTI_ANA > OFF)
-          #define POTI1_FILT        7
-          #define POTI1_1115_ATT    ADS1115_ATT_6_144V
-          #if (USE_POTI_ANA > 1)
-              #define POTI2_FILT        7
-              #define POTI2_1115_ATT    ADS1115_ATT_6_144V
-              #if (USE_POTI_ANA > 2)
-                  #define POTI3_FILT        7
-                  #define POTI3_1115_ATT    ADS1115_ATT_6_144V
-                  #if (USE_POTI_ANA > 3)
-                      #define POTI4_FILT        7
-                      #define POTI4_1115_ATT    ADS1115_ATT_6_144V
-                    #endif
-                #endif
-            #endif
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
-            #endif
+      #if (USE_ACS712_ANA > OFF)
+          #define I712_1_FILT          7
+          #define I712_1_DROP          0
+          #define I712_1_SCAL          OFF
+          #define I712_1_SCAL_MIN      0
+          #define I712_1_SCAL_MAX      100
+          #define I712_1_ADC           OFF
+            #if (POTI1_ADC > OFF)
+                #define POTI1_ADC_ATT   ADC_ATTEN_DB_11
+              #endif
+          #define I712_1_1115           ON
+                #if (I712_1_1115 > OFF)
+                    #define I712_1_1115_ATT  GAIN_ONE
+                    #define I712_1_1115_DEV  0
+                    #define I712_1_1115_CHAN 0
+                  #endif
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
       #ifdef USE_MEASURE_CYCLE
