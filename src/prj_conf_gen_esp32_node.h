@@ -451,9 +451,11 @@
         #endif
 
       #if (USE_MQ135_GAS_ANA > OFF)
-          #define MQ135_FILT      15       // floating  measure filtering
+          #define MQ135_GAS_ADC    ADC1_CHANNEL_7  (PIN 35)
+          #define MQ135_GAS_1115   NU
+          #define MQ135_FILT       15       // floating  measure filtering
           //#define MQ135_ThresFilt 25       // threshold measure filtering
-          #define MQ135_EM_WIN    100      // window for traffic light
+          #define MQ135_EM_WIN     100      // window for traffic light
           //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
