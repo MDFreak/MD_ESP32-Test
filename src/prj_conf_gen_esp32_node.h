@@ -580,14 +580,17 @@
             #endif
         #endif
       #if (USE_ACS712_ANA > OFF)
+          /*  ACS712 hall effect current sensor +/- 5A/20A/30 A
+              sensitivity
+            */
           #define I712_1_FILT          7
           #define I712_1_DROP          0
           #define I712_1_SCAL          OFF
           #define I712_1_SCAL_MIN      0
           #define I712_1_SCAL_MAX      100
           #define I712_1_ADC           OFF
-            #if (POTI1_ADC > OFF)
-                #define POTI1_ADC_ATT   ADC_ATTEN_DB_11
+            #if (I712_1_ADC > OFF)
+                #define I712_1_ADC_ATT   ADC_ATTEN_DB_11
               #endif
           #define I712_1_1115           ON
                 #if (I712_1_1115 > OFF)
