@@ -547,17 +547,37 @@
             #endif
         #endif
 
+      #if (USE_VCC_ANA > OFF)
+          #define VCC_FILT              7
+          #define VCC_DROP              0
+          #define VCC_SCAL              OFF
+          #define VCC_SCAL_MIN          0
+          #define VCC_SCAL_MAX          100
+          #define VCC_ADC               OFF
+          #if (VCC_ADC > OFF)
+              #define VCC_ADC_ATT       ADC_ATTEN_DB_11
+            #endif
+          #define VCC_1115              ON
+            #if (VCC_1115 > OFF)
+                #define VCC_1115_ATT    GAIN_TWOTHIRDS
+                #define VCC_1115_DEV    0
+                #define VCC_1115_CHAN   0
+              #endif
+          #ifndef USE_MEASURE_CYCLE
+              #define USE_MEASURE_CYCLE
+            #endif
+        #endif
       #if (USE_POTI_ANA > OFF)
-          #define POTI1_FILT                7
-          #define POTI1_DROP                0
-          #define POTI1_SCAL                OFF
-          #define POTI1_SCAL_MIN            0
-          #define POTI1_SCAL_MAX            100
-          #define POTI1_ADC                 ON
+          #define POTI1_FILT            7
+          #define POTI1_DROP            0
+          #define POTI1_SCAL            OFF
+          #define POTI1_SCAL_MIN        0
+          #define POTI1_SCAL_MAX        100
+          #define POTI1_ADC             OFF
           #if (POTI1_ADC > OFF)
               #define POTI1_ADC_ATT         ADC_ATTEN_DB_11
             #endif
-          #define POTI1_1115                OFF
+          #define POTI1_1115            ON
             #if (POTI1_1115 > OFF)
                 #define POTI1_1115_ATT  GAIN_TWOTHIRDS
                 #define POTI1_1115_DEV  0

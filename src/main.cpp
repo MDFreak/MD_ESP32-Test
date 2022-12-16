@@ -495,13 +495,23 @@
       #endif
 
     #if (USE_PHOTO_SENS_ANA > OFF)
-        filterValue valPhoto(PHOTO_FILT, 1);
-        md_val<uint16_t> PhotoVal;
+        filterValue valPhoto[USE_PHOTO_SENS_ANA];
+        //md_val<uint16_t> PhotoVal;
       #endif
 
     #if (USE_POTI_ANA > OFF)
         filterValue valPoti[USE_POTI_ANA];
-        md_val<int16_t> potiVal;
+        //md_val<int16_t> potiVal;
+      #endif
+
+    #if (USE_VCC_ANA > OFF)
+        filterValue valVCC;
+        //md_val<int16_t> vccVal;
+      #endif
+
+    #if (USE_ACS712_ANA > OFF)
+        filterValue valI712[USE_ACS712_ANA];
+        //md_val<int16_t> i712Val[USE_ACS712_ANA];
       #endif
 
     #if (USE_TYPE_K_SPI > 0)
@@ -566,7 +576,6 @@
               SOUT(src32m); SOUT(" ~ 0x") ; SOUTHEX(src32m); SOUT(" -> ");
               SOUT(dest16mcpp); SOUT(" ~ 0x") ; SOUTHEXLN(dest16mcpp);
               SOUTLN();
-
             #endif
           #if (USE_LED_BLINK_OUT > 0)
               pinMode(PIN_BOARD_LED, OUTPUT);
@@ -817,12 +826,12 @@
             #endif
         // photo sensor
           #if (USE_PHOTO_SENS_ANA > OFF)
-            SOUT("init poto sensor ... ");
-            PhotoVal.begin(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
-            pinMode(PIN_PHOTO_SENS, INPUT);
-            adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO_SENS,
-                                      (adc_atten_t)    PHOTO_SENS_ATT);
-            SOUTLN(" ready");
+              SOUT("init poto sensors ... ");
+              valPhoto.begin(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
+              pinMode(PIN_PHOTO_SENS, INPUT);
+              adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO_SENS,
+                                        (adc_atten_t)    PHOTO_SENS_ATT);
+              SOUTLN(" ready");
             #endif
         // K-type thermoelementation
           #if ( USE_TYPE_K_SPI > 0)
