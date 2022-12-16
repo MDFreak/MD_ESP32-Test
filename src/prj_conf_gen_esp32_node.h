@@ -452,19 +452,19 @@
 
       /* analog channels
         ADC channels
-          ***_ADC_ATT     ADC_ATTEN_DB_0
-          ***_ADC_ATT     ADC_ATTEN_DB_11
-          ***_ADC_ATT     ADC_ATTEN_DB_6
-          ***_ADC_ATT     ADC_ATTEN_DB_11
+          ***_ADC_RES 12                    --> resolution 12 bit (def)
+          ***_ADC_ATT  ADC_ATTEN_DB_0   -->  range 0 -  800 mV
+          ***_ADC_ATT  ADC_ATTEN_DB_2_5 -->  range 0 - 1100 mV
+          ***_ADC_ATT  ADC_ATTEN_DB_6   -->  range 0 - 1350 mV
+          ***_ADC_ATT  ADC_ATTEN_DB_11  -->  range 0 - 2600 mV (def)
 
         ADS1115 channels
-
-          ***_1115_ATT GAIN_TWOTHIRDS -->  +/-6.144V range = Gain 2/3
-          ***_1115_ATT GAIN_ONE       -->  +/-4.096V range = Gain 1
-          ***_1115_ATT GAIN_TWO       -->  +/-2.048V range = Gain 2 (default)
-          ***_1115_ATT GAIN_FOUR      -->  +/-1.024V range = Gain 4
-          ***_1115_ATT GAIN_EIGHT     -->  +/-0.512V range = Gain 8
-          ***_1115_ATT GAIN_SIXTEEN   -->  +/-0.256V range = Gain 16
+          ***_1115_ATT GAIN_TWOTHIRDS   -->  range +/-6.144V
+          ***_1115_ATT GAIN_ONE         -->  range +/-4.096V
+          ***_1115_ATT GAIN_TWO         -->  range +/-2.048V (def)
+          ***_1115_ATT GAIN_FOUR       -->  range +/-1.024V
+          ***_1115_ATT GAIN_EIGHT       -->  range +/-0.512V
+          ***_1115_ATT GAIN_SIXTEEN     -->  range +/-0.256V
         */
       #if (USE_MQ135_GAS_ANA > OFF)
           #define MQ135_GAS_ADC    ON
@@ -484,6 +484,7 @@
           #define MQ3_ALK_1115   OFF
           #define MQ3_FILT       15       // floating  measure filtering
           #define MQ3_EM_WIN     100      // window for traffic light
+          #define MQ3_SCAL       OFF
           #define MQ3_SCAL_MIN   0
           #define MQ3_SCAL_MAX   100
           #ifndef USE_MEASURE_CYCLE
@@ -504,17 +505,53 @@
         #endif
 
       #if (USE_PHOTO_SENS_ANA > OFF)
-          #define PHOTO_FILT        7
-          #define PHOTO_DROP        0
-          #define PHOTO_SENS_ATT    3 // 2 = ADC_ATTEN_DB_6; 3 = ADC_ATTEN_DB_11
+          #define PHOTO1_FILT          7
+          #define PHOTO1_DROP          0
+          #define PHOTO1_SCAL          OFF
+          #define PHOTO1_SCAL_MIN      0
+          #define PHOTO1_SCAL_MAX      100
+          #define PHOTO1_ADC           ON
+            #if (PHOTO1_ADC > OFF)
+                #define PHOTO1_ADC_ATT   ADC_ATTEN_DB_11
+              #endif
+          #define PHOTO1_1115          OFF
+            #if (PHOTO1_1115 > OFF)
+                #define PHOTO1_1115_ATT  GAIN_ONE
+                #define PHOTO1_1115_DEV  0
+                #define PHOTO1_1115_CHAN 0
+              #endif
+          #if (USE_PHOTO_SENS_ANA > 1)
+              #define PHOTO1_FILT          7
+              #define PHOTO1_DROP          0
+              #define PHOTO1_SCAL          OFF
+              #define PHOTO1_SCAL_MIN      0
+              #define PHOTO1_SCAL_MAX      100
+              #define PHOTO1_ADC           ON
+                #if (PHOTO1_ADC > OFF)
+                    #define PHOTO1_ADC_ATT   ADC_ATTEN_DB_11
+                  #endif
+              #define PHOTO1_1115          OFF
+                #if (PHOTO1_1115 > OFF)
+                    #define PHOTO1_1115_ATT  GAIN_ONE
+                    #define PHOTO1_1115_DEV  0
+                    #define PHOTO1_1115_CHAN 0
+                  #endif
+            #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
         #endif
 
       #if (USE_POTI_ANA > OFF)
+          #define POTI1_ADC           ON
+          #if (PHOTO_ADC > OFF)
+              #define PHOTO1_ADC_ATT   ADC_ATTEN_DB_11
+              #if (PHOTO_ADC > 1)
+                  #define PHOTO2_ADC_ATT   ADC_ATTEN_DB_11
+                #endif
+            #endif
           #define POTI1_ADC_FILT    7
-          #define POTI1_ADC_ATT     3 // 3 = ADC_ATTEN_DB_11
+          #define POTI1_ADC_ATT     ADC_ATTEN_DB_11
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
