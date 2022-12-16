@@ -485,33 +485,33 @@
     #if (USE_MQ135_GAS_ANA > OFF)
         filterValue valGas(MQ135_FILT, 1);
         //filterValue tholdGas(MQ135_ThresFilt,1);
-        int16_t gasValue;
-        int16_t gasThres;
+        md_val<uint16_t> gasValue;
+        md_val<uint16_t> gasThres;
       #endif
 
     #if (USE_MQ3_ALK_ANA > OFF)
-        int16_t alkVal;
-        filterValue valAlk(MQ3_FILT, 1);
+        //filterValue valAlk(MQ3_FILT, 1);
+        md_val<uint16_t> alkVal;
       #endif
 
     #if (USE_PHOTO_SENS_ANA > OFF)
-        filterValue valPhoto[USE_PHOTO_SENS_ANA];
-        //md_val<uint16_t> PhotoVal;
+        //filterValue valPhoto[USE_PHOTO_SENS_ANA];
+        md_val<uint16_t> photoVal;
       #endif
 
     #if (USE_POTI_ANA > OFF)
-        filterValue valPoti[USE_POTI_ANA];
-        //md_val<int16_t> potiVal;
+        //filterValue valPoti[USE_POTI_ANA];
+        md_val<int16_t> potiVal;
       #endif
 
     #if (USE_VCC_ANA > OFF)
-        filterValue valVCC;
-        //md_val<int16_t> vccVal;
+        //filterValue valVCC;
+        md_val<int16_t> vccVal;
       #endif
 
     #if (USE_ACS712_ANA > OFF)
-        filterValue valI712[USE_ACS712_ANA];
-        //md_val<int16_t> i712Val[USE_ACS712_ANA];
+        //filterValue valI712[USE_ACS712_ANA];
+        md_val<int16_t> i712Val[USE_ACS712_ANA];
       #endif
 
     #if (USE_TYPE_K_SPI > 0)
@@ -829,7 +829,7 @@
               SOUT("init poto sensors ... ");
               for (uint8_t i=0 ; i < USE_PHOTO_SENS_ANA ; i++ )
                 {
-                  valPhoto.init(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
+                  photoVal.begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
                   pinMode(PIN_PHOTO_SENS, INPUT);
                   adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO_SENS,
                                             (adc_atten_t)    PHOTO_SENS_ATT);
