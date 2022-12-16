@@ -450,20 +450,42 @@
             #endif
         #endif
 
+      /* analog channels
+        ADC channels
+          ***_ADC_ATT     ADC_ATTEN_DB_0
+          ***_ADC_ATT     ADC_ATTEN_DB_11
+          ***_ADC_ATT     ADC_ATTEN_DB_6
+          ***_ADC_ATT     ADC_ATTEN_DB_11
+
+        ADS1115 channels
+
+          ***_1115_ATT GAIN_TWOTHIRDS -->  +/-6.144V range = Gain 2/3
+          ***_1115_ATT GAIN_ONE       -->  +/-4.096V range = Gain 1
+          ***_1115_ATT GAIN_TWO       -->  +/-2.048V range = Gain 2 (default)
+          ***_1115_ATT GAIN_FOUR      -->  +/-1.024V range = Gain 4
+          ***_1115_ATT GAIN_EIGHT     -->  +/-0.512V range = Gain 8
+          ***_1115_ATT GAIN_SIXTEEN   -->  +/-0.256V range = Gain 16
+        */
       #if (USE_MQ135_GAS_ANA > OFF)
-          #define MQ135_GAS_ADC    ADC1_CHANNEL_7  (PIN 35)
-          #define MQ135_GAS_1115   NU
+          #define MQ135_GAS_ADC    ON
+          #define MQ135_GAS_1115   OFF
           #define MQ135_FILT       15       // floating  measure filtering
-          //#define MQ135_ThresFilt 25       // threshold measure filtering
           #define MQ135_EM_WIN     100      // window for traffic light
-          //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
+          #define MQ135_SCAL_MIN   0
+          #define MQ135_SCAL_MAX   100
+            //#define MQ135_ThresFilt 25       // threshold measure filtering
+            //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
         #endif
       #if (USE_MQ3_ALK_ANA > OFF)
-          #define MQ3_FILT      15       // floating  measure filtering
-          #define MQ3_EM_WIN    100      // window for traffic light
+          #define MQ3_ALK_ADC    ON
+          #define MQ3_ALK_1115   OFF
+          #define MQ3_FILT       15       // floating  measure filtering
+          #define MQ3_EM_WIN     100      // window for traffic light
+          #define MQ3_SCAL_MIN   0
+          #define MQ3_SCAL_MAX   100
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
@@ -490,10 +512,6 @@
             #endif
         #endif
 
-      /* ADC channels
-          #define ***_ADC_ATT     2  ///< ADC_ATTEN_DB_6
-          #define ***_ADC_ATT     3  ///< ADC_ATTEN_DB_11
-        */
       #if (USE_POTI_ANA > OFF)
           #define POTI1_ADC_FILT    7
           #define POTI1_ADC_ATT     3 // 3 = ADC_ATTEN_DB_11
@@ -502,14 +520,6 @@
             #endif
         #endif
 
-      /* ADS1115 channels
-          #define ADS1115_ATT_6_144V (0x0000) ///< +/-6.144V range = Gain 2/3
-          #define ADS1115_ATT_4_096V (0x0200) ///< +/-4.096V range = Gain 1
-          #define ADS1115_ATT_2_048V (0x0400) ///< +/-2.048V range = Gain 2 (default)
-          #define ADS1115_ATT_1_024V (0x0600) ///< +/-1.024V range = Gain 4
-          #define ADS1115_ATT_0_512V (0x0800) ///< +/-0.512V range = Gain 8
-          #define ADS1115_ATT_0_256V (0x0A00) ///< +/-0.256V range = Gain 16
-        */
       #if (USE_POTI_ANA > OFF)
           #define POTI1_FILT        7
           #define POTI1_1115_ATT    ADS1115_ATT_6_144V
