@@ -766,13 +766,7 @@
                     SOUT(millis()); SOUT(" BME280 ... " );
               dispStatus("init BME2801");
               bool bmeda = false;
-              #if (USE_BME280_I2C > OFF)
-                  #if (BME2801_I2C == I2C1)
-                      bmeda = bme1.begin(I2C_BME280, &i2c1);
-                    #else
-                      bmeda = bme2.begin(I2C_BME280, &i2c2);
-                    #endif
-                #endif
+              bmeda = bme1.begin(I2C_BME280, pbme1i2c);
               if (bmeda)
                   {
                     bme1.setSampling(bme1.MODE_SLEEP);
@@ -788,20 +782,15 @@
               #if (USE_BME280_I2C > 1)
                         SOUT(millis()); SOUT(" BME280 ... " );
                   dispStatus("init BME280");
-                  bool bmeda = false;
-                  #if (USE_BME280_I2C > OFF)
-                      bmeda = bme.begin(I2C_BME280, &i2c1);
-                      #if (USE_BME280_I2C > 1)
-                          bmeda = bme.begin(I2C_BME280, &i2c2);
-                        #endif
-                    #endif
+                  bmeda = false;
+                  bmeda = bme2.begin(I2C_BME280, pbme2i2c);
                   if (bmeda)
                       {
-                        bme.setSampling(bme.MODE_SLEEP);
+                        bme2.setSampling(bme2.MODE_SLEEP);
                               SOUTLN(" gefunden");
-                        bmeT.begin(BME280T_FILT, BME280T_Drop, FILT_NU);
-                        bmeP.begin(BME280P_FILT, BME280P_Drop, FILT_NU);
-                        bmeH.begin(BME280H_FILT, BME280H_Drop, FILT_NU);
+                        bme2T.begin(BME2802T_FILT, BME2802T_Drop, FILT_NU);
+                        bmeP.begin(BME2802P_FILT, BME2802P_Drop, FILT_NU);
+                        bmeH.begin(BME2802H_FILT, BME2802H_Drop, FILT_NU);
                       }
                     else
                       {
@@ -1146,11 +1135,11 @@
                           //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
                   #endif
                 #if ( USE_BME280_I2C > OFF )
-                    bme.init();
+                    bme1.init();
                     usleep(1000);
-                    bmeT.doVal((int16_t) (bme.readTemperature() + 0.5));
-                    bmeH.doVal((uint16_t) (bme.readHumidity() + 0.5));
-                    bmeP.doVal((uint16_t) ((bme.readPressure() / 100.0F) + 0.5));
+                    bme1T.doVal((int16_t) (bme1.readTemperature() + 0.5));
+                    bme1H.doVal((uint16_t) (bme1.readHumidity() + 0.5));
+                    bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
                   #endif
                 #if (USE_PHOTO_SENS_ANA > OFF)
                     PhotoVal.doVal(analogRead(PIN_PHOTO_SENS));
@@ -1599,18 +1588,18 @@
                           switch (i)
                             {
                               case 0:
-                                tmpStr.concat(bmeT.getVal());
-                                outStr.concat(bmeT.getVal());
+                                tmpStr.concat(bme1T.getVal());
+                                outStr.concat(bme1T.getVal());
                                 outStr.concat("°  ");
                                 break;
                               case 1:
-                                tmpStr.concat(bmeH.getVal());
-                                outStr.concat(bmeH.getVal());
+                                tmpStr.concat(bme1H.getVal());
+                                outStr.concat(bme1H.getVal());
                                 outStr.concat("%  ");
                                 break;
                               case 2:
-                                tmpStr.concat(bmeP.getVal());
-                                outStr.concat(bmeP.getVal());
+                                tmpStr.concat(bme1P.getVal());
+                                outStr.concat(bme1P.getVal());
                                 outStr.concat("mb");
                                 break;
                               default:
