@@ -551,16 +551,20 @@
                 #endif
             #endif
           #if (TEST_NUM_CONVERT > OFF)
-              int32_t src32   = 0x01000000;
+              int32_t src32   = 200 * 2<<15;
               int32_t src32m  = -src32;
               int16_t src16   = 0x0100;
               int16_t src16m  = -src16;
-              int16_t dest16cpp  = (int16_t) (src32m >> 16);
-              int16_t dest16mcpp = (int16_t) (src32m >> 16);
+              uint8_t bits    = 15;
+              int16_t dest16cpp  = (int16_t) (src32/(2 * bits));
+              int16_t dest16mcpp = (int16_t) (src32m/(2 * bits));
+              SOUTLN();
               SOUTLN(" test convertion NUM format");
               SOUT(" (cpp) int32 -> int16: ");
               SOUT(src32); SOUT(" ~ 0x") ; SOUTHEX(src32); SOUT(" -> ");
               SOUT(dest16cpp); SOUT(" ~ 0x") ; SOUTHEXLN(dest16cpp);
+              SOUT(src32m); SOUT(" ~ 0x") ; SOUTHEX(src32m); SOUT(" -> ");
+              SOUT(dest16mcpp); SOUT(" ~ 0x") ; SOUTHEXLN(dest16mcpp);
               SOUTLN();
 
             #endif
