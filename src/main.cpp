@@ -1180,7 +1180,7 @@
                     bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
                   #endif
                 #if (USE_PHOTO_SENS_ANA > OFF)
-                    PhotoVal.doVal(analogRead(PIN_PHOTO_SENS));
+                    photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
@@ -1595,11 +1595,11 @@
                       outStr = "          ";
                       dispText(outStr, 12, 4, outStr.length());
                       outStr = "";
-                      outStr.concat(PhotoVal.getVal());
+                      outStr.concat(photo1Val.getVal());
                       #if (USE_WEBSERVER > OFF)
                           tmpStr = "SVA";
                           tmpStr.concat("3");
-                          tmpStr.concat(PhotoVal.getVal());
+                          tmpStr.concat(photo1Val.getVal());
                           pmdServ->updateAll(tmpStr);
                         #endif
                     #endif
