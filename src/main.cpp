@@ -827,10 +827,13 @@
         // photo sensor
           #if (USE_PHOTO_SENS_ANA > OFF)
               SOUT("init poto sensors ... ");
-              valPhoto.begin(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
-              pinMode(PIN_PHOTO_SENS, INPUT);
-              adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO_SENS,
-                                        (adc_atten_t)    PHOTO_SENS_ATT);
+              for (uint8_t i=0 ; i < USE_PHOTO_SENS_ANA ; i++ )
+                {
+                  valPhoto.init(PHOTO_FILT, PHOTO_DROP, FILT_FL_MEAN);
+                  pinMode(PIN_PHOTO_SENS, INPUT);
+                  adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO_SENS,
+                                            (adc_atten_t)    PHOTO_SENS_ATT);
+                }
               SOUTLN(" ready");
             #endif
         // K-type thermoelementation
