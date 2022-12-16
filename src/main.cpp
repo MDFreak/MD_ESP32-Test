@@ -550,7 +550,20 @@
                   scanI2C(&i2c2, 0, SCAN_I2C, PIN_I2C2_SDA, PIN_I2C2_SCL);
                 #endif
             #endif
+          #if (TEST_NUM_CONVERT > OFF)
+              int32_t src32   = 0x01000000;
+              int32_t src32m  = -src32;
+              int16_t src16   = 0x0100;
+              int16_t src16m  = -src16;
+              int16_t dest16cpp  = (int16_t) (src32m >> 16);
+              int16_t dest16mcpp = (int16_t) (src32m >> 16);
+              SOUTLN(" test convertion NUM format");
+              SOUT(" (cpp) int32 -> int16: ");
+              SOUT(src32); SOUT(" ~ 0x") ; SOUTHEX(src32); SOUT(" -> ");
+              SOUT(dest16cpp); SOUT(" ~ 0x") ; SOUTHEXLN(dest16cpp);
+              SOUTLN();
 
+            #endif
           #if (USE_LED_BLINK_OUT > 0)
               pinMode(PIN_BOARD_LED, OUTPUT);
               digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
