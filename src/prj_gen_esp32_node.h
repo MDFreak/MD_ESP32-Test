@@ -67,7 +67,8 @@
       #define USE_MQ3_ALK_ANA       1   // ADC or ADS1115
       #define USE_PHOTO_SENS_ANA    1   // ADC or ADS1115
       #define USE_ACS712_ANA        1   // only ADS1115
-      #define USE_POTI_ANA          2   // ADC or ADS1115
+      #define USE_POTI_ANA          1   // ADC or ADS1115
+      #define USE_VCC_ANA           1   // ADC or ADS1115
       #define USE_ADC1115_I2C       1   // ADC 4 channels 16Bit
     // --- network  components
       #define USE_WIFI              ON  // ON

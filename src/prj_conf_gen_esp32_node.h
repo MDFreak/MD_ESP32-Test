@@ -480,13 +480,18 @@
             #endif
         #endif
       #if (USE_MQ3_ALK_ANA > OFF)
-          #define MQ3_ALK_ADC    ON
-          #define MQ3_ALK_1115   OFF
-          #define MQ3_FILT       15       // floating  measure filtering
-          #define MQ3_EM_WIN     100      // window for traffic light
-          #define MQ3_SCAL       OFF
-          #define MQ3_SCAL_MIN   0
-          #define MQ3_SCAL_MAX   100
+          #define MQ3_FILT              15       // floating  measure filtering
+          #define MQ3_EM_WIN            100      // window for traffic light
+          #define MQ3_SCAL              OFF
+          #define MQ3_1115_SCAL_MIN     0
+          #define MQ3_1115_SCAL_MAX     100
+          #define MQ3_ALK_ADC           OFF
+          #define MQ3_ALK_1115          ON
+          #if (MQ3_ALK_1115 > OFF)
+              #define MQ3_1115_DEV      0
+              #define MQ3_1115_CHAN     3
+              #define MQ3_1115_1115_ATT GAIN_TWOTHIRDS
+            #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
@@ -543,34 +548,34 @@
         #endif
 
       #if (USE_POTI_ANA > OFF)
-          #define POTI1_FILT          7
-          #define POTI1_DROP          0
-          #define POTI1_SCAL          OFF
-          #define POTI1_SCAL_MIN      0
-          #define POTI1_SCAL_MAX      100
-          #define POTI1_ADC           ON
-            #if (POTI1_ADC > OFF)
-                #define POTI1_ADC_ATT   ADC_ATTEN_DB_11
-              #endif
-          #define POTI1_1115          OFF
+          #define POTI1_FILT                7
+          #define POTI1_DROP                0
+          #define POTI1_SCAL                OFF
+          #define POTI1_SCAL_MIN            0
+          #define POTI1_SCAL_MAX            100
+          #define POTI1_ADC                 ON
+          #if (POTI1_ADC > OFF)
+              #define POTI1_ADC_ATT         ADC_ATTEN_DB_11
+            #endif
+          #define POTI1_1115                OFF
             #if (POTI1_1115 > OFF)
-                #define POTI1_1115_ATT  GAIN_ONE
+                #define POTI1_1115_ATT  GAIN_TWOTHIRDS
                 #define POTI1_1115_DEV  0
                 #define POTI1_1115_CHAN 0
               #endif
           #if (USE_POTI_ANA > 1)
-              #define POTI2_FILT          7
-              #define POTI2_DROP          0
-              #define POTI2_SCAL          OFF
-              #define POTI2_SCAL_MIN      0
-              #define POTI2_SCAL_MAX      100
-              #define POTI2_ADC           ON
-                #if (POTI2_ADC > OFF)
-                    #define POTI2_ADC_ATT   ADC_ATTEN_DB_11
-                  #endif
-              #define POTI2_1115          OFF
+              #define POTI2_FILT            7
+              #define POTI2_DROP            0
+              #define POTI2_SCAL            OFF
+              #define POTI2_SCAL_MIN        0
+              #define POTI2_SCAL_MAX        100
+              #define POTI2_ADC             ON
+              #if (POTI2_ADC > OFF)
+                  #define POTI2_ADC_ATT   ADC_ATTEN_DB_11
+                #endif
+              #define POTI2_1115            OFF
                 #if (POTI2_1115 > OFF)
-                    #define POTI2_1115_ATT  GAIN_ONE
+                    #define POTI2_1115_ATT  GAIN_TWOTHIRDS
                     #define POTI2_1115_DEV  0
                     #define POTI2_1115_CHAN 0
                   #endif
@@ -586,21 +591,32 @@
               sensitivity: type 20A -> 100mV/A ->   500 - 4500 mV
               sensitivity: type 30A ->  66mV/A ->   520 - 4480 mV
             */
-          #define I712_1_FILT          7
+          #define I712_1_FILT          15
           #define I712_1_DROP          0
           #define I712_1_SCAL          OFF
-          #define I712_1_SCAL_MIN      0
-          #define I712_1_SCAL_MAX      100
-          #define I712_1_ADC           OFF
+          #define I712_1_IMAX          5000 // mA
+          #define I712_1_ADC           OFF // not recommended, low resolution
             #if (I712_1_ADC > OFF)
                 #define I712_1_ADC_ATT   ADC_ATTEN_DB_11
               #endif
           #define I712_1_1115           ON
-                #if (I712_1_1115 > OFF)
-                    #define I712_1_1115_ATT  GAIN_ONE
-                    #define I712_1_1115_DEV  0
-                    #define I712_1_1115_CHAN 3
-                  #endif
+          #if (I712_1_1115 > OFF)
+              #define I712_1_1115_DEV  0
+              #define I712_1_1115_CHAN 3
+              #if   (I712_1_IMAX ==  5000)
+                  #define I712_1_SCAL_MIN      0
+                  #define I712_1_SCAL_MAX      100
+                  #define I712_1_1115_ATT      GAIN_ONE
+                #elif (I712_1_IMAX == 20000)
+                  #define I712_1_SCAL_MIN      0
+                  #define I712_1_SCAL_MAX      100
+                  #define I712_1_1115_ATT      GAIN_TWOTHIRDS
+                #else // 30000
+                  #define I712_1_SCAL_MIN      0
+                  #define I712_1_SCAL_MAX      100
+                  #define I712_1_1115_ATT      GAIN_TWOTHIRDS
+                #endif
+            #endif
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
       #ifdef USE_MEASURE_CYCLE
