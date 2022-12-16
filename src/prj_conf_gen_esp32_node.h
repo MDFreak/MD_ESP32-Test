@@ -520,13 +520,14 @@
           #define PHOTO1_FILT          7
           #define PHOTO1_DROP          0
           #define PHOTO1_SCAL          OFF
-          #define PHOTO1_SCAL_MIN      0
-          #define PHOTO1_SCAL_MAX      100
+          #define PHOTO1_SCAL_OFFRAW   0
+          #define PHOTO1_SCAL_GAIN     1
+          #define PHOTO1_SCAL_OFFREAL  0
           #define PHOTO1_ADC           ON
             #if (PHOTO1_ADC > OFF)
                 #define PHOTO1_ADC_ATT   ADC_ATTEN_DB_11
               #endif
-          #define PHOTO1_1115          OFF
+          #define PHOTO1_1115          ON
             #if (PHOTO1_1115 > OFF)
                 #define PHOTO1_1115_ATT  GAIN_ONE
                 #define PHOTO1_1115_DEV  0
@@ -858,8 +859,8 @@
             #endif
 
           #if (USE_PHOTO_SENS_ANA > OFF)
-              #define PIN_PHOTO_SENS 39
-              #define ADC_PHOTO_SENS 3
+              #define PIN_PHOTO1_SENS 39
+              #define ADC_PHOTO1_SENS 3
             #endif
 
         // --- PWM channels   0..15

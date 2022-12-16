@@ -496,12 +496,12 @@
 
     #if (USE_PHOTO_SENS_ANA > OFF)
         //filterValue valPhoto[USE_PHOTO_SENS_ANA];
-        md_val<uint16_t> photoVal;
+        md_val<uint16_t> photo1Val;
       #endif
 
     #if (USE_POTI_ANA > OFF)
         //filterValue valPoti[USE_POTI_ANA];
-        md_val<int16_t> potiVal;
+        md_val<int16_t> poti1Val;
       #endif
 
     #if (USE_VCC_ANA > OFF)
@@ -829,10 +829,19 @@
               SOUT("init poto sensors ... ");
               for (uint8_t i=0 ; i < USE_PHOTO_SENS_ANA ; i++ )
                 {
-                  photoVal.begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
-                  pinMode(PIN_PHOTO_SENS, INPUT);
-                  adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO_SENS,
-                                            (adc_atten_t)    PHOTO_SENS_ATT);
+                  photo1Val.begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
+                  #if (PHOTO1_SCAL > OFF)
+                      photo1Val.setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL)
+                    #endif
+                  #if (PHOTO1_ADC > OFF)
+                      pinMode(PIN_PHOTO1_SENS, INPUT);
+                      adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO1_SENS,
+                                                (adc_atten_t)    PHOTO1_ADC_ATT);
+                  #elif (PHOTO1_1115 > OFF)
+
+
+
+                    #endif
                 }
               SOUTLN(" ready");
             #endif
