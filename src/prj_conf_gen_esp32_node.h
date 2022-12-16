@@ -581,7 +581,10 @@
         #endif
       #if (USE_ACS712_ANA > OFF)
           /*  ACS712 hall effect current sensor +/- 5A/20A/30 A
-              sensitivity
+              output: VCC/2 (2,5V) + measured value
+              sensitivity: type  5A -> 186mV/A ->  1570 - 3430 mV
+              sensitivity: type 20A -> 100mV/A ->   500 - 4500 mV
+              sensitivity: type 30A ->  66mV/A ->   520 - 4480 mV
             */
           #define I712_1_FILT          7
           #define I712_1_DROP          0
@@ -596,7 +599,7 @@
                 #if (I712_1_1115 > OFF)
                     #define I712_1_1115_ATT  GAIN_ONE
                     #define I712_1_1115_DEV  0
-                    #define I712_1_1115_CHAN 0
+                    #define I712_1_1115_CHAN 3
                   #endif
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
