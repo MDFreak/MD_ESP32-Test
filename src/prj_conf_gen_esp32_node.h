@@ -500,9 +500,9 @@
               #define MQ3_1115_DEV      0
               #define MQ3_1115_CHAN     3
               #define MQ3_1115_1115_ATT GAIN_TWOTHIRDS
-              #define MQ3_1115_OFFRAW   0
-              #define MQ3_1115_GAIN     0
-              #define MQ3_1115_OFFREAL  0
+              #define MQ3_OFFRAW        0
+              #define MQ3_GAIN          0
+              #define MQ3_OFFREAL       0
             #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
@@ -577,9 +577,9 @@
                 #define VCC_1115_DEV      0
                 #define VCC_1115_CHAN     1
                 #define VCC_1115_ATT      GAIN_TWOTHIRDS
-                #define VCC_SCAL_OFFRAW   0
-                #define VCC_SCAL_GAIN     1
-                #define VCC_SCAL_OFFREAL  0
+                #define VCC_OFFRAW        0
+                #define VCC_GAIN          1
+                #define VCC_OFFREAL       0
               #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
@@ -616,9 +616,9 @@
                 #endif
               #define POTI2_1115            OFF
                 #if (POTI2_1115 > OFF)
-                    #define POTI2_1115_ATT  GAIN_TWOTHIRDS
                     #define POTI2_1115_DEV  0
                     #define POTI2_1115_CHAN 0
+                    #define POTI2_1115_ATT  GAIN_TWOTHIRDS
                   #endif
             #endif
           #ifndef USE_MEASURE_CYCLE

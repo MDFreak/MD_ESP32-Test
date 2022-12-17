@@ -856,20 +856,29 @@
         // alcohol sensor
           #if (USE_MQ3_ALK_ANA > OFF)
               SOUT("init alc sensors ... ");
-                  photoVal[0].begin(MQ3_FILT, MQ3_DROP, FILT_FL_MEAN);
-                  photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+              alkVal[0].begin(MQ3_FILT, MQ3_DROP, FILT_FL_MEAN);
+              alkScal[0].setScale(MQ3_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
             #endif
         // vcc measure
-                  photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
-                  photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+          #if (USE_VCC_ANA > OFF)
+              SOUT("init vcc measure ... ");
+              vccVal[0].begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+              vccScal[0].setScale(VCC_SCAL_OFFRAW, VCC_SCAL_GAIN, VCC_SCAL_OFFREAL);
+            #endif
 
         // poti measure
-                  photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
-                  photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+          #if (USE_POTI_ANA > OFF)
+              SOUT("init poti ... ");
+              potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
+              potiScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+            #endif
 
         // ACS712 current measurement
-                  photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
-                  photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+          #if (USE_MQ3_ALK_ANA > OFF)
+              SOUT("init alc sensors ... ");
+              photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
+              photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+            #endif
 
         // K-type thermoelementation
           #if ( USE_TYPE_K_SPI > 0)
@@ -1197,7 +1206,7 @@
                   #endif
                 #if (USE_PHOTO_SENS_ANA > OFF)
                     #if (PHOTO1_ADC > OFF)
-                        photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
+                        photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
                       #endif
                     #if (PHOTO1_1115 > OFF)
                       #endif
@@ -1209,10 +1218,10 @@
                           //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
                   #endif
                 #if (USE_MQ3_ALK_ANA > OFF)
-                    alkVal.doVal(analogRead(PIN_PHOTO1_SENS));
+                    alkVal[0].doVal(ads->readADC_SingleEnded());
                   #endif
-                #if (USE_PHOTO_SENS_ANA > OFF)
-                    photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
+                #if (USE_VCC_ANA > OFF)
+                    vccVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
