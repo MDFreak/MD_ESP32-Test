@@ -491,23 +491,24 @@
       #endif
 
     #if (USE_MQ3_ALK_ANA > OFF)
-        md_val<double> alkVal;
+        md_val<int16_t> alkVal;
       #endif
 
     #if (USE_PHOTO_SENS_ANA > OFF)
-        md_val<double> photo1Val;
+        md_val<int16_t> photo1Val;
       #endif
 
     #if (USE_POTI_ANA > OFF)
-        md_val<double> poti1Val;
+        md_val<int16_t> poti1Val;
       #endif
 
     #if (USE_VCC_ANA > OFF)
-        md_val<double> vccVal;
+        md_val<int16_t> vccVal;
       #endif
 
     #if (USE_ACS712_ANA > OFF)
-        md_val<double> i712Val[USE_ACS712_ANA];
+        md_val<int16_t> i712Val[USE_ACS712_ANA];
+        float i712Curr[USE_ACS712_ANA];
       #endif
 
     #if (USE_TYPE_K_SPI > 0)
@@ -834,16 +835,13 @@
               for (uint8_t i=0 ; i < USE_PHOTO_SENS_ANA ; i++ )
                 {
                   photo1Val.begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
-                  #if (PHOTO1_SCAL > OFF)
-                      photo1Val.setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
-                    #endif
+                  photo1Val.setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
                   #if (PHOTO1_ADC > OFF)
                       pinMode(PIN_PHOTO1_SENS, INPUT);
                       adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO1_SENS,
                                                 (adc_atten_t)    PHOTO1_ADC_ATT);
-                  #elif (PHOTO1_1115 > OFF)
-
-
+                    #endif
+                  #if (PHOTO1_1115 > OFF)
 
                     #endif
                 }

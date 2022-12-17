@@ -471,10 +471,9 @@
           ***_1115_ATT GAIN_SIXTEEN   --> range +/- 256mV -   7.8125 uV/bit
 
         scaling parameters and calculation
-        *PdWert = (  (*PdWert + (double).OffsetRaw)
-                   * (double).Faktor_mul
-                   / (double).Faktor_div
-                   + (double).OffsetReal
+        *pValue = (  (*pValue + (double) *_SCAL_OFFRAW)
+                   * (double)*_SCAL_GAIN
+                   + (double) *_SCAL_OFFRREAL
                   )
         */
       #if (USE_MQ135_GAS_ANA > OFF)
@@ -494,13 +493,13 @@
           #define MQ3_FILT              15       // floating  measure filtering
           #define MQ3_EM_WIN            100      // window for traffic light
           #define MQ3_SCAL              OFF
-          #define MQ3_1115_SCAL_MIN     0
-          #define MQ3_1115_SCAL_MAX     100
           #define MQ3_ALK_ADC           OFF
           #define MQ3_ALK_1115          ON
           #if (MQ3_ALK_1115 > OFF)
               #define MQ3_1115_DEV      0
               #define MQ3_1115_CHAN     3
+              #define MQ3_1115_OFFRAW   0
+              #define MQ3_1115_SCAL_MAX 100
               #define MQ3_1115_1115_ATT GAIN_TWOTHIRDS
             #endif
           #ifndef USE_MEASURE_CYCLE
