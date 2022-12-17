@@ -858,18 +858,21 @@
               SOUT("init alc sensors ... ");
               alkVal[0].begin(MQ3_FILT, MQ3_DROP, FILT_FL_MEAN);
               alkScal[0].setScale(MQ3_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+              SOUTLN(" ready");
             #endif
         // vcc measure
           #if (USE_VCC_ANA > OFF)
               SOUT("init vcc measure ... ");
               vccVal[0].begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
               vccScal[0].setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
+              SOUTLN(" ready");
             #endif
         // poti measure
           #if (USE_POTI_ANA > OFF)
               SOUT("init poti ... ");
               potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
               potiScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
+              SOUTLN(" ready");
             #endif
 
         // ACS712 current measurement
@@ -877,6 +880,7 @@
               SOUT("init alc sensors ... ");
               photoVal[0].begin(I712_1_FILT, I712_1_DROP, FILT_FL_MEAN);
               photoScal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
+              SOUTLN(" ready");
             #endif
 
         // K-type thermoelementation
@@ -1218,7 +1222,7 @@
                   #endif
                 #if (USE_MQ3_ALK_ANA > OFF)
                     ads[0].setGain(MQ3_1115_ATT);
-                    alk[0] = alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN));
+                    alk[0] = ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN)));
                   #endif
                 #if (USE_VCC_ANA > OFF)
                     ads[0].setGain(VCC_1115_ATT);
@@ -1226,11 +1230,11 @@
                   #endif
                 #if (USE_POTI_ANA > OFF)
                     ads[0].setGain(POTI1_1115_ATT);
-                    poti[0] = potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN));
+                    poti[0] = ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN)));
                   #endif
                 #if (USE_ACS712_ANA > OFF)
                     ads[0].setGain(I712_1_1115_ATT);
-                    i712[0] = i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN));
+                    i712[0] = ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN)));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
@@ -1639,10 +1643,11 @@
                             //SOUTLN(outStr);
                     #endif
                   #if (USE_MQ3_ALK_ANA > OFF)
-                      outStr = "a ";
+                      outStr = "  a ";
                       outStr.concat(alk[0]);
                       outStr.concat("  ");
                       dispText(outStr, 1, 1, outStr.length());
+                            SOUT(outStr);
                             //SOUTLN(outStr);
                     #endif
 
@@ -1713,27 +1718,29 @@
 
                 case 8:  // voltage, current
                     #if (USE_VCC_ANA > OFF)
-                        outStr = "V ";
+                        outStr = "  V ";
                         outStr.concat(vcc[0]);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
-                              SOUTLN(outStr);
+                              SOUT(outStr);
+                              //SOUTLN(outStr);
                       #endif
                     #if (USE_ACS712_ANA > OFF)
-                        outStr = "I ";
+                        outStr = "  I ";
                         outStr.concat(i712[0]);
                         outStr.concat("  ");
                         dispText(outStr, 15, 2, outStr.length());
+                              SOUT(outStr);
                               //SOUTLN(outStr);
                       #endif
                    	break;
                 case 9:  // poti,
                     #if (USE_POTI_ANA > OFF)
-                        outStr = "P ";
+                        outStr = "  P ";
                         outStr.concat(poti[0]);
                         outStr.concat("  ");
                         dispText(outStr, 15, 1, outStr.length());
-                              //SOUTLN(outStr);
+                              SOUTLN(outStr);
                       #endif
                     break;
                 case 10:  // digital inputs
