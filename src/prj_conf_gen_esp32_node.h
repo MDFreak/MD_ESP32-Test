@@ -563,7 +563,7 @@
         #endif
 
       #if (USE_VCC_ANA > OFF)
-          #define VCC_FILT              0
+          #define VCC_FILT              5
           #define VCC_DROP              1
           #define VCC_ADC               OFF
             #if (VCC_ADC > OFF)
