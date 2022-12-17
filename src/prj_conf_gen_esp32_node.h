@@ -463,12 +463,12 @@
           ***_ADC_ATT  ADC_ATTEN_DB_11  -->  range 0 - 2600 mV (def)
 
         ADS1115 channels
-          ***_1115_ATT GAIN_TWOTHIRDS   -->  range +/-6.144V
-          ***_1115_ATT GAIN_ONE         -->  range +/-4.096V
-          ***_1115_ATT GAIN_TWO         -->  range +/-2.048V (def)
-          ***_1115_ATT GAIN_FOUR       -->  range +/-1.024V
-          ***_1115_ATT GAIN_EIGHT       -->  range +/-0.512V
-          ***_1115_ATT GAIN_SIXTEEN     -->  range +/-0.256V
+          ***_1115_ATT GAIN_TWOTHIRDS --> range +/-6144mV - 187.5    uV/bit
+          ***_1115_ATT GAIN_ONE       --> range +/-4096mV - 125      uV/bit
+          ***_1115_ATT GAIN_TWO (def) --> range +/-2048mV -  62.5    uV/bit
+          ***_1115_ATT GAIN_FOUR      --> range +/-1024mV -  31.25   uV/bit
+          ***_1115_ATT GAIN_EIGHT     --> range +/- 512mV -  15.625  uV/bit
+          ***_1115_ATT GAIN_SIXTEEN   --> range +/- 256mV -   7.8125 uV/bit
 
         scaling parameters and calculation
         *PdWert = (  (*PdWert + (double).OffsetRaw)
@@ -531,7 +531,7 @@
             #if (PHOTO1_ADC > OFF)
                 #define PHOTO1_ADC_ATT   ADC_ATTEN_DB_11
               #endif
-          #define PHOTO1_1115          ON
+          #define PHOTO1_1115          OFF
             #if (PHOTO1_1115 > OFF)
                 #define PHOTO1_1115_ATT  GAIN_ONE
                 #define PHOTO1_1115_DEV  0

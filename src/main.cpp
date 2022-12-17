@@ -485,35 +485,29 @@
         Adafruit_ADS1115 ads[USE_ADC1115_I2C];
       #endif
     #if (USE_MQ135_GAS_ANA > OFF)
-        filterValue valGas(MQ135_FILT, 1);
         //filterValue tholdGas(MQ135_ThresFilt,1);
-        md_val<uint16_t> gasValue;
-        md_val<uint16_t> gasThres;
+        md_val<double> gasVal;
+        //md_val<uint16_t> gasThres;
       #endif
 
     #if (USE_MQ3_ALK_ANA > OFF)
-        //filterValue valAlk(MQ3_FILT, 1);
-        md_val<uint16_t> alkVal;
+        md_val<double> alkVal;
       #endif
 
     #if (USE_PHOTO_SENS_ANA > OFF)
-        //filterValue valPhoto[USE_PHOTO_SENS_ANA];
-        md_val<uint16_t> photo1Val;
+        md_val<double> photo1Val;
       #endif
 
     #if (USE_POTI_ANA > OFF)
-        //filterValue valPoti[USE_POTI_ANA];
-        md_val<int16_t> poti1Val;
+        md_val<double> poti1Val;
       #endif
 
     #if (USE_VCC_ANA > OFF)
-        //filterValue valVCC;
-        md_val<int16_t> vccVal;
+        md_val<double> vccVal;
       #endif
 
     #if (USE_ACS712_ANA > OFF)
-        //filterValue valI712[USE_ACS712_ANA];
-        md_val<int16_t> i712Val[USE_ACS712_ANA];
+        md_val<double> i712Val[USE_ACS712_ANA];
       #endif
 
     #if (USE_TYPE_K_SPI > 0)
@@ -1172,16 +1166,6 @@
             if (measT.TOut())
               {
                 measT.startT();
-                #if (USE_MQ135_GAS_ANA > OFF)
-                    gasValue = analogRead(PIN_MQ135);
-                          //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
-                    gasValue = (int16_t) valGas.value((double) gasValue);
-                          //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
-                    //gasThres = analogRead(PIN_CO2_THOLD);
-                          //SOUT(millis()); SOUT(" gas threshold val = "); SOUTLN(gasThres);
-                    //gasThres = (int16_t) tholdGas.value((double) gasThres);
-                          //SOUT(millis()); SOUT("    gasThres = "); SOUTLN(gasThres);
-                  #endif
                 #if ( USE_BME280_I2C > OFF )
                     bme1.init();
                     usleep(1000);
@@ -1190,10 +1174,20 @@
                     bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
                   #endif
                 #if (USE_PHOTO_SENS_ANA > OFF)
-                    photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
+                    #if (PHOTO1_ADC > OFF)
+                        photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
+                      #endif
+                    #if (PHOTO1_1115 > OFF)
+                      #endif
                   #endif
-                #if (USE_PHOTO_SENS_ANA > OFF)
-                    photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
+                #if (USE_MQ135_GAS_ANA > OFF)
+                    gasVal.doVal(analogRead(PIN_MQ135));
+                          //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
+                    gasValue = (int16_t) valGas.value((double) gasValue);
+                          //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
+                  #endif
+                #if (USE_MQ3_ALK_ANA > OFF)
+                    alkVal.doVal(analogRead(PIN_PHOTO1_SENS));
                   #endif
                 #if (USE_PHOTO_SENS_ANA > OFF)
                     photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
