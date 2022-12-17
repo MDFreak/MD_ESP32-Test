@@ -831,7 +831,7 @@
                 {
                   photo1Val.begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
                   #if (PHOTO1_SCAL > OFF)
-                      photo1Val.setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL)
+                      photo1Val.setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
                     #endif
                   #if (PHOTO1_ADC > OFF)
                       pinMode(PIN_PHOTO1_SENS, INPUT);
