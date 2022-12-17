@@ -491,24 +491,33 @@
       #endif
 
     #if (USE_MQ3_ALK_ANA > OFF)
-        md_val<int16_t> alkVal;
+        md_val<int16_t> alkVal[USE_MQ3_ALK_ANA];
+        md_scale<int16_t> alkScal[USE_MQ3_ALK_ANA];
+        float alk[USE_PHOTO_SENS_ANA];
       #endif
 
     #if (USE_PHOTO_SENS_ANA > OFF)
-        md_val<int16_t> photo1Val;
+        md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
+        md_scale<int16_t> photoScal[USE_PHOTO_SENS_ANA];
+        float bright[USE_PHOTO_SENS_ANA];
       #endif
 
     #if (USE_POTI_ANA > OFF)
-        md_val<int16_t> poti1Val;
+        md_val<int16_t> potiVal[USE_POTI_ANA];
+        md_scale<int16_t> potiScal[USE_POTI_ANA];
+        float poti[USE_ACS712_ANA];
       #endif
 
     #if (USE_VCC_ANA > OFF)
-        md_val<int16_t> vccVal;
+        md_val<int16_t> vccVal[USE_VCC_ANA];
+        md_scale<int16_t> vccScal[USE_VCC_ANA];
+        float vcc[USE_ACS712_ANA];
       #endif
 
     #if (USE_ACS712_ANA > OFF)
         md_val<int16_t> i712Val[USE_ACS712_ANA];
-        float i712Curr[USE_ACS712_ANA];
+        md_scale<int16_t> i712Scal[USE_ACS712_ANA];
+        float i712[USE_ACS712_ANA];
       #endif
 
     #if (USE_TYPE_K_SPI > 0)
@@ -832,21 +841,36 @@
         // photo sensor
           #if (USE_PHOTO_SENS_ANA > OFF)
               SOUT("init poto sensors ... ");
-              for (uint8_t i=0 ; i < USE_PHOTO_SENS_ANA ; i++ )
-                {
-                  photo1Val.begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
-                  photo1Val.setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
-                  #if (PHOTO1_ADC > OFF)
-                      pinMode(PIN_PHOTO1_SENS, INPUT);
-                      adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO1_SENS,
-                                                (adc_atten_t)    PHOTO1_ADC_ATT);
-                    #endif
-                  #if (PHOTO1_1115 > OFF)
+              photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
+              photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+              #if (PHOTO1_ADC > OFF)
+                  pinMode(PIN_PHOTO1_SENS, INPUT);
+                  adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO1_SENS,
+                                            (adc_atten_t)    PHOTO1_ADC_ATT);
+                #endif
+              #if (PHOTO1_1115 > OFF)
 
-                    #endif
-                }
+                #endif
               SOUTLN(" ready");
             #endif
+        // alcohol sensor
+          #if (USE_MQ3_ALK_ANA > OFF)
+              SOUT("init alc sensors ... ");
+                  photoVal[0].begin(MQ3_FILT, MQ3_DROP, FILT_FL_MEAN);
+                  photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+            #endif
+        // vcc measure
+                  photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
+                  photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+
+        // poti measure
+                  photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
+                  photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+
+        // ACS712 current measurement
+                  photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
+                  photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+
         // K-type thermoelementation
           #if ( USE_TYPE_K_SPI > 0)
                     SOUT(millis()); SOUT(" Tcouple1 ... " );

@@ -491,6 +491,7 @@
         #endif
       #if (USE_MQ3_ALK_ANA > OFF)
           #define MQ3_FILT              15       // floating  measure filtering
+          #define MQ3_DROP              0
           #define MQ3_EM_WIN            100      // window for traffic light
           #define MQ3_SCAL              OFF
           #define MQ3_ALK_ADC           OFF
@@ -498,9 +499,10 @@
           #if (MQ3_ALK_1115 > OFF)
               #define MQ3_1115_DEV      0
               #define MQ3_1115_CHAN     3
-              #define MQ3_1115_OFFRAW   0
-              #define MQ3_1115_SCAL_MAX 100
               #define MQ3_1115_1115_ATT GAIN_TWOTHIRDS
+              #define MQ3_1115_OFFRAW   0
+              #define MQ3_1115_GAIN     0
+              #define MQ3_1115_OFFREAL  0
             #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
