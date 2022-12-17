@@ -1192,6 +1192,12 @@
                 #if (USE_PHOTO_SENS_ANA > OFF)
                     photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
                   #endif
+                #if (USE_PHOTO_SENS_ANA > OFF)
+                    photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
+                  #endif
+                #if (USE_PHOTO_SENS_ANA > OFF)
+                    photo1Val.doVal(analogRead(PIN_PHOTO1_SENS));
+                  #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
                         getCNTIn();
