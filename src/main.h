@@ -73,6 +73,9 @@
       #endif
     #if (DEV_ADC_ADS1115 > OFF)
         #include <Adafruit_ADS1X15.h>
+        #ifndef IRAM_ATTR
+            #define IRAM_ATTR
+          #endif
       #endif
   // --- user outputs
     // --- PWM

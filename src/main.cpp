@@ -481,7 +481,9 @@
         DeviceAddress     dsAddr[DS18B20_ANZ];
         float dsTemp[DS18B20_ANZ];
       #endif
-
+    #if (USE_ADC1115_I2C > OFF)
+        Adafruit_ADS1115 ads[USE_ADC1115_I2C];
+      #endif
     #if (USE_MQ135_GAS_ANA > OFF)
         filterValue valGas(MQ135_FILT, 1);
         //filterValue tholdGas(MQ135_ThresFilt,1);
