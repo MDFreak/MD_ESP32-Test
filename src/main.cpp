@@ -863,7 +863,7 @@
           #if (USE_VCC_ANA > OFF)
               SOUT("init vcc measure ... ");
               vccVal[0].begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
-              vccScal[0].setScale(VCC_SCAL_OFFRAW, VCC_SCAL_GAIN, VCC_SCAL_OFFREAL);
+              vccScal[0].setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
             #endif
         // poti measure
           #if (USE_POTI_ANA > OFF)
@@ -1217,16 +1217,16 @@
                           //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
                   #endif
                 #if (USE_MQ3_ALK_ANA > OFF)
-                    alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN));
+                    alk[0] = (float) alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN));
                   #endif
                 #if (USE_VCC_ANA > OFF)
-                    vccVal[0].doVal(ads->readADC_SingleEnded(VCC_1115_CHAN));
+                    vcc[0] = (float) vccVal[0].doVal(ads->readADC_SingleEnded(VCC_1115_CHAN));
                   #endif
                 #if (USE_POTI_ANA > OFF)
-                    potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN));
+                    poti[0] = (float) potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN));
                   #endif
                 #if (USE_ACS712_ANA > OFF)
-                    i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN));
+                    i712[0] = (float) i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
@@ -1627,13 +1627,21 @@
 
                 case 4:  // gas sensor
                   #if (USE_MQ135_GAS_ANA > OFF)
-                    //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
-                    outStr = "CO2 ";
-                    outStr.concat(gasValue);
-                    outStr.concat("  ");
-                    dispText(outStr, 17, 3, outStr.length());
-                          //SOUTLN(outStr);
+                      //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
+                      outStr = "CO2 ";
+                      outStr.concat(gasValue);
+                      outStr.concat("  ");
+                      dispText(outStr, 17, 3, outStr.length());
+                            //SOUTLN(outStr);
                     #endif
+                  #if (USE_MQ3_ALK_ANA > OFF)
+                      outStr = "a ";
+                      outStr.concat(alk[0]);
+                      outStr.concat("  ");
+                      dispText(outStr, 1, 1, outStr.length());
+                            //SOUTLN(outStr);
+                    #endif
+
                   break;
 
                 case 5:  // light sensor
@@ -1663,43 +1671,68 @@
                   break;
 
                 case 7:  // BME 280 temp, humidity, pressure
-                    #if ( USE_BME280_I2C > OFF )
-                      outStr = "";
-                      for (uint8_t i = 0; i < 3 ; i++)
-                        {
-                          tmpStr = "SVA";
-                          tmpStr.concat(i);
-                          switch (i)
-                            {
-                              case 0:
-                                tmpStr.concat(bme1T.getVal());
-                                outStr.concat(bme1T.getVal());
-                                outStr.concat("°  ");
-                                break;
-                              case 1:
-                                tmpStr.concat(bme1H.getVal());
-                                outStr.concat(bme1H.getVal());
-                                outStr.concat("%  ");
-                                break;
-                              case 2:
-                                tmpStr.concat(bme1P.getVal());
-                                outStr.concat(bme1P.getVal());
-                                outStr.concat("mb");
-                                break;
-                              default:
-                                break;
-                            }
-                          // send to websocket
-                          #if (USE_WEBSERVER > OFF)
-                              pmdServ->updateAll(tmpStr);
-                            #endif
-                        }
-                              //SOUT(outStr); SOUT(" ");
-                      dispText(outStr , 0, 3, outStr.length());
-                      #endif
-                    	break;
+                  #if ( USE_BME280_I2C > OFF )
+                    outStr = "";
+                    for (uint8_t i = 0; i < 3 ; i++)
+                      {
+                        tmpStr = "SVA";
+                        tmpStr.concat(i);
+                        switch (i)
+                          {
+                            case 0:
+                              tmpStr.concat(bme1T.getVal());
+                              outStr.concat(bme1T.getVal());
+                              outStr.concat("°  ");
+                              break;
+                            case 1:
+                              tmpStr.concat(bme1H.getVal());
+                              outStr.concat(bme1H.getVal());
+                              outStr.concat("%  ");
+                              break;
+                            case 2:
+                              tmpStr.concat(bme1P.getVal());
+                              outStr.concat(bme1P.getVal());
+                              outStr.concat("mb");
+                              break;
+                            default:
+                              break;
+                          }
+                        // send to websocket
+                        #if (USE_WEBSERVER > OFF)
+                            pmdServ->updateAll(tmpStr);
+                          #endif
+                      }
+                            //SOUT(outStr); SOUT(" ");
+                    dispText(outStr , 0, 3, outStr.length());
+                    #endif
+                	break;
 
-                case 8:  // digital inputs
+                case 8:  // voltage, current
+                    #if (USE_VCC_ANA > OFF)
+                        outStr = "V ";
+                        outStr.concat(vcc[0]);
+                        outStr.concat("  ");
+                        dispText(outStr, 1, 2, outStr.length());
+                              //SOUTLN(outStr);
+                      #endif
+                    #if (USE_ACS712_ANA > OFF)
+                        outStr = "I ";
+                        outStr.concat(i712[0]);
+                        outStr.concat("  ");
+                        dispText(outStr, 15, 2, outStr.length());
+                              //SOUTLN(outStr);
+                      #endif
+                   	break;
+                case 9:  // poti,
+                    #if (USE_POTI_ANA > OFF)
+                        outStr = "P ";
+                        outStr.concat(poti[0]);
+                        outStr.concat("  ");
+                        dispText(outStr, 15, 1, outStr.length());
+                              //SOUTLN(outStr);
+                      #endif
+                    break;
+                case 10:  // digital inputs
                     #if (USE_ESPHALL > OFF)
                         int32_t valHall = 0;
                       #endif
@@ -1728,7 +1761,7 @@
 
                   break;
 
-                case 9:  // WS2812 lines
+                case 11:  // WS2812 lines
                   #if ((USE_WS2812_MATRIX_OUT > OFF) || (USE_WS2812_LINE_OUT > OFF))
                       outStr = "              ";
                       dispText(outStr ,  0, 0, outStr.length());
@@ -1749,7 +1782,7 @@
                       dispText(outStr ,  0, 0, outStr.length());
                     #endif
                   break;
-                case 10:  // counter values
+                case 12:  // counter values
                   #if (USE_CNT_INP > OFF)
                         outStr = "              ";
                         dispText(outStr ,  0, 2, outStr.length());
@@ -1778,7 +1811,7 @@
                         #endif
                     #endif
                   break;
-                case 11: // pwm counter values
+                case 13: // pwm counter values
                   #if (USE_PWM_INP > OFF)
                         outStr = "              ";
                         dispText(outStr ,  0, 1, outStr.length());
