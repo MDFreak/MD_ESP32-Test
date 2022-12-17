@@ -499,7 +499,7 @@
     #if (USE_PHOTO_SENS_ANA > OFF)
         md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
         md_scale<int16_t> photoScal[USE_PHOTO_SENS_ANA];
-        float bright[USE_PHOTO_SENS_ANA];
+        int16_t bright[USE_PHOTO_SENS_ANA];
       #endif
 
     #if (USE_POTI_ANA > OFF)
@@ -1217,16 +1217,20 @@
                           //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
                   #endif
                 #if (USE_MQ3_ALK_ANA > OFF)
-                    alk[0] = (float) alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN));
+                    ads[0].setGain(MQ3_1115_ATT);
+                    alk[0] = alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN));
                   #endif
                 #if (USE_VCC_ANA > OFF)
-                    vcc[0] = (float) vccVal[0].doVal(ads->readADC_SingleEnded(VCC_1115_CHAN));
+                    ads[0].setGain(VCC_1115_ATT);
+                    vcc[0] = ads[0].computeVolts(vccVal[0].doVal(ads[0].readADC_SingleEnded(VCC_1115_CHAN)));
                   #endif
                 #if (USE_POTI_ANA > OFF)
-                    poti[0] = (float) potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN));
+                    ads[0].setGain(POTI1_1115_ATT);
+                    poti[0] = potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN));
                   #endif
                 #if (USE_ACS712_ANA > OFF)
-                    i712[0] = (float) i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN));
+                    ads[0].setGain(I712_1_1115_ATT);
+                    i712[0] = i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
@@ -1713,7 +1717,7 @@
                         outStr.concat(vcc[0]);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
-                              //SOUTLN(outStr);
+                              SOUTLN(outStr);
                       #endif
                     #if (USE_ACS712_ANA > OFF)
                         outStr = "I ";

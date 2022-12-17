@@ -499,7 +499,7 @@
           #if (MQ3_ALK_1115 > OFF)
               #define MQ3_1115_DEV      0
               #define MQ3_1115_CHAN     3
-              #define MQ3_1115_1115_ATT GAIN_TWOTHIRDS
+              #define MQ3_1115_ATT      GAIN_TWOTHIRDS
               #define MQ3_OFFRAW        0
               #define MQ3_GAIN          0
               #define MQ3_OFFREAL       0
@@ -647,7 +647,7 @@
                   #define I712_1_1115_ATT       GAIN_ONE
                   #define I712_1_SCAL_OFFRAW    0
                   #define I712_1_SCAL_GAIN      1
-                  #define I712_1_SCAL_OFFREAL    0
+                  #define I712_1_SCAL_OFFREAL   0
                 #endif
               #if (I712_1_IMAX == 20000)
                   #define I712_1_1115_ATT      GAIN_TWOTHIRDS
