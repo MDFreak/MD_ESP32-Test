@@ -780,6 +780,11 @@
             #endif
 
       // --- sensors
+        // ADC ADS1115
+          #if (USE_ADC1115_I2C > OFF)
+              ads[0].begin(ADC1115_1_ADDR, ADC1115_1_I2C );
+
+            #endif
         // temp. sensor DS18D20
           #if (USE_DS18B20_1W_IO > OFF)
                   SOUT(millis()); SOUT(" DS18D20 ... " );

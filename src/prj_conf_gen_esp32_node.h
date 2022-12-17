@@ -395,9 +395,13 @@
             #ifndef USE_MEASURE_CYCLE
                 #define USE_MEASURE_CYCLE
               #endif
-            #define ADC1115_1_CHAN        4
+            #define ADC1115_1_CHANS      4
+            #define ADC1115_1_I2C        I2C1
+            #define ADC1115_1_ADDR       I2C_ADS1115_48
             #if (USE_ADC1115_I2C > 1)
-                #define ADC1115_2_CHAN        4
+                #define ADC1115_2_CHANs  4
+                #define ADC1115_1_I2C    I2C1
+                #define ADC1115_1_ADDR   I2C_ADS1115_49
               #endif
           #endif
 
