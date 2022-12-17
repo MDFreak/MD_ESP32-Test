@@ -1222,18 +1222,22 @@
                   #endif
                 #if (USE_MQ3_ALK_ANA > OFF)
                     ads[0].setGain(MQ3_1115_ATT);
+                    usleep(1000);
                     alk[0] = ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN)));
                   #endif
                 #if (USE_VCC_ANA > OFF)
                     ads[0].setGain(VCC_1115_ATT);
+                    usleep(1000);
                     vcc[0] = ads[0].computeVolts(vccVal[0].doVal(ads[0].readADC_SingleEnded(VCC_1115_CHAN)));
                   #endif
                 #if (USE_POTI_ANA > OFF)
                     ads[0].setGain(POTI1_1115_ATT);
+                    usleep(1000);
                     poti[0] = ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN)));
                   #endif
                 #if (USE_ACS712_ANA > OFF)
                     ads[0].setGain(I712_1_1115_ATT);
+                    usleep(1000);
                     i712[0] = ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN)));
                   #endif
                 #if (USE_CNT_INP > OFF)

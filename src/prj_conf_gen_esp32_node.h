@@ -564,7 +564,7 @@
 
       #if (USE_VCC_ANA > OFF)
           #define VCC_FILT              0
-          #define VCC_DROP              0
+          #define VCC_DROP              1
           #define VCC_ADC               OFF
             #if (VCC_ADC > OFF)
                 #define VCC_ADC_ATT       ADC_ATTEN_DB_11
@@ -575,8 +575,8 @@
           #define VCC_1115              ON
             #if (VCC_1115 > OFF)
                 #define VCC_1115_DEV      0
-                #define VCC_1115_CHAN     1
-                #define VCC_1115_ATT      GAIN_ONE
+                #define VCC_1115_CHAN     2
+                #define VCC_1115_ATT      GAIN_TWOTHIRDS
                 #define VCC_OFFRAW        0
                 #define VCC_GAIN          1
                 #define VCC_OFFREAL       0
