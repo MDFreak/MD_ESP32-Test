@@ -520,21 +520,23 @@
         #endif
 
       #if (USE_PHOTO_SENS_ANA > OFF)
-          #define PHOTO1_FILT          7
-          #define PHOTO1_DROP          0
-          #define PHOTO1_SCAL          ON
-          #define PHOTO1_SCAL_OFFRAW   0
-          #define PHOTO1_SCAL_GAIN     1
-          #define PHOTO1_SCAL_OFFREAL  0
-          #define PHOTO1_ADC           ON
+          #define PHOTO1_FILT               7
+          #define PHOTO1_DROP               0
+          #define PHOTO1_ADC                ON
             #if (PHOTO1_ADC > OFF)
-                #define PHOTO1_ADC_ATT   ADC_ATTEN_DB_11
+                #define PHOTO1_ADC_ATT      ADC_ATTEN_DB_11
+                #define PHOTO1_SCAL_OFFRAW  0
+                #define PHOTO1_SCAL_GAIN    1
+                #define PHOTO1_SCAL_OFFREAL 0
               #endif
-          #define PHOTO1_1115          OFF
+          #define PHOTO1_1115               OFF
             #if (PHOTO1_1115 > OFF)
-                #define PHOTO1_1115_ATT  GAIN_ONE
-                #define PHOTO1_1115_DEV  0
-                #define PHOTO1_1115_CHAN 0
+                #define PHOTO1_1115_DEV     0
+                #define PHOTO1_1115_CHAN    0
+                #define PHOTO1_1115_ATT     GAIN_ONE
+                #define PHOTO1_SCAL_OFFRAW  0
+                #define PHOTO1_SCAL_GAIN    1
+                #define PHOTO1_SCAL_OFFREAL 0
               #endif
           #if (USE_PHOTO_SENS_ANA > 1)
               #define PHOTO2_FILT          7
@@ -561,38 +563,44 @@
       #if (USE_VCC_ANA > OFF)
           #define VCC_FILT              7
           #define VCC_DROP              0
-          #define VCC_SCAL              OFF
-          #define VCC_SCAL_MIN          0
-          #define VCC_SCAL_MAX          100
           #define VCC_ADC               OFF
-          #if (VCC_ADC > OFF)
-              #define VCC_ADC_ATT       ADC_ATTEN_DB_11
-            #endif
+            #if (VCC_ADC > OFF)
+                #define VCC_ADC_ATT       ADC_ATTEN_DB_11
+                #define VCC_SCAL_OFFRAW   0
+                #define VCC_SCAL_GAIN     1
+                #define VCC_SCAL_OFFREAL  0
+              #endif
           #define VCC_1115              ON
             #if (VCC_1115 > OFF)
-                #define VCC_1115_ATT    GAIN_TWOTHIRDS
-                #define VCC_1115_DEV    0
-                #define VCC_1115_CHAN   0
+                #define VCC_1115_DEV      0
+                #define VCC_1115_CHAN     1
+                #define VCC_1115_ATT      GAIN_TWOTHIRDS
+                #define VCC_SCAL_OFFRAW   0
+                #define VCC_SCAL_GAIN     1
+                #define VCC_SCAL_OFFREAL  0
               #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
         #endif
       #if (USE_POTI_ANA > OFF)
-          #define POTI1_FILT            7
-          #define POTI1_DROP            0
-          #define POTI1_SCAL            OFF
-          #define POTI1_SCAL_MIN        0
-          #define POTI1_SCAL_MAX        100
-          #define POTI1_ADC             OFF
-          #if (POTI1_ADC > OFF)
-              #define POTI1_ADC_ATT         ADC_ATTEN_DB_11
-            #endif
-          #define POTI1_1115            ON
+          #define POTI1_FILT              7
+          #define POTI1_DROP              0
+          #define POTI1_ADC               OFF
+            #if (POTI1_ADC > OFF)
+                #define POTI1_ADC_ATT     ADC_ATTEN_DB_11
+                #define VCC_SCAL_OFFRAW   0
+                #define VCC_SCAL_GAIN     1
+                #define VCC_SCAL_OFFREAL  0
+              #endif
+          #define POTI1_1115              ON
             #if (POTI1_1115 > OFF)
-                #define POTI1_1115_ATT  GAIN_TWOTHIRDS
-                #define POTI1_1115_DEV  0
-                #define POTI1_1115_CHAN 0
+                #define POTI1_1115_DEV    0
+                #define POTI1_1115_CHAN   0
+                #define POTI1_1115_ATT    GAIN_TWOTHIRDS
+                #define VCC_SCAL_OFFRAW   0
+                #define VCC_SCAL_GAIN     1
+                #define VCC_SCAL_OFFREAL  0
               #endif
           #if (USE_POTI_ANA > 1)
               #define POTI2_FILT            7
@@ -622,30 +630,34 @@
               sensitivity: type 20A -> 100mV/A ->   500 - 4500 mV
               sensitivity: type 30A ->  66mV/A ->   520 - 4480 mV
             */
-          #define I712_1_FILT          15
-          #define I712_1_DROP          0
-          #define I712_1_SCAL          OFF
-          #define I712_1_IMAX          5000 // mA
-          #define I712_1_ADC           OFF // not recommended, low resolution
+          #define I712_1_FILT             15
+          #define I712_1_DROP             0
+          #define I712_1_IMAX             5000 // mA
+          #define I712_1_ADC              OFF // not recommended, low resolution
             #if (I712_1_ADC > OFF)
                 #define I712_1_ADC_ATT   ADC_ATTEN_DB_11
               #endif
-          #define I712_1_1115           ON
+          #define I712_1_1115             ON
           #if (I712_1_1115 > OFF)
-              #define I712_1_1115_DEV  0
-              #define I712_1_1115_CHAN 3
+              #define I712_1_1115_DEV     0
+              #define I712_1_1115_CHAN    2
               #if   (I712_1_IMAX ==  5000)
-                  #define I712_1_SCAL_MIN      0
-                  #define I712_1_SCAL_MAX      100
-                  #define I712_1_1115_ATT      GAIN_ONE
-                #elif (I712_1_IMAX == 20000)
-                  #define I712_1_SCAL_MIN      0
-                  #define I712_1_SCAL_MAX      100
+                  #define I712_1_1115_ATT       GAIN_ONE
+                  #define I712_1_SCAL_OFFRAW    0
+                  #define I712_1_SCAL_GAIN      1
+                  #define I712_1_SCAL_OFFRAW    0
+                #endif
+              #if (I712_1_IMAX == 20000)
                   #define I712_1_1115_ATT      GAIN_TWOTHIRDS
-                #else // 30000
-                  #define I712_1_SCAL_MIN      0
-                  #define I712_1_SCAL_MAX      100
+                  #define I712_1_SCAL_OFFRAW    0
+                  #define I712_1_SCAL_GAIN      1
+                  #define I712_1_SCAL_OFFRAW    0
+                #endif
+              #if (I712_1_IMAX == 30000)
                   #define I712_1_1115_ATT      GAIN_TWOTHIRDS
+                  #define I712_1_SCAL_OFFRAW    0
+                  #define I712_1_SCAL_GAIN      1
+                  #define I712_1_SCAL_OFFRAW    0
                 #endif
             #endif
         #endif
