@@ -493,7 +493,7 @@
     #if (USE_MQ3_ALK_ANA > OFF)
         md_val<int16_t> alkVal[USE_MQ3_ALK_ANA];
         md_scale<int16_t> alkScal[USE_MQ3_ALK_ANA];
-        float alk[USE_PHOTO_SENS_ANA];
+        float alk[USE_MQ3_ALK_ANA];
       #endif
 
     #if (USE_PHOTO_SENS_ANA > OFF)
@@ -505,13 +505,13 @@
     #if (USE_POTI_ANA > OFF)
         md_val<int16_t> potiVal[USE_POTI_ANA];
         md_scale<int16_t> potiScal[USE_POTI_ANA];
-        float poti[USE_ACS712_ANA];
+        float poti[USE_POTI_ANA];
       #endif
 
     #if (USE_VCC_ANA > OFF)
         md_val<int16_t> vccVal[USE_VCC_ANA];
         md_scale<int16_t> vccScal[USE_VCC_ANA];
-        float vcc[USE_ACS712_ANA];
+        float vcc[USE_VCC_ANA];
       #endif
 
     #if (USE_ACS712_ANA > OFF)
@@ -865,19 +865,18 @@
               vccVal[0].begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
               vccScal[0].setScale(VCC_SCAL_OFFRAW, VCC_SCAL_GAIN, VCC_SCAL_OFFREAL);
             #endif
-
         // poti measure
           #if (USE_POTI_ANA > OFF)
               SOUT("init poti ... ");
               potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
-              potiScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+              potiScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
             #endif
 
         // ACS712 current measurement
-          #if (USE_MQ3_ALK_ANA > OFF)
+          #if (USE_ACS712_ANA > OFF)
               SOUT("init alc sensors ... ");
-              photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
-              photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+              photoVal[0].begin(I712_1_FILT, I712_1_DROP, FILT_FL_MEAN);
+              photoScal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
             #endif
 
         // K-type thermoelementation
@@ -1218,10 +1217,16 @@
                           //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
                   #endif
                 #if (USE_MQ3_ALK_ANA > OFF)
-                    alkVal[0].doVal(ads->readADC_SingleEnded());
+                    alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN));
                   #endif
                 #if (USE_VCC_ANA > OFF)
-                    vccVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
+                    vccVal[0].doVal(ads->readADC_SingleEnded(VCC_1115_CHAN));
+                  #endif
+                #if (USE_POTI_ANA > OFF)
+                    potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN));
+                  #endif
+                #if (USE_ACS712_ANA > OFF)
+                    i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
@@ -1636,11 +1641,11 @@
                       outStr = "          ";
                       dispText(outStr, 12, 4, outStr.length());
                       outStr = "";
-                      outStr.concat(photo1Val.getVal());
+                      outStr.concat(photoVal[0].getVal());
                       #if (USE_WEBSERVER > OFF)
                           tmpStr = "SVA";
                           tmpStr.concat("3");
-                          tmpStr.concat(photo1Val.getVal());
+                          tmpStr.concat(photoVal[0].getVal());
                           pmdServ->updateAll(tmpStr);
                         #endif
                     #endif

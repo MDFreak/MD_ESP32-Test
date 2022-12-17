@@ -600,9 +600,9 @@
                 #define POTI1_1115_DEV    0
                 #define POTI1_1115_CHAN   0
                 #define POTI1_1115_ATT    GAIN_TWOTHIRDS
-                #define VCC_SCAL_OFFRAW   0
-                #define VCC_SCAL_GAIN     1
-                #define VCC_SCAL_OFFREAL  0
+                #define POTI1_OFFRAW      0
+                #define POTI1_GAIN        1
+                #define POTI1_OFFREAL     0
               #endif
           #if (USE_POTI_ANA > 1)
               #define POTI2_FILT            7
@@ -647,7 +647,7 @@
                   #define I712_1_1115_ATT       GAIN_ONE
                   #define I712_1_SCAL_OFFRAW    0
                   #define I712_1_SCAL_GAIN      1
-                  #define I712_1_SCAL_OFFRAW    0
+                  #define I712_1_SCAL_OFFREAL    0
                 #endif
               #if (I712_1_IMAX == 20000)
                   #define I712_1_1115_ATT      GAIN_TWOTHIRDS
