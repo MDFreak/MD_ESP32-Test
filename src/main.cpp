@@ -40,9 +40,14 @@
         TwoWire i2c2 = TwoWire(1);
       #endif
 
-    if (DEV_VSPI > OFF)
-        SPIClass
+    #if ( DEV_VSPI > OFF )
+        //SPIClass pVSPI(VSPI);
       #endif
+
+    #if ( DEV_HSPI > OFF )
+        //SPIClass pHSPI(HSPI);
+      #endif
+
     #if ( USE_LED_BLINK_OUT > 0 )
         msTimer ledT = msTimer(BLINKTIME_MS);
         uint8_t SYS_LED_ON = ON;
@@ -551,6 +556,7 @@
       #endif
 
     #if (USE_SD_SPI > OFF)
+        SPIClass psdSPI(VSPI);
         File sdFile;                       // file object that is used to read and write data
       #endif
 // ----------------------------------------------------------------
@@ -937,7 +943,8 @@
               //File sdFile;
               pinMode(SD_CS, OUTPUT); // chip select pin must be set to OUTPUT mode
                     SOUT(" init SD ... ");
-              if (SD.begin(SD_CS, VSPI))
+              psdSPI.begin(SD_SCL, SD_MISO, SD_MOSI, SD_CS);
+              if (SD.begin(SD_CS, psdSPI))
                 {
                   if (SD.exists("test.txt"))
                     { // if "file.txt" exists, fill will be deleted
