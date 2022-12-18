@@ -947,24 +947,26 @@
               //psdSPI.end();
               if (SD.begin(SD_CS, psdSPI))
                 {
-                  if (SD.exists("test.txt"))
+                  if (SD.exists("/test.txt"))
                     { // if "file.txt" exists, fill will be deleted
-                      if (SD.remove("file.txt") == true)
+                      if (SD.remove("/test.txt") == true)
                         { SOUT(" file removed "); }
                     }
-                  sdFile = SD.open("test.txt", FILE_WRITE); // open "file.txt" to write data
+                  sdFile = SD.open("/test.txt", FILE_WRITE); // open "file.txt" to write data
                   if (sdFile)
                     {
-                      sdFile.println("test ok"); // write test text
+                      sdFile.println("test ok\n"); // write test text
                       sdFile.close();
                       SOUT(" wrote text ");
-                      sdFile = SD.open("test.txt", FILE_READ);
+                      sdFile = SD.open("/test.txt", FILE_READ);
                       if (sdFile)
                         {
                           char c;
                           SOUT(" read: ");
-                          while ((c = sdFile.read()) != -1)
-                            { SOUT(c); }
+                          while ((c = sdFile.read()) == '\n')
+                            {
+                              SOUT(c);
+                            }
                           sdFile.close();
                           SOUTLN(" ready ");
                         }
