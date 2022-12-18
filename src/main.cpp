@@ -961,11 +961,12 @@
                       sdFile = SD.open("/test.txt", FILE_READ);
                       if (sdFile)
                         {
-                          char c;
+                          char c = 0;
                           SOUT(" read: ");
-                          while ((c = sdFile.read()) == '\n')
+                          while (c != '\n')
                             {
-                              SOUT(c);
+                              c = sdFile.read()
+                              SOUT(c); SOUT("/"); SOUT(NUM(c));
                             }
                           sdFile.close();
                           SOUTLN(" ready ");
