@@ -955,36 +955,30 @@
                   sdFile = SD.open("/test.txt", FILE_WRITE); // open "file.txt" to write data
                   if (sdFile)
                     {
-                      sdFile.println("test ok\n"); // write test text
+                      sdFile.println("test ok"); // write test text
                       sdFile.close();
                       SOUT(" wrote text ");
                       sdFile = SD.open("/test.txt", FILE_READ);
                       if (sdFile)
                         {
-                          char c = 0;
+                          char c = 32;
                           SOUT(" read: ");
-                          while (c != '\n')
+                          while (c >= ' ')
                             {
-                              c = sdFile.read()
-                              SOUT(c); SOUT("/"); SOUT(NUM(c));
+                              c = sdFile.read();
+                              SOUT(c);
                             }
                           sdFile.close();
                           SOUTLN(" ready ");
                         }
                       else
-                        {
-                          SOUTLN(" ERR could not open file (read)");
-                        }
+                        { SOUTLN(" ERR could not open file (read)"); }
                     }
                   else
-                    {
-                      SOUTLN(" ERR could not open file (write)");
-                    }
+                    { SOUTLN(" ERR could not open file (write)"); }
                 }
               else
-                {
-                  SOUTLN(" ERROR SD could not be initialised ");
-                }
+                { SOUTLN(" ERROR SD could not be initialised "); }
             #endif
         // FRAM
           #if (USE_FRAM_I2C > OFF)
