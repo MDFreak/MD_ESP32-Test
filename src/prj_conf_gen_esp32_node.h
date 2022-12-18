@@ -916,7 +916,7 @@
               #define SD_MISO             PIN_SPI_MISO
               #define SD_MOSI             PIN_SPI_MOSI
               #define SD_SCL              PIN_SPI_SCL
-              #define SD_CS               32
+              #define SD_CS               5
             #endif
 
         // --- PWM channels   0..15

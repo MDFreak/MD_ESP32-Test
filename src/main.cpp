@@ -943,7 +943,8 @@
               //File sdFile;
               pinMode(SD_CS, OUTPUT); // chip select pin must be set to OUTPUT mode
                     SOUT(" init SD ... ");
-              psdSPI.begin(SD_SCL, SD_MISO, SD_MOSI, SD_CS);
+              //psdSPI.begin(SD_SCL, SD_MISO, SD_MOSI, SD_CS);
+              //psdSPI.end();
               if (SD.begin(SD_CS, psdSPI))
                 {
                   if (SD.exists("test.txt"))
