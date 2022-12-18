@@ -941,10 +941,35 @@
                       if (SD.remove("file.txt") == true)
                         { SOUT(" file removed "); }
                     }
+                  sdFile = SD.open("test.txt", FILE_WRITE); // open "file.txt" to write data
+                  if (sdFile)
+                    {
+                      sdFile.println("test ok"); // write test text
+                      sdFile.close();
+                      SOUT(" wrote text ");
+                      sdFile = SD.open("test.txt", FILE_READ);
+                      if (sdFile)
+                        {
+                          char c;
+                          SOUT(" read: ");
+                          while ((c = sdFile.read()) != -1)
+                            { SOUT(c); }
+                          sdFile.close();
+                          SOUTLN(" ready ");
+                        }
+                      else
+                        {
+                          SOUTLN(" ERR could not open file (read)");
+                        }
+                    }
+                  else
+                    {
+                      SOUTLN(" ERR could not open file (write)");
+                    }
                 }
               else
                 {
-                  SOUTLN(" ERROR SD not init ");
+                  SOUTLN(" ERROR SD could not be initialised ");
                 }
             #endif
         // FRAM
