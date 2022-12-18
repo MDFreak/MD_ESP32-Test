@@ -490,8 +490,8 @@
             #endif
         #endif
       #if (USE_MQ3_ALK_ANA > OFF)
-          #define MQ3_FILT              0       // floating  measure filtering
-          #define MQ3_DROP              0
+          #define MQ3_FILT              11       // floating  measure filtering
+          #define MQ3_DROP              2
           #define MQ3_EM_WIN            100      // window for traffic light
           #define MQ3_SCAL              OFF
           #define MQ3_ALK_ADC           OFF
@@ -586,8 +586,8 @@
             #endif
         #endif
       #if (USE_POTI_ANA > OFF)
-          #define POTI1_FILT              0
-          #define POTI1_DROP              0
+          #define POTI1_FILT              9
+          #define POTI1_DROP              1
           #define POTI1_ADC               OFF
             #if (POTI1_ADC > OFF)
                 #define POTI1_ADC_ATT     ADC_ATTEN_DB_11
@@ -599,7 +599,7 @@
             #if (POTI1_1115 > OFF)
                 #define POTI1_1115_DEV    0
                 #define POTI1_1115_CHAN   0
-                #define POTI1_1115_ATT    GAIN_TWOTHIRDS
+                #define POTI1_1115_ATT    GAIN_TWO
                 #define POTI1_OFFRAW      0
                 #define POTI1_GAIN        1
                 #define POTI1_OFFREAL     0
@@ -632,8 +632,8 @@
               sensitivity: type 20A -> 100mV/A ->   500 - 4500 mV
               sensitivity: type 30A ->  66mV/A ->   520 - 4480 mV
             */
-          #define I712_1_FILT             0
-          #define I712_1_DROP             0
+          #define I712_1_FILT             9
+          #define I712_1_DROP             2
           #define I712_1_IMAX             5000 // mA
           #define I712_1_ADC              OFF // not recommended, low resolution
             #if (I712_1_ADC > OFF)
