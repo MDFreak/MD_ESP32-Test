@@ -40,8 +40,8 @@
         //#include "esp_attr.h"
         //#include "esp_log.h"
   // --- system components
-    #if (DEV_SPI > OFF)
-        #include "sd.h"
+    #if (DEV_VSPI > OFF) || (DEV_HSPI > OFF)
+        #include "spi.h"
       #endif // USE_TOUCHSCREEN
 
   // --- user inputs
@@ -170,6 +170,10 @@
 
     #if (USE_FRAM_I2C > OFF)
         #include <md_FRAM.h>
+      #endif
+
+    #if (USE_SD_SPI > OFF)
+        #include <sd.h>
       #endif
   // --- network
     #if (USE_WIFI > OFF)

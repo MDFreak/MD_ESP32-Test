@@ -18,7 +18,7 @@
     // --- system components and devices
       #define DEV_I2C1              ON  // ON
       #define DEV_I2C2              OFF
-      #define DEV_SPI               ON
+      #define DEV_VSPI              ON
       #define DEV_HSPI              OFF
       #define DEV_PWM_OUTPUT        ON
       #define DEV_ADC_INT           1

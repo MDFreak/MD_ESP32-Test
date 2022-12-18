@@ -422,6 +422,7 @@
           #endif
 
     // --- memories
+
     // --- sensors
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION   9
@@ -911,6 +912,7 @@
             #endif
 
           #if (USE_SD_SPI > OFF)
+              #define SD_SPI              VSPI
               #define SD_MISO             PIN_SPI_MISO
               #define SD_MOSI             PIN_SPI_MOSI
               #define SD_SCL              PIN_SPI_SCL

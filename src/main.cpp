@@ -40,6 +40,9 @@
         TwoWire i2c2 = TwoWire(1);
       #endif
 
+    if (DEV_VSPI > OFF)
+        SPIClass
+      #endif
     #if ( USE_LED_BLINK_OUT > 0 )
         msTimer ledT = msTimer(BLINKTIME_MS);
         uint8_t SYS_LED_ON = ON;
@@ -934,7 +937,7 @@
               //File sdFile;
               pinMode(SD_CS, OUTPUT); // chip select pin must be set to OUTPUT mode
                     SOUT(" init SD ... ");
-              if (SD.begin(SD_CS))
+              if (SD.begin(SD_CS, VSPI))
                 {
                   if (SD.exists("test.txt"))
                     { // if "file.txt" exists, fill will be deleted
