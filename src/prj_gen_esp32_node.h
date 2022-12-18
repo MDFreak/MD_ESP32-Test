@@ -18,7 +18,7 @@
     // --- system components and devices
       #define DEV_I2C1              ON  // ON
       #define DEV_I2C2              OFF
-      #define DEV_SPI               OFF
+      #define DEV_SPI               ON
       #define DEV_HSPI              OFF
       #define DEV_PWM_OUTPUT        ON
       #define DEV_ADC_INT           1
@@ -78,6 +78,7 @@
     // --- memory components
       #define USE_FLASH_MEM         ON
       #define USE_FRAM_I2C          1   // 1   // [0, 1, ...] limited by I2C channel/addr
+      #define USE_SD_SPI            ON
     // --- test components
       #define USE_CTRL_POTI         OFF   // [0, 1, ....] limited by analog inputs
       #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins

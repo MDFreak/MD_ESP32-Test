@@ -748,6 +748,28 @@
           #if (USE_LED_BLINK_OUT > OFF)
               #define PIN_BOARD_LED 2
             #endif
+          // --- I2C board connection
+            #define PIN_I2C1_SDA      21
+            #define PIN_I2C1_SCL      22
+            #if ( USE_I2C > 1 )
+                #define PIN_I2C2_SDA  25
+                #define PIN_I2C2_SCL  26
+              #endif
+          // --- SPI board connection
+            #define PIN_SPI_MOSI      23
+            #define PIN_SPI_MISO      19
+            #define PIN_SPI_SCL       18
+
+        // --- display
+          #if (USE_OLED_I2C > OFF)
+              #define OLED1_I2C_SCL   PIN_I2C1_SCL
+              #define OLED1_I2C_SDA   PIN_I2C1_SDA
+              #if (USE_OLED_I2C > 1)
+                  #define OLED2_I2C_SCL   PIN_I2C1_SCL
+                  #define OLED2_I2C_SDA   PIN_I2C1_SDA
+                #endif
+            #endif
+
         // --- user input
           #if (USE_CTRL_POTI > OFF)
               #define PIN_INP_POTI_1 35   // ADC 1-5
@@ -861,8 +883,8 @@
               #define DS_ONEWIRE_PIN 27
             #endif
           #if (USE_TYPE_K_SPI > OFF)
-              #define TYPEK_DATA_PIN 19   // SPI MISO
-              #define TYPEK_CLK_PIN  18   // SPI CLK
+              #define TYPEK_DATA_PIN PIN_SPI_MISO
+              #define TYPEK_CLK_PIN  PIN_SPI_CLK
               #define TYPEK1_CS_PIN  16
               #define TYPEK2_CS_PIN  17
             #endif
@@ -878,6 +900,22 @@
           #if (USE_PHOTO_SENS_ANA > OFF)
               #define PIN_PHOTO1_SENS 39
               #define ADC_PHOTO1_SENS 3
+            #endif
+        // --- memory
+          #if (USE_FRAM_I2C > OFF)
+              #define FRAM1_I2C_SCL       PIN_I2C1_SCL
+              #define FRAM1_I2C_SDA       PIN_I2C1_SDA
+              #if (USE_FRAM_I2C > 1 )
+                  #define FRAM2_I2C_SCL   I2C1_SCL
+                  #define FRAM2_I2C_SDA   I2C1_SDA
+                #endif
+            #endif
+
+          #if (USE_SD_SPI > OFF)
+              #define SD_MISO             PIN_SPI_MISO
+              #define SD_MOSI             PIN_SPI_MOSI
+              #define SD_SCL              PIN_SPI_SCL
+              #define SD_CS
             #endif
 
         // --- PWM channels   0..15
@@ -941,32 +979,7 @@
                 #endif
             #endif
 
-        // --- I2C
-          // --- board connection
-            #define PIN_I2C1_SDA      21
-            #define PIN_I2C1_SCL      22
-            #if ( USE_I2C > 1 )
-                #define PIN_I2C2_SDA  25
-                #define PIN_I2C2_SCL  26
-              #endif
-            #if (USE_OLED_I2C > OFF)
-                #define OLED1_I2C_SCL   PIN_I2C1_SCL
-                #define OLED1_I2C_SDA   PIN_I2C1_SDA
-                #if (USE_OLED_I2C > 1)
-                    #define OLED2_I2C_SCL   PIN_I2C1_SCL
-                    #define OLED2_I2C_SDA   PIN_I2C1_SDA
-                  #endif
-              #endif
 
-            #if (USE_FRAM_I2C > OFF)
-                #define FRAM1_I2C_SCL       PIN_I2C1_SCL
-                #define FRAM1_I2C_SDA       PIN_I2C1_SDA
-                #if (USE_FRAM_I2C > 1 )
-                    #define FRAM2_I2C_SCL   I2C1_SCL
-                    #define FRAM2_I2C_SDA   I2C1_SDA
-                  #endif
-              #endif
       #endif
-
     // ******************************************
 #endif // _PRJ_CONFIG_H_

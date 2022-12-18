@@ -1651,7 +1651,7 @@
                       outStr.concat(alk[0]);
                       outStr.concat("  ");
                       dispText(outStr, 1, 1, outStr.length());
-                            SOUT(outStr);
+                            //SOUT(outStr);
                             //SOUTLN(outStr);
                     #endif
 
@@ -1726,7 +1726,7 @@
                         outStr.concat(vcc[0]);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
-                              SOUT(outStr);
+                              //SOUT(outStr);
                               //SOUTLN(outStr);
                       #endif
                     #if (USE_ACS712_ANA > OFF)
@@ -1734,7 +1734,7 @@
                         outStr.concat(i712[0]);
                         outStr.concat("  ");
                         dispText(outStr, 15, 2, outStr.length());
-                              SOUT(outStr);
+                              //SOUT(outStr);
                               //SOUTLN(outStr);
                       #endif
                    	break;
@@ -1744,7 +1744,7 @@
                         outStr.concat(poti[0]);
                         outStr.concat("  ");
                         dispText(outStr, 15, 1, outStr.length());
-                              SOUTLN(outStr);
+                              //SOUTLN(outStr);
                       #endif
                     break;
                 case 10:  // digital inputs
