@@ -36,7 +36,7 @@
     #if ( DEV_I2C1 > OFF )
         TwoWire i2c1 = TwoWire(0);
       #endif
-    #if ( USE_I2C2 > OFF )
+    #if ( DEV_I2C2 > OFF )
         TwoWire i2c2 = TwoWire(1);
       #endif
 
@@ -542,8 +542,13 @@
     #if (USE_FLASH_MEM > OFF)
         #include <SPIFFS.h>
       #endif
+
     #if (USE_FRAM_I2C > OFF)
         md_FRAM fram = md_FRAM();
+      #endif
+
+    #if (USE_SD_SPI > OFF)
+        File sdFile;                       // file object that is used to read and write data
       #endif
 // ----------------------------------------------------------------
 // --- system setup -----------------------------------
@@ -922,6 +927,25 @@
         // FLASH memory
           #if (USE_FLASH_MEM > OFF)
               testFlash();
+            #endif
+
+        // SD card
+          #if (USE_SD_SPI > OFF)
+              //File sdFile;
+              pinMode(SD_CS, OUTPUT); // chip select pin must be set to OUTPUT mode
+                    SOUT(" init SD ... ");
+              if (SD.begin(SD_CS))
+                {
+                  if (SD.exists("test.txt"))
+                    { // if "file.txt" exists, fill will be deleted
+                      if (SD.remove("file.txt") == true)
+                        { SOUT(" file removed "); }
+                    }
+                }
+              else
+                {
+                  SOUTLN(" ERROR SD not init ");
+                }
             #endif
         // FRAM
           #if (USE_FRAM_I2C > OFF)

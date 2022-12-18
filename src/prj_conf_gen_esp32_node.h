@@ -62,10 +62,24 @@
                 #define FRAM2_I2C       I2C2
               #endif
           #endif
-        #if ( USE_BME280_I2C > OFF )
+        #if (USE_BME280_I2C > OFF )
             #define BME2801_I2C         I2C1
             #if ( USE_BME280_I2C > 1 )
                 #define BME2802_I2C     I2C2
+              #endif
+          #endif
+
+        #if (USE_ADC1115_I2C > OFF)
+            #ifndef USE_MEASURE_CYCLE
+                #define USE_MEASURE_CYCLE
+              #endif
+            #define ADC1115_1_CHANS      4
+            #define ADC1115_1_I2C        I2C1
+            #define ADC1115_1_ADDR       I2C_ADS1115_48
+            #if (USE_ADC1115_I2C > 1)
+                #define ADC1115_2_CHANs  4
+                #define ADC1115_1_I2C    I2C1
+                #define ADC1115_1_ADDR   I2C_ADS1115_49
               #endif
           #endif
 
@@ -390,21 +404,6 @@
                 #define USE_MEASURE_CYCLE
               #endif
           #endif
-      // --- external adc input using ADS1115 (I2C)
-        #if (USE_ADC1115_I2C > OFF)
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
-              #endif
-            #define ADC1115_1_CHANS      4
-            #define ADC1115_1_I2C        I2C1
-            #define ADC1115_1_ADDR       I2C_ADS1115_48
-            #if (USE_ADC1115_I2C > 1)
-                #define ADC1115_2_CHANs  4
-                #define ADC1115_1_I2C    I2C1
-                #define ADC1115_1_ADDR   I2C_ADS1115_49
-              #endif
-          #endif
-
       // --- internal digital input
         #if (USE_DIG_INP > OFF)
             #ifndef USE_MEASURE_CYCLE
@@ -898,8 +897,8 @@
             #endif
 
           #if (USE_PHOTO_SENS_ANA > OFF)
-              #define PIN_PHOTO1_SENS 39
-              #define ADC_PHOTO1_SENS 3
+              #define PIN_PHOTO1_SENS     39
+              #define ADC_PHOTO1_SENS     3
             #endif
         // --- memory
           #if (USE_FRAM_I2C > OFF)
@@ -915,7 +914,7 @@
               #define SD_MISO             PIN_SPI_MISO
               #define SD_MOSI             PIN_SPI_MOSI
               #define SD_SCL              PIN_SPI_SCL
-              #define SD_CS
+              #define SD_CS               32
             #endif
 
         // --- PWM channels   0..15

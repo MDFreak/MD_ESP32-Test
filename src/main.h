@@ -40,6 +40,10 @@
         //#include "esp_attr.h"
         //#include "esp_log.h"
   // --- system components
+    #if (DEV_SPI > OFF)
+        #include "sd.h"
+      #endif // USE_TOUCHSCREEN
+
   // --- user inputs
     #if (USE_TOUCHSCREEN > OFF)
         #include "md_touch.h"
@@ -159,12 +163,13 @@
     #if (USE_CNT_INP > OFF)
       #endif
   // --- memory
+    #if (USE_FLASH_MEM > OFF)
+        #include <SPIFFS.h>
+        #include <md_spiffs.h>
+      #endif
+
     #if (USE_FRAM_I2C > OFF)
         #include <md_FRAM.h>
-      #endif
-    #if (USE_FLASH_MEM > OFF)
-        #include <md_spiffs.h>
-        //#include <SPIFFS.h>
       #endif
   // --- network
     #if (USE_WIFI > OFF)
@@ -183,7 +188,6 @@
         #include <Adafruit_BME280.h>
       #endif
     #if ( USE_TYPE_K_SPI > OFF )
-        #include <SPI.h>
         #include <md_31855_ktype.h>
       #endif
 
