@@ -2494,7 +2494,7 @@
         uint32_t bFree = SPIFFS.totalBytes();
         SOUT("found "); SOUT(bFree); SOUTLN(" bytes free");
         //*
-        SOUTLN("dir: test_example.txt");
+        SOUT("dir: test_example.txt ");
         File file = SPIFFS.open("/test_example.txt");
         if(!file)
           {
