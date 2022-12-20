@@ -100,7 +100,7 @@
             #define KEYS            ?
           #endif // USE_KEYPADSHIELD
 
-      #define USE_TOUCHSCREEN     (3 * USE_TRAFFIC_LED_OUT) +USE_TOUCHSCREEN_SPI + USE_TOUCHSCREEN_OUT
+        //  #define USE_TOUCHSCREEN     (3 * USE_TRAFFIC_LED_OUT) +USE_TOUCHSCREEN_SPI + USE_TOUCHSCREEN_OUT
         #if (USE_TOUCHSCREEN > OFF)
             #define TOUCHSCREEN1     TOUCHXPT2046_AZ_3V3
             #define TOUCHKEYS1       KEYS_TOUCHXPT2046_AZ_3V3
