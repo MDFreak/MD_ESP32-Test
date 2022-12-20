@@ -182,6 +182,7 @@
                     #define DISP_TX_FCOL   0xB7E0 // TFT_GREENYELLOW
                     #define DISP_TX_BCOL   DISP_BCOL
                     // status line for messages
+                    #define USE_STAT_TOUCH OFF
                     #define STATUS_XCENT   120 // Centred on this
                     #define STATUS_YCENT   315
                     #define STATUS_XLI     0
