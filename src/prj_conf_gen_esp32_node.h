@@ -373,6 +373,8 @@
             // counter 1
             #define PCNT1_INP_FILT      10  // glitch filter (clock 80 MHz)
             #define PCNT1_UFLOW         3000000ul  // timedelay due to 0 Hz [us]
+            //#define PCNT1_INP_SIG_IO    PIN_CNT_FAN_1       // Pulse Input GPIO
+            //#define PCNT1_INP_CTRL_IO   PIN_CNT_FAN_1       // Control GPIO HIGH=count up, LOW=count down
             //#define PCNT1_THRESH1_VAL   5
             #define PCNT1_THRESH0_VAL   3
             #define PCNT1_EVT_0         PCNT_EVT_THRES_0
@@ -384,6 +386,8 @@
                 // counter 2
                 #define PCNT2_INP_FILT      10  // glitch filter (clock 80 MHz)
                 #define PCNT2_UFLOW         3000000ul  // timedelay due to 0 Hz [us]
+                //#define PCNT2_INP_SIG_IO    PIN_CNT_FAN_2   // Pulse Input GPIO
+                //#define PCNT2_INP_CTRL_IO   PIN_CNT_FAN_2       // Control GPIO HIGH=count up, LOW=count down
                 //#define PCNT2_THRESH1_VAL   2
                 #define PCNT2_THRESH0_VAL   400
                 #define PCNT2_EVT_0         PCNT_EVT_THRES_0
@@ -422,7 +426,10 @@
           #endif
 
     // --- memories
-
+      // --- FRAM
+        #if (USE_FRAM_I2C > OFF)
+            #define SIZE_FRAM     0x8000
+          #endif
     // --- sensors
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION   9
