@@ -687,8 +687,8 @@
             #define WIFI_SSID1_PW   "ElaNanniRalf3"
             #define WIFI_SSID2      "WL-Fairnetz" //Weltladen
             #define WIFI_SSID2_PW   "WL&Fair2Live#"
-            #define WIFI_SSID3      "machquadrat" //machQuadrat
-            #define WIFI_SSID3_PW   "IamSecure"
+            #define WIFI_SSID3      "MachNet" //machQuadrat
+            #define WIFI_SSID3_PW   "!Machquadrat1"
             #define WIFI_SSID4      "MD_KingKong" //Hotspot Martin
             #define WIFI_SSID4_PW   "ElaNanniRalf3"
             #define WIFI_SSID5      "CDWiFi"        //OEBB Raijet
@@ -716,8 +716,8 @@
                 #define WIFI_GATEWAY1   0x8B00000Aul // 10.0.0.139      // Jungberg
                 #define WIFI_GATEWAY2   0x8a00000Aul // 10.0.0.138      // Weltladen
                 #define WIFI_FIXIP2     0x1600000Aul // 10.0.0.22
-                #define WIFI_GATEWAY3   0x0100000Aul // 10.0.0.1        // machquadrat
-                #define WIFI_FIXIP3     0x1600000Aul // 10.0.0.22
+                #define WIFI_GATEWAY3   0x01250D0Aul // 10.0.0.1        // machquadrat
+                #define WIFI_FIXIP3     0x6F250D0Aul // 10.0.0.22
                 #define WIFI_GATEWAY4   0x012BA8C0ul // 192.168.43.154  // hotspot KingKong
                 #define WIFI_FIXIP4     0x162BA8C0ul // 192.168.43.22
                 #define WIFI_GATEWAY5   0x0926A8C0ul // 192.168.32.1    // OEBB Railjet
