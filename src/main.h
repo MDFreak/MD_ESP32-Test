@@ -180,6 +180,9 @@
         #include <AsyncTCP.h>
         #include <ESPAsyncWebServer.h>
         #include <md_webserver.h>
+        #if (USE_MQTT > OFF)
+            #include <espMqttClient.h>
+          #endif
       #endif
   // --- sensors
     #if ( USE_DS18B20_1W_IO > OFF )
