@@ -735,6 +735,12 @@
       // --- webserver
         #if (USE_WEBSERVER > OFF)
             #define WEBSERVER_CYCLE 1000ul  // Intervallzeit [us]
+            #define MQTT_HOST IPAddress(10, 0, 0, 203)
+          #endif
+
+      // --- MQTT Mosquitto client
+        #if (USE_MQTT > OFF)
+            #define MQTT_PORT          1883
           #endif
 
   // ----------------------------------------------------------------

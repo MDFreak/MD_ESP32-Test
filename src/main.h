@@ -181,7 +181,8 @@
         #include <ESPAsyncWebServer.h>
         #include <md_webserver.h>
         #if (USE_MQTT > OFF)
-            #include <espMqttClient.h>
+            //#include <espMqttClient.h>
+            #include <espMqttClientAsync.h>
           #endif
       #endif
   // --- sensors
