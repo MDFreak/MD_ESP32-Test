@@ -182,7 +182,7 @@
         #include <md_webserver.h>
         #if (USE_MQTT > OFF)
             //#include <espMqttClient.h>
-            #include <espMqttClientAsync.h>
+            #include <AsyncMqttClient.h>
           #endif
       #endif
   // --- sensors
