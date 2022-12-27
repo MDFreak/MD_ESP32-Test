@@ -710,41 +710,42 @@
             #elif !(BOARD ^ MC_ESP32_D1_R32)
                 #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
               #endif
-            #define WIFI_GATEWAY0   0x8B00000Aul // 10.0.0.139 // Moosgraben
-            #define WIFI_FIXIP1     0x1800000Aul // 10.0.0.24
+            #define WIFI_GATEWAY0         0x8B00000Aul // 10.0.0.139 // Moosgraben
+            #define WIFI_FIXIP1           0x1800000Aul // 10.0.0.24
             #ifdef USE_LOCAL_IP
-                #define WIFI_GATEWAY1   0x8B00000Aul // 10.0.0.139      // Jungberg
-                #define WIFI_GATEWAY2   0x8a00000Aul // 10.0.0.138      // Weltladen
-                #define WIFI_FIXIP2     0x1600000Aul // 10.0.0.22
-                #define WIFI_GATEWAY3   0x01250D0Aul // 10.0.0.1        // machquadrat
-                #define WIFI_FIXIP3     0x6F250D0Aul // 10.0.0.22
-                #define WIFI_GATEWAY4   0x012BA8C0ul // 192.168.43.154  // hotspot KingKong
-                #define WIFI_FIXIP4     0x162BA8C0ul // 192.168.43.22
-                #define WIFI_GATEWAY5   0x0926A8C0ul // 192.168.32.1    // OEBB Railjet
-                #define WIFI_FIXIP5     0x1620A8C0ul // 192.168.32.22
-                #define WIFI_GATEWAY6   0x01AE12ACul // 172.18.0.1    // DB ICE
-                #define WIFI_FIXIP6     0x16AE12ACul // 172.18.174.22
-                #define WIFI_GATEWAY7   0x0100000Aul // 10.0.0.10       // ?
-                #define WIFI_FIXIP7     0x1600000Aul // 10.0.0.22  // ?
-                #define WIFI_GATEWAY8   0x0100000Aul // 10.0.0.1        // ?
-                #define WIFI_FIXIP8     0x1600000Aul // 10.0.0.22  // ?
-                #define WIFI_SUBNET     0x0000FFFFul // 255.255.255.0
+                #define WIFI_GATEWAY1     0x8B00000Aul // 10.0.0.139      // Jungberg
+                #define WIFI_GATEWAY2     0x8a00000Aul // 10.0.0.138      // Weltladen
+                #define WIFI_FIXIP2       0x1600000Aul // 10.0.0.22
+                #define WIFI_GATEWAY3     0x01250D0Aul // 10.0.0.1        // machquadrat
+                #define WIFI_FIXIP3       0x6F250D0Aul // 10.0.0.22
+                #define WIFI_GATEWAY4     0x012BA8C0ul // 192.168.43.154  // hotspot KingKong
+                #define WIFI_FIXIP4       0x162BA8C0ul // 192.168.43.22
+                #define WIFI_GATEWAY5     0x0926A8C0ul // 192.168.32.1    // OEBB Railjet
+                #define WIFI_FIXIP5       0x1620A8C0ul // 192.168.32.22
+                #define WIFI_GATEWAY6     0x01AE12ACul // 172.18.0.1    // DB ICE
+                #define WIFI_FIXIP6       0x16AE12ACul // 172.18.174.22
+                #define WIFI_GATEWAY7     0x0100000Aul // 10.0.0.10       // ?
+                #define WIFI_FIXIP7       0x1600000Aul // 10.0.0.22  // ?
+                #define WIFI_GATEWAY8     0x0100000Aul // 10.0.0.1        // ?
+                #define WIFI_FIXIP8       0x1600000Aul // 10.0.0.22  // ?
+                #define WIFI_SUBNET       0x0000FFFFul // 255.255.255.0
               #endif
           #endif
 
       // --- webserver
         #if (USE_WEBSERVER > OFF)
-            #define WEBSERVER_CYCLE     1000ul  // Intervallzeit [us]
-            #define MQTT_HOST           IPAddress(10, 0, 0, 203)
-            #define MQTT_SECURE         OFF
-            #if(MQTT_SECURE > OFF)
-            #define MQTT_BROKER_USER    "<user>"
-            #define MQTT_BROKER_PASS    "<pass>"
+            #define WEBSERVER_CYCLE       1000ul  // Intervallzeit [us]
           #endif
 
       // --- MQTT Mosquitto client
         #if (USE_MQTT > OFF)
-            #define MQTT_PORT          1883
+            #define MQTT_HOST             IPAddress(10, 0, 0, 203)
+            #define MQTT_PORT             1883
+            #define MQTT_SECURE           OFF
+            #if(MQTT_SECURE > OFF)
+                #define MQTT_BROKER_USER  "<user>"
+                #define MQTT_BROKER_PASS  "<pass>"
+              #endif
           #endif
 
   // ----------------------------------------------------------------
@@ -764,24 +765,24 @@
       // --- pins, connections
         // --- system
           #if (USE_LED_BLINK_OUT > OFF)
-              #define PIN_BOARD_LED 2
+              #define PIN_BOARD_LED       2
             #endif
           // --- I2C board connection
-            #define PIN_I2C1_SDA      21
-            #define PIN_I2C1_SCL      22
+            #define PIN_I2C1_SDA          21
+            #define PIN_I2C1_SCL          22
             #if ( USE_I2C > 1 )
                 #define PIN_I2C2_SDA  25
                 #define PIN_I2C2_SCL  26
               #endif
           // --- SPI board connection
-            #define PIN_SPI_MOSI      23
-            #define PIN_SPI_MISO      19
-            #define PIN_SPI_SCL       18
+            #define PIN_SPI_MOSI          23
+            #define PIN_SPI_MISO          19
+            #define PIN_SPI_SCL           18
 
         // --- display
           #if (USE_OLED_I2C > OFF)
-              #define OLED1_I2C_SCL   PIN_I2C1_SCL
-              #define OLED1_I2C_SDA   PIN_I2C1_SDA
+              #define OLED1_I2C_SCL       PIN_I2C1_SCL
+              #define OLED1_I2C_SDA       PIN_I2C1_SDA
               #if (USE_OLED_I2C > 1)
                   #define OLED2_I2C_SCL   PIN_I2C1_SCL
                   #define OLED2_I2C_SDA   PIN_I2C1_SDA
@@ -790,27 +791,27 @@
 
         // --- user input
           #if (USE_CTRL_POTI > OFF)
-              #define PIN_INP_POTI_1 35   // ADC 1-5
-              #define ADC_INP_POTI_1 NU   // ADC 1-5
+              #define PIN_INP_POTI_1      35   // ADC 1-5
+              #define ADC_INP_POTI_1      NU   // ADC 1-5
             #endif
 
           #if (USE_CTRL_SW_INP > OFF)
-              #define PIN_INP_SW_1  32   // INPUT_PULLUP
+              #define PIN_INP_SW_1        32   // INPUT_PULLUP
             #endif
 
           #if (USE_DIG_INP > OFF)
               #if (USE_GEN_SW_INP > OFF)
-                  #define PIN_INP_REED_1 15
+                  #define PIN_INP_REED_1  15
                 #endif
             #endif
           #if (USE_GEN_CNT_INP > OFF)
-              #define PIN_CNT_GEN_S0 4
-              #define PIN_CNT_GEN_C0 PCNT_PIN_NOT_USED
-              #define PIN_CNT_GEN_S1 17
-              #define PIN_CNT_GEN_C1 PCNT_PIN_NOT_USED
+              #define PIN_CNT_GEN_S0      4
+              #define PIN_CNT_GEN_C0      PCNT_PIN_NOT_USED
+              #define PIN_CNT_GEN_S1      17
+              #define PIN_CNT_GEN_C1      PCNT_PIN_NOT_USED
             #endif
           #if (USE_PWM_INP > OFF)
-                #define PIN_PWM_INP_1 PIN_CNT_GEN_2
+                #define PIN_PWM_INP_1     PIN_CNT_GEN_2
             #endif
         // --- counter
           #if (USE_CNT_INP > OFF)
@@ -827,24 +828,24 @@
             #endif
         // --- user output
           #if (USE_TRAFFIC_LED_OUT > OFF)
-              #define PIN_TL_RED    26   // RGB red
-              #define PIN_TL_YELLOW 25   // RGB green
-              #define PIN_TL_GREEN  33   // RGB blue
+              #define PIN_TL_RED          26   // RGB red
+              #define PIN_TL_YELLOW       25   // RGB green
+              #define PIN_TL_GREEN        33   // RGB blue
             #endif
 
           #if (USE_RGBLED_PWM > OFF)
-              #define PIN_RGB_RED   33 //26   // RGB red
-              #define PIN_RGB_GREEN 26   // RGB blue
-              #define PIN_RGB_BLUE  14 //33   // RGB blue
+              #define PIN_RGB_RED         33 //26   // RGB red
+              #define PIN_RGB_GREEN       26   // RGB blue
+              #define PIN_RGB_BLUE        14 //33   // RGB blue
             #endif
 
           #if (USE_FAN_PWM > OFF)
-              #define PIN_PWM_FAN_1 0
-              #define PIN_PWM_FAN_2 4
+              #define PIN_PWM_FAN_1       0
+              #define PIN_PWM_FAN_2       4
             #endif
 
           #if (USE_OUT_FREQ_PWM > OFF)
-              #define PIN_FREQ_1    26
+              #define PIN_FREQ_1          26
             #endif
 
           #if (USE_WS2812_MATRIX_OUT > OFF)
@@ -853,7 +854,7 @@
                   #define PIN_WS2812_PWR_IN_SW 36
                 #endif
               #if (USE_WS2812_MATRIX_OUT > 1)
-                  #define PIN_WS2812_M2  17
+                  #define PIN_WS2812_M2   17
                 #endif
                 //#define PIN_WS2812_M3  x
                 //#define PIN_WS2812_M4  x
@@ -864,7 +865,7 @@
                   #define PIN_WS2812_PWR_IN_SW 36
                 #endif
               #define PIN_WS2812_L1      17
-                //#define PIN_WS2812_L2      17
+                //#define PIN_WS2812_L2    17
                 //#define PIN_WS2812_L3  x
                 //#define PIN_WS2812_L4  x
             #endif
@@ -898,21 +899,21 @@
             #endif
         // --- sensors
           #if (USE_DS18B20_1W_IO > OFF)
-              #define DS_ONEWIRE_PIN 27
+              #define DS_ONEWIRE_PIN      27
             #endif
           #if (USE_TYPE_K_SPI > OFF)
-              #define TYPEK_DATA_PIN PIN_SPI_MISO
-              #define TYPEK_CLK_PIN  PIN_SPI_CLK
-              #define TYPEK1_CS_PIN  16
-              #define TYPEK2_CS_PIN  17
+              #define TYPEK_DATA_PIN      PIN_SPI_MISO
+              #define TYPEK_CLK_PIN       PIN_SPI_CLK
+              #define TYPEK1_CS_PIN       16
+              #define TYPEK2_CS_PIN       17
             #endif
           #if (USE_MQ135_GAS_ANA > OFF)
-              #define PIN_MQ135     35
-              #define ADC_MQ135     5   // ADC 1-3
+              #define PIN_MQ135           35
+              #define ADC_MQ135           5   // ADC 1-3
             #endif
           #if (USE_MQ3_ALK_ANA > OFF)
-              #define PIN_MQ135     35
-              #define ADC_MQ135     5   // ADC 1-3
+              #define PIN_MQ135           35
+              #define ADC_MQ135           5   // ADC 1-3
             #endif
 
           #if (USE_PHOTO_SENS_ANA > OFF)
@@ -952,20 +953,20 @@
                 #endif
 
               #if (USE_RGBLED_PWM > OFF)
-                  #define PWM_RGB_RED   1
-                  #define PWM_RGB_GREEN 2
-                  #define PWM_RGB_BLUE  3
+                  #define PWM_RGB_RED     1
+                  #define PWM_RGB_GREEN   2
+                  #define PWM_RGB_BLUE    3
                 #endif
 
               #if (USE_FAN_PWM > OFF)
-                  #define PWM_FAN_1     4
+                  #define PWM_FAN_1       4
                   #if (USE_FAN_PWM > 1)
-                      #define PWM_FAN_2     5
+                      #define PWM_FAN_2   5
                     #endif
                 #endif
 
               #if (USE_OUT_FREQ_PWM > OFF)
-                  #define PWM_FREQ_1    6
+                  #define PWM_FREQ_1      6
                 #endif
             #endif
 
