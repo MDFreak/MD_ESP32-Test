@@ -734,8 +734,12 @@
 
       // --- webserver
         #if (USE_WEBSERVER > OFF)
-            #define WEBSERVER_CYCLE 1000ul  // Intervallzeit [us]
-            #define MQTT_HOST IPAddress(10, 0, 0, 203)
+            #define WEBSERVER_CYCLE     1000ul  // Intervallzeit [us]
+            #define MQTT_HOST           IPAddress(10, 0, 0, 203)
+            #define MQTT_SECURE         OFF
+            #if(MQTT_SECURE > OFF)
+            #define MQTT_BROKER_USER    "<user>"
+            #define MQTT_BROKER_PASS    "<pass>"
           #endif
 
       // --- MQTT Mosquitto client
