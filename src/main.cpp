@@ -800,6 +800,18 @@
                   #endif
                     //md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
               }
+          #if (USE_MQTT > OFF)
+              mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0,
+                                                reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
+              mqttClient.onConnect(onMqttConnect);
+              mqttClient.onDisconnect(onMqttDisconnect);
+              mqttClient.onSubscribe(onMqttSubscribe);
+              mqttClient.onUnsubscribe(onMqttUnsubscribe);
+              mqttClient.onMessage(onMqttMessage);
+              mqttClient.onPublish(onMqttPublish);
+              mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+            #endif
+
             #endif
 
       // --- sensors

@@ -297,6 +297,7 @@
             void readMessage();
             void sendMessage();
           #endif
+      // --- MQTT
         #if (USE_MQTT > OFF)
             void connectToMqtt();
             void onMqttConnect(bool sessionPresent);
