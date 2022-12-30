@@ -746,6 +746,8 @@
                 #define MQTT_BROKER_USER  "<user>"
                 #define MQTT_BROKER_PASS  "<pass>"
               #endif
+            //
+            #define
           #endif
 
   // ----------------------------------------------------------------

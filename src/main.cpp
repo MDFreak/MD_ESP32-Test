@@ -2988,6 +2988,12 @@
         void connectToMqtt()
           {
             SOUTLN("Connecting to MQTT...");
+              //AsyncMqttClient& setKeepAlive(uint16_t `keepAlive`);   // Set keep alive. Defaults to 15 seconds
+              //AsyncMqttClient& setClientId(const char\* `clientId`); // Defaults to `esp8266<chip ID on 6 hex caracters>`
+              //AsyncMqttClient& setCleanSession(bool `cleanSession`); // Defaults to `true`
+              //AsyncMqttClient& setMaxTopicLength(uint16_t `maxLen`); // Defaults to `128`
+              //AsyncMqttClient& setCredentials(const char\* `username`, const char\* `password` = nullptr);
+              //AsyncMqttClient& setWill(const char\* `topic`, uint8_t `qos`, bool `retain`, const char\* `payload` = nullptr, size_t `length` = 0); //Defaults to none
             mqttClient.connect();
           }
 
