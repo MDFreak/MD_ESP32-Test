@@ -217,55 +217,55 @@
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
-            #define COLCHAR_2812   6
-            #define COLBMP_2812    8
-            #define ROWBMP_2812    8
-            #define UPD_2812_M1_MS 70
-            //#define COL24_2812_M1  0xFF0000u   // 0xB924u   // color r-g-b (5-6-5)
-            //#define COL24_2812_BM1 0x00FF00u   // color r-g-b (5-6-5)
-            #define COL24_2812_M1 0xFF0080u   // color r-g-b (5-6-5) = 255,0,128
-            #define COL24_2812_BM1  0xF0B63Cu   // color r-g-b (5-6-5) = 240, 182, 56
-            #define BRI_2812_M1    255
-            #define BRI_2812_BM1   255
+            #define COLCHAR_2812            6
+            #define COLBMP_2812             8
+            #define ROWBMP_2812             8
+            #define UPD_2812_M1_MS          70
+            //#define COL24_2812_M1           0xFF0000u   // 0xB924u   // color r-g-b (5-6-5)
+            //#define COL24_2812_BM1          0x00FF00u   // color r-g-b (5-6-5)
+            #define COL24_2812_M1           0xFF0080u   // color r-g-b (5-6-5) = 255,0,128
+            #define COL24_2812_BM1          0xF0B63Cu   // color r-g-b (5-6-5) = 240, 182, 56
+            #define BRI_2812_M1             255
+            #define BRI_2812_BM1            255
 
-            #define ROW1_2812_M1   NEO_MATRIX_TOP
-            #define COL1_2812_M1   NEO_MATRIX_LEFT
-            #define DIR_2812_M1    NEO_MATRIX_COLUMNS
-            #define ORI_2812_M1    NEO_MATRIX_ZIGZAG
+            #define ROW1_2812_M1            NEO_MATRIX_TOP
+            #define COL1_2812_M1            NEO_MATRIX_LEFT
+            #define DIR_2812_M1             NEO_MATRIX_COLUMNS
+            #define ORI_2812_M1             NEO_MATRIX_ZIGZAG
 
-            #define TYPE_2812_M1   WS2812B
-            #define COLORD_2812_M1 NEO_GRB
-            #define ROWPIX_2812_M1 8
-            #define LEDS_2812_M1   COLPIX_2812_M1 * ROWPIX_2812_M1
+            #define TYPE_2812_M1            WS2812B
+            #define COLORD_2812_M1          NEO_GRB
+            #define ROWPIX_2812_M1          8
+            #define LEDS_2812_M1            COLPIX_2812_M1 * ROWPIX_2812_M1
 
-            #define ROW1_2812_T1   NEO_MATRIX_TOP
-            #define COL1_2812_T1   NEO_MATRIX_LEFT
-            #define DIR_2812_T1    NEO_MATRIX_COLUMNS
-            #define ORI_2812_T1    NEO_MATRIX_ZIGZAG
+            #define ROW1_2812_T1            NEO_MATRIX_TOP
+            #define COL1_2812_T1            NEO_MATRIX_LEFT
+            #define DIR_2812_T1             NEO_MATRIX_COLUMNS
+            #define ORI_2812_T1             NEO_MATRIX_ZIGZAG
 
-            #define COLPIX_2812_T1 8
-            #define ROWPIX_2812_T1 8
-            #define COLTIL_2812_M1 16  // needs correct value
-            #define ROWTIL_2812_M1 1   // 0 = OFF
-            #define ANZ_TILES_M1   COLTIL_2812_M1 * ROWPIX_2812_T1
-            #define COLPIX_2812_M1 COLTIL_2812_M1 * COLPIX_2812_T1
-            #define OFFBEG_2812_M1 1 //+ COLPIX_2812_T1
-            #define OFFEND_2812_M1 0 //+ COLPIX_2812_T1
+            #define COLPIX_2812_T1          8
+            #define ROWPIX_2812_T1          8
+            #define COLTIL_2812_M1          16  // needs correct value
+            #define ROWTIL_2812_M1          1   // 0 = OFF
+            #define ANZ_TILES_M1            COLTIL_2812_M1 * ROWPIX_2812_T1
+            #define COLPIX_2812_M1          COLTIL_2812_M1 * COLPIX_2812_T1
+            #define OFFBEG_2812_M1          1 //+ COLPIX_2812_T1
+            #define OFFEND_2812_M1          0 //+ COLPIX_2812_T1
             #if (USE_WS2812_MATRIX_OUT > 1)
                 #ifndef USE_OUTPUT_CYCLE
                     #define USE_OUTPUT_CYCLE
                   #endif
-                #define UPD_2812_M2_MS 8
-                #define LEDS_2812_M2   512
-                #define BRIGHT_2812_M2 5
-                #define TYPE_2812_M2   WS2812B
-                #define COLORD_2812_M2 NEO_GRB
-                #define COLPIX_2812_M2 128
-                #define ROWPIX_2812_M2 8
-                #define COLPIX_2812_T2 8
-                #define ROWPIX_2812_T2 8
-                #define COLTIL_2812_M2 4
-                #define ROWTIL_2812_M2 1
+                #define UPD_2812_M2_MS      8
+                #define LEDS_2812_M2        512
+                #define BRIGHT_2812_M2      5
+                #define TYPE_2812_M2        WS2812B
+                #define COLORD_2812_M2      NEO_GRB
+                #define COLPIX_2812_M2      128
+                #define ROWPIX_2812_M2      8
+                #define COLPIX_2812_T2      8
+                #define ROWPIX_2812_T2      8
+                #define COLTIL_2812_M2      4
+                #define ROWTIL_2812_M2      1
               #endif
           #endif
 
@@ -273,15 +273,15 @@
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
-            #define UPD_2812_L1_MS 10
-            #define COL24_2812_L1  0x6300F1u   // color r-g-b (5-6-5)
-            #define BRI_2812_L1    5u
-            #define TYPE_2812_L1   WS2812B
-            #define COLORD_2812_L1 NEO_GRB
-            #define COLPIX_2812_L1 30
-            #define ROWPIX_2812_L1 1
-            #define COLTIL_2812_L1 4
-            #define ROWTIL_2812_L1 1
+            #define UPD_2812_L1_MS          10
+            #define COL24_2812_L1           0x6300F1u   // color r-g-b (5-6-5)
+            #define BRI_2812_L1             5u
+            #define TYPE_2812_L1            WS2812B
+            #define COLORD_2812_L1          NEO_GRB
+            #define COLPIX_2812_L1          30
+            #define ROWPIX_2812_L1          1
+            #define COLTIL_2812_L1          4
+            #define ROWTIL_2812_L1          1
               //#define COLPIX_2812_T1 8
               //#define ROWPIX_2812_T1 8
                   //#define UPD_2812_L1_MS 1
@@ -290,16 +290,16 @@
                   //#define TYPE_2812_L1   WS2812B
                   //#define COLORD_2812_L1 NEO_GRB
             #if (USE_WS2812_LINE_OUT > 1)
-                #define UPD_2812_L2_MS 10
-                #define LEDS_2812_L2   30
-                #define BRIGHT_2812_L2 12
-                #define TYPE_2812_L2   WS2812B
-                #define COLORD_2812_L2 GRB
+                #define UPD_2812_L2_MS      10
+                #define LEDS_2812_L2        30
+                #define BRIGHT_2812_L2      12
+                #define TYPE_2812_L2        WS2812B
+                #define COLORD_2812_L2      GRB
                 #if (USE_WS2812_LINE_OUT > 2)
-                    #define LEDS_2812_L3   30
-                    #define BRIGHT_2812_L3 12
-                    #define TYPE_2812_L3   WS2812
-                    #define COLORD_2812_L3 GRB
+                    #define LEDS_2812_L3    30
+                    #define BRIGHT_2812_L3  12
+                    #define TYPE_2812_L3    WS2812
+                    #define COLORD_2812_L3  GRB
                     #if (USE_WS2812_LINE_OUT > 3)
                         #define LEDS_2812_L4   30
                         #define BRIGHT_2812_L4 12
@@ -315,21 +315,21 @@
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
-            #define PWM_LEDS_FREQ  4000u
-            #define PWM_LEDS_RES   8
-            #define BRI_RGBLED_1   15
-            #define COL24_RGBLED_1 0xBE2727u   // bright 10 + red 10 + green 10 + blue 10
+            #define PWM_LEDS_FREQ           4000u
+            #define PWM_LEDS_RES            8
+            #define BRI_RGBLED_1            15
+            #define COL24_RGBLED_1          0xBE2727u   // bright 10 + red 10 + green 10 + blue 10
           #endif
         #if (USE_FAN_PWM > OFF)
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
-            #define PWM_FAN_FREQ      4500u
-            #define PWM_FAN_RES       8
+            #define PWM_FAN_FREQ            4500u
+            #define PWM_FAN_RES             8
           #endif
 
         #ifdef USE_OUTPUT_CYCLE
-            #define OUTPUT_CYCLE_MS  500u
+            #define OUTPUT_CYCLE_MS         500u
           #endif
 
     // --- user input
@@ -340,27 +340,27 @@
               #endif
             #if !(KEYS ^ MC_UI_Keypad_ANA0_RO)
                 #define USE_KEYPADSHIELD
-                #define KEYS_ADC        34   // ADC Pin GPIO02
-                #define ADC_STD_RES     12   // default resolution 12 Bit
-                #define ADC_RES         12   // active resolution
-                #define KP_NUM_KEYS     5
-                #define KP_KEY_VAL_1    200  // max ADC value of button 0
-                #define KP_KEY_VAL_2    750
-                #define KP_KEY_VAL_3    1470
-                #define KP_KEY_VAL_4    2330
-                #define KP_KEY_VAL_5    3200
+                #define KEYS_ADC            34   // ADC Pin GPIO02
+                #define ADC_STD_RES         12   // default resolution 12 Bit
+                #define ADC_RES             12   // active resolution
+                #define KP_NUM_KEYS         5
+                #define KP_KEY_VAL_1        200  // max ADC value of button 0
+                #define KP_KEY_VAL_2        750
+                #define KP_KEY_VAL_3        1470
+                #define KP_KEY_VAL_4        2330
+                #define KP_KEY_VAL_5        3200
               #endif // keypad
 
             #if !(KEYS ^ MC_UI_TOUCHXPT2046_AZ)
                 // Keypad start position, key sizes and spacing
-                #define KEY_X          40 // Centre of key
-                #define KEY_Y          287
-                #define KEY_W          62 // Width and height
-                #define KEY_H          26
-                #define KEY_SPACING_X  18 // X and Y gap
-                #define KEY_SPACING_Y  20
-                #define KEY_TEXTSIZE   1   // Font size multiplier
-                #define KEY_NUM_LEN    3 // Anzahl der Tasten
+                #define KEY_X               40 // Centre of key
+                #define KEY_Y               287
+                #define KEY_W               62 // Width and height
+                #define KEY_H               26
+                #define KEY_SPACING_X       18 // X and Y gap
+                #define KEY_SPACING_Y       20
+                #define KEY_TEXTSIZE        1   // Font size multiplier
+                #define KEY_NUM_LEN         3 // Anzahl der Tasten
               #endif // touchpad
 
           #endif
@@ -415,47 +415,50 @@
                 #define USE_MEASURE_CYCLE
               #endif
             #if (USE_CTRL_SW_INP > OFF)
-                #define INP_SW_CTRL  0
-                #define POL_SW_CTRL  HIGH // LOW, HIGH
-                #define MOD_SW_CTRL  INPUT_PULLUP // INPUT, INPUT_PULLDOWN
+                #define INP_SW_CTRL         0
+                #define POL_SW_CTRL         HIGH // LOW, HIGH
+                #define MOD_SW_CTRL         INPUT_PULLUP // INPUT, INPUT_PULLDOWN
               #endif
             #if (USE_GEN_SW_INP > OFF)
-                #define INP_REED_1   0
-                #define POL_REED_1   LOW // LOW, HIGH
-                #define MOD_REED_1   INPUT_PULLUP // INPUT, INPUT_PULLDOWN
+                #define INP_REED_1          0
+                #define POL_REED_1          LOW // LOW, HIGH
+                #define MOD_REED_1          INPUT_PULLUP // INPUT, INPUT_PULLDOWN
               #endif
           #endif
 
     // --- memories
       // --- FRAM
         #if (USE_FRAM_I2C > OFF)
-            #define SIZE_FRAM     0x8000
+            #define SIZE_FRAM               0x8000
           #endif
     // --- sensors
       #if (USE_DS18B20_1W_IO > OFF)
-          #define DS_T_PRECISION   9
-          #define DS18B20_ANZ      1
+          #define DS_T_PRECISION            9
+          #define DS18B20_ANZ               1
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
         #endif
 
       #if (USE_BME280_I2C > OFF)
-          #define BME2801_I2C      I2C1
-          #define BME2801T_FILT    0
-          #define BME2801T_Drop    0
-          #define BME2801P_FILT    0
-          #define BME2801P_Drop    0
-          #define BME2801H_FILT    0
-          #define BME2801H_Drop    0
+          #define BME2801_I2C               I2C1
+          #define BME2801T_FILT             0
+          #define BME2801T_Drop             0
+          #define BME2801T_MQTT             "bme280t"
+          #define BME2801P_FILT             0
+          #define BME2801P_Drop             0
+          #define BME2801P_MQTT             "bme280p"
+          #define BME2801H_FILT             0
+          #define BME2801H_Drop             0
+          #define BME2801H_MQTT             "bme280h"
           #if (USE_BME280_I2C > 1)
-              #define BME2802_I2C      I2C2
-              #define BME2802T_FILT    0
-              #define BME2802T_Drop    0
-              #define BME2802P_FILT    0
-              #define BME2802P_Drop    0
-              #define BME2802H_FILT    0
-              #define BME2802H_Drop    0
+              #define BME2802_I2C           I2C2
+              #define BME2802T_FILT         0
+              #define BME2802T_Drop         0
+              #define BME2802P_FILT         0
+              #define BME2802P_Drop         0
+              #define BME2802H_FILT         0
+              #define BME2802H_Drop         0
             #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
@@ -485,32 +488,33 @@
                   )
         */
       #if (USE_MQ135_GAS_ANA > OFF)
-          #define MQ135_GAS_ADC    ON
-          #define MQ135_GAS_1115   OFF
-          #define MQ135_FILT       15       // floating  measure filtering
-          #define MQ135_EM_WIN     100      // window for traffic light
-          #define MQ135_SCAL_MIN   0
-          #define MQ135_SCAL_MAX   100
-            //#define MQ135_ThresFilt 25       // threshold measure filtering
-            //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
+          #define MQ135_GAS_ADC             ON
+          #define MQ135_GAS_1115            OFF
+          #define MQ135_FILT                15       // floating  measure filtering
+          #define MQ135_EM_WIN              100      // window for traffic light
+          #define MQ135_SCAL_MIN            0
+          #define MQ135_SCAL_MAX            100
+            //#define MQ135_ThresFilt       25       // threshold measure filtering
+            //#define MQ135_EM_MID          2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
         #endif
       #if (USE_MQ3_ALK_ANA > OFF)
-          #define MQ3_FILT              11       // floating  measure filtering
-          #define MQ3_DROP              2
-          #define MQ3_EM_WIN            100      // window for traffic light
-          #define MQ3_SCAL              OFF
-          #define MQ3_ALK_ADC           OFF
-          #define MQ3_ALK_1115          ON
+          #define MQ3_FILT                  11       // floating  measure filtering
+          #define MQ3_DROP                  2
+          #define MQ3_EM_WIN                100      // window for traffic light
+          #define MQ3_SCAL                  OFF
+          #define VCC33_MQTT                "alc"
+          #define MQ3_ALK_ADC               OFF
+          #define MQ3_ALK_1115              ON
           #if (MQ3_ALK_1115 > OFF)
-              #define MQ3_1115_DEV      0
-              #define MQ3_1115_CHAN     3
-              #define MQ3_1115_ATT      GAIN_TWOTHIRDS
-              #define MQ3_OFFRAW        0
-              #define MQ3_GAIN          0
-              #define MQ3_OFFREAL       0
+              #define MQ3_1115_DEV          0
+              #define MQ3_1115_CHAN         3
+              #define MQ3_1115_ATT          GAIN_TWOTHIRDS
+              #define MQ3_OFFRAW            0
+              #define MQ3_GAIN              0
+              #define MQ3_OFFREAL           0
             #endif
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
@@ -518,12 +522,12 @@
         #endif
 
       #if (USE_TYPE_K_SPI > OFF)
-          #define TYPEK_FILT      11       // floating  measure filtering
-          #define TYPEK_DROP_PEEK 2        // drop biggest / lowest
-          #define TYPEK1_OFFSET   0.       // offset unit °C
-          #define TYPEK1_GAIN     1.       // result = (measure * gain) + offset
-          #define TYPEK2_OFFSET   0.       // offset unit °C
-          #define TYPEK2_GAIN     1.       // result = (measure * gain) + offset
+          #define TYPEK_FILT      11        // floating  measure filtering
+          #define TYPEK_DROP_PEEK 2         // drop biggest / lowest
+          #define TYPEK1_OFFSET   0.        // offset unit °C
+          #define TYPEK1_GAIN     1.        // result = (measure * gain) + offset
+          #define TYPEK2_OFFSET   0.        // offset unit °C
+          #define TYPEK2_GAIN     1.        // result = (measure * gain) + offset
           #ifndef USE_MEASURE_CYCLE
               #define USE_MEASURE_CYCLE
             #endif
@@ -532,6 +536,7 @@
       #if (USE_PHOTO_SENS_ANA > OFF)
           #define PHOTO1_FILT               7
           #define PHOTO1_DROP               0
+          #define PHOTO1_MQTT               "licht"
           #define PHOTO1_ADC                ON
             #if (PHOTO1_ADC > OFF)
                 #define PHOTO1_ADC_ATT      ADC_ATTEN_DB_11
@@ -549,16 +554,16 @@
                 #define PHOTO1_SCAL_OFFREAL 0
               #endif
           #if (USE_PHOTO_SENS_ANA > 1)
-              #define PHOTO2_FILT          7
-              #define PHOTO2_DROP          0
-              #define PHOTO2_SCAL          OFF
-              #define PHOTO2_SCAL_MIN      0
-              #define PHOTO2_SCAL_MAX      100
-              #define PHOTO2_ADC           ON
+              #define PHOTO2_FILT           7
+              #define PHOTO2_DROP           0
+              #define PHOTO2_SCAL           OFF
+              #define PHOTO2_SCAL_MIN       0
+              #define PHOTO2_SCAL_MAX       100
+              #define PHOTO2_ADC            ON
                 #if (PHOTO2_ADC > OFF)
-                    #define PHOTO2_ADC_ATT   ADC_ATTEN_DB_11
+                    #define PHOTO2_ADC_ATT  ADC_ATTEN_DB_11
                   #endif
-              #define PHOTO2_1115          OFF
+              #define PHOTO2_1115           OFF
                 #if (PHOTO2_1115 > OFF)
                     #define PHOTO2_1115_ATT  GAIN_ONE
                     #define PHOTO2_1115_DEV  0
@@ -573,6 +578,10 @@
       #if (USE_VCC_ANA > OFF)
           #define VCC_FILT              5
           #define VCC_DROP              1
+          #if (USE_MQTT > OFF)
+              #define VCC50_MQTT          "vcc50"
+              #define VCC33_MQTT          "vcc33"
+            #endif
           #define VCC_ADC               OFF
             #if (VCC_ADC > OFF)
                 #define VCC_ADC_ATT       ADC_ATTEN_DB_11
@@ -596,6 +605,7 @@
       #if (USE_POTI_ANA > OFF)
           #define POTI1_FILT              9
           #define POTI1_DROP              1
+          #define VCC33_MQTT              "poti"
           #define POTI1_ADC               OFF
             #if (POTI1_ADC > OFF)
                 #define POTI1_ADC_ATT     ADC_ATTEN_DB_11
@@ -742,12 +752,12 @@
             #define MQTT_HOST             IPAddress(10, 0, 0, 203)
             #define MQTT_PORT             1883
             #define MQTT_SECURE           OFF
+            #define MQTT_DEVICE           "esp-test/"
             #if(MQTT_SECURE > OFF)
                 #define MQTT_BROKER_USER  "<user>"
                 #define MQTT_BROKER_PASS  "<pass>"
               #endif
             //
-            #define
           #endif
 
   // ----------------------------------------------------------------

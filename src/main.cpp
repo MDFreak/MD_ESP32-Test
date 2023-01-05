@@ -1730,6 +1730,8 @@
                       dispText(outStr, 1, 1, outStr.length());
                             //SOUT(outStr);
                             //SOUTLN(outStr);
+                      #if (USE_MQTT > OFF)
+                        #endif
                     #endif
 
                   break;
@@ -1745,6 +1747,8 @@
                           tmpStr.concat("3");
                           tmpStr.concat(photoVal[0].getVal());
                           pmdServ->updateAll(tmpStr);
+                        #endif
+                      #if (USE_MQTT > OFF)
                         #endif
                     #endif
                   outStr.concat("  ");
@@ -1791,6 +1795,8 @@
                         #if (USE_WEBSERVER > OFF)
                             pmdServ->updateAll(tmpStr);
                           #endif
+                        #if (USE_MQTT > OFF)
+                          #endif
                       }
                             //SOUT(outStr); SOUT(" ");
                     dispText(outStr , 0, 3, outStr.length());
@@ -1805,6 +1811,8 @@
                         dispText(outStr, 1, 2, outStr.length());
                               //SOUT(outStr);
                               //SOUTLN(outStr);
+                        #if (USE_MQTT > OFF)
+                          #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
                         outStr = "  I ";
@@ -1813,6 +1821,8 @@
                         dispText(outStr, 15, 2, outStr.length());
                               //SOUT(outStr);
                               //SOUTLN(outStr);
+                        #if (USE_MQTT > OFF)
+                          #endif
                       #endif
                    	break;
                 case 9:  // poti,
@@ -1822,6 +1832,8 @@
                         outStr.concat("  ");
                         dispText(outStr, 15, 1, outStr.length());
                               //SOUTLN(outStr);
+                        #if (USE_MQTT > OFF)
+                          #endif
                       #endif
                     break;
                 case 10:  // digital inputs
@@ -1842,6 +1854,8 @@
                           // send to websocket
                           #if (USE_WEBSERVER > OFF)
                               pmdServ->updateAll(tmpStr);
+                            #endif
+                          #if (USE_MQTT > OFF)
                             #endif
                         }
                       dispText(outStr , 17, 3, outStr.length());
@@ -2999,10 +3013,12 @@
 
         void onMqttConnect(bool sessionPresent)
           {
+            char temp[32] = "";
             SOUT("Connected to MQTT ");
             SOUT("Session present: ");
             SOUTLN(sessionPresent);
-            uint16_t packetIdSub = mqttClient.subscribe("test/lol", 2);
+            sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT) ;
+            uint16_t packetIdSub = mqttClient.subscribe(temp, 2);
             SOUT("Subscribing at QoS 2, packetId: ");
             SOUTLN(packetIdSub);
             mqttClient.publish("test/lol", 0, true, "test 1");
