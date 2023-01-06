@@ -3018,12 +3018,13 @@
             SOUT("Session present: ");
             SOUTLN(sessionPresent);
             sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT) ;
-            uint16_t packetIdSub = mqttClient.subscribe(temp, 2);
-            SOUT("Subscribing at QoS 2, packetId: ");
-            SOUTLN(packetIdSub);
+            uint16_t packetIdSub = mqttClient.subscribe(temp, 0);
+                SOUT("Subscribing at QoS 0, packetId: "); SOUTLN(packetIdSub);
+            sprintf(temp, "%s%s", MQTT_DEVICE, BME2801P_MQTT) ;
             mqttClient.publish("test/lol", 0, true, "test 1");
             SOUTLN("Publishing at QoS 0");
-            uint16_t packetIdPub1 = mqttClient.publish("test/lol", 1, true, "test 2");
+            sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT) ;
+            uint16_t packetIdPub1 = mqttClient.publish("test/lol", 0, true, "test 2");
             SOUT("Publishing at QoS 1, packetId: ");
             SOUTLN(packetIdPub1);
             uint16_t packetIdPub2 = mqttClient.publish("test/lol", 2, true, "test 3");

@@ -444,7 +444,9 @@
           #define BME2801_I2C               I2C1
           #define BME2801T_FILT             0
           #define BME2801T_Drop             0
-          #define BME2801T_MQTT             "bme280t"
+          #if (USE_MQTT > OFF)
+              #define BME2801T_MQTT             "bme280t"
+            #endif
           #define BME2801P_FILT             0
           #define BME2801P_Drop             0
           #define BME2801P_MQTT             "bme280p"
