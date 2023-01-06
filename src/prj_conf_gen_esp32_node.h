@@ -444,15 +444,15 @@
           #define BME2801_I2C               I2C1
           #define BME2801T_FILT             0
           #define BME2801T_Drop             0
-          #if (USE_MQTT > OFF)
-              #define BME2801T_MQTT             "bme280t"
-            #endif
           #define BME2801P_FILT             0
           #define BME2801P_Drop             0
-          #define BME2801P_MQTT             "bme280p"
           #define BME2801H_FILT             0
           #define BME2801H_Drop             0
-          #define BME2801H_MQTT             "bme280h"
+          #if (USE_MQTT > OFF)
+              #define BME2801T_MQTT         "bme280t"
+              #define BME2801P_MQTT         "bme280p"
+              #define BME2801H_MQTT         "bme280h"
+            #endif
           #if (USE_BME280_I2C > 1)
               #define BME2802_I2C           I2C2
               #define BME2802T_FILT         0
@@ -507,7 +507,7 @@
           #define MQ3_DROP                  2
           #define MQ3_EM_WIN                100      // window for traffic light
           #define MQ3_SCAL                  OFF
-          #define VCC33_MQTT                "alc"
+          #define MQ3_MQTT                  "alc"
           #define MQ3_ALK_ADC               OFF
           #define MQ3_ALK_1115              ON
           #if (MQ3_ALK_1115 > OFF)
@@ -580,10 +580,8 @@
       #if (USE_VCC_ANA > OFF)
           #define VCC_FILT              5
           #define VCC_DROP              1
-          #if (USE_MQTT > OFF)
-              #define VCC50_MQTT          "vcc50"
-              #define VCC33_MQTT          "vcc33"
-            #endif
+          #define VCC50_MQTT          "vcc50"
+          #define VCC33_MQTT          "vcc33"
           #define VCC_ADC               OFF
             #if (VCC_ADC > OFF)
                 #define VCC_ADC_ATT       ADC_ATTEN_DB_11
@@ -607,7 +605,7 @@
       #if (USE_POTI_ANA > OFF)
           #define POTI1_FILT              9
           #define POTI1_DROP              1
-          #define VCC33_MQTT              "poti"
+          #define POTI1_MQTT              "poti"
           #define POTI1_ADC               OFF
             #if (POTI1_ADC > OFF)
                 #define POTI1_ADC_ATT     ADC_ATTEN_DB_11

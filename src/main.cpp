@@ -3014,22 +3014,38 @@
         void onMqttConnect(bool sessionPresent)
           {
             char temp[32] = "";
+            uint16_t packetIdSub;
             SOUT("Connected to MQTT ");
             SOUT("Session present: ");
             SOUTLN(sessionPresent);
-            sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT) ;
-            uint16_t packetIdSub = mqttClient.subscribe(temp, 0);
-                SOUT("Subscribing at QoS 0, packetId: "); SOUTLN(packetIdSub);
-            sprintf(temp, "%s%s", MQTT_DEVICE, BME2801P_MQTT) ;
-            mqttClient.publish("test/lol", 0, true, "test 1");
-            SOUTLN("Publishing at QoS 0");
-            sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT) ;
-            uint16_t packetIdPub1 = mqttClient.publish("test/lol", 0, true, "test 2");
-            SOUT("Publishing at QoS 1, packetId: ");
-            SOUTLN(packetIdPub1);
-            uint16_t packetIdPub2 = mqttClient.publish("test/lol", 2, true, "test 3");
-            SOUT("Publishing at QoS 2, packetId: ");
-            SOUTLN(packetIdPub2);
+            for (uint8_t i=0; i<6; i++)
+              {
+                switch(i)
+                  {
+                    case 0:
+                      sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
+                      break;
+                    case 1:
+                      sprintf(temp, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
+                      break;
+                    case 2:
+                      sprintf(temp, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
+                      break;
+                    case 3:
+                      sprintf(temp, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
+                      break;
+                    case 4:
+                      sprintf(temp, "%s%s", MQTT_DEVICE, POTI1_MQTT);
+                      break;
+                    case 5:
+                      sprintf(temp, "%s%s", MQTT_DEVICE, VCC50_MQTT);
+                      break;
+                  }
+                  packetIdSub = mqttClient.subscribe(temp, 0);
+                      SOUT("Subscribing at QoS 0, packetId: ");
+                      SOUTLN(packetIdSub);
+                  mqttClient.publish("temp", 0, true);
+              }
           }
 
         void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
