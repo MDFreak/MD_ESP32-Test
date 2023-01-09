@@ -79,7 +79,7 @@
     // --- memory components
       #define USE_FLASH_MEM         ON
       #define USE_FRAM_I2C          1   // 1   // [0, 1, ...] limited by I2C channel/addr
-      #define USE_SD_SPI            ON
+      #define USE_SD_SPI            OFF
     // --- test components
       #define USE_CTRL_POTI         OFF   // [0, 1, ....] limited by analog inputs
       #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins

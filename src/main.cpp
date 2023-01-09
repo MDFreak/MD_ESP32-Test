@@ -1602,6 +1602,8 @@
               oledIdx++;
               outStr = "";
               String tmpStr;
+              char tmpMQTT[20];
+              char tmpOut[20];
               switch (oledIdx)
                 {
                 case 1:  // system output
@@ -1767,6 +1769,7 @@
                 case 7:  // BME 280 temp, humidity, pressure
                   #if ( USE_BME280_I2C > OFF )
                     outStr = "";
+                    int16_t tmpval;
                     for (uint8_t i = 0; i < 3 ; i++)
                       {
                         tmpStr = "SVA";
@@ -1774,18 +1777,24 @@
                         switch (i)
                           {
                             case 0:
-                              tmpStr.concat(bme1T.getVal());
-                              outStr.concat(bme1T.getVal());
+                              tmpval = bme1T.getVal();
+                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
+                              tmpStr.concat(tmpval);
+                              outStr.concat(tmpval);
                               outStr.concat("°  ");
                               break;
                             case 1:
-                              tmpStr.concat(bme1H.getVal());
-                              outStr.concat(bme1H.getVal());
+                              tmpval = bme1P.getVal();
+                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
+                              tmpStr.concat(tmpval);
+                              outStr.concat(tmpval);
                               outStr.concat("%  ");
                               break;
                             case 2:
-                              tmpStr.concat(bme1P.getVal());
-                              outStr.concat(bme1P.getVal());
+                              tmpval = bme1H.getVal();
+                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
+                              tmpStr.concat(tmpval);
+                              outStr.concat(tmpval);
                               outStr.concat("mb");
                               break;
                             default:
@@ -1796,6 +1805,8 @@
                             pmdServ->updateAll(tmpStr);
                           #endif
                         #if (USE_MQTT > OFF)
+                            sprintf(tmpOut, "%d", tmpval);
+                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       }
                             //SOUT(outStr); SOUT(" ");
@@ -3001,14 +3012,16 @@
       #if (USE_MQTT > OFF)
         void connectToMqtt()
           {
-            SOUTLN("Connecting to MQTT...");
+                  SOUT("Connecting to MQTT ...");
               //AsyncMqttClient& setKeepAlive(uint16_t `keepAlive`);   // Set keep alive. Defaults to 15 seconds
               //AsyncMqttClient& setClientId(const char\* `clientId`); // Defaults to `esp8266<chip ID on 6 hex caracters>`
               //AsyncMqttClient& setCleanSession(bool `cleanSession`); // Defaults to `true`
               //AsyncMqttClient& setMaxTopicLength(uint16_t `maxLen`); // Defaults to `128`
               //AsyncMqttClient& setCredentials(const char\* `username`, const char\* `password` = nullptr);
               //AsyncMqttClient& setWill(const char\* `topic`, uint8_t `qos`, bool `retain`, const char\* `payload` = nullptr, size_t `length` = 0); //Defaults to none
+                  SOUT("  connect ...");
             mqttClient.connect();
+                  SOUT("  MQTT connected");
           }
 
         void onMqttConnect(bool sessionPresent)
