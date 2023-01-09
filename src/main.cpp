@@ -804,8 +804,6 @@
         // start MQTT
           #if (USE_MQTT > OFF)
               SOUTLN("Connecting to MQTT...");
-              mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0,
-                                                reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
               mqttClient.onConnect(onMqttConnect);
               mqttClient.onDisconnect(onMqttDisconnect);
               mqttClient.onSubscribe(onMqttSubscribe);
@@ -813,7 +811,9 @@
               mqttClient.onMessage(onMqttMessage);
               mqttClient.onPublish(onMqttPublish);
               mqttClient.setServer(MQTT_HOST, MQTT_PORT);
-                // mqttClient.connect();
+              mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0,
+                                                reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
+              mqttClient.connect();
             #endif
 
 
@@ -3055,7 +3055,7 @@
                       break;
                   }
                   packetIdSub = mqttClient.subscribe(temp, 0);
-                      SOUT("Subscribing at QoS 0, packetId: ");
+                      SOUT("Subscribing "); SOUT(temp); SOUT(" Id: ");
                       SOUTLN(packetIdSub);
                   mqttClient.publish("temp", 0, true);
               }
@@ -3072,10 +3072,7 @@
 
         void onMqttSubscribe(uint16_t packetId, uint8_t qos)
           {
-            SOUTLN("Subscribe acknowledged.");
-            SOUT("  packetId: ");
-            SOUTLN(packetId);
-            SOUT("  qos: ");
+            SOUT("Subscribe ack Id/qos "); SOUT(packetId); SOUT("/");
             SOUTLN(qos);
           }
 
@@ -3088,20 +3085,18 @@
 
         void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total)
           {
-            SOUTLN("Publish received.");
-            SOUT("  topic: "); SOUTLN(topic);
-            SOUT("  qos: ");   SOUTLN(properties.qos);
-            SOUT("  dup: ");   SOUTLN(properties.dup);
-            SOUT("  retain: ");SOUTLN(properties.retain);
-            SOUT("  len: ");   SOUTLN(len);
-            SOUT("  index: "); SOUTLN(index);
-            SOUT("  total: "); SOUTLN(total);
+            SOUT("Publish rec topic/len: "); SOUT(topic); SOUT("/"); SOUTLN(len);
+                  //SOUT("  qos: ");   SOUTLN(properties.qos);
+                  //SOUT("  dup: ");   SOUTLN(properties.dup);
+                  //SOUT("  retain: ");SOUTLN(properties.retain);
+                  //SOUT("  len: ");   SOUTLN(len);
+                  //SOUT("  index: "); SOUTLN(index);
+                  //SOUT("  total: "); SOUTLN(total);
           }
 
         void onMqttPublish(uint16_t packetId)
           {
-            SOUTLN("Publish acknowledged.");
-            SOUT("  packetId: "); SOUTLN(packetId);
+            SOUT("Publish ack Id"); SOUTLN(packetId);
           }
       #endif
   // --- error ESP -------------------------
