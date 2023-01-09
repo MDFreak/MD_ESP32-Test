@@ -578,18 +578,20 @@
         #endif
 
       #if (USE_VCC_ANA > OFF)
-          #define VCC_FILT              5
-          #define VCC_DROP              1
-          #define VCC50_MQTT          "vcc50"
-          #define VCC33_MQTT          "vcc33"
-          #define VCC_ADC               OFF
+          #define VCC_FILT                5
+          #define VCC_DROP                1
+          #define VCC50_IDX               0
+          #define VCC33_IDX               1
+          #define VCC50_MQTT              "vcc50"
+          #define VCC33_MQTT              "vcc33"
+          #define VCC_ADC                 OFF
             #if (VCC_ADC > OFF)
                 #define VCC_ADC_ATT       ADC_ATTEN_DB_11
                 #define VCC_SCAL_OFFRAW   0
                 #define VCC_SCAL_GAIN     1
                 #define VCC_SCAL_OFFREAL  0
               #endif
-          #define VCC_1115              ON
+          #define VCC_1115                ON
             #if (VCC_1115 > OFF)
                 #define VCC_1115_DEV      0
                 #define VCC_1115_CHAN     2

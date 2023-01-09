@@ -1601,7 +1601,8 @@
                 #endif // RUN_OLED_TEST
               oledIdx++;
               outStr = "";
-              String tmpStr;
+              String  tmpStr;
+              int16_t tmpval;
               char tmpMQTT[20];
               char tmpOut[20];
               switch (oledIdx)
@@ -1726,6 +1727,8 @@
                             //SOUTLN(outStr);
                     #endif
                   #if (USE_MQ3_ALK_ANA > OFF)
+                      tmpval = alk[0];
+                      sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
                       outStr = "  a ";
                       outStr.concat(alk[0]);
                       outStr.concat("  ");
@@ -1733,6 +1736,8 @@
                             //SOUT(outStr);
                             //SOUTLN(outStr);
                       #if (USE_MQTT > OFF)
+                          sprintf(tmpOut, "%d", tmpval);
+                          mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                         #endif
                     #endif
 
@@ -1745,12 +1750,16 @@
                       outStr = "";
                       outStr.concat(photoVal[0].getVal());
                       #if (USE_WEBSERVER > OFF)
+                          tmpval = photoVal[0].getVal();
+                          sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
                           tmpStr = "SVA";
                           tmpStr.concat("3");
-                          tmpStr.concat(photoVal[0].getVal());
+                          tmpStr.concat(tmpval);
                           pmdServ->updateAll(tmpStr);
                         #endif
                       #if (USE_MQTT > OFF)
+                          sprintf(tmpOut, "%d", tmpval);
+                          mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                         #endif
                     #endif
                   outStr.concat("  ");
@@ -1769,7 +1778,6 @@
                 case 7:  // BME 280 temp, humidity, pressure
                   #if ( USE_BME280_I2C > OFF )
                     outStr = "";
-                    int16_t tmpval;
                     for (uint8_t i = 0; i < 3 ; i++)
                       {
                         tmpStr = "SVA";
@@ -1816,16 +1824,22 @@
 
                 case 8:  // voltage, current
                     #if (USE_VCC_ANA > OFF)
+                        tmpval = vcc[0];
+                        sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
                         outStr = "  V ";
-                        outStr.concat(vcc[0]);
+                        outStr.concat(tmpval);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
                               //SOUT(outStr);
                               //SOUTLN(outStr);
                         #if (USE_MQTT > OFF)
+                            sprintf(tmpOut, "%d", tmpval);
+                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
+                              tmpval = bme1T.getVal();
+                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
                         outStr = "  I ";
                         outStr.concat(i712[0]);
                         outStr.concat("  ");
