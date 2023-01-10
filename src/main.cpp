@@ -460,8 +460,8 @@
     #if (USE_MQTT > OFF)
         AsyncMqttClient  mqttClient;
         TimerHandle_t    mqttReconnectTimer;
-        char tmpMQTT[20];
-        char tmpOut[20];
+        char tmpMQTT[40];
+        char tmpOut[40];
       #endif
 
   // ------ sensors ----------------------
