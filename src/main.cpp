@@ -1767,7 +1767,9 @@
                       outStr.concat(photoVal[0].getVal());
                       #if (USE_WEBSERVER > OFF)
                           tmpval16 = photoVal[0].getVal();
-                          sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
+                          #if (USE_MQTT > OFF)
+                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
+                            #endif
                           tmpStr = "SVA";
                           tmpStr.concat("3");
                           tmpStr.concat(tmpval16);
@@ -1803,21 +1805,27 @@
                           {
                             case 0:
                               tmpval16 = bme1T.getVal();
-                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
+                              #if (USE_MQTT > OFF)
+                                  sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
+                                #endif
                               tmpStr.concat(tmpval16);
                               outStr.concat(tmpval16);
                               outStr.concat("°  ");
                               break;
                             case 1:
                               tmpval16 = bme1P.getVal();
-                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
+                              #if (USE_MQTT > OFF)
+                                  sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
+                                #endif
                               tmpStr.concat(tmpval16);
                               outStr.concat(tmpval16);
                               outStr.concat("%  ");
                               break;
                             case 2:
                               tmpval16 = bme1H.getVal();
-                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
+                              #if (USE_MQTT > OFF)
+                                  sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
+                                #endif
                               tmpStr.concat(tmpval16);
                               outStr.concat(tmpval16);
                               outStr.concat("mb");
@@ -1843,7 +1851,9 @@
                 case 8:  // voltage, current
                     #if (USE_VCC_ANA > OFF)
                         tmpval16 = vcc[VCC50_IDX];
-                        sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
+                        #if (USE_MQTT > OFF)
+                            sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
+                          #endif
                         outStr = "  V ";
                         outStr.concat(tmpval16);
                         outStr.concat("  ");
@@ -1858,7 +1868,9 @@
                       #endif
                     #if (USE_ACS712_ANA > OFF)
                         tmpval16 = i712[0];
-                        sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, I712_1_MQTT);
+                        #if (USE_MQTT > OFF)
+                            sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, I712_1_MQTT);
+                          #endif
                         outStr = "  I ";
                         outStr.concat(i712[0]);
                         outStr.concat("  ");
@@ -1875,7 +1887,9 @@
                 case 9:  // poti,
                     #if (USE_POTI_ANA > OFF)
                         tmpval16 = poti[0];
-                        sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
+                        #if (USE_MQTT > OFF)
+                            sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
+                          #endif
                         outStr = "  P ";
                         outStr.concat(tmpval16);
                         outStr.concat("  ");
