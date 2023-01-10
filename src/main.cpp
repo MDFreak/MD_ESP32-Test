@@ -1293,6 +1293,7 @@
         #ifdef USE_MEASURE_CYCLE
             if (measT.TOut())
               {
+                    //SOUT("  "); SOUT(millis()); SOUTLN(" MEASCYCLE ");
                 measT.startT();
                 #if ( USE_BME280_I2C > OFF )
                     bme1.init();
@@ -1581,6 +1582,7 @@
         #if (USE_DISP > 0)
           if (dispT.TOut())    // handle touch output
             {
+                    //SOUT("  "); SOUT(millis()); SOUTLN(" Display Out ");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (oledIdx)
@@ -1739,7 +1741,9 @@
                     #endif
                   #if (USE_MQ3_ALK_ANA > OFF)
                       tmpval16 = alk[0];
-                      sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
+                      #if (USE_MQTT > OFF)
+                          sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
+                        #endif
                       outStr = "  a ";
                       outStr.concat(alk[0]);
                       outStr.concat("  ");
