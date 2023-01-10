@@ -26,6 +26,10 @@
     static uint64_t usTmp       = 0ul;
     static uint64_t usPerCycle  = 0ul;
     static char     cmsg[MSG_MAXLEN+1] = "";
+    String  tmpStr;
+    int16_t tmpval;
+    char tmpMQTT[20];
+    char tmpOut[20];
       //static uint64_t anzMsCycles = 0;
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
@@ -1079,6 +1083,9 @@
 // ----------------------------------------------------------------
   void loop()
     {
+      anzUsCycles++;
+      oledIdx++;
+      outStr = "";
       if (firstrun == true)
         {
           String taskMessage = "loop task running on core ";
@@ -1087,7 +1094,6 @@
           usLast = micros();
           firstrun = false;
         }
-      anzUsCycles++;
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
       // --- network ---
         #if (USE_WIFI > OFF)  // restart WIFI if offline
@@ -1599,12 +1605,6 @@
                   if (++oledIdx > 6) { oledIdx = 0; }
                   oled.sendBuffer();
                 #endif // RUN_OLED_TEST
-              oledIdx++;
-              outStr = "";
-              String  tmpStr;
-              int16_t tmpval;
-              char tmpMQTT[20];
-              char tmpOut[20];
               switch (oledIdx)
                 {
                 case 1:  // system output
@@ -1824,7 +1824,7 @@
 
                 case 8:  // voltage, current
                     #if (USE_VCC_ANA > OFF)
-                        tmpval = vcc[VCC50_IDX]*1000;
+                        tmpval = vcc[VCC50_IDX];
                         sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
                         outStr = "  V ";
                         outStr.concat(tmpval);
@@ -1838,10 +1838,10 @@
                           #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
-                        tmpval = i712[0]*1000;
+                        tmpval = i712[0];
                         sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, I712_1_MQTT);
                         outStr = "  I ";
-                        outStr.concat(tmpval);
+                        outStr.concat(i712[0]);
                         outStr.concat("  ");
                         dispText(outStr, 15, 2, outStr.length());
                               //SOUT(outStr);
