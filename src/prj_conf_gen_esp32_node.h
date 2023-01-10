@@ -503,8 +503,8 @@
             #endif
         #endif
       #if (USE_MQ3_ALK_ANA > OFF)
-          #define MQ3_FILT                  11       // floating  measure filtering
-          #define MQ3_DROP                  2
+          #define MQ3_FILT                  5       // floating  measure filtering
+          #define MQ3_DROP                  1
           #define MQ3_EM_WIN                100      // window for traffic light
           #define MQ3_SCAL                  OFF
           #define MQ3_MQTT                  "alc"
@@ -536,8 +536,8 @@
         #endif
 
       #if (USE_PHOTO_SENS_ANA > OFF)
-          #define PHOTO1_FILT               7
-          #define PHOTO1_DROP               0
+          #define PHOTO1_FILT               5
+          #define PHOTO1_DROP               1
           #define PHOTO1_MQTT               "licht"
           #define PHOTO1_ADC                ON
             #if (PHOTO1_ADC > OFF)

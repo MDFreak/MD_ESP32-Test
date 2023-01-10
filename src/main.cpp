@@ -1582,7 +1582,7 @@
         #if (USE_DISP > 0)
           if (dispT.TOut())    // handle touch output
             {
-                    //SOUT("  "); SOUT(millis()); SOUTLN(" Display Out ");
+                    SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (oledIdx)
@@ -1755,8 +1755,8 @@
                           mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           SOUT(tmpOut); SOUT(" ");
                         #endif
+                              SOUT(outStr); SOUT(" ");
                     #endif
-
                   break;
 
                 case 5:  // light sensor
@@ -1783,7 +1783,7 @@
                     #endif
                   outStr.concat("  ");
                   dispText(outStr, 12, 4, outStr.length());
-                          SOUTLN(outStr);
+                        SOUT(outStr); SOUT(" ");
                   break;
 
                 case 6:  // temp sensor
@@ -1843,8 +1843,8 @@
                             SOUT(tmpOut); SOUT(" ");
                           #endif
                       }
-                            SOUT(outStr); SOUT(" ");
                     dispText(outStr , 0, 3, outStr.length());
+                            SOUT(outStr); SOUT(" ");
                     #endif
                 	break;
 
@@ -1860,6 +1860,7 @@
                         dispText(outStr, 1, 2, outStr.length());
                               //SOUT(outStr);
                               //SOUTLN(outStr);
+                        SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
@@ -1882,6 +1883,7 @@
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   SOUT(tmpOut); SOUT(" ");
                           #endif
+                        SOUT(outStr); SOUT(" ");
                       #endif
                    	break;
                 case 9:  // poti,
@@ -1899,6 +1901,7 @@
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
+                        SOUT(outStr); SOUT(" ");
                       #endif
                     break;
                 case 10:  // digital inputs
@@ -2010,9 +2013,11 @@
                   dispT.startT();
                   break;
                 }
+
               #ifdef USE_STATUS
                   dispStatus("");
                 #endif
+                        SOUTLN();
             }
           #endif // defined(DISP)
 
