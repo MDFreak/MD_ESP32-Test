@@ -28,15 +28,12 @@
     static char     cmsg[MSG_MAXLEN+1] = "";
     String  tmpStr;
     int16_t tmpval;
-    char tmpMQTT[20];
-    char tmpOut[20];
       //static uint64_t anzMsCycles = 0;
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
 
 	    //static uint32_t anzMsCycles = 0;
 	    //static uint64_t msLast      = 0;
-
     #if ( DEV_I2C1 > OFF )
         TwoWire i2c1 = TwoWire(0);
       #endif
@@ -459,8 +456,10 @@
         msTimer   servT = msTimer(WEBSERVER_CYCLE);
       #endif // USE_WEBSERVER
     #if (USE_MQTT > OFF)
-        AsyncMqttClient mqttClient;
-        TimerHandle_t mqttReconnectTimer;
+        AsyncMqttClient  mqttClient;
+        TimerHandle_t    mqttReconnectTimer;
+        char tmpMQTT[20];
+        char tmpOut[20];
       #endif
 
   // ------ sensors ----------------------
@@ -510,31 +509,35 @@
     #if (USE_MQ3_ALK_ANA > OFF)
         md_val<int16_t> alkVal[USE_MQ3_ALK_ANA];
         md_scale<int16_t> alkScal[USE_MQ3_ALK_ANA];
-        float alk[USE_MQ3_ALK_ANA];
+        //float alk[USE_MQ3_ALK_ANA];
+        uint16_t alk[USE_MQ3_ALK_ANA];
       #endif
 
     #if (USE_PHOTO_SENS_ANA > OFF)
         md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
         md_scale<int16_t> photoScal[USE_PHOTO_SENS_ANA];
-        int16_t bright[USE_PHOTO_SENS_ANA];
+        int16_t           bright[USE_PHOTO_SENS_ANA];
       #endif
 
     #if (USE_POTI_ANA > OFF)
-        md_val<int16_t> potiVal[USE_POTI_ANA];
+        md_val<int16_t>   potiVal[USE_POTI_ANA];
         md_scale<int16_t> potiScal[USE_POTI_ANA];
-        float poti[USE_POTI_ANA];
+        //float poti[USE_POTI_ANA];
+        uint16_t          poti[USE_POTI_ANA];
       #endif
 
     #if (USE_VCC_ANA > OFF)
-        md_val<int16_t> vccVal[USE_VCC_ANA];
+        md_val<int16_t>   vccVal[USE_VCC_ANA];
         md_scale<int16_t> vccScal[USE_VCC_ANA];
-        float vcc[USE_VCC_ANA];
+        //float vcc[USE_VCC_ANA];
+        uint16_t          vcc[USE_VCC_ANA];
       #endif
 
     #if (USE_ACS712_ANA > OFF)
-        md_val<int16_t> i712Val[USE_ACS712_ANA];
+        md_val<int16_t>   i712Val[USE_ACS712_ANA];
         md_scale<int16_t> i712Scal[USE_ACS712_ANA];
-        float i712[USE_ACS712_ANA];
+        //float i712[USE_ACS712_ANA];
+        uint16_t          i712[USE_ACS712_ANA];
       #endif
 
     #if (USE_TYPE_K_SPI > 0)
@@ -1086,6 +1089,9 @@
       anzUsCycles++;
       oledIdx++;
       outStr = "";
+      SOUTLN(" ");
+      SOUT(millis()); SOUT(" loop free  "); SOUTLN(heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT));
+      SOUTLN(" ");
       if (firstrun == true)
         {
           String taskMessage = "loop task running on core ";
@@ -1286,8 +1292,8 @@
                 #if ( USE_BME280_I2C > OFF )
                     bme1.init();
                     usleep(1000);
-                    bme1T.doVal((int16_t) (bme1.readTemperature() + 0.5));
-                    bme1H.doVal((uint16_t) (bme1.readHumidity() + 0.5));
+                    bme1T.doVal((int16_t)  ( bme1.readTemperature() + 0.5));
+                    bme1H.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
                     bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
                   #endif
                 #if (USE_PHOTO_SENS_ANA > OFF)
@@ -1306,22 +1312,22 @@
                 #if (USE_MQ3_ALK_ANA > OFF)
                     ads[0].setGain(MQ3_1115_ATT);
                     usleep(1000);
-                    alk[0] = ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN)));
+                    alk[0] = (uint16_t) ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN)));
                   #endif
                 #if (USE_VCC_ANA > OFF)
                     ads[0].setGain(VCC_1115_ATT);
                     usleep(1000);
-                    vcc[0] = ads[0].computeVolts(vccVal[0].doVal(ads[0].readADC_SingleEnded(VCC_1115_CHAN)));
+                    vcc[0] = (uint16_t) ads[0].computeVolts(vccVal[0].doVal(ads[0].readADC_SingleEnded(VCC_1115_CHAN)));
                   #endif
                 #if (USE_POTI_ANA > OFF)
                     ads[0].setGain(POTI1_1115_ATT);
                     usleep(1000);
-                    poti[0] = ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN)));
+                    poti[0] = (uint16_t) ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN)));
                   #endif
                 #if (USE_ACS712_ANA > OFF)
                     ads[0].setGain(I712_1_1115_ATT);
                     usleep(1000);
-                    i712[0] = ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN)));
+                    i712[0] = (uint16_t) ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN)));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
