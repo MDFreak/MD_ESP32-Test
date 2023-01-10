@@ -1091,14 +1091,12 @@
       anzUsCycles++;
       oledIdx++;
       outStr   = "";
-      tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
-      if(tmpval32 < freeHeap)
-        {
-          freeHeap = tmpval32;
-          SOUTLN(" ");
-          SOUT(millis()); SOUT(" loop freeHeap "); SOUTLN(freeHeap);
-          SOUTLN(" ");
-        }
+      //tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
+      //if(tmpval32 < freeHeap)
+      //  {
+      //    freeHeap = tmpval32;
+      //    SOUT(millis()); SOUT(" loop freeHeap "); SOUTLN(freeHeap);
+      //  }
       if (firstrun == true)
         {
           String taskMessage = "loop task running on core ";
@@ -1751,6 +1749,7 @@
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
                           mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                          SOUT(tmpOut); SOUT(" ");
                         #endif
                     #endif
 
@@ -1773,11 +1772,12 @@
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
                           mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                          SOUT(tmpOut); SOUT(" ");
                         #endif
                     #endif
                   outStr.concat("  ");
                   dispText(outStr, 12, 4, outStr.length());
-                          //SOUTLN(outStr);
+                          SOUTLN(outStr);
                   break;
 
                 case 6:  // temp sensor
@@ -1828,9 +1828,10 @@
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                            SOUT(tmpOut); SOUT(" ");
                           #endif
                       }
-                            //SOUT(outStr); SOUT(" ");
+                            SOUT(outStr); SOUT(" ");
                     dispText(outStr , 0, 3, outStr.length());
                     #endif
                 	break;
@@ -1848,6 +1849,7 @@
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                                  SOUT(tmpOut); SOUT(" ");
                           #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
@@ -1862,6 +1864,7 @@
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                                  SOUT(tmpOut); SOUT(" ");
                           #endif
                       #endif
                    	break;
