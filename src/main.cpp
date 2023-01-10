@@ -1824,7 +1824,7 @@
 
                 case 8:  // voltage, current
                     #if (USE_VCC_ANA > OFF)
-                        tmpval = vcc[0];
+                        tmpval = vcc[VCC50_IDX]*1000;
                         sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
                         outStr = "  V ";
                         outStr.concat(tmpval);
@@ -1838,26 +1838,32 @@
                           #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
-                              tmpval = bme1T.getVal();
-                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
+                        tmpval = i712[0]*1000;
+                        sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, I712_1_MQTT);
                         outStr = "  I ";
-                        outStr.concat(i712[0]);
+                        outStr.concat(tmpval);
                         outStr.concat("  ");
                         dispText(outStr, 15, 2, outStr.length());
                               //SOUT(outStr);
                               //SOUTLN(outStr);
                         #if (USE_MQTT > OFF)
+                            sprintf(tmpOut, "%d", tmpval);
+                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
                    	break;
                 case 9:  // poti,
                     #if (USE_POTI_ANA > OFF)
+                        tmpval = poti[0];
+                        sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
                         outStr = "  P ";
-                        outStr.concat(poti[0]);
+                        outStr.concat(tmpval);
                         outStr.concat("  ");
                         dispText(outStr, 15, 1, outStr.length());
                               //SOUTLN(outStr);
                         #if (USE_MQTT > OFF)
+                            sprintf(tmpOut, "%d", tmpval);
+                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
                     break;
@@ -3099,7 +3105,8 @@
 
         void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total)
           {
-            SOUT("Publish rec topic/len: "); SOUT(topic); SOUT("/"); SOUTLN(len);
+            SOUT("Publish rec topic/payload/len: ");
+            SOUT(topic); SOUT("/"); SOUT(payload); SOUT("/"); SOUTLN(len);
                   //SOUT("  qos: ");   SOUTLN(properties.qos);
                   //SOUT("  dup: ");   SOUTLN(properties.dup);
                   //SOUT("  retain: ");SOUTLN(properties.retain);

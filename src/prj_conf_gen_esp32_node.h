@@ -655,6 +655,7 @@
           #define I712_1_FILT             9
           #define I712_1_DROP             2
           #define I712_1_IMAX             5000 // mA
+          #define I712_1_MQTT             "icc"
           #define I712_1_ADC              OFF // not recommended, low resolution
             #if (I712_1_ADC > OFF)
                 #define I712_1_ADC_ATT   ADC_ATTEN_DB_11
