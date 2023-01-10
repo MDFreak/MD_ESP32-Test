@@ -1091,12 +1091,12 @@
       anzUsCycles++;
       oledIdx++;
       outStr   = "";
-      //tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
-      //if(tmpval32 < freeHeap)
-      //  {
-      //    freeHeap = tmpval32;
-      //    SOUT(millis()); SOUT(" loop freeHeap "); SOUTLN(freeHeap);
-      //  }
+      tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
+      if(tmpval32 < freeHeap)
+        {
+          freeHeap = tmpval32;
+          SOUT(millis()); SOUT(" loop freeHeap "); SOUTLN(freeHeap);
+        }
       if (firstrun == true)
         {
           String taskMessage = "loop task running on core ";
