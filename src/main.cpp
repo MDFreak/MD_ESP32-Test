@@ -25,9 +25,11 @@
     static uint64_t usLast      = 0ul;
     static uint64_t usTmp       = 0ul;
     static uint64_t usPerCycle  = 0ul;
+    static uint32_t freeHeap    = 10000000;
     static char     cmsg[MSG_MAXLEN+1] = "";
-    String  tmpStr;
-    int16_t tmpval;
+    static String   tmpStr;
+    static uint16_t tmpval16;
+    static uint32_t tmpval32;
       //static uint64_t anzMsCycles = 0;
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
@@ -1088,10 +1090,15 @@
     {
       anzUsCycles++;
       oledIdx++;
-      outStr = "";
-      SOUTLN(" ");
-      SOUT(millis()); SOUT(" loop free  "); SOUTLN(heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT));
-      SOUTLN(" ");
+      outStr   = "";
+      tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
+      if(tmpval32 < freeHeap)
+        {
+          freeHeap = tmpval32;
+          SOUTLN(" ");
+          SOUT(millis()); SOUT(" loop freeHeap "); SOUTLN(freeHeap);
+          SOUTLN(" ");
+        }
       if (firstrun == true)
         {
           String taskMessage = "loop task running on core ";
@@ -1733,7 +1740,7 @@
                             //SOUTLN(outStr);
                     #endif
                   #if (USE_MQ3_ALK_ANA > OFF)
-                      tmpval = alk[0];
+                      tmpval16 = alk[0];
                       sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
                       outStr = "  a ";
                       outStr.concat(alk[0]);
@@ -1742,7 +1749,7 @@
                             //SOUT(outStr);
                             //SOUTLN(outStr);
                       #if (USE_MQTT > OFF)
-                          sprintf(tmpOut, "%d", tmpval);
+                          sprintf(tmpOut, "%d", tmpval16);
                           mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                         #endif
                     #endif
@@ -1756,15 +1763,15 @@
                       outStr = "";
                       outStr.concat(photoVal[0].getVal());
                       #if (USE_WEBSERVER > OFF)
-                          tmpval = photoVal[0].getVal();
+                          tmpval16 = photoVal[0].getVal();
                           sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
                           tmpStr = "SVA";
                           tmpStr.concat("3");
-                          tmpStr.concat(tmpval);
+                          tmpStr.concat(tmpval16);
                           pmdServ->updateAll(tmpStr);
                         #endif
                       #if (USE_MQTT > OFF)
-                          sprintf(tmpOut, "%d", tmpval);
+                          sprintf(tmpOut, "%d", tmpval16);
                           mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                         #endif
                     #endif
@@ -1791,24 +1798,24 @@
                         switch (i)
                           {
                             case 0:
-                              tmpval = bme1T.getVal();
+                              tmpval16 = bme1T.getVal();
                               sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
-                              tmpStr.concat(tmpval);
-                              outStr.concat(tmpval);
+                              tmpStr.concat(tmpval16);
+                              outStr.concat(tmpval16);
                               outStr.concat("°  ");
                               break;
                             case 1:
-                              tmpval = bme1P.getVal();
+                              tmpval16 = bme1P.getVal();
                               sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
-                              tmpStr.concat(tmpval);
-                              outStr.concat(tmpval);
+                              tmpStr.concat(tmpval16);
+                              outStr.concat(tmpval16);
                               outStr.concat("%  ");
                               break;
                             case 2:
-                              tmpval = bme1H.getVal();
+                              tmpval16 = bme1H.getVal();
                               sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
-                              tmpStr.concat(tmpval);
-                              outStr.concat(tmpval);
+                              tmpStr.concat(tmpval16);
+                              outStr.concat(tmpval16);
                               outStr.concat("mb");
                               break;
                             default:
@@ -1819,7 +1826,7 @@
                             pmdServ->updateAll(tmpStr);
                           #endif
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpOut, "%d", tmpval);
+                            sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       }
@@ -1830,21 +1837,21 @@
 
                 case 8:  // voltage, current
                     #if (USE_VCC_ANA > OFF)
-                        tmpval = vcc[VCC50_IDX];
+                        tmpval16 = vcc[VCC50_IDX];
                         sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
                         outStr = "  V ";
-                        outStr.concat(tmpval);
+                        outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
                               //SOUT(outStr);
                               //SOUTLN(outStr);
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpOut, "%d", tmpval);
+                            sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
-                        tmpval = i712[0];
+                        tmpval16 = i712[0];
                         sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, I712_1_MQTT);
                         outStr = "  I ";
                         outStr.concat(i712[0]);
@@ -1853,22 +1860,22 @@
                               //SOUT(outStr);
                               //SOUTLN(outStr);
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpOut, "%d", tmpval);
+                            sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
                    	break;
                 case 9:  // poti,
                     #if (USE_POTI_ANA > OFF)
-                        tmpval = poti[0];
+                        tmpval16 = poti[0];
                         sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
                         outStr = "  P ";
-                        outStr.concat(tmpval);
+                        outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 15, 1, outStr.length());
                               //SOUTLN(outStr);
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpOut, "%d", tmpval);
+                            sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
