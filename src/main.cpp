@@ -3116,7 +3116,7 @@
                   packetIdSub = mqttClient.subscribe(temp, 0);
                       SOUT("Subscribing "); SOUT(temp); SOUT(" Id: ");
                       SOUTLN(packetIdSub);
-                  mqttClient.publish("temp", 0, true);
+                  //mqttClient.publish("temp", 0, true);
               }
           }
 
