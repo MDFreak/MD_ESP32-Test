@@ -1089,7 +1089,6 @@
   void loop()
     {
       anzUsCycles++;
-      oledIdx++;
       outStr   = "";
       tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
       if(tmpval32 < freeHeap)
@@ -1318,22 +1317,22 @@
                 #if (USE_MQ3_ALK_ANA > OFF)
                     ads[0].setGain(MQ3_1115_ATT);
                     usleep(1000);
-                    alk[0] = (uint16_t) ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN)));
+                    alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
                   #endif
                 #if (USE_VCC_ANA > OFF)
                     ads[0].setGain(VCC_1115_ATT);
                     usleep(1000);
-                    vcc[0] = (uint16_t) ads[0].computeVolts(vccVal[0].doVal(ads[0].readADC_SingleEnded(VCC_1115_CHAN)));
+                    vcc[0] = (uint16_t) (1000 * ads[0].computeVolts(vccVal[0].doVal(ads[0].readADC_SingleEnded(VCC_1115_CHAN))));
                   #endif
                 #if (USE_POTI_ANA > OFF)
                     ads[0].setGain(POTI1_1115_ATT);
                     usleep(1000);
-                    poti[0] = (uint16_t) ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN)));
+                    poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
                   #endif
                 #if (USE_ACS712_ANA > OFF)
                     ads[0].setGain(I712_1_1115_ATT);
                     usleep(1000);
-                    i712[0] = (uint16_t) ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN)));
+                    i712[0] = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
@@ -1582,7 +1581,8 @@
         #if (USE_DISP > 0)
           if (dispT.TOut())    // handle touch output
             {
-                    SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
+              oledIdx++;
+                    //SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (oledIdx)
@@ -2004,12 +2004,12 @@
                   break;
 
                 default:
+                  oledIdx = 0;
                   //SOUT("disp end "); SOUT(" "); SOUTLN(millis());
                   if (SYS_LED_ON == ON) { SYS_LED_ON = OFF; }
                   else                  { SYS_LED_ON = ON ; }
                   digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
 
-                  oledIdx = 0;
                   dispT.startT();
                   break;
                 }
