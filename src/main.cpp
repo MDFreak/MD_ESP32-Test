@@ -1753,7 +1753,7 @@
                             //SOUT(outStr); SOUT(" ");
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
-                          mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                      //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           SOUT(tmpOut); SOUT(" ");
                         #endif
                     #endif
@@ -1839,7 +1839,7 @@
                           #endif
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                             SOUT(tmpOut); SOUT(" ");
                           #endif
                       }
@@ -1863,7 +1863,7 @@
                               //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   SOUT(tmpOut); SOUT(" ");
                           #endif
                       #endif
@@ -1881,7 +1881,7 @@
                               //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   SOUT(tmpOut); SOUT(" ");
                           #endif
                       #endif
@@ -1900,7 +1900,7 @@
                               //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
                     break;

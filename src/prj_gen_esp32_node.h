@@ -75,7 +75,7 @@
       #define USE_NTP_SERVER        ON  // ON
       #define USE_LOCAL_IP          ON  // ON
       #define USE_WEBSERVER         ON  // ON
-      #define USE_MQTT              OFF
+      #define USE_MQTT              ON
     // --- memory components
       #define USE_FLASH_MEM         ON
       #define USE_FRAM_I2C          1   // 1   // [0, 1, ...] limited by I2C channel/addr
