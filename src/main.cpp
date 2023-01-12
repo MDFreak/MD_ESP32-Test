@@ -1750,12 +1750,12 @@
                       dispText(outStr, 1, 1, outStr.length());
                             //SOUT(outStr);
                             //SOUTLN(outStr);
+                            //SOUT(outStr); SOUT(" ");
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
                           mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           SOUT(tmpOut); SOUT(" ");
                         #endif
-                              SOUT(outStr); SOUT(" ");
                     #endif
                   break;
 
@@ -1783,7 +1783,7 @@
                     #endif
                   outStr.concat("  ");
                   dispText(outStr, 12, 4, outStr.length());
-                        SOUT(outStr); SOUT(" ");
+                        //SOUT(outStr); SOUT(" ");
                   break;
 
                 case 6:  // temp sensor
@@ -1844,7 +1844,7 @@
                           #endif
                       }
                     dispText(outStr , 0, 3, outStr.length());
-                            SOUT(outStr); SOUT(" ");
+                            //SOUT(outStr); SOUT(" ");
                     #endif
                 	break;
 
@@ -1860,7 +1860,7 @@
                         dispText(outStr, 1, 2, outStr.length());
                               //SOUT(outStr);
                               //SOUTLN(outStr);
-                        SOUT(outStr); SOUT(" ");
+                              //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
@@ -1878,12 +1878,12 @@
                         dispText(outStr, 15, 2, outStr.length());
                               //SOUT(outStr);
                               //SOUTLN(outStr);
+                              //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   SOUT(tmpOut); SOUT(" ");
                           #endif
-                        SOUT(outStr); SOUT(" ");
                       #endif
                    	break;
                 case 9:  // poti,
@@ -1897,11 +1897,11 @@
                         outStr.concat("  ");
                         dispText(outStr, 15, 1, outStr.length());
                               //SOUTLN(outStr);
+                              //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
-                        SOUT(outStr); SOUT(" ");
                       #endif
                     break;
                 case 10:  // digital inputs
@@ -2017,7 +2017,7 @@
               #ifdef USE_STATUS
                   dispStatus("");
                 #endif
-                        SOUTLN();
+                        //SOUTLN();
             }
           #endif // defined(DISP)
 
