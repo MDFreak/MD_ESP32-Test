@@ -1838,7 +1838,7 @@
                             pmdServ->updateAll(tmpStr);
                           #endif
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpOut, "%d", tmpval16);
+                            //sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                             SOUT(tmpOut); SOUT(" ");
                           #endif
@@ -1874,6 +1874,7 @@
                           #endif
                         outStr = "  I ";
                         outStr.concat(i712[0]);
+                        //outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 15, 2, outStr.length());
                               //SOUT(outStr);
