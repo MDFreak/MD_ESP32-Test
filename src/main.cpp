@@ -1318,6 +1318,16 @@
                   #endif
                 #if (USE_MQ3_ALK_ANA > OFF)
                     ads[0].setGain(MQ3_1115_ATT);
+                    ads[0].setDataRate(RATE_ADS1115_250SPS);
+                    ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
+
+  // Wait for the conversion to complete
+  while (!conversionComplete())
+    ;
+
+  // Read the conversion results
+  return getLastConversionResults();
+
                     usleep(1000);
                     alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
                   #endif
