@@ -30,6 +30,7 @@
     static String   tmpStr;
     static uint16_t tmpval16;
     static uint32_t tmpval32;
+    static uint32_t loopidx     = 0;
       //static uint64_t anzMsCycles = 0;
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
@@ -1088,13 +1089,14 @@
 // ----------------------------------------------------------------
   void loop()
     {
+      loopidx++;
       anzUsCycles++;
       outStr   = "";
       tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
       if(tmpval32 < freeHeap)
         {
           freeHeap = tmpval32;
-          SOUT(millis()); SOUT(" loop freeHeap "); SOUTLN(freeHeap);
+          SOUT(millis()); SOUT(" loop "); SOUT(loopidx); SOUT(" freeHeap "); SOUTLN(freeHeap);
         }
       if (firstrun == true)
         {
@@ -1754,7 +1756,7 @@
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
                           mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                          SOUT(tmpOut); SOUT(" ");
+                                //SOUT(tmpOut); SOUT(" ");
                         #endif
                     #endif
                   break;
@@ -1778,7 +1780,7 @@
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
                           mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                          SOUT(tmpOut); SOUT(" ");
+                          //SOUT(tmpOut); SOUT(" ");
                         #endif
                     #endif
                   outStr.concat("  ");
@@ -1840,7 +1842,7 @@
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                            SOUT(tmpOut); SOUT(" ");
+                                  //SOUT(tmpOut); SOUT(" ");
                           #endif
                       }
                     dispText(outStr , 0, 3, outStr.length());
@@ -1864,7 +1866,7 @@
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  SOUT(tmpOut); SOUT(" ");
+                                  //SOUT(tmpOut); SOUT(" ");
                           #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
@@ -1883,7 +1885,7 @@
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  SOUT(tmpOut); SOUT(" ");
+                                  //SOUT(tmpOut); SOUT(" ");
                           #endif
                       #endif
                    	break;
@@ -1928,7 +1930,7 @@
                             #endif
                         }
                       dispText(outStr , 17, 3, outStr.length());
-                      //SOUTLN();
+                            //SOUTLN();
                     #endif
                   #if (USE_CTRL_POTI)
                       //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
