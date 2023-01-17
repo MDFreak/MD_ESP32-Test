@@ -814,9 +814,9 @@
           #if (USE_MQTT > OFF)
               SOUTLN("Connecting to MQTT...");
               mqttClient.onConnect(onMqttConnect);
-              mqttClient.onDisconnect(onMqttDisconnect);
+//              mqttClient.onDisconnect(onMqttDisconnect);
               mqttClient.onSubscribe(onMqttSubscribe);
-              mqttClient.onUnsubscribe(onMqttUnsubscribe);
+//              mqttClient.onUnsubscribe(onMqttUnsubscribe);
               mqttClient.onMessage(onMqttMessage);
               mqttClient.onPublish(onMqttPublish);
               mqttClient.setServer(MQTT_HOST, MQTT_PORT);
@@ -1292,7 +1292,7 @@
         #ifdef USE_MEASURE_CYCLE
             if (measT.TOut())
               {
-                    SOUT("  "); SOUT(millis()); SOUTLN(" MEASCYCLE ");
+                    //SOUT("  "); SOUT(millis()); SOUTLN(" MEASCYCLE ");
                 measT.startT();
                 #if ( USE_BME280_I2C > OFF )
                     bme1.init();
@@ -1517,7 +1517,7 @@
             #if (USE_RGBLED_PWM > OFF)
                 if (rgbledT.TOut())
                   {
-                        SOUT("  "); SOUT(millis()); SOUTLN(" Out RGBLED");
+                        //SOUT("  "); SOUT(millis()); SOUTLN(" Out RGBLED");
                     rgbledT.startT();
                     #if (TEST_RGBLED_PWM > OFF)
                       /*
@@ -1603,7 +1603,7 @@
             #if (USE_FAN_PWM > OFF)
                 if (fanT.TOut())
                   {
-                        SOUT("  "); SOUT(millis()); SOUTLN(" Out FAN");
+                        //SOUT("  "); SOUT(millis()); SOUTLN(" Out FAN");
                     fanT.startT();
                     if (fanIdx++ > 1000)
                       {
@@ -1638,7 +1638,7 @@
           if (dispT.TOut())    // handle touch output
             {
               oledIdx++;
-                    SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
+                    //SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (oledIdx)
@@ -1809,7 +1809,7 @@
                             //SOUT(outStr); SOUT(" ");
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
-                          mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                      //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                 //SOUT(tmpOut); SOUT(" ");
                         #endif
                     #endif
@@ -1833,7 +1833,7 @@
                         #endif
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
-                          mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                      //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           //SOUT(tmpOut); SOUT(" ");
                         #endif
                     #endif
@@ -1895,7 +1895,7 @@
                           #endif
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //SOUT(tmpOut); SOUT(" ");
                           #endif
                       }
@@ -1919,7 +1919,7 @@
                               //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //SOUT(tmpOut); SOUT(" ");
                           #endif
                       #endif
@@ -1938,7 +1938,7 @@
                               //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //SOUT(tmpOut); SOUT(" ");
                           #endif
                       #endif
@@ -1957,7 +1957,7 @@
                               //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
                     break;
@@ -2069,7 +2069,7 @@
                   dispT.startT();
                   break;
                 }
-              SOUT(" "); SOUT(millis()); SOUTLN("  disp end ");
+                      //SOUT(" "); SOUT(millis()); SOUTLN("  disp end ");
 
               #ifdef USE_STATUS
                   dispStatus("");
@@ -3147,34 +3147,36 @@
             SOUT("Connected to MQTT ");
             SOUT("Session present: ");
             SOUTLN(sessionPresent);
-            for (uint8_t i=0; i<6; i++)
-              {
-                switch(i)
-                  {
-                    case 0:
-                      sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
-                      break;
-                    case 1:
-                      sprintf(temp, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
-                      break;
-                    case 2:
-                      sprintf(temp, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
-                      break;
-                    case 3:
-                      sprintf(temp, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
-                      break;
-                    case 4:
-                      sprintf(temp, "%s%s", MQTT_DEVICE, POTI1_MQTT);
-                      break;
-                    case 5:
-                      sprintf(temp, "%s%s", MQTT_DEVICE, VCC50_MQTT);
-                      break;
-                  }
-                  //packetIdSub = mqttClient.subscribe(temp, 0);
-                      SOUT("Subscribing "); SOUT(temp); SOUT(" Id: ");
-                      SOUTLN(packetIdSub);
-                  //mqttClient.publish("temp", 0, true);
-              }
+            /*
+              for (uint8_t i=0; i<6; i++)
+                {
+                  switch(i)
+                    {
+                      case 0:
+                        sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
+                        break;
+                      case 1:
+                        sprintf(temp, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
+                        break;
+                      case 2:
+                        sprintf(temp, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
+                        break;
+                      case 3:
+                        sprintf(temp, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
+                        break;
+                      case 4:
+                        sprintf(temp, "%s%s", MQTT_DEVICE, POTI1_MQTT);
+                        break;
+                      case 5:
+                        sprintf(temp, "%s%s", MQTT_DEVICE, VCC50_MQTT);
+                        break;
+                    }
+                  packetIdSub = mqttClient.subscribe(temp, 0);
+                        SOUT("Subscribing "); SOUT(temp); SOUT(" Id: ");
+                        SOUTLN(packetIdSub);
+                    //mqttClient.publish("temp", 0, true);
+                }
+              */
           }
 
         void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
