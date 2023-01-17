@@ -1517,7 +1517,7 @@
             #if (USE_RGBLED_PWM > OFF)
                 if (rgbledT.TOut())
                   {
-                        SOUT(millis()); SOUTLN(" Out RGBLED");
+                        SOUT("  "); SOUT(millis()); SOUTLN(" Out RGBLED");
                     rgbledT.startT();
                     #if (TEST_RGBLED_PWM > OFF)
                       /*
@@ -1603,7 +1603,7 @@
             #if (USE_FAN_PWM > OFF)
                 if (fanT.TOut())
                   {
-                        SOUT("  "); SOUT(millis()); SOUTLN(" Out RGBLED");
+                        SOUT("  "); SOUT(millis()); SOUTLN(" Out FAN");
                     fanT.startT();
                     if (fanIdx++ > 1000)
                       {
@@ -1638,7 +1638,7 @@
           if (dispT.TOut())    // handle touch output
             {
               oledIdx++;
-                    SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUTLN(" ");
+                    SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (oledIdx)
