@@ -1089,7 +1089,7 @@
       anzUsCycles++;
       outStr   = "";
       tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
-      if(tmpval32 < freeHeap)
+      if (tmpval32 < freeHeap)
         {
           freeHeap = tmpval32;
           SOUT(millis()); SOUT(" loop "); SOUT(loopidx); SOUT(" freeHeap "); SOUTLN(freeHeap);
@@ -1290,7 +1290,7 @@
         #ifdef USE_MEASURE_CYCLE
             if (measT.TOut())
               {
-                    //SOUT("  "); SOUT(millis()); SOUTLN(" MEASCYCLE ");
+                    SOUT("  "); SOUT(millis()); SOUTLN(" MEASCYCLE ");
                 measT.startT();
                 #if ( USE_BME280_I2C > OFF )
                     bme1.init();
@@ -1513,6 +1513,7 @@
                   //{
                     //outpT.startT();
             #if (USE_RGBLED_PWM > OFF)
+                    SOUT(millis()); SOUTLN(" Out RGBLED");
                 #if (TEST_RGBLED_PWM > OFF)
                   /*
                     switch (colRGBLED)
@@ -1626,7 +1627,7 @@
           if (dispT.TOut())    // handle touch output
             {
               oledIdx++;
-                    //SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
+                    SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (oledIdx)
@@ -3158,7 +3159,7 @@
                       sprintf(temp, "%s%s", MQTT_DEVICE, VCC50_MQTT);
                       break;
                   }
-                  packetIdSub = mqttClient.subscribe(temp, 0);
+                  //packetIdSub = mqttClient.subscribe(temp, 0);
                       SOUT("Subscribing "); SOUT(temp); SOUT(" Id: ");
                       SOUTLN(packetIdSub);
                   //mqttClient.publish("temp", 0, true);
