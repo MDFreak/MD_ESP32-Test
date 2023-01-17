@@ -325,7 +325,7 @@
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
-            #define PWM_FAN_CYCLE_MS        300u
+            #define PWM_FAN_CYCLE_MS        0u
             #define PWM_FAN_FREQ            4500u
             #define PWM_FAN_RES             8
           #endif
