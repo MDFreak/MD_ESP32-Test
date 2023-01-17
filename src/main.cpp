@@ -540,7 +540,7 @@
         md_val<int16_t>   i712Val[USE_ACS712_ANA];
         md_scale<int16_t> i712Scal[USE_ACS712_ANA];
         //float i712[USE_ACS712_ANA];
-        uint16_t          i712[USE_ACS712_ANA];
+        //uint16_t          i712[USE_ACS712_ANA];
       #endif
 
     #if (USE_TYPE_K_SPI > 0)
@@ -830,6 +830,7 @@
           #if (USE_ADC1115_I2C > OFF)
               #if (ADC1115_1_I2C == I2C1)
                   ads[0].begin(ADC1115_1_ADDR, &i2c1);
+                  ads[0].setDataRate(ADS0_DATARATE);
                 #else
                   ads[0].begin(ADC1115_1_ADDR, &i2c1);
                 #endif
@@ -920,8 +921,8 @@
         // ACS712 current measurement
           #if (USE_ACS712_ANA > OFF)
               SOUT("init alc sensors ... ");
-              photoVal[0].begin(I712_1_FILT, I712_1_DROP, FILT_FL_MEAN);
-              photoScal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
+              i712Val[0].begin(I712_1_FILT, I712_1_DROP, FILT_FL_MEAN);
+              i712Scal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
               SOUTLN(" ready");
             #endif
 
@@ -1328,6 +1329,7 @@
                         usleep(1200); // Wait for the conversion to complete
                         while (!ads[0].conversionComplete());
                         alk[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                        alkVal[0].doVal(alk[0]);   // Read the conversion results
                         //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
                       #endif
                   #endif
@@ -1352,7 +1354,7 @@
                 #if (USE_ACS712_ANA > OFF)
                     ads[0].setGain(I712_1_1115_ATT);
                     usleep(1000);
-                    i712[0] = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
+                    i712Val[0].doVal = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
                   #endif
                 #if (USE_CNT_INP > OFF)
                     #ifdef USE_PW
@@ -1909,7 +1911,7 @@
                    	break;
                 case 9:  // poti,
                     #if (USE_POTI_ANA > OFF)
-                        tmpval16 = poti[0];
+                        tmpval16 = potiScal[0].scale((float) poti[0]);
                         #if (USE_MQTT > OFF)
                             sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
                           #endif

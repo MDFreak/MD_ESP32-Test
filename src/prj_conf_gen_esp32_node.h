@@ -483,6 +483,16 @@
           ***_1115_ATT GAIN_EIGHT     --> range +/- 512mV -  15.625  uV/bit
           ***_1115_ATT GAIN_SIXTEEN   --> range +/- 256mV -   7.8125 uV/bit
 
+        ADS1115 datarates
+          RATE_ADS1115_8SPS         8 samples per second
+          RATE_ADS1115_16SPS       16 samples per second
+          RATE_ADS1115_32SPS       32 samples per second
+          RATE_ADS1115_64SPS       64 samples per second
+          RATE_ADS1115_128SPS      128 samples per second (default)
+          RATE_ADS1115_250SPS      250 samples per second
+          RATE_ADS1115_475SPS      475 samples per second
+          RATE_ADS1115_860SPS      860 samples per second
+
         scaling parameters and calculation
         *pValue = (  (*pValue + (double) *_SCAL_OFFRAW)
                    * (double)*_SCAL_GAIN
@@ -490,7 +500,9 @@
                   )
         */
 
-            ads[0].setDataRate(RATE_ADS1115_860SPS);
+      #if (USE_ADC1115_I2C > OFF)
+          #define ADS0_DATARATE             RATE_ADS1115_860SPS
+        #endif
 
       #if (USE_MQ135_GAS_ANA > OFF)
           #define MQ135_GAS_ADC             ON
