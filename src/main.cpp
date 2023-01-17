@@ -825,8 +825,6 @@
                                                 reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
               mqttClient.connect();
             #endif
-
-
       // --- sensors
         // ADC ADS1115
           #if (USE_ADC1115_I2C > OFF)
@@ -1311,30 +1309,40 @@
                       #endif
                   #endif
                 #if (USE_MQ135_GAS_ANA > OFF)
-                    gasVal.doVal(analogRead(PIN_MQ135));
-                          //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
-                    gasValue = (int16_t) valGas.value((double) gasValue);
-                          //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
+                    #if (MQ135_GAS_ADC > OFF)
+                        gasVal.doVal(analogRead(PIN_MQ135));
+                              //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
+                        gasValue = (int16_t) valGas.value((double) gasValue);
+                              //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
+                      #endif
+                    #if (MQ135_GAS_1115 > OFF)
+                      #endif
                   #endif
                 #if (USE_MQ3_ALK_ANA > OFF)
-                    ads[0].setGain(MQ3_1115_ATT);
-                    ads[0].setDataRate(RATE_ADS1115_250SPS);
-                    ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
-
-  // Wait for the conversion to complete
-  while (!conversionComplete())
-    ;
-
-  // Read the conversion results
-  return getLastConversionResults();
-
-                    usleep(1000);
-                    alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
+                    #if (MQ3_ALK_ADC > OFF)
+                      #endif
+                    #if (MQ3_ALK_1115 > OFF)
+                        ads[0].setGain(MQ3_1115_ATT);
+                        //ads[0].setDataRate(RATE_ADS1115_860SPS);
+                        ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
+                        usleep(1200); // Wait for the conversion to complete
+                        while (!ads[0].conversionComplete());
+                        alk[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                        //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
+                      #endif
                   #endif
                 #if (USE_VCC_ANA > OFF)
-                    ads[0].setGain(VCC_1115_ATT);
-                    usleep(1000);
-                    vcc[0] = (uint16_t) (1000 * ads[0].computeVolts(vccVal[0].doVal(ads[0].readADC_SingleEnded(VCC_1115_CHAN))));
+                    #if (VCC_ADC > OFF)
+                      #endif
+                    #if (VCC_1115 > OFF)
+                        ads[0].setGain(VCC_1115_ATT);
+                        //ads[0].setDataRate(RATE_ADS1115_860SPS);
+                        ads[0].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
+                        usleep(1200); // Wait for the conversion to complete
+                        while (!ads[0].conversionComplete());
+                        alk[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                        //vcc[0] = (uint16_t) (1000 * ads[0].computeVolts(vccVal[0].doVal(ads[0].readADC_SingleEnded(VCC_1115_CHAN))));
+                      #endif
                   #endif
                 #if (USE_POTI_ANA > OFF)
                     ads[0].setGain(POTI1_1115_ATT);

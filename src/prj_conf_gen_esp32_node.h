@@ -489,6 +489,9 @@
                    + (double) *_SCAL_OFFRREAL
                   )
         */
+
+            ads[0].setDataRate(RATE_ADS1115_860SPS);
+
       #if (USE_MQ135_GAS_ANA > OFF)
           #define MQ135_GAS_ADC             ON
           #define MQ135_GAS_1115            OFF
