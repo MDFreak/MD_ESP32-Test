@@ -255,7 +255,8 @@
       #endif
   // ------ user output ---------------
     #if (USE_RGBLED_PWM > OFF)
-        outRGBVal_t outValRGB[USE_RGBLED_PWM];
+        msTimer      rgbledT   = msTimer(PWM_LEDS_CYCLE_MS);
+        outRGBVal_t  outValRGB[USE_RGBLED_PWM];
         md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1), new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
         uint8_t      LEDout    = FALSE;
         #if (TEST_RGBLED_PWM > OFF)
@@ -330,6 +331,7 @@
       #endif // USE_BUZZER_PWM
 
     #if (USE_FAN_PWM > OFF)
+        msTimer      fanT   = msTimer(PWM_FAN_CYCLE_MS);
         #if (USE_POTICTRL_FAN > OFF)
           #endif
         uint32_t valFanPWM[USE_FAN_PWM];
@@ -1513,111 +1515,120 @@
                   //{
                     //outpT.startT();
             #if (USE_RGBLED_PWM > OFF)
-                    SOUT(millis()); SOUTLN(" Out RGBLED");
-                #if (TEST_RGBLED_PWM > OFF)
-                  /*
-                    switch (colRGBLED)
-                      {
-                        case 0:
-                          if (RGBLED_rt >= 254)
-                            {
-                              RGBLED_rt = 0;
-                              RGBLED_gr += incRGBLED;
-                              colRGBLED++;
-                            }
-                            else
-                            { RGBLED_rt += incRGBLED; }
-                          break;
-                        case 1:
-                          if (RGBLED_gr >= 254)
-                            {
-                              RGBLED_gr = 0;
-                              RGBLED_bl += incRGBLED;
-                              colRGBLED++;
-                            }
-                            else
-                            { RGBLED_gr += incRGBLED; }
-                          break;
-                        case 2:
-                          if (RGBLED_bl >= 254)
-                            {
-                              RGBLED_bl = 0;
-                              RGBLED_rt += incRGBLED;
-                              colRGBLED = 0;
-                            }
-                            else
-                            { RGBLED_bl += incRGBLED; }
-                          break;
-                        default:
-                          break;
-                      }
-                  */
-
-                    #if (USE_WEBCTRL_RGB > OFF)
-                        _tmp += 4;
-                        if (_tmp > 50)
-                          { _tmp = 0; }
-                        //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
-                        ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
-                        ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
-                        ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
-                      #endif
-
-
-                    if(*RGBLED[0] == *RGBLED[1]) {}
-                      else
-                      {
-                        SOUT(" RGBLED changed 0/1 "); SOUTHEX((uint32_t) *RGBLED[0]);
-                        SOUT(" / "); SOUTHEXLN((uint32_t) *RGBLED[1]);
-                        *RGBLED[0] = *RGBLED[1];
-                        //ledcWrite(PWM_RGB_RED,   BrightCol(RGBLED[0][LED_RED],RGBLED[0][LED_BRIGHT]));
-                        //ledcWrite(PWM_RGB_GREEN, BrightCol(RGBLED[0][LED_GREEN],RGBLED[0][LED_BRIGHT]));
-                        //ledcWrite(PWM_RGB_BLUE, BrightCol()  BrightCol(RGBLED[0][LED_BLUE],RGBLED[0][LED_BRIGHT]));
-                        ledcWrite(PWM_RGB_RED,   Bright_x_Col(Red(RGBLED[0]->col24()),   RGBLED[0]->bright()));
-                        ledcWrite(PWM_RGB_GREEN, Bright_x_Col(Green(RGBLED[0]->col24()), RGBLED[0]->bright()));
-                        ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
-                      }
-                  #endif
-                // update changes from webserver
-                if (LEDout)
+                if (rgbledT.TOut())
                   {
-                    LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
-                                           0, Green(RGBLED[1]->col24()));
-                    ledcWrite(PWM_RGB_GREEN, LEDout);
-                    LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
-                                           0, Red(RGBLED[1]->col24()));
-                    ledcWrite(PWM_RGB_RED, LEDout);
-                    LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
-                                           0, Blue(RGBLED[1]->col24()));
-                    ledcWrite(PWM_RGB_BLUE, LEDout);
-                    LEDout = FALSE;
+                        SOUT(millis()); SOUTLN(" Out RGBLED");
+                    rgbledT.startT();
+                    #if (TEST_RGBLED_PWM > OFF)
+                      /*
+                        switch (colRGBLED)
+                          {
+                            case 0:
+                              if (RGBLED_rt >= 254)
+                                {
+                                  RGBLED_rt = 0;
+                                  RGBLED_gr += incRGBLED;
+                                  colRGBLED++;
+                                }
+                                else
+                                { RGBLED_rt += incRGBLED; }
+                              break;
+                            case 1:
+                              if (RGBLED_gr >= 254)
+                                {
+                                  RGBLED_gr = 0;
+                                  RGBLED_bl += incRGBLED;
+                                  colRGBLED++;
+                                }
+                                else
+                                { RGBLED_gr += incRGBLED; }
+                              break;
+                            case 2:
+                              if (RGBLED_bl >= 254)
+                                {
+                                  RGBLED_bl = 0;
+                                  RGBLED_rt += incRGBLED;
+                                  colRGBLED = 0;
+                                }
+                                else
+                                { RGBLED_bl += incRGBLED; }
+                              break;
+                            default:
+                              break;
+                          }
+                      */
+
+                        #if (USE_WEBCTRL_RGB > OFF)
+                            _tmp += 4;
+                            if (_tmp > 50)
+                              { _tmp = 0; }
+                            //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
+                            ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
+                            ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
+                            ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
+                          #endif
+
+
+                        if(*RGBLED[0] == *RGBLED[1]) {}
+                          else
+                          {
+                            SOUT(" RGBLED changed 0/1 "); SOUTHEX((uint32_t) *RGBLED[0]);
+                            SOUT(" / "); SOUTHEXLN((uint32_t) *RGBLED[1]);
+                            *RGBLED[0] = *RGBLED[1];
+                            //ledcWrite(PWM_RGB_RED,   BrightCol(RGBLED[0][LED_RED],RGBLED[0][LED_BRIGHT]));
+                            //ledcWrite(PWM_RGB_GREEN, BrightCol(RGBLED[0][LED_GREEN],RGBLED[0][LED_BRIGHT]));
+                            //ledcWrite(PWM_RGB_BLUE, BrightCol()  BrightCol(RGBLED[0][LED_BLUE],RGBLED[0][LED_BRIGHT]));
+                            ledcWrite(PWM_RGB_RED,   Bright_x_Col(Red(RGBLED[0]->col24()),   RGBLED[0]->bright()));
+                            ledcWrite(PWM_RGB_GREEN, Bright_x_Col(Green(RGBLED[0]->col24()), RGBLED[0]->bright()));
+                            ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
+                          }
+                      #endif
+                    // update changes from webserver
+                    if (LEDout)
+                      {
+                        LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
+                                               0, Green(RGBLED[1]->col24()));
+                        ledcWrite(PWM_RGB_GREEN, LEDout);
+                        LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
+                                               0, Red(RGBLED[1]->col24()));
+                        ledcWrite(PWM_RGB_RED, LEDout);
+                        LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
+                                               0, Blue(RGBLED[1]->col24()));
+                        ledcWrite(PWM_RGB_BLUE, LEDout);
+                        LEDout = FALSE;
+                      }
                   }
               #endif
 
             #if (USE_FAN_PWM > OFF)
-                if (fanIdx++ > 1000)
+                if (fanT.TOut())
                   {
-                    fanIdx = 0;
-                    for (uint8_t i=0 ; i < USE_FAN_PWM ; i++)
+                        SOUT("  "); SOUT(millis()); SOUTLN(" Out RGBLED");
+                    fanT.startT();
+                    if (fanIdx++ > 1000)
                       {
-                        valFanPWM[i] += 1;
-                        if (valFanPWM[i] >= 255) { valFanPWM[i] = 0; } // -50%
-                      }
+                        fanIdx = 0;
+                        for (uint8_t i=0 ; i < USE_FAN_PWM ; i++)
+                          {
+                            valFanPWM[i] += 1;
+                            if (valFanPWM[i] >= 255) { valFanPWM[i] = 0; } // -50%
+                          }
 
-                    #if (USE_POTICTRL_FAN > 0)
-                        valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                        //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
-                        valFanPWM[0] = valFan[INP_CNT_FAN_1];
-                        #if (USE_POTICTRL_FAN > 1)
-                            valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                            valFanPWM[1] = valFan[INP_CNT_FAN_2];
+                        #if (USE_POTICTRL_FAN > 0)
+                            valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                            //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
+                            valFanPWM[0] = valFan[INP_CNT_FAN_1];
+                            #if (USE_POTICTRL_FAN > 1)
+                                valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                                valFanPWM[1] = valFan[INP_CNT_FAN_2];
+                              #endif
                           #endif
-                      #endif
 
-                    ledcWrite(PWM_FAN_1, valFanPWM[0]);
-                    #if (USE_FAN_PWM > 1)
-                        ledcWrite(PWM_FAN_2, valFanPWM[1]);
-                      #endif
+                        ledcWrite(PWM_FAN_1, valFanPWM[0]);
+                        #if (USE_FAN_PWM > 1)
+                            ledcWrite(PWM_FAN_2, valFanPWM[1]);
+                          #endif
+                      }
                   }
               #endif
                   //}
@@ -1627,7 +1638,7 @@
           if (dispT.TOut())    // handle touch output
             {
               oledIdx++;
-                    SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
+                    SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUTLN(" ");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (oledIdx)
@@ -2051,7 +2062,6 @@
 
                 default:
                   oledIdx = 0;
-                  //SOUT("disp end "); SOUT(" "); SOUTLN(millis());
                   if (SYS_LED_ON == ON) { SYS_LED_ON = OFF; }
                   else                  { SYS_LED_ON = ON ; }
                   digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
@@ -2059,6 +2069,7 @@
                   dispT.startT();
                   break;
                 }
+              SOUT(" "); SOUT(millis()); SOUTLN("  disp end ");
 
               #ifdef USE_STATUS
                   dispStatus("");
