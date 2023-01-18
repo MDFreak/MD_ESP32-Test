@@ -465,6 +465,7 @@
         TimerHandle_t    mqttReconnectTimer;
         char tmpMQTT[40];
         char tmpOut[40];
+        void* mqttID = NULL;
       #endif
 
   // ------ sensors ----------------------
@@ -820,7 +821,7 @@
               mqttClient.onMessage(onMqttMessage);
               mqttClient.onPublish(onMqttPublish);
               mqttClient.setServer(MQTT_HOST, MQTT_PORT);
-              mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0,
+              mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, mqttID,
                                                 reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
               mqttClient.connect();
             #endif
@@ -1089,6 +1090,7 @@
     {
       loopidx++;
       anzUsCycles++;
+      SOUT(" "); SOUT(millis());
       outStr   = "";
       tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
       if (tmpval32 < freeHeap)
@@ -1896,7 +1898,7 @@
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  //SOUT(tmpOut); SOUT(" ");
+                                  SOUT(tmpOut); SOUTLN(" ");
                           #endif
                       }
                     dispText(outStr , 0, 3, outStr.length());
