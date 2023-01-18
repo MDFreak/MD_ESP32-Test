@@ -201,6 +201,9 @@
 
   // ---------------------------------------
   // --- prototypes
+    // ------ system -------------------------
+      // --- heap ------------------------
+        void heapFree(const char* text);
     // ------ user interface -----------------
       // --- user output
         // --- display

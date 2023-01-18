@@ -1092,7 +1092,8 @@
       anzUsCycles++;
       //SOUT(" "); SOUT(millis());
       outStr   = "";
-      tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
+      //tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
+      heapFree("+loop");
       if (tmpval32 < freeHeap)
         {
           freeHeap = tmpval32;
@@ -1121,6 +1122,7 @@
                   }
               }
           #endif // USE_WIFI
+
         #if (USE_NTP_SERVER > OFF)   // get time from NTP server
             if (ntpT.TOut() == true)
               {
@@ -1151,7 +1153,9 @@
           #endif // USE_NTP_SERVER
         #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
             // read only 1 message / cycle for cycle time
+            heapFree("webserv +readmsg");
             readMessage();
+            heapFree("webserv -readmsg");
           #endif
       // --- input ---
         #if (USE_TOUCHSCREEN > OFF)
@@ -1294,7 +1298,8 @@
         #ifdef USE_MEASURE_CYCLE
             if (measT.TOut())
               {
-                    SOUT(" #"); SOUT(millis()); SOUTLN(" MEASCYCLE ");
+                heapFree("+meascyc");
+                    //SOUT(" #"); SOUT(millis()); SOUTLN(" MEASCYCLE ");
                 measT.startT();
                 #if ( USE_BME280_I2C > OFF )
                     bme1.init();
@@ -1433,6 +1438,7 @@
                 #if (USE_MCPWM > OFF)
                     getCNTIn();
                   #endif
+                heapFree("-meascyc");
               }
           #endif
         #ifdef USE_OUTPUT_CYCLE
@@ -1640,7 +1646,8 @@
           if (dispT.TOut())    // handle touch output
             {
               oledIdx++;
-                    SOUT(" #"); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
+                    //SOUT(" #"); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
+              heapFree("+disp");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (oledIdx)
@@ -1676,6 +1683,7 @@
                   if (++oledIdx > 6) { oledIdx = 0; }
                   oled.sendBuffer();
                 #endif // RUN_OLED_TEST
+              heapFree("+oledIdx");
               switch (oledIdx)
                 {
                 case 1:  // system output
@@ -1897,8 +1905,10 @@
                           #endif
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
+                            heapFree("+pubish");
                             mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  SOUT(tmpOut); SOUTLN(" ");
+                                  //SOUT(tmpOut); SOUTLN(" ");
+                            heapFree("+pubish");
                           #endif
                       }
                     dispText(outStr , 0, 3, outStr.length());
@@ -2071,6 +2081,7 @@
                   dispT.startT();
                   break;
                 }
+              heapFree("-oledIdx");
                       //SOUT(" "); SOUT(millis()); SOUTLN("  disp end ");
 
               #ifdef USE_STATUS
@@ -2114,6 +2125,13 @@
 // ----------------------------------------------------------------
 // --- subroutine and drivers ----------------
 // ----------------------------------------------------------------
+  // --- system --------------------------
+    // --- heap output
+      void heapFree(const char* text)
+        {
+          uint32_t tmp32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
+          SOUT(" #"); SOUT(millis()); SOUT(" "); SOUT(text); SOUT(" "); SOUT(tmp32);
+        }
   // --- user output ---------------------
     // --- display
       void clearDisp()
