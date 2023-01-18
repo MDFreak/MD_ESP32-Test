@@ -815,9 +815,9 @@
           #if (USE_MQTT > OFF)
               SOUTLN("Connecting to MQTT...");
               mqttClient.onConnect(onMqttConnect);
-//              mqttClient.onDisconnect(onMqttDisconnect);
+              mqttClient.onDisconnect(onMqttDisconnect);
               mqttClient.onSubscribe(onMqttSubscribe);
-//              mqttClient.onUnsubscribe(onMqttUnsubscribe);
+              mqttClient.onUnsubscribe(onMqttUnsubscribe);
               mqttClient.onMessage(onMqttMessage);
               mqttClient.onPublish(onMqttPublish);
               mqttClient.setServer(MQTT_HOST, MQTT_PORT);
@@ -1090,7 +1090,7 @@
     {
       loopidx++;
       anzUsCycles++;
-      SOUT(" "); SOUT(millis());
+      //SOUT(" "); SOUT(millis());
       outStr   = "";
       tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
       if (tmpval32 < freeHeap)
@@ -1294,7 +1294,7 @@
         #ifdef USE_MEASURE_CYCLE
             if (measT.TOut())
               {
-                    //SOUT("  "); SOUT(millis()); SOUTLN(" MEASCYCLE ");
+                    SOUT(" #"); SOUT(millis()); SOUTLN(" MEASCYCLE ");
                 measT.startT();
                 #if ( USE_BME280_I2C > OFF )
                     bme1.init();
@@ -1519,7 +1519,7 @@
             #if (USE_RGBLED_PWM > OFF)
                 if (rgbledT.TOut())
                   {
-                        //SOUT("  "); SOUT(millis()); SOUTLN(" Out RGBLED");
+                        SOUT(" #"); SOUT(millis()); SOUTLN(" Out RGBLED");
                     rgbledT.startT();
                     #if (TEST_RGBLED_PWM > OFF)
                       /*
@@ -1605,7 +1605,7 @@
             #if (USE_FAN_PWM > OFF)
                 if (fanT.TOut())
                   {
-                        //SOUT("  "); SOUT(millis()); SOUTLN(" Out FAN");
+                        SOUT(" #"); SOUT(millis()); SOUTLN(" Out FAN");
                     fanT.startT();
                     if (fanIdx++ > 1000)
                       {
@@ -1640,7 +1640,7 @@
           if (dispT.TOut())    // handle touch output
             {
               oledIdx++;
-                    //SOUT("  "); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
+                    SOUT(" #"); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (oledIdx)
