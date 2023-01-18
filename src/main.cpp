@@ -1905,11 +1905,12 @@
                           #endif
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            //heapFree("+publish");
-                            //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                            heapFree("+publish");
+                            //
+                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //SOUT(tmpOut); SOUTLN(" ");
-                            //heapFree("+publish");
-                            sleep(2);
+                            heapFree("+publish");
+                            //sleep(2);
                           #endif
                       }
                     dispText(outStr , 0, 3, outStr.length());
