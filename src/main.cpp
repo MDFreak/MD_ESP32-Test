@@ -1905,10 +1905,11 @@
                           #endif
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            heapFree("+pubish");
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                            //heapFree("+publish");
+                            //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //SOUT(tmpOut); SOUTLN(" ");
-                            heapFree("+pubish");
+                            //heapFree("+publish");
+                            sleep(2);
                           #endif
                       }
                     dispText(outStr , 0, 3, outStr.length());
@@ -2129,8 +2130,9 @@
     // --- heap output
       void heapFree(const char* text)
         {
-          uint32_t tmp32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
-          SOUT(" #"); SOUT(millis()); SOUT(" "); SOUT(text); SOUT(" "); SOUT(tmp32);
+          uint32_t tmp32 = ESP.getFreeHeap();
+          //uint32_t tmp32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
+          SOUT(" #"); SOUT(millis()); SOUT(" "); SOUT(text); SOUT(" "); SOUTLN(tmp32);
         }
   // --- user output ---------------------
     // --- display
