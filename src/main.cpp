@@ -1097,7 +1097,7 @@
           outStr   = "";
         #endif
       //tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
-      heapFree("+loop");
+      //heapFree("+loop");
       if (tmpval32 < freeHeap)
         {
           freeHeap = tmpval32;
@@ -1157,9 +1157,9 @@
           #endif // USE_NTP_SERVER
         #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
             // read only 1 message / cycle for cycle time
-            heapFree("webserv +readmsg");
+            //heapFree("webserv +readmsg");
             readMessage();
-            heapFree("webserv -readmsg");
+            //heapFree("webserv -readmsg");
           #endif
       // --- input ---
         #if (USE_TOUCHSCREEN > OFF)
