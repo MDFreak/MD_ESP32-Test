@@ -315,7 +315,7 @@
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
-            #define PWM_LEDS_CYCLE_MS       20u
+            #define PWM_LEDS_CYCLE_MS       400u
             #define PWM_LEDS_FREQ           4000u
             #define PWM_LEDS_RES            8
             #define BRI_RGBLED_1            15
@@ -325,13 +325,13 @@
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
-            #define PWM_FAN_CYCLE_MS        200u
+            #define PWM_FAN_CYCLE_MS        390u
             #define PWM_FAN_FREQ            4500u
             #define PWM_FAN_RES             8
           #endif
 
         #ifdef USE_OUTPUT_CYCLE
-            #define OUTPUT_CYCLE_MS         500u
+            #define OUTPUT_CYCLE_MS         10u
           #endif
 
     // --- user input

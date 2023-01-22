@@ -1446,6 +1446,7 @@
               }
           #endif
         #ifdef USE_OUTPUT_CYCLE
+            uint8_t cntOutcyc = 0;
             #if (USE_WS2812_MATRIX_OUT > OFF)
                 //if (ws2812T1.TOut())
                   //{
