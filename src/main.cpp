@@ -30,7 +30,6 @@
     static String   tmpStr;
     static uint16_t tmpval16;
     static uint32_t tmpval32;
-    static uint32_t loopidx     = 0;
       //static uint64_t anzMsCycles = 0;
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
@@ -58,7 +57,6 @@
       #endif
 
     #if ( USE_DISP > 0 )
-        msTimer       dispT  = msTimer(DISP_CYCLE);
         uint32_t      ze     = 1;      // aktuelle Schreibzeile
         char          outBuf[OLED1_MAXCOLS + 1] = "";
         String        outStr;
@@ -77,7 +75,20 @@
     #if (USE_ESPHALL > OFF)
         int32_t valHall = 0;
       #endif
-  // ------ user input ---------------
+// ------ system cycles ---------------
+    #ifdef USE_INPUT_CYCLE
+        msTimer inputT           = msTimer(INPUT_CYCLE_MS);
+        static uint32_t inpIdx   = 0;
+      #endif
+    #ifdef USE_OUTPUT_CYCLE
+        msTimer outpT            = msTimer(OUTPUT_CYCLE_MS);
+        static uint32_t outpIdx  = 0;
+      #endif
+    #if (USE_DISP > OFF)
+        msTimer dispT            = msTimer(DISP_CYCLE);
+        static uint32_t dispIdx  = 0;
+      #endif
+// ------ user input ---------------
     #if (USE_TOUCHSCREEN > OFF)
         md_touch  touch  =  md_touch(TOUCH_CS, TFT_CS, TFT_DC, TFT_RST, TFT_LED, LED_ON);
         md_touch* ptouch =  &touch;
@@ -358,7 +369,7 @@
               #endif
           #endif
         msTimer oledT   = msTimer(DISP_CYCLE);
-        uint8_t oledIdx = 0;
+        uint8_t dispIdx = 0;
       #endif
     #if (defined(USE_TFT1602_GPIO_RO_3V3) || defined(USE_TFT1602_GPIO_RO_3V3))
         LiquidCrystal  lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
@@ -466,15 +477,6 @@
         char tmpMQTT[40];
         char tmpOut[40];
         void* mqttID = NULL;
-      #endif
-
-    #ifdef USE_INPUT_CYCLE
-        msTimer measT     = msTimer(INPUT_CYCLE_MS);
-        uint8_t cntInpcyc = 0;
-      #endif
-    #ifdef USE_OUTPUT_CYCLE
-        msTimer outpT     = msTimer(OUTPUT_CYCLE_MS);
-        uint8_t cntOutcyc = 0;
       #endif
   // ------ sensors ----------------------
     #if (USE_BME280_I2C > OFF)
@@ -1302,149 +1304,152 @@
           #endif
       // --- standard input cycle ---
         #ifdef USE_INPUT_CYCLE
-            if (measT.TOut())
+            if (inputT.TOut())
               {
-                heapFree("+meascyc");
+                    //heapFree("+meascyc");
                     //SOUT(" #"); SOUT(millis()); SOUTLN(" MEASCYCLE ");
-                measT.startT();
-                #if ( USE_BME280_I2C > OFF )
-                    bme1.init();
-                    usleep(100);
-                    bme1T.doVal((int16_t)  ( bme1.readTemperature() + 0.5));
-                    bme1H.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
-                    bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
-                  #endif
-                #if (USE_PHOTO_SENS_ANA > OFF)
-                    #if (PHOTO1_ADC > OFF)
-                        photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
-                      #endif
-                    #if (PHOTO1_1115 > OFF)
-                      #endif
-                  #endif
-                #if (USE_MQ135_GAS_ANA > OFF)
-                    #if (MQ135_GAS_ADC > OFF)
-                        gasVal.doVal(analogRead(PIN_MQ135));
-                              //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
-                        gasValue = (int16_t) valGas.value((double) gasValue);
-                              //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
-                      #endif
-                    #if (MQ135_GAS_1115 > OFF)
-                      #endif
-                  #endif
-                #if (USE_MQ3_ALK_ANA > OFF)
-                    #if (MQ3_ALK_ADC > OFF)
-                      #endif
-                    #if (MQ3_ALK_1115 > OFF)
-                        ads[0].setGain(MQ3_1115_ATT);
-                        //ads[0].setDataRate(RATE_ADS1115_860SPS);
-                        ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
-                        usleep(1200); // Wait for the conversion to complete
-                        while (!ads[0].conversionComplete());
-                        alk[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                        alkVal[0].doVal(alk[0]);   // Read the conversion results
-                        //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
-                      #endif
-                  #endif
-                #if (USE_VCC_ANA > OFF)
-                    #if (VCC_ADC > OFF)
-                      #endif
-                    #if (VCC_1115 > OFF)
-                        ads[VCC50_IDX].setGain(VCC_1115_ATT);
-                        ads[VCC50_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
-                        usleep(1200); // Wait for the conversion to complete
-                        while (!ads[VCC50_IDX].conversionComplete());
-                        vcc[VCC50_IDX] = ads[VCC50_IDX].getLastConversionResults();   // Read the conversion results
-                        vccVal[VCC50_IDX].doVal(vcc[VCC50_IDX]);
-                        //vcc[VCC50_IDX] = (uint16_t) (1000 * ads[VCC50_IDX].computeVolts(vccVal[VCC50_IDX].doVal(ads[VCC50_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
-                        #if (VCC_1115 > 1)
-                            ads[VCC33_IDX].setGain(VCC_1115_ATT);
-                            ads[VCC33_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
-                            usleep(1200); // Wait for the conversion to complete
-                            while (!ads[VCC33_IDX].conversionComplete());
-                            vcc[VCC33_IDX] = ads[VCC33_IDX].getLastConversionResults();   // Read the conversion results
-                            vccVal[VCC33_IDX].doVal(vcc[VCC33_IDX]);
-                            //vcc[VCC33_IDX] = (uint16_t) (1000 * ads[VCC33_IDX].computeVolts(vccVal[VCC33_IDX].doVal(ads[VCC33_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
-                          #endif
-                      #endif
-                  #endif
-                #if (USE_POTI_ANA > OFF)
-                    #if (POTI1_ADC > OFF)
-                      #endif
-                    #if (POTI1_1115 > OFF)
-                        ads[0].setGain(POTI1_1115_ATT);
-                        ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHAN], /*continuous=*/false);
-                        usleep(1200); // Wait for the conversion to complete
-                        while (!ads[0].conversionComplete());
-                        poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                        potiVal[0].doVal(poti[0]);
-                        //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
-                      #endif
-                  #endif
-                #if (USE_ACS712_ANA > OFF)
-                    #if (I712_1_ADC > OFF)
-                      #endif
-                    #if (I712_1_1115 > OFF)
-                        ads[0].setGain(I712_1_1115_ATT);
-                        ads[0].startADCReading(MUX_BY_CHANNEL[I712_1_1115_CHAN], /*continuous=*/false);
-                        usleep(1200); // Wait for the conversion to complete
-                        while (!ads[0].conversionComplete());
-                        i712[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                        i712Val[0].doVal(i712[0]);
-                        // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
-                      #endif
-                  #endif
-                #if (USE_CNT_INP > OFF)
-                    #ifdef USE_PW
-                        getCNTIn();
-                      #endif
-                  #endif
+                inputT.startT();
+                switch(inpIdx)
+                  {
+                      #if (USE_BME280_I2C > OFF)
+                          bme1.init();
+                          usleep(100);
+                          bme1T.doVal((int16_t)  ( bme1.readTemperature() + 0.5));
+                          bme1H.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
+                          bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
+                        #endif
+                      #if (USE_PHOTO_SENS_ANA > OFF)
+                          #if (PHOTO1_ADC > OFF)
+                              photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
+                            #endif
+                          #if (PHOTO1_1115 > OFF)
+                            #endif
+                        #endif
+                      #if (USE_MQ135_GAS_ANA > OFF)
+                          #if (MQ135_GAS_ADC > OFF)
+                              gasVal.doVal(analogRead(PIN_MQ135));
+                                    //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
+                              gasValue = (int16_t) valGas.value((double) gasValue);
+                                    //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
+                            #endif
+                          #if (MQ135_GAS_1115 > OFF)
+                            #endif
+                        #endif
+                      #if (USE_MQ3_ALK_ANA > OFF)
+                          #if (MQ3_ALK_ADC > OFF)
+                            #endif
+                          #if (MQ3_ALK_1115 > OFF)
+                              ads[0].setGain(MQ3_1115_ATT);
+                              //ads[0].setDataRate(RATE_ADS1115_860SPS);
+                              ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
+                              usleep(1200); // Wait for the conversion to complete
+                              while (!ads[0].conversionComplete());
+                              alk[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                              alkVal[0].doVal(alk[0]);   // Read the conversion results
+                              //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
+                            #endif
+                        #endif
+                      #if (USE_VCC_ANA > OFF)
+                          #if (VCC_ADC > OFF)
+                            #endif
+                          #if (VCC_1115 > OFF)
+                              ads[VCC50_IDX].setGain(VCC_1115_ATT);
+                              ads[VCC50_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
+                              usleep(1200); // Wait for the conversion to complete
+                              while (!ads[VCC50_IDX].conversionComplete());
+                              vcc[VCC50_IDX] = ads[VCC50_IDX].getLastConversionResults();   // Read the conversion results
+                              vccVal[VCC50_IDX].doVal(vcc[VCC50_IDX]);
+                              //vcc[VCC50_IDX] = (uint16_t) (1000 * ads[VCC50_IDX].computeVolts(vccVal[VCC50_IDX].doVal(ads[VCC50_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
+                              #if (VCC_1115 > 1)
+                                  ads[VCC33_IDX].setGain(VCC_1115_ATT);
+                                  ads[VCC33_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
+                                  usleep(1200); // Wait for the conversion to complete
+                                  while (!ads[VCC33_IDX].conversionComplete());
+                                  vcc[VCC33_IDX] = ads[VCC33_IDX].getLastConversionResults();   // Read the conversion results
+                                  vccVal[VCC33_IDX].doVal(vcc[VCC33_IDX]);
+                                  //vcc[VCC33_IDX] = (uint16_t) (1000 * ads[VCC33_IDX].computeVolts(vccVal[VCC33_IDX].doVal(ads[VCC33_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
+                                #endif
+                            #endif
+                        #endif
+                      #if (USE_POTI_ANA > OFF)
+                          #if (POTI1_ADC > OFF)
+                            #endif
+                          #if (POTI1_1115 > OFF)
+                              ads[0].setGain(POTI1_1115_ATT);
+                              ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHAN], /*continuous=*/false);
+                              usleep(1200); // Wait for the conversion to complete
+                              while (!ads[0].conversionComplete());
+                              poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                              potiVal[0].doVal(poti[0]);
+                              //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
+                            #endif
+                        #endif
+                      #if (USE_ACS712_ANA > OFF)
+                          #if (I712_1_ADC > OFF)
+                            #endif
+                          #if (I712_1_1115 > OFF)
+                              ads[0].setGain(I712_1_1115_ATT);
+                              ads[0].startADCReading(MUX_BY_CHANNEL[I712_1_1115_CHAN], /*continuous=*/false);
+                              usleep(1200); // Wait for the conversion to complete
+                              while (!ads[0].conversionComplete());
+                              i712[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                              i712Val[0].doVal(i712[0]);
+                              // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
+                            #endif
+                        #endif
+                      #if (USE_CNT_INP > OFF)
+                          #ifdef USE_PW
+                              getCNTIn();
+                            #endif
+                        #endif
 
-                #if (USE_TYPE_K_SPI > OFF)
-                    int8_t  tkerr = (int8_t) ISOK;
-                    int16_t ival = TypeK1.actT();
-                    tkerr = TypeK1.readErr();
-                          //SOUT(" typeK1 err "); SOUT(tkerr);
-                          //SOUT(" val "); SOUT( ival);
-                    if (!tkerr)
-                      {
-                        tk1Val    = valTK1.value((double) ival);
-                          //SOUT(" / "); SOUT(tk1Val);
-                        ival      = TypeK1.refT();
-                              //SOUT(millis()); SOUT(" ref raw = "); SOUT((int) ival);
-                        tk1ValRef = valTK1ref.value((double) ival);
-                          //SOUT(millis()); SOUT(" ival = "); SOUT((int) tk1ValRef);
-                      }
-                          //SOUTLN();
-                    #if (USE_TYPE_K_SPI > 1)
-                        ival    = TypeK2.actT();
-                        tkerr     = TypeK2.readErr() % 8;
-                              //SOUT(" typeK2 err "); SOUT(tkerr);
-                              //SOUT(" val "); SOUT(ival);
-                        if (!tkerr)
-                          {
-                            tk2Val    = valTK2.value((double) ival);
-                              //SOUT(" / "); SOUT((int) tk2Val);
-                            ival      = TypeK2.refT();
-                              //SOUT(millis()); SOUT(" ref raw = "); SOUT(ival);
-                            tk2ValRef = valTK2ref.value((double) ival);
-                              //SOUT(millis()); SOUT(" ival = "); SOUT(tk2ValRef);
-                          }
-                              //SOUTLN();
-                    #else
-                              SOUTLN();
-                      #endif
-                  #endif
+                      #if (USE_TYPE_K_SPI > OFF)
+                          int8_t  tkerr = (int8_t) ISOK;
+                          int16_t ival = TypeK1.actT();
+                          tkerr = TypeK1.readErr();
+                                //SOUT(" typeK1 err "); SOUT(tkerr);
+                                //SOUT(" val "); SOUT( ival);
+                          if (!tkerr)
+                            {
+                              tk1Val    = valTK1.value((double) ival);
+                                //SOUT(" / "); SOUT(tk1Val);
+                              ival      = TypeK1.refT();
+                                    //SOUT(millis()); SOUT(" ref raw = "); SOUT((int) ival);
+                              tk1ValRef = valTK1ref.value((double) ival);
+                                //SOUT(millis()); SOUT(" ival = "); SOUT((int) tk1ValRef);
+                            }
+                                //SOUTLN();
+                          #if (USE_TYPE_K_SPI > 1)
+                              ival    = TypeK2.actT();
+                              tkerr     = TypeK2.readErr() % 8;
+                                    //SOUT(" typeK2 err "); SOUT(tkerr);
+                                    //SOUT(" val "); SOUT(ival);
+                              if (!tkerr)
+                                {
+                                  tk2Val    = valTK2.value((double) ival);
+                                    //SOUT(" / "); SOUT((int) tk2Val);
+                                  ival      = TypeK2.refT();
+                                    //SOUT(millis()); SOUT(" ref raw = "); SOUT(ival);
+                                  tk2ValRef = valTK2ref.value((double) ival);
+                                    //SOUT(millis()); SOUT(" ival = "); SOUT(tk2ValRef);
+                                }
+                                    //SOUTLN();
+                          #else
+                                    SOUTLN();
+                            #endif
+                        #endif
 
-                #if (USE_DIG_INP > OFF)
-                    getDIGIn();
-                  #endif
-                #if (USE_ESPHALL > OFF)
-                    valHall = hallRead();
-                  #endif
-                #if (USE_MCPWM > OFF)
-                    getCNTIn();
-                  #endif
-                heapFree("-meascyc");
+                      #if (USE_DIG_INP > OFF)
+                          getDIGIn();
+                        #endif
+                      #if (USE_ESPHALL > OFF)
+                          valHall = hallRead();
+                        #endif
+                      #if (USE_MCPWM > OFF)
+                          getCNTIn();
+                        #endif
+                  }
+                    //heapFree("-meascyc");
               }
           #endif
       // --- direct output ---
@@ -1652,12 +1657,12 @@
         #if (USE_DISP > 0)
           if (dispT.TOut())    // handle touch output
             {
-              oledIdx++;
-                    //SOUT(" #"); SOUT(millis()); SOUT(" Display oledIdx ... "); SOUT(oledIdx); SOUT(" ");
+              dispIdx++;
+                    //SOUT(" #"); SOUT(millis()); SOUT(" Display dispIdx ... "); SOUT(dispIdx); SOUT(" ");
               heapFree("+disp");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
-                  switch (oledIdx)
+                  switch (dispIdx)
                     {
                       case 0:
                         oled.prepare();
@@ -1673,7 +1678,7 @@
                       case 3:
                         oled.prepare();
                         oled.string_orientation();
-                        oledIdx--;
+                        dispIdx--;
                         break;
                       case 4:
                         oled.line();
@@ -1687,11 +1692,11 @@
                       default:
                         break;
                     }
-                  if (++oledIdx > 6) { oledIdx = 0; }
+                  if (++dispIdx > 6) { dispIdx = 0; }
                   oled.sendBuffer();
                 #endif // RUN_OLED_TEST
-              heapFree("+oledIdx");
-              switch (oledIdx)
+              heapFree("+dispIdx");
+              switch (dispIdx)
                 {
                 case 1:  // system output
                     usTmp      = micros();
@@ -2082,7 +2087,7 @@
                   break;
 
                 default:
-                  oledIdx = 0;
+                  dispIdx = 0;
                   if (SYS_LED_ON == ON) { SYS_LED_ON = OFF; }
                   else                  { SYS_LED_ON = ON ; }
                   digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
@@ -2090,7 +2095,7 @@
                   dispT.startT();
                   break;
                 }
-              heapFree("-oledIdx");
+              heapFree("-dispIdx");
                       //SOUT(" "); SOUT(millis()); SOUTLN("  disp end ");
 
               #ifdef USE_STATUS
