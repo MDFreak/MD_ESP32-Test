@@ -17,7 +17,8 @@
       //#define PROJECT TOUCHTEST_1
       //#define PROJECT MEASFREQ_1
       //#define PROJECT LIGHTSHOW_1
-      #define PROJECT GEN_ESP32_NODE
+      //#define PROJECT GEN_ESP32_NODE
+      #define PROJECT GEN_XIAO_ESP32C3
       //#define PROJECT GEN_ESP32_D1_MINI
       //#define PROJECT GEN_ESP32_D1_R32
 
@@ -37,7 +38,10 @@
           #define PROJ_TITLE "Generic ESP32-Node"
           #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
         #endif
-
+      #if (PROJECT == GEN_XIAO_ESP32C3)
+          #define PROJ_TITLE "Generic XIAO ESP32C3"
+          #define BOARD   XIAO_ESP32C3     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+        #endif
       #if (PROJECT == GEN_ESP32_D1_MINI)
           #define PROJ_TITLE "Generic ESP32-D1-Mini"
           #define BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
