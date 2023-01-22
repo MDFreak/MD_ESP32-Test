@@ -369,7 +369,6 @@
               #endif
           #endif
         msTimer oledT   = msTimer(DISP_CYCLE);
-        uint8_t dispIdx = 0;
       #endif
     #if (defined(USE_TFT1602_GPIO_RO_3V3) || defined(USE_TFT1602_GPIO_RO_3V3))
         LiquidCrystal  lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
@@ -1094,7 +1093,7 @@
 // ----------------------------------------------------------------
   void loop()
     {
-      loopidx++;
+      dispIdx++;
       anzUsCycles++;
       //SOUT(" "); SOUT(millis());
       #if ( USE_DISP > 0 )
@@ -1105,7 +1104,7 @@
       if (tmpval32 < freeHeap)
         {
           freeHeap = tmpval32;
-          SOUT(millis()); SOUT(" loop "); SOUT(loopidx); SOUT(" freeHeap "); SOUTLN(freeHeap);
+          SOUT(millis()); SOUT(" loop "); SOUT(dispIdx); SOUT(" freeHeap "); SOUTLN(freeHeap);
         }
       if (firstrun == true)
         {
@@ -1306,11 +1305,13 @@
         #ifdef USE_INPUT_CYCLE
             if (inputT.TOut())
               {
+                inpIdx++;
                     //heapFree("+meascyc");
                     //SOUT(" #"); SOUT(millis()); SOUTLN(" MEASCYCLE ");
                 inputT.startT();
                 switch(inpIdx)
                   {
+                    case 1:
                       #if (USE_BME280_I2C > OFF)
                           bme1.init();
                           usleep(100);
@@ -1318,6 +1319,8 @@
                           bme1H.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
                           bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
                         #endif
+                      break;
+                    case 2:
                       #if (USE_PHOTO_SENS_ANA > OFF)
                           #if (PHOTO1_ADC > OFF)
                               photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
@@ -1325,6 +1328,8 @@
                           #if (PHOTO1_1115 > OFF)
                             #endif
                         #endif
+                      break;
+                    case 3:
                       #if (USE_MQ135_GAS_ANA > OFF)
                           #if (MQ135_GAS_ADC > OFF)
                               gasVal.doVal(analogRead(PIN_MQ135));
@@ -1335,6 +1340,8 @@
                           #if (MQ135_GAS_1115 > OFF)
                             #endif
                         #endif
+                      break;
+                    case 4:
                       #if (USE_MQ3_ALK_ANA > OFF)
                           #if (MQ3_ALK_ADC > OFF)
                             #endif
@@ -1349,6 +1356,8 @@
                               //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
                             #endif
                         #endif
+                      break;
+                    case 5:
                       #if (USE_VCC_ANA > OFF)
                           #if (VCC_ADC > OFF)
                             #endif
@@ -1371,6 +1380,8 @@
                                 #endif
                             #endif
                         #endif
+                      break;
+                    case 6:
                       #if (USE_POTI_ANA > OFF)
                           #if (POTI1_ADC > OFF)
                             #endif
@@ -1384,6 +1395,8 @@
                               //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
                             #endif
                         #endif
+                      break;
+                    case 7:
                       #if (USE_ACS712_ANA > OFF)
                           #if (I712_1_ADC > OFF)
                             #endif
@@ -1397,12 +1410,16 @@
                               // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
                             #endif
                         #endif
+                      break;
+                    case 8:
                       #if (USE_CNT_INP > OFF)
                           #ifdef USE_PW
                               getCNTIn();
                             #endif
                         #endif
 
+                      break;
+                    case 9:
                       #if (USE_TYPE_K_SPI > OFF)
                           int8_t  tkerr = (int8_t) ISOK;
                           int16_t ival = TypeK1.actT();
@@ -1439,15 +1456,25 @@
                             #endif
                         #endif
 
+                      break;
+                    case 10:
                       #if (USE_DIG_INP > OFF)
                           getDIGIn();
                         #endif
+                      break;
+                    case 11:
                       #if (USE_ESPHALL > OFF)
                           valHall = hallRead();
                         #endif
+                      break;
+                    case 12:
                       #if (USE_MCPWM > OFF)
                           getCNTIn();
                         #endif
+                      break;
+                    default:
+                      inpIdx = 0;
+                      break;
                   }
                     //heapFree("-meascyc");
               }
@@ -1530,128 +1557,137 @@
           #endif
       // --- standard output cycle ---
         #ifdef USE_OUTPUT_CYCLE
-
-                //if (outpT.TOut())
-                  //{
-                    //outpT.startT();
-            #if (USE_RGBLED_PWM > OFF)
-                if (rgbledT.TOut())
+            if (outpT.TOut())
+              {
+                outpIdx++;
+                outpT.startT();
+                switch(outpIdx)
                   {
-                        SOUT(" #"); SOUT(millis()); SOUTLN(" Out RGBLED");
-                    rgbledT.startT();
-                    #if (TEST_RGBLED_PWM > OFF)
-                      /*
-                        switch (colRGBLED)
-                          {
-                            case 0:
-                              if (RGBLED_rt >= 254)
-                                {
-                                  RGBLED_rt = 0;
-                                  RGBLED_gr += incRGBLED;
-                                  colRGBLED++;
-                                }
-                                else
-                                { RGBLED_rt += incRGBLED; }
-                              break;
-                            case 1:
-                              if (RGBLED_gr >= 254)
-                                {
-                                  RGBLED_gr = 0;
-                                  RGBLED_bl += incRGBLED;
-                                  colRGBLED++;
-                                }
-                                else
-                                { RGBLED_gr += incRGBLED; }
-                              break;
-                            case 2:
-                              if (RGBLED_bl >= 254)
-                                {
-                                  RGBLED_bl = 0;
-                                  RGBLED_rt += incRGBLED;
-                                  colRGBLED = 0;
-                                }
-                                else
-                                { RGBLED_bl += incRGBLED; }
-                              break;
-                            default:
-                              break;
-                          }
-                      */
+                    case 1:
+                      #if (USE_RGBLED_PWM > OFF)
+                          if (rgbledT.TOut())
+                            {
+                                  SOUT(" #"); SOUT(millis()); SOUTLN(" Out RGBLED");
+                              rgbledT.startT();
+                              #if (TEST_RGBLED_PWM > OFF)
+                                /*
+                                  switch (colRGBLED)
+                                    {
+                                      case 0:
+                                        if (RGBLED_rt >= 254)
+                                          {
+                                            RGBLED_rt = 0;
+                                            RGBLED_gr += incRGBLED;
+                                            colRGBLED++;
+                                          }
+                                          else
+                                          { RGBLED_rt += incRGBLED; }
+                                        break;
+                                      case 1:
+                                        if (RGBLED_gr >= 254)
+                                          {
+                                            RGBLED_gr = 0;
+                                            RGBLED_bl += incRGBLED;
+                                            colRGBLED++;
+                                          }
+                                          else
+                                          { RGBLED_gr += incRGBLED; }
+                                        break;
+                                      case 2:
+                                        if (RGBLED_bl >= 254)
+                                          {
+                                            RGBLED_bl = 0;
+                                            RGBLED_rt += incRGBLED;
+                                            colRGBLED = 0;
+                                          }
+                                          else
+                                          { RGBLED_bl += incRGBLED; }
+                                        break;
+                                      default:
+                                        break;
+                                    }
+                                */
 
-                        #if (USE_WEBCTRL_RGB > OFF)
-                            _tmp += 4;
-                            if (_tmp > 50)
-                              { _tmp = 0; }
-                            //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
-                            ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
-                            ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
-                            ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
-                          #endif
+                                  #if (USE_WEBCTRL_RGB > OFF)
+                                      _tmp += 4;
+                                      if (_tmp > 50)
+                                        { _tmp = 0; }
+                                      //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
+                                      ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
+                                      ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
+                                      ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
+                                    #endif
 
 
-                        if(*RGBLED[0] == *RGBLED[1]) {}
-                          else
-                          {
-                            SOUT(" RGBLED changed 0/1 "); SOUTHEX((uint32_t) *RGBLED[0]);
-                            SOUT(" / "); SOUTHEXLN((uint32_t) *RGBLED[1]);
-                            *RGBLED[0] = *RGBLED[1];
-                            //ledcWrite(PWM_RGB_RED,   BrightCol(RGBLED[0][LED_RED],RGBLED[0][LED_BRIGHT]));
-                            //ledcWrite(PWM_RGB_GREEN, BrightCol(RGBLED[0][LED_GREEN],RGBLED[0][LED_BRIGHT]));
-                            //ledcWrite(PWM_RGB_BLUE, BrightCol()  BrightCol(RGBLED[0][LED_BLUE],RGBLED[0][LED_BRIGHT]));
-                            ledcWrite(PWM_RGB_RED,   Bright_x_Col(Red(RGBLED[0]->col24()),   RGBLED[0]->bright()));
-                            ledcWrite(PWM_RGB_GREEN, Bright_x_Col(Green(RGBLED[0]->col24()), RGBLED[0]->bright()));
-                            ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
-                          }
-                      #endif
-                    // update changes from webserver
-                    if (LEDout)
-                      {
-                        LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
-                                               0, Green(RGBLED[1]->col24()));
-                        ledcWrite(PWM_RGB_GREEN, LEDout);
-                        LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
-                                               0, Red(RGBLED[1]->col24()));
-                        ledcWrite(PWM_RGB_RED, LEDout);
-                        LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
-                                               0, Blue(RGBLED[1]->col24()));
-                        ledcWrite(PWM_RGB_BLUE, LEDout);
-                        LEDout = FALSE;
-                      }
+                                  if(*RGBLED[0] == *RGBLED[1]) {}
+                                    else
+                                    {
+                                      SOUT(" RGBLED changed 0/1 "); SOUTHEX((uint32_t) *RGBLED[0]);
+                                      SOUT(" / "); SOUTHEXLN((uint32_t) *RGBLED[1]);
+                                      *RGBLED[0] = *RGBLED[1];
+                                      //ledcWrite(PWM_RGB_RED,   BrightCol(RGBLED[0][LED_RED],RGBLED[0][LED_BRIGHT]));
+                                      //ledcWrite(PWM_RGB_GREEN, BrightCol(RGBLED[0][LED_GREEN],RGBLED[0][LED_BRIGHT]));
+                                      //ledcWrite(PWM_RGB_BLUE, BrightCol()  BrightCol(RGBLED[0][LED_BLUE],RGBLED[0][LED_BRIGHT]));
+                                      ledcWrite(PWM_RGB_RED,   Bright_x_Col(Red(RGBLED[0]->col24()),   RGBLED[0]->bright()));
+                                      ledcWrite(PWM_RGB_GREEN, Bright_x_Col(Green(RGBLED[0]->col24()), RGBLED[0]->bright()));
+                                      ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
+                                    }
+                                #endif
+                              // update changes from webserver
+                              if (LEDout)
+                                {
+                                  LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
+                                                         0, Green(RGBLED[1]->col24()));
+                                  ledcWrite(PWM_RGB_GREEN, LEDout);
+                                  LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
+                                                         0, Red(RGBLED[1]->col24()));
+                                  ledcWrite(PWM_RGB_RED, LEDout);
+                                  LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
+                                                         0, Blue(RGBLED[1]->col24()));
+                                  ledcWrite(PWM_RGB_BLUE, LEDout);
+                                  LEDout = FALSE;
+                                }
+                            }
+                        #endif
+                      break;
+                    case 2:
+                      #if (USE_FAN_PWM > OFF)
+                          if (fanT.TOut())
+                            {
+                                  SOUT(" #"); SOUT(millis()); SOUTLN(" Out FAN");
+                              fanT.startT();
+                              if (fanIdx++ > 1000)
+                                {
+                                  fanIdx = 0;
+                                  for (uint8_t i=0 ; i < USE_FAN_PWM ; i++)
+                                    {
+                                      valFanPWM[i] += 1;
+                                      if (valFanPWM[i] >= 255) { valFanPWM[i] = 0; } // -50%
+                                    }
+
+                                  #if (USE_POTICTRL_FAN > 0)
+                                      valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                                      //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
+                                      valFanPWM[0] = valFan[INP_CNT_FAN_1];
+                                      #if (USE_POTICTRL_FAN > 1)
+                                          valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
+                                          valFanPWM[1] = valFan[INP_CNT_FAN_2];
+                                        #endif
+                                    #endif
+
+                                  ledcWrite(PWM_FAN_1, valFanPWM[0]);
+                                  #if (USE_FAN_PWM > 1)
+                                      ledcWrite(PWM_FAN_2, valFanPWM[1]);
+                                    #endif
+                                }
+                            }
+                        #endif
+                      break;
+                    default:
+                      outpIdx = 0;
+                      break;
                   }
-              #endif
-
-            #if (USE_FAN_PWM > OFF)
-                if (fanT.TOut())
-                  {
-                        SOUT(" #"); SOUT(millis()); SOUTLN(" Out FAN");
-                    fanT.startT();
-                    if (fanIdx++ > 1000)
-                      {
-                        fanIdx = 0;
-                        for (uint8_t i=0 ; i < USE_FAN_PWM ; i++)
-                          {
-                            valFanPWM[i] += 1;
-                            if (valFanPWM[i] >= 255) { valFanPWM[i] = 0; } // -50%
-                          }
-
-                        #if (USE_POTICTRL_FAN > 0)
-                            valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                            //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
-                            valFanPWM[0] = valFan[INP_CNT_FAN_1];
-                            #if (USE_POTICTRL_FAN > 1)
-                                valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                                valFanPWM[1] = valFan[INP_CNT_FAN_2];
-                              #endif
-                          #endif
-
-                        ledcWrite(PWM_FAN_1, valFanPWM[0]);
-                        #if (USE_FAN_PWM > 1)
-                            ledcWrite(PWM_FAN_2, valFanPWM[1]);
-                          #endif
-                      }
-                  }
-              #endif
-                  //}
+              }
           #endif
       // --- Display -------------------
         #if (USE_DISP > 0)
@@ -1712,7 +1748,6 @@
                       //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
                     anzUsCycles = 0ul;
                   break;
-
                 case 2:  // webserver nu
                     #if (USE_WIFI > OFF)
                         outStr = WiFi.localIP().toString();
@@ -1782,7 +1817,6 @@
                           }
                       #endif
                   break;
-
                 case 3:  // k-type sensor
                   #if (USE_TYPE_K_SPI > OFF)
                     outStr = "";
@@ -1807,7 +1841,6 @@
                             SOUTLN(outStr); SOUT(" ");
                     #endif
                   break;
-
                 case 4:  // gas sensor
                   #if (USE_MQ135_GAS_ANA > OFF)
                       //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
@@ -1836,7 +1869,6 @@
                         #endif
                     #endif
                   break;
-
                 case 5:  // light sensor
                   #if (USE_PHOTO_SENS_ANA > OFF)
                       outStr = "          ";
@@ -1863,7 +1895,6 @@
                   dispText(outStr, 12, 4, outStr.length());
                         //SOUT(outStr); SOUT(" ");
                   break;
-
                 case 6:  // temp sensor
                   #if (USE_DS18B20_1W_IO > OFF)
                     outStr = "";
@@ -1871,7 +1902,6 @@
                     dispText(outStr ,  0, 4, outStr.length());
                     #endif
                   break;
-
                 case 7:  // BME 280 temp, humidity, pressure
                   #if ( USE_BME280_I2C > OFF )
                     outStr = "";
@@ -1929,7 +1959,6 @@
                             //SOUT(outStr); SOUT(" ");
                     #endif
                 	break;
-
                 case 8:  // voltage, current
                     #if (USE_VCC_ANA > OFF)
                         tmpval16 = vcc[VCC50_IDX];
@@ -2015,9 +2044,7 @@
                   #if (USE_CTRL_POTI)
                       //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
                     #endif
-
                   break;
-
                 case 11:  // WS2812 lines
                   #if ((USE_WS2812_MATRIX_OUT > OFF) || (USE_WS2812_LINE_OUT > OFF))
                       outStr = "              ";
@@ -2091,7 +2118,6 @@
                   if (SYS_LED_ON == ON) { SYS_LED_ON = OFF; }
                   else                  { SYS_LED_ON = ON ; }
                   digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
-
                   dispT.startT();
                   break;
                 }
@@ -2104,7 +2130,6 @@
                         //SOUTLN();
             }
           #endif // defined(DISP)
-
       // --- system control --------------------------------
         #if (USE_COL16_BLINK_OUT > 0)
           if (ledT.TOut())    // handle touch output
@@ -2122,8 +2147,7 @@
                   }
             }
           #endif
-
-        if (firstrun == true)
+       if (firstrun == true)
           {
             String taskMessage = "loop task running on core ";
             taskMessage = taskMessage + xPortGetCoreID();
@@ -2132,10 +2156,9 @@
             firstrun = false;
           }
         anzUsCycles++;
-        //usleep(20);
-        //delay(1);
+          //usleep(20);
+          //delay(1);
     }
-
 // ----------------------------------------------------------------
 // --- subroutine and drivers ----------------
 // ----------------------------------------------------------------
