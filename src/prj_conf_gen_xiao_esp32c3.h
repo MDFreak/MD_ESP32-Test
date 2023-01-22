@@ -783,7 +783,7 @@
   // ----------------------------------------------------------------
   // --- board management
   // ----------------------------------------------------------------
-    #if !(BOARD ^ MC_ESP32_Node)
+    #if !(BOARD ^ XIAO_ESP32C3)
       // --- system
         #define SER_BAUDRATE ESP_SER_BAUD
         // --- network
