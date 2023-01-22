@@ -70,8 +70,8 @@
           #endif
 
         #if (USE_ADC1115_I2C > OFF)
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
+            #ifndef USE_INPUT_CYCLE
+                #define USE_INPUT_CYCLE
               #endif
             #define ADC1115_1_CHANS      4
             #define ADC1115_1_I2C        I2C1
@@ -335,8 +335,8 @@
     // --- user input
       // --- keypads
         #if defined(KEYS)
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
+            #ifndef USE_INPUT_CYCLE
+                #define USE_INPUT_CYCLE
               #endif
             #if !(KEYS ^ MC_UI_Keypad_ANA0_RO)
                 #define USE_KEYPADSHIELD
@@ -396,8 +396,8 @@
                 #define PCNT2_CHAN          0
                 #define PCNT2_ID            1
               #endif
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
+            #ifndef USE_INPUT_CYCLE
+                #define USE_INPUT_CYCLE
               #endif
           #endif
       // --- dutycycle (pwm) input
@@ -406,14 +406,14 @@
           #endif
       // --- internal adc input
         #if (USE_ADC1 > OFF)
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
+            #ifndef USE_INPUT_CYCLE
+                #define USE_INPUT_CYCLE
               #endif
           #endif
       // --- internal digital input
         #if (USE_DIG_INP > OFF)
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
+            #ifndef USE_INPUT_CYCLE
+                #define USE_INPUT_CYCLE
               #endif
             #if (USE_CTRL_SW_INP > OFF)
                 #define INP_SW_CTRL  0
@@ -436,8 +436,8 @@
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION   9
           #define DS18B20_ANZ      1
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
 
@@ -458,8 +458,8 @@
               #define BME2802H_FILT    0
               #define BME2802H_Drop    0
             #endif
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
 
@@ -494,8 +494,8 @@
           #define MQ135_SCAL_MAX   100
             //#define MQ135_ThresFilt 25       // threshold measure filtering
             //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
       #if (USE_MQ3_ALK_ANA > OFF)
@@ -513,8 +513,8 @@
               #define MQ3_GAIN          0
               #define MQ3_OFFREAL       0
             #endif
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
 
@@ -525,8 +525,8 @@
           #define TYPEK1_GAIN     1.       // result = (measure * gain) + offset
           #define TYPEK2_OFFSET   0.       // offset unit °C
           #define TYPEK2_GAIN     1.       // result = (measure * gain) + offset
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
 
@@ -566,8 +566,8 @@
                     #define PHOTO2_1115_CHAN 0
                   #endif
             #endif
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
 
@@ -590,8 +590,8 @@
                 #define VCC_GAIN          1
                 #define VCC_OFFREAL       0
               #endif
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
       #if (USE_POTI_ANA > OFF)
@@ -630,8 +630,8 @@
                     #define POTI2_1115_ATT  GAIN_TWOTHIRDS
                   #endif
             #endif
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
       #if (USE_ACS712_ANA > OFF)
@@ -673,8 +673,8 @@
             #endif
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
-      #ifdef USE_MEASURE_CYCLE
-          #define MEASURE_CYCLE_MS  500u
+      #ifdef USE_INPUT_CYCLE
+          #define INPUT_CYCLE_MS  500u
         #endif
 
     // --- network
@@ -812,8 +812,8 @@
                   #define PCNT2_INP_SIG_IO    PIN_CNT_FAN_2   // Pulse Input GPIO
                   #define PCNT2_INP_CTRL_IO   PIN_CNT_FAN_2       // Control GPIO HIGH=count up, LOW=count down
                 #endif
-              #ifndef USE_MEASURE_CYCLE
-                  #define USE_MEASURE_CYCLE
+              #ifndef USE_INPUT_CYCLE
+                  #define USE_INPUT_CYCLE
                 #endif
             #endif
         // --- user output

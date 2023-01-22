@@ -830,8 +830,8 @@
     // --- user input
       // --- keypads
         #if defined(KEYS)
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
+            #ifndef USE_INPUT_CYCLE
+                #define USE_INPUT_CYCLE
               #endif
             #if !(KEYS ^ MC_UI_Keypad_ANA0_RO)
                 #define USE_KEYPADSHIELD
@@ -891,8 +891,8 @@
                 #define PCNT2_CHAN          0
                 #define PCNT2_ID            1
               #endif
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
+            #ifndef USE_INPUT_CYCLE
+                #define USE_INPUT_CYCLE
               #endif
           #endif
       // --- dutycycle (pwm) input
@@ -900,14 +900,14 @@
             //
           #endif
         #if (USE_ADC1 > OFF)
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
+            #ifndef USE_INPUT_CYCLE
+                #define USE_INPUT_CYCLE
               #endif
           #endif
 
         #if (USE_DIG_INP > OFF)
-            #ifndef USE_MEASURE_CYCLE
-                #define USE_MEASURE_CYCLE
+            #ifndef USE_INPUT_CYCLE
+                #define USE_INPUT_CYCLE
               #endif
             #define INP_SW_CTRL  0
           #endif
@@ -921,8 +921,8 @@
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION   9
           #define DS18B20_ANZ      1
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
 
@@ -933,8 +933,8 @@
           #define BME280P_Drop    0
           #define BME280H_FILT    0
           #define BME280H_Drop    0
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
 
@@ -943,8 +943,8 @@
           //#define MQ135_ThresFilt 25       // threshold measure filtering
           #define MQ135_EM_WIN    100      // window for traffic light
           //#define MQ135_EM_MID    2350    // green < (MID-(WIN/2) < yellow < (MID+(WIN/2) < red
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
 
@@ -955,8 +955,8 @@
           #define TYPEK1_GAIN     1.       // result = (measure * gain) + offset
           #define TYPEK2_OFFSET   0.       // offset unit °C
           #define TYPEK2_GAIN     1.       // result = (measure * gain) + offset
-          #ifndef USE_MEASURE_CYCLE
-              #define USE_MEASURE_CYCLE
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
             #endif
         #endif
 
@@ -964,14 +964,14 @@
         #define PHOTO_FILT        7
         #define PHOTO_DROP        0
         #define PHOTO_SENS_ATT    3 // 2 = ADC_ATTEN_DB_6; 3 = ADC_ATTEN_DB_11
-        #ifndef USE_MEASURE_CYCLE
-            #define USE_MEASURE_CYCLE
+        #ifndef USE_INPUT_CYCLE
+            #define USE_INPUT_CYCLE
           #endif
         #endif
 
       #define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
-      #ifdef USE_MEASURE_CYCLE
-          #define MEASURE_CYCLE_MS  500u
+      #ifdef USE_INPUT_CYCLE
+          #define INPUT_CYCLE_MS  500u
         #endif
 
     // --- network

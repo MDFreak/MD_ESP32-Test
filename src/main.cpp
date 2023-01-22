@@ -468,13 +468,15 @@
         void* mqttID = NULL;
       #endif
 
-  // ------ sensors ----------------------
-    #ifdef USE_MEASURE_CYCLE
-        msTimer measT   = msTimer(MEASURE_CYCLE_MS);
+    #ifdef USE_INPUT_CYCLE
+        msTimer measT     = msTimer(INPUT_CYCLE_MS);
+        uint8_t cntInpcyc = 0;
       #endif
     #ifdef USE_OUTPUT_CYCLE
-        msTimer outpT   = msTimer(OUTPUT_CYCLE_MS);
+        msTimer outpT     = msTimer(OUTPUT_CYCLE_MS);
+        uint8_t cntOutcyc = 0;
       #endif
+  // ------ sensors ----------------------
     #if (USE_BME280_I2C > OFF)
         Adafruit_BME280  bme1;
         #if (BME2801_I2C == I2C1)
@@ -1161,7 +1163,7 @@
             readMessage();
             //heapFree("webserv -readmsg");
           #endif
-      // --- input ---
+      // --- direct input ---
         #if (USE_TOUCHSCREEN > OFF)
           //touch.runTouch(outBuf);
           #endif // USE_TOUCHSCREEN
@@ -1298,8 +1300,8 @@
             mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_POS_EDGE, 1);
             pwmInVal->highVal = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0);
           #endif
-      // --- IN/OUT cycles ---
-        #ifdef USE_MEASURE_CYCLE
+      // --- standard input cycle ---
+        #ifdef USE_INPUT_CYCLE
             if (measT.TOut())
               {
                 heapFree("+meascyc");
@@ -1307,7 +1309,7 @@
                 measT.startT();
                 #if ( USE_BME280_I2C > OFF )
                     bme1.init();
-                    usleep(1000);
+                    usleep(100);
                     bme1T.doVal((int16_t)  ( bme1.readTemperature() + 0.5));
                     bme1H.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
                     bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
@@ -1445,84 +1447,84 @@
                 heapFree("-meascyc");
               }
           #endif
+      // --- direct output ---
+        #if (USE_WS2812_MATRIX_OUT > OFF)
+            //if (ws2812T1.TOut())
+              //{
+                //ws2812T1.startT();
+                  if (!(outM2812[0].bmpB->pix24 == outM2812[1].bmpB->pix24)) //{}
+                    //else
+                    {
+                      outM2812[0].bmpB->pix24 = outM2812[1].bmpB->pix24;
+                      outM2812[0].bmpE->pix24 = outM2812[1].bmpE->pix24;
+                    }
+
+                    //if (strcmp(outM2812[0].text->text, outM2812[1].text->text) > 0)
+                  if (strncmp((char*) outM2812[0].text, (char*) outM2812[1].text, sizeof(outM2812[1].text)) > 0)
+                    {
+                      memcpy((char*) outM2812[0].text, (char*) outM2812[1].text, sizeof(outM2812[1].text));
+                        //memcpy(outM2812[0].text->text, outM2812[1].text->text, sizeof((char*) outM2812[1].text->text));
+                    }
+
+                      //SOUT(" matrix 0/1  "); SOUTHEX((uint32_t)  outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t)  outM2812[0].text->pix24);
+                      //SOUT(" matrix 0/1 *"); SOUTHEX((uint32_t) *outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t) *outM2812[0].text->pix24);
+                  //md_LEDPix24* ppix = *outM2812[0].text->pix24
+                  if (!(outM2812[0].text->pix24 == outM2812[1].text->pix24)) //{}
+                    //else
+                    {
+                      //SOUTLN(" changed matrix bright&color ");
+                        //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
+                        //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
+                        //SOUT(" / ");
+                        //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
+                      outM2812[0].text->pix24 = outM2812[1].text->pix24;
+                        //SOUTLN(" neu ");
+                        //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
+                        //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
+                        //SOUT(" / ");
+                        //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
+                    }
+
+                      /*
+                        if (outM2812[0] == outM2812[1]) {}
+                        else
+                          {
+                            SOUT(" changed matrix bitmap "); SOUT(outM2812[0].text.pix24.bright());
+                            *outM2812[0].bmpE.pix24 = *outM2812[1].bmpE.pix24;
+                          }
+
+                        if (doIt == true)
+                          {
+                            //SOUT(" do start-matrix ");
+                            matrix_1.start_scroll_matrix((scroll2812_t*) &outM2812);
+                          }
+                      */
+                      //SOUT(" "); SOUTLN(micros());
+                matrix_1.scroll_matrix();
+                    //SOUT(" matrix ready "); SOUTLN(micros());
+                ws2812_Mcnt++;
+              //}
+          #endif
+        #if (USE_WS2812_LINE_OUT > OFF)
+            //if (ws2812LT.TOut())
+              //{
+                //ws2812LT.startT();
+                //SOUT(" outCycle line 0/1 "); SOUTHEX(*line2812[0]); SOUT("/"); SOUTHEX(*line2812[1]);
+                //SOUT(" bright 0/1 "); SOUTHEX(line2812[0]->bright()); SOUT("/"); SOUTHEX(line2812[1]->bright());
+                //SOUT(" col24 0/1 "); SOUTHEX(line2812[0]->col24()); SOUT("/"); SOUTHEXLN(line2812[1]->col24());
+                if (*(line2812[1]) == *(line2812[0])) {}
+                  else
+                  {
+                    SOUTLN(" line changed ");
+                    *line2812[0] = *line2812[1];
+                    strip.setBrightness(line2812[0]->bright());
+                    strip.fill(line2812[0]->col24());
+                    strip.show();
+                  }
+              //}
+          #endif
+      // --- standard output cycle ---
         #ifdef USE_OUTPUT_CYCLE
-            uint8_t cntOutcyc = 0;
-            #if (USE_WS2812_MATRIX_OUT > OFF)
-                //if (ws2812T1.TOut())
-                  //{
-                    //ws2812T1.startT();
-                      if (!(outM2812[0].bmpB->pix24 == outM2812[1].bmpB->pix24)) //{}
-                        //else
-                        {
-                          outM2812[0].bmpB->pix24 = outM2812[1].bmpB->pix24;
-                          outM2812[0].bmpE->pix24 = outM2812[1].bmpE->pix24;
-                        }
-
-                        //if (strcmp(outM2812[0].text->text, outM2812[1].text->text) > 0)
-                      if (strncmp((char*) outM2812[0].text, (char*) outM2812[1].text, sizeof(outM2812[1].text)) > 0)
-                        {
-                          memcpy((char*) outM2812[0].text, (char*) outM2812[1].text, sizeof(outM2812[1].text));
-                            //memcpy(outM2812[0].text->text, outM2812[1].text->text, sizeof((char*) outM2812[1].text->text));
-                        }
-
-                          //SOUT(" matrix 0/1  "); SOUTHEX((uint32_t)  outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t)  outM2812[0].text->pix24);
-                          //SOUT(" matrix 0/1 *"); SOUTHEX((uint32_t) *outM2812[0].text->pix24); SOUT("/"); SOUTHEXLN((uint32_t) *outM2812[0].text->pix24);
-                      //md_LEDPix24* ppix = *outM2812[0].text->pix24
-                      if (!(outM2812[0].text->pix24 == outM2812[1].text->pix24)) //{}
-                        //else
-                        {
-                          //SOUTLN(" changed matrix bright&color ");
-                            //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
-                            //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
-                            //SOUT(" / ");
-                            //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
-                          outM2812[0].text->pix24 = outM2812[1].text->pix24;
-                            //SOUTLN(" neu ");
-                            //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
-                            //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
-                            //SOUT(" / ");
-                            //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
-                        }
-
-                          /*
-                            if (outM2812[0] == outM2812[1]) {}
-                            else
-                              {
-                                SOUT(" changed matrix bitmap "); SOUT(outM2812[0].text.pix24.bright());
-                                *outM2812[0].bmpE.pix24 = *outM2812[1].bmpE.pix24;
-                              }
-
-                            if (doIt == true)
-                              {
-                                //SOUT(" do start-matrix ");
-                                matrix_1.start_scroll_matrix((scroll2812_t*) &outM2812);
-                              }
-                          */
-                          //SOUT(" "); SOUTLN(micros());
-                    matrix_1.scroll_matrix();
-                        //SOUT(" matrix ready "); SOUTLN(micros());
-                    ws2812_Mcnt++;
-                  //}
-              #endif
-
-            #if (USE_WS2812_LINE_OUT > OFF)
-                //if (ws2812LT.TOut())
-                  //{
-                    //ws2812LT.startT();
-                    //SOUT(" outCycle line 0/1 "); SOUTHEX(*line2812[0]); SOUT("/"); SOUTHEX(*line2812[1]);
-                    //SOUT(" bright 0/1 "); SOUTHEX(line2812[0]->bright()); SOUT("/"); SOUTHEX(line2812[1]->bright());
-                    //SOUT(" col24 0/1 "); SOUTHEX(line2812[0]->col24()); SOUT("/"); SOUTHEXLN(line2812[1]->col24());
-                    if (*(line2812[1]) == *(line2812[0])) {}
-                      else
-                      {
-                        SOUTLN(" line changed ");
-                        *line2812[0] = *line2812[1];
-                        strip.setBrightness(line2812[0]->bright());
-                        strip.fill(line2812[0]->col24());
-                        strip.show();
-                      }
-                  //}
-              #endif
 
                 //if (outpT.TOut())
                   //{
