@@ -735,6 +735,8 @@
             #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
             #if !(BOARD ^ MC_ESP32_Node)
                 #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
+            #elif !(BOARD ^ XIAO_ESP32C3)
+                #define WIFI_FIXIP0     0x1700000Aul // 10.0.0.23   lowest first
             #elif !(BOARD ^ MC_ESP32_D1_MINI)
                   #define WIFI_FIXIP0   0x1800000Aul // 10.0.0.24
             #elif !(BOARD ^ MC_ESP32_D1_R32)

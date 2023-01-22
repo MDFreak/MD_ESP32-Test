@@ -583,7 +583,9 @@
       // --- system
         // disable watchdog
           disableCore0WDT();
-          disableCore1WDT();
+          #if (BOARD ^ XIAO_ESP32C3)
+              disableCore1WDT();
+            #endif
           disableLoopWDT();
         // start system
           Serial.begin(SER_BAUDRATE);
