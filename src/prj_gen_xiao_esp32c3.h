@@ -28,9 +28,9 @@
     // --- user output components
       #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
       // --- displays
-        #define USE_DISP            1
+        #define USE_DISP            OFF//1
           // OLEDs
-            #define USE_OLED_I2C    1
+            #define USE_OLED_I2C    OFF//1
           // TFTs
             #define USE_DISP_TFT    OFF
               // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT2046_AZ_UNO, MC_UO_TXPT2046_AZ_SPI
@@ -41,7 +41,7 @@
             #define BUZZER1           OFF
             // AOUT_PAS_BUZZ_3V5V
       // --- PWM output
-        #define USE_FAN_PWM           1   // 2
+        #define USE_FAN_PWM           OFF//1   // 2
         #define USE_OUT_FREQ_PWM      OFF // 1
       // --- LED output
         #define USE_TRAFFIC_LED_OUT   OFF

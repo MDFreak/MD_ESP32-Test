@@ -1093,7 +1093,9 @@
       loopidx++;
       anzUsCycles++;
       //SOUT(" "); SOUT(millis());
-      outStr   = "";
+      #if ( USE_DISP > 0 )
+          outStr   = "";
+        #endif
       //tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
       heapFree("+loop");
       if (tmpval32 < freeHeap)
