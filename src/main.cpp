@@ -73,15 +73,15 @@
 // ------ system cycles ---------------
     #ifdef USE_INPUT_CYCLE
         msTimer inputT           = msTimer(INPUT_CYCLE_MS);
-        static uint32_t inpIdx   = 0;
+        uint8_t inpIdx   = 0;
       #endif
     #ifdef USE_OUTPUT_CYCLE
         msTimer outpT            = msTimer(OUTPUT_CYCLE_MS);
-        static uint32_t outpIdx  = 0;
+        uint8_t outpIdx  = 0;
       #endif
     #if (USE_DISP > OFF)
         msTimer dispT            = msTimer(DISP_CYCLE_MS);
-        static uint32_t dispIdx  = 0;
+        uint8_t dispIdx  = 0;
       #endif
 // ------ user input ---------------
     #if (USE_TOUCHSCREEN > OFF)
@@ -1088,7 +1088,6 @@
 // ----------------------------------------------------------------
   void loop()
     {
-      dispIdx++;
       anzUsCycles++;
       //SOUT(" "); SOUT(millis());
       #if ( USE_DISP > 0 )
@@ -1678,6 +1677,69 @@
                             }
                         #endif
                       break;
+                    case 3:
+                      #if (USE_WEBSERVER > OFF)
+                          if (newClient)
+                            {
+                              char ctmp[8] = "";
+                              // EL_TSLIDER
+                              #if (USE_RGBLED_PWM > OFF)
+                                  outStr = "SVB1";
+                                  outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
+                                  pmdServ->updateAll(outStr);
+                                  SOUTLN(outStr);
+                                #endif
+                              #if (USE_WS2812_LINE_OUT > OFF)
+                                  outStr = "SVB2";
+                                  outStr.concat(line2812[0]->bright());    // RGB-LED col24
+                                  pmdServ->updateAll(outStr);
+                                  SOUTLN(outStr);
+                                #endif
+                              #if (USE_WS2812_MATRIX_OUT > OFF)
+                                  outStr = "SVB3";
+                                  md_LEDPix24* ppix = outM2812[0].text->pix24;
+                                  outStr.concat(ppix->bright());           // RGB-LED col24
+                                  pmdServ->updateAll(outStr);
+                                  SOUTLN(outStr);                              outStr = "SVB3";
+                                #endif
+                                  //tmpStr = "SVB4";
+                                  //tmpStr.concat(line2812[0]->bright());    // RGB-LED col24
+                                  //pmdServ->updateAll(tmpStr);
+
+                              // EL_TCOLOR
+                              #if (USE_RGBLED_PWM > OFF)
+                                  outStr = "SVC1";
+                                  colToHexStr(ctmp, RGBLED[0]->col24());
+                                  outStr.concat(ctmp);    // RGB-LED col24
+                                  pmdServ->updateAll(outStr);
+                                  SOUTLN(outStr);
+                                #endif
+                              #if (USE_WS2812_LINE_OUT > OFF)
+                                  outStr = "SVC2";
+                                  colToHexStr(ctmp, line2812[0]->col24());
+                                  outStr.concat(ctmp);    // RGB-LED col24
+                                  pmdServ->updateAll(outStr);
+                                  SOUTLN(outStr);
+                                #endif
+                              #if (USE_WS2812_MATRIX_OUT > OFF)
+                                  outStr = "SVC3";
+                                  ppix = outM2812[0].text->pix24;
+                                  colToHexStr(ctmp, ppix->col24());
+                                  outStr.concat(ctmp);    // RGB-LED col24
+                                  pmdServ->updateAll(outStr);
+                                  SOUTLN(outStr);
+                                  outStr = "SVC4";
+                                  ppix = outM2812[0].bmpB->pix24;
+                                  colToHexStr(ctmp, ppix->col24());
+                                  outStr.concat(ctmp);    // RGB-LED col24
+                                  pmdServ->updateAll(outStr);
+                                  SOUTLN(outStr);
+                                #endif
+
+                              newClient = false;
+                            }
+                        #endif
+                      break;
                     default:
                       outpIdx = 0;
                       break;
@@ -1689,8 +1751,8 @@
           if (dispT.TOut())    // handle touch output
             {
               dispIdx++;
-                    //SOUT(" #"); SOUT(millis()); SOUT(" Display dispIdx ... "); SOUT(dispIdx); SOUT(" ");
-                    //heapFree("+disp");
+                    SOUT(" #"); SOUT(millis()); SOUT(" Display dispIdx ... "); SOUT(dispIdx); SOUT(" ");
+                    heapFree("+disp");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (dispIdx)
@@ -1750,67 +1812,6 @@
                         outStr = "IP Offline";
                       #endif
                     dispText(outStr ,  0, 4, outStr.length());
-                    #if (USE_WEBSERVER > OFF)
-                        if (newClient)
-                          {
-                            char ctmp[8] = "";
-                            // EL_TSLIDER
-                            #if (USE_RGBLED_PWM > OFF)
-                                outStr = "SVB1";
-                                outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
-                                pmdServ->updateAll(outStr);
-                                SOUTLN(outStr);
-                              #endif
-                            #if (USE_WS2812_LINE_OUT > OFF)
-                                outStr = "SVB2";
-                                outStr.concat(line2812[0]->bright());    // RGB-LED col24
-                                pmdServ->updateAll(outStr);
-                                SOUTLN(outStr);
-                              #endif
-                            #if (USE_WS2812_MATRIX_OUT > OFF)
-                                outStr = "SVB3";
-                                md_LEDPix24* ppix = outM2812[0].text->pix24;
-                                outStr.concat(ppix->bright());           // RGB-LED col24
-                                pmdServ->updateAll(outStr);
-                                SOUTLN(outStr);                              outStr = "SVB3";
-                              #endif
-                                //tmpStr = "SVB4";
-                                //tmpStr.concat(line2812[0]->bright());    // RGB-LED col24
-                                //pmdServ->updateAll(tmpStr);
-
-                            // EL_TCOLOR
-                            #if (USE_RGBLED_PWM > OFF)
-                                outStr = "SVC1";
-                                colToHexStr(ctmp, RGBLED[0]->col24());
-                                outStr.concat(ctmp);    // RGB-LED col24
-                                pmdServ->updateAll(outStr);
-                                SOUTLN(outStr);
-                              #endif
-                            #if (USE_WS2812_LINE_OUT > OFF)
-                                outStr = "SVC2";
-                                colToHexStr(ctmp, line2812[0]->col24());
-                                outStr.concat(ctmp);    // RGB-LED col24
-                                pmdServ->updateAll(outStr);
-                                SOUTLN(outStr);
-                              #endif
-                            #if (USE_WS2812_MATRIX_OUT > OFF)
-                                outStr = "SVC3";
-                                ppix = outM2812[0].text->pix24;
-                                colToHexStr(ctmp, ppix->col24());
-                                outStr.concat(ctmp);    // RGB-LED col24
-                                pmdServ->updateAll(outStr);
-                                SOUTLN(outStr);
-                                outStr = "SVC4";
-                                ppix = outM2812[0].bmpB->pix24;
-                                colToHexStr(ctmp, ppix->col24());
-                                outStr.concat(ctmp);    // RGB-LED col24
-                                pmdServ->updateAll(outStr);
-                                SOUTLN(outStr);
-                              #endif
-
-                            newClient = false;
-                          }
-                      #endif
                   break;
                 case 3:  // k-type sensor
                   #if (USE_TYPE_K_SPI > OFF)
@@ -1845,6 +1846,8 @@
                       dispText(outStr, 17, 3, outStr.length());
                             //SOUTLN(outStr);
                     #endif
+                  break;
+                case 5:  // gas sensor
                   #if (USE_MQ3_ALK_ANA > OFF)
                       tmpval16 = alk[0];
                       #if (USE_MQTT > OFF)
@@ -1864,7 +1867,7 @@
                         #endif
                     #endif
                   break;
-                case 5:  // light sensor
+                case 6:  // light sensor
                   #if (USE_PHOTO_SENS_ANA > OFF)
                       outStr = "          ";
                       dispText(outStr, 12, 4, outStr.length());
@@ -1888,16 +1891,16 @@
                     #endif
                   outStr.concat("  ");
                   dispText(outStr, 12, 4, outStr.length());
-                        //SOUT(outStr); SOUT(" ");
+                        SOUTLN(outStr); //SOUT(" ");
                   break;
-                case 6:  // temp sensor
+                case 7:  // temp sensor
                   #if (USE_DS18B20_1W_IO > OFF)
                     outStr = "";
                     outStr = getDS18D20Str();
                     dispText(outStr ,  0, 4, outStr.length());
                     #endif
                   break;
-                case 7:  // BME 280 temp, humidity, pressure
+                case 8:  // BME 280 temp, humidity, pressure
                   #if ( USE_BME280_I2C > OFF )
                     outStr = "";
                     for (uint8_t i = 0; i < 3 ; i++)
@@ -1954,7 +1957,7 @@
                             //SOUT(outStr); SOUT(" ");
                     #endif
                 	break;
-                case 8:  // voltage, current
+                case 9:  // voltage, current
                     #if (USE_VCC_ANA > OFF)
                         tmpval16 = vcc[VCC50_IDX];
                         #if (USE_MQTT > OFF)
@@ -1993,7 +1996,7 @@
                           #endif
                       #endif
                    	break;
-                case 9:  // poti,
+                case 10:  // poti,
                     #if (USE_POTI_ANA > OFF)
                         tmpval16 = potiScal[0].scale((float) poti[0]);
                         #if (USE_MQTT > OFF)
@@ -2011,7 +2014,7 @@
                           #endif
                       #endif
                     break;
-                case 10:  // digital inputs
+                case 11:  // digital inputs
                     #if (USE_ESPHALL > OFF)
                         int32_t valHall = 0;
                       #endif
@@ -2040,7 +2043,7 @@
                       //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
                     #endif
                   break;
-                case 11:  // WS2812 lines
+                case 12:  // WS2812 lines
                   #if ((USE_WS2812_MATRIX_OUT > OFF) || (USE_WS2812_LINE_OUT > OFF))
                       outStr = "              ";
                       dispText(outStr ,  0, 0, outStr.length());
@@ -2061,7 +2064,7 @@
                       dispText(outStr ,  0, 0, outStr.length());
                     #endif
                   break;
-                case 12:  // counter values
+                case 13:  // counter values
                   #if (USE_CNT_INP > OFF)
                         outStr = "              ";
                         dispText(outStr ,  0, 2, outStr.length());
@@ -2090,7 +2093,7 @@
                         #endif
                     #endif
                   break;
-                case 13: // pwm counter values
+                case 14: // pwm counter values
                   #if (USE_PWM_INP > OFF)
                         outStr = "              ";
                         dispText(outStr ,  0, 1, outStr.length());
