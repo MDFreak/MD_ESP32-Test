@@ -586,10 +586,10 @@
 
     // --- user interface
       // --- display output
-        #define DISP_CYCLE       1000ul   // Intervallzeit [us]
+        #define DISP_CYCLE_MS       1000ul   // Intervallzeit [us]
         // output status line
-        #define STAT_DELTIME     5000u    // default time to clear status
-        #define STAT_NEWTIME     1000u    // default time to clear status
+        #define STAT_DELTIME_MS     5000u    // default time to clear status
+        #define STAT_NEWTIME_MS     1000u    // default time to clear status
 
     // --- user output
       // --- display

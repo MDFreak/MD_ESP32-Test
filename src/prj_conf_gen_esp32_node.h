@@ -82,14 +82,6 @@
                 #define ADC1115_1_ADDR   I2C_ADS1115_49
               #endif
           #endif
-
-    // --- user interface
-      // --- display output
-        #define DISP_CYCLE       1000ul   // Intervallzeit [us]
-        // output status line
-        #define STAT_DELTIME     5000u    // default time to clear status
-        #define STAT_NEWTIME     1000u    // default time to clear status
-
     // --- user output
       // --- display
         #if (USE_DISP > 0)
@@ -164,7 +156,6 @@
             #if ( USE_TOUCHSCREEN > 0 )
                 //
               #endif // USE_TOUCHSCREEN
-
             #if ( USE_TFT > 0 )
                 #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
                     #define DISP_ORIENT    3      // 0:USB oben, 1:USB links, 2:USB unten, 3:USB rechts
@@ -201,7 +192,6 @@
                   #endif
               #endif
           #endif // DISP
-
       // --- acoustic output
         #if (USE_AOUT > OFF)
             #if !(BUZZER1 ^ AOUT_PAS_BUZZ_3V5V)
@@ -315,7 +305,7 @@
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
               #endif
-            #define PWM_LEDS_CYCLE_MS       400u
+            #define PWM_LEDS_CYCLE_MS       600u
             #define PWM_LEDS_FREQ           4000u
             #define PWM_LEDS_RES            8
             #define BRI_RGBLED_1            15
@@ -330,9 +320,6 @@
             #define PWM_FAN_RES             8
           #endif
 
-        #ifdef USE_OUTPUT_CYCLE
-            #define OUTPUT_CYCLE_MS         10u
-          #endif
 
     // --- user input
       // --- keypads
@@ -702,9 +689,6 @@
             #endif
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
-      #ifdef USE_INPUT_CYCLE
-          #define INPUT_CYCLE_MS  50u
-        #endif
 
     // --- network
       // --- WIFI
@@ -780,6 +764,17 @@
             //
           #endif
 
+      // --- cycle timing
+        #define DISP_CYCLE_MS       500ul   // Intervallzeit [us]
+        // output status line
+        #define STAT_DELTIME_MS     5000ul  // default time to clear status
+        #define STAT_NEWTIME_MS     1000ul  // default time to clear status
+        #ifdef USE_INPUT_CYCLE
+            #define INPUT_CYCLE_MS  50u
+          #endif
+        #ifdef USE_OUTPUT_CYCLE
+            #define OUTPUT_CYCLE_MS 20u
+          #endif
   // ----------------------------------------------------------------
   // --- board management
   // ----------------------------------------------------------------

@@ -42,11 +42,9 @@
     #if ( DEV_I2C2 > OFF )
         TwoWire i2c2 = TwoWire(1);
       #endif
-
     #if ( DEV_VSPI > OFF )
         //SPIClass pVSPI(VSPI);
       #endif
-
     #if ( DEV_HSPI > OFF )
         //SPIClass pHSPI(HSPI);
       #endif
@@ -61,12 +59,9 @@
         char          outBuf[OLED1_MAXCOLS + 1] = "";
         String        outStr;
       #endif
-
-        //
     #ifdef USE_STATUS
-        msTimer     statT  = msTimer(STAT_DELTIME);
-        msTimer     statN  = msTimer(STAT_NEWTIME);
-        //char      statOut[OLED1_MAXCOLS + 1] = "";
+        msTimer     statT  = msTimer(STAT_DELTIME_MS);
+        msTimer     statN  = msTimer(STAT_NEWTIME_MS);
         char        statOut[60 + 1] = "";
         bool        statOn = false;
         bool        statDate = false;
@@ -85,7 +80,7 @@
         static uint32_t outpIdx  = 0;
       #endif
     #if (USE_DISP > OFF)
-        msTimer dispT            = msTimer(DISP_CYCLE);
+        msTimer dispT            = msTimer(DISP_CYCLE_MS);
         static uint32_t dispIdx  = 0;
       #endif
 // ------ user input ---------------
@@ -368,7 +363,7 @@
                                         (uint8_t) OLED2_I2C_SCL, (OLEDDISPLAY_GEOMETRY) OLED2_GEO);
               #endif
           #endif
-        msTimer oledT   = msTimer(DISP_CYCLE);
+        msTimer oledT   = msTimer(DISP_CYCLE_MS);
       #endif
     #if (defined(USE_TFT1602_GPIO_RO_3V3) || defined(USE_TFT1602_GPIO_RO_3V3))
         LiquidCrystal  lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
@@ -1567,7 +1562,7 @@
                       #if (USE_RGBLED_PWM > OFF)
                           if (rgbledT.TOut())
                             {
-                                  SOUT(" #"); SOUT(millis()); SOUTLN(" Out RGBLED");
+                                  //SOUT(" #"); SOUT(millis()); SOUTLN(" Out RGBLED");
                               rgbledT.startT();
                               #if (TEST_RGBLED_PWM > OFF)
                                 /*
@@ -1654,7 +1649,7 @@
                       #if (USE_FAN_PWM > OFF)
                           if (fanT.TOut())
                             {
-                                  SOUT(" #"); SOUT(millis()); SOUTLN(" Out FAN");
+                                  //SOUT(" #"); SOUT(millis()); SOUTLN(" Out FAN");
                               fanT.startT();
                               if (fanIdx++ > 1000)
                                 {
@@ -1695,7 +1690,7 @@
             {
               dispIdx++;
                     //SOUT(" #"); SOUT(millis()); SOUT(" Display dispIdx ... "); SOUT(dispIdx); SOUT(" ");
-              heapFree("+disp");
+                    //heapFree("+disp");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (dispIdx)
@@ -1731,7 +1726,7 @@
                   if (++dispIdx > 6) { dispIdx = 0; }
                   oled.sendBuffer();
                 #endif // RUN_OLED_TEST
-              heapFree("+dispIdx");
+                    //heapFree("+dispIdx");
               switch (dispIdx)
                 {
                 case 1:  // system output
@@ -2121,7 +2116,7 @@
                   dispT.startT();
                   break;
                 }
-              heapFree("-dispIdx");
+                      //heapFree("-dispIdx");
                       //SOUT(" "); SOUT(millis()); SOUTLN("  disp end ");
 
               #ifdef USE_STATUS
