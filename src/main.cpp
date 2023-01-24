@@ -526,7 +526,6 @@
         md_val<int16_t>   potiVal[USE_POTI_ANA];
         md_scale<int16_t> potiScal[USE_POTI_ANA];
         uint16_t          poti[USE_POTI_ANA];
-        const char        potiOut[] = "esp-test/poti";
       #endif
 
     #if (USE_VCC_ANA > OFF)
@@ -2011,7 +2010,7 @@
                               //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                            //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
                     break;
