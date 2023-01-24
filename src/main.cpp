@@ -526,7 +526,7 @@
         md_val<int16_t>   potiVal[USE_POTI_ANA];
         md_scale<int16_t> potiScal[USE_POTI_ANA];
         uint16_t          poti[USE_POTI_ANA];
-        const char[]      potiOut =
+        const char        potiOut[] = "esp-test/poti";
       #endif
 
     #if (USE_VCC_ANA > OFF)
