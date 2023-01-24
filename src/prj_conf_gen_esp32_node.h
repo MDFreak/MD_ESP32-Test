@@ -82,6 +82,80 @@
                 #define ADC1115_1_ADDR   I2C_ADS1115_49
               #endif
           #endif
+    // --- network
+      // --- WIFI
+        #if (USE_WIFI > OFF)
+            #define WIFI_ANZ_LOGIN  7
+            #define WIFI_IS_DUTY    ON
+            #define WIFI_SSID0      "MAMD-HomeG" // WLAN Moosgrabenstrasse 26
+            #define WIFI_SSID0_PW   "ElaNanniRalf3"
+            #define WIFI_SSID1      "HS-HomeG" // WLAN Am Jungberg 9
+            #define WIFI_SSID1_PW   "ElaNanniRalf3"
+            #define WIFI_SSID2      "WL-Fairnetz" //Weltladen
+            #define WIFI_SSID2_PW   "WL&Fair2Live#"
+            #define WIFI_SSID3      "MachNet" //machQuadrat
+            #define WIFI_SSID3_PW   "!Machquadrat1"
+            #define WIFI_SSID4      "MD_KingKong" //Hotspot Martin
+            #define WIFI_SSID4_PW   "ElaNanniRalf3"
+            #define WIFI_SSID5      "CDWiFi"        //OEBB Raijet
+            #define WIFI_SSID5_PW   ""
+            #define WIFI_SSID6      "xWIFI@DB"        //DB ICE
+            #define WIFI_SSID6_PW   ""
+            #define WIFI_SSID7      ""        //?
+            #define WIFI_SSID7_PW   ""
+            #define WIFI_CONN_DELAY 500000ul // Scan-Abstand [us]
+            #define WIFI_CONN_REP   5        // Anzahle der Connect-Schleifen
+            #define WIFI_CONN_CYCLE 4000ul   // Intervallzeit fuer Recoonect [us]
+            #define NTPSERVER_CYCLE 1000ul   // Intervallzeit [us]
+
+            #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
+            #if !(BOARD ^ MC_ESP32_Node)
+                #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
+            #elif !(BOARD ^ MC_ESP32_D1_MINI)
+                  #define WIFI_FIXIP0   0x1800000Aul // 10.0.0.24
+            #elif !(BOARD ^ MC_ESP32_D1_R32)
+                #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
+              #endif
+            #define WIFI_GATEWAY0         0x8B00000Aul // 10.0.0.139 // Moosgraben
+            #define WIFI_FIXIP1           0x1800000Aul // 10.0.0.24
+            #ifdef USE_LOCAL_IP
+                #define WIFI_GATEWAY1     0x8B00000Aul // 10.0.0.139      // Jungberg
+                #define WIFI_GATEWAY2     0x8a00000Aul // 10.0.0.138      // Weltladen
+                #define WIFI_FIXIP2       0x1600000Aul // 10.0.0.22
+                #define WIFI_GATEWAY3     0x01250D0Aul // 10.0.0.1        // machquadrat
+                #define WIFI_FIXIP3       0x6F250D0Aul // 10.0.0.22
+                #define WIFI_GATEWAY4     0x012BA8C0ul // 192.168.43.154  // hotspot KingKong
+                #define WIFI_FIXIP4       0x162BA8C0ul // 192.168.43.22
+                #define WIFI_GATEWAY5     0x0926A8C0ul // 192.168.32.1    // OEBB Railjet
+                #define WIFI_FIXIP5       0x1620A8C0ul // 192.168.32.22
+                #define WIFI_GATEWAY6     0x01AE12ACul // 172.18.0.1    // DB ICE
+                #define WIFI_FIXIP6       0x16AE12ACul // 172.18.174.22
+                #define WIFI_GATEWAY7     0x0100000Aul // 10.0.0.10       // ?
+                #define WIFI_FIXIP7       0x1600000Aul // 10.0.0.22  // ?
+                #define WIFI_GATEWAY8     0x0100000Aul // 10.0.0.1        // ?
+                #define WIFI_FIXIP8       0x1600000Aul // 10.0.0.22  // ?
+                #define WIFI_SUBNET       0x0000FFFFul // 255.255.255.0
+              #endif
+          #endif
+
+      // --- webserver
+        #if (USE_WEBSERVER > OFF)
+            #define WEBSERVER_CYCLE       1000ul  // Intervallzeit [us]
+          #endif
+
+      // --- MQTT Mosquitto client
+        #if (USE_MQTT > OFF)
+            #define MQTT_HOST             IPAddress(10, 0, 0, 203)
+            #define MQTT_PORT             1883
+            #define MQTT_SECURE           OFF
+            #define MQTT_DEVICE           "esp-test/"
+            #if(MQTT_SECURE > OFF)
+                #define MQTT_BROKER_USER  "<user>"
+                #define MQTT_BROKER_PASS  "<pass>"
+              #endif
+            //
+          #endif
+
     // --- user output
       // --- display
         #if (USE_DISP > 0)
@@ -689,81 +763,6 @@
             #endif
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
-
-    // --- network
-      // --- WIFI
-        #if (USE_WIFI > OFF)
-            #define WIFI_ANZ_LOGIN  7
-            #define WIFI_IS_DUTY    ON
-            #define WIFI_SSID0      "MAMD-HomeG" // WLAN Moosgrabenstrasse 26
-            #define WIFI_SSID0_PW   "ElaNanniRalf3"
-            #define WIFI_SSID1      "HS-HomeG" // WLAN Am Jungberg 9
-            #define WIFI_SSID1_PW   "ElaNanniRalf3"
-            #define WIFI_SSID2      "WL-Fairnetz" //Weltladen
-            #define WIFI_SSID2_PW   "WL&Fair2Live#"
-            #define WIFI_SSID3      "MachNet" //machQuadrat
-            #define WIFI_SSID3_PW   "!Machquadrat1"
-            #define WIFI_SSID4      "MD_KingKong" //Hotspot Martin
-            #define WIFI_SSID4_PW   "ElaNanniRalf3"
-            #define WIFI_SSID5      "CDWiFi"        //OEBB Raijet
-            #define WIFI_SSID5_PW   ""
-            #define WIFI_SSID6      "xWIFI@DB"        //DB ICE
-            #define WIFI_SSID6_PW   ""
-            #define WIFI_SSID7      ""        //?
-            #define WIFI_SSID7_PW   ""
-            #define WIFI_CONN_DELAY 500000ul // Scan-Abstand [us]
-            #define WIFI_CONN_REP   5        // Anzahle der Connect-Schleifen
-            #define WIFI_CONN_CYCLE 4000ul   // Intervallzeit fuer Recoonect [us]
-            #define NTPSERVER_CYCLE 1000ul   // Intervallzeit [us]
-
-            #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
-            #if !(BOARD ^ MC_ESP32_Node)
-                #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
-            #elif !(BOARD ^ MC_ESP32_D1_MINI)
-                  #define WIFI_FIXIP0   0x1800000Aul // 10.0.0.24
-            #elif !(BOARD ^ MC_ESP32_D1_R32)
-                #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
-              #endif
-            #define WIFI_GATEWAY0         0x8B00000Aul // 10.0.0.139 // Moosgraben
-            #define WIFI_FIXIP1           0x1800000Aul // 10.0.0.24
-            #ifdef USE_LOCAL_IP
-                #define WIFI_GATEWAY1     0x8B00000Aul // 10.0.0.139      // Jungberg
-                #define WIFI_GATEWAY2     0x8a00000Aul // 10.0.0.138      // Weltladen
-                #define WIFI_FIXIP2       0x1600000Aul // 10.0.0.22
-                #define WIFI_GATEWAY3     0x01250D0Aul // 10.0.0.1        // machquadrat
-                #define WIFI_FIXIP3       0x6F250D0Aul // 10.0.0.22
-                #define WIFI_GATEWAY4     0x012BA8C0ul // 192.168.43.154  // hotspot KingKong
-                #define WIFI_FIXIP4       0x162BA8C0ul // 192.168.43.22
-                #define WIFI_GATEWAY5     0x0926A8C0ul // 192.168.32.1    // OEBB Railjet
-                #define WIFI_FIXIP5       0x1620A8C0ul // 192.168.32.22
-                #define WIFI_GATEWAY6     0x01AE12ACul // 172.18.0.1    // DB ICE
-                #define WIFI_FIXIP6       0x16AE12ACul // 172.18.174.22
-                #define WIFI_GATEWAY7     0x0100000Aul // 10.0.0.10       // ?
-                #define WIFI_FIXIP7       0x1600000Aul // 10.0.0.22  // ?
-                #define WIFI_GATEWAY8     0x0100000Aul // 10.0.0.1        // ?
-                #define WIFI_FIXIP8       0x1600000Aul // 10.0.0.22  // ?
-                #define WIFI_SUBNET       0x0000FFFFul // 255.255.255.0
-              #endif
-          #endif
-
-      // --- webserver
-        #if (USE_WEBSERVER > OFF)
-            #define WEBSERVER_CYCLE       1000ul  // Intervallzeit [us]
-          #endif
-
-      // --- MQTT Mosquitto client
-        #if (USE_MQTT > OFF)
-            #define MQTT_HOST             IPAddress(10, 0, 0, 203)
-            #define MQTT_PORT             1883
-            #define MQTT_SECURE           OFF
-            #define MQTT_DEVICE           "esp-test/"
-            #if(MQTT_SECURE > OFF)
-                #define MQTT_BROKER_USER  "<user>"
-                #define MQTT_BROKER_PASS  "<pass>"
-              #endif
-            //
-          #endif
-
       // --- cycle timing
         #define DISP_CYCLE_MS       400ul   // Intervallzeit [us]
         // output status line
@@ -775,6 +774,7 @@
         #ifdef USE_OUTPUT_CYCLE
             #define OUTPUT_CYCLE_MS 20u
           #endif
+
   // ----------------------------------------------------------------
   // --- board management
   // ----------------------------------------------------------------
