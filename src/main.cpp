@@ -1947,7 +1947,7 @@
                             sprintf(tmpOut, "%d", tmpval16);
                             heapFree("+publish");
                             //
-                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                            //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //SOUT(tmpOut); SOUTLN(" ");
                             heapFree("+publish");
                             //sleep(2);
@@ -2010,7 +2010,7 @@
                               //SOUT(outStr); SOUT(" ");
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                            mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif
                     break;
@@ -2116,9 +2116,9 @@
                   if (SYS_LED_ON == ON) { SYS_LED_ON = OFF; }
                   else                  { SYS_LED_ON = ON ; }
                   digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
-                  dispT.startT();
                   break;
                 }
+              dispT.startT();
                       //heapFree("-dispIdx");
                       //SOUT(" "); SOUT(millis()); SOUTLN("  disp end ");
 

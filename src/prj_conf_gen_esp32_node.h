@@ -765,7 +765,7 @@
           #endif
 
       // --- cycle timing
-        #define DISP_CYCLE_MS       1000ul   // Intervallzeit [us]
+        #define DISP_CYCLE_MS       400ul   // Intervallzeit [us]
         // output status line
         #define STAT_DELTIME_MS     5000ul  // default time to clear status
         #define STAT_NEWTIME_MS     1000ul  // default time to clear status
