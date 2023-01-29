@@ -466,7 +466,7 @@
         msTimer   servT = msTimer(WEBSERVER_CYCLE);
       #endif // USE_WEBSERVER
     #if (USE_MQTT > OFF)
-        AsyncMqttClient  mqttClient;
+        //AsyncMqttClient  mqttClient;
         TimerHandle_t    mqttReconnectTimer;
         char tmpMQTT[40];
         char tmpOut[40];
@@ -814,16 +814,16 @@
         // start MQTT
           #if (USE_MQTT > OFF)
               SOUTLN("Connecting to MQTT...");
-              mqttClient.onConnect(onMqttConnect);
-              mqttClient.onDisconnect(onMqttDisconnect);
-              mqttClient.onSubscribe(onMqttSubscribe);
-              mqttClient.onUnsubscribe(onMqttUnsubscribe);
-              mqttClient.onMessage(onMqttMessage);
-              mqttClient.onPublish(onMqttPublish);
-              mqttClient.setServer(MQTT_HOST, MQTT_PORT);
-              mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, mqttID,
-                                                reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
-              mqttClient.connect();
+              //mqttClient.onConnect(onMqttConnect);
+              //mqttClient.onDisconnect(onMqttDisconnect);
+              //mqttClient.onSubscribe(onMqttSubscribe);
+              //mqttClient.onUnsubscribe(onMqttUnsubscribe);
+              //mqttClient.onMessage(onMqttMessage);
+              //mqttClient.onPublish(onMqttPublish);
+              //mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+              //mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, mqttID,
+                                                //reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
+              //mqttClient.connect();
             #endif
       // --- sensors
         // ADC ADS1115
@@ -3182,6 +3182,7 @@
         #endif // USE_WEBSERVER
     // --- MQTT
       #if (USE_MQTT > OFF)
+#ifdef UNUSED
         void connectToMqtt()
           {
                   SOUT("Connecting to MQTT ...");
@@ -3273,6 +3274,7 @@
           {
             SOUT("Publish ack Id"); SOUTLN(packetId);
           }
+#endif
       #endif
   // --- error ESP -------------------------
     void logESP(const esp_err_t _err, const char *_msg, uint8_t nr, bool _stop)
