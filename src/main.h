@@ -185,7 +185,7 @@
         #include <md_webserver.h>
         #if (USE_MQTT > OFF)
             //#include <espMqttClient.h>
-            #include <md_eMQTT.hpp>
+            #include <md_eMQTT5.hpp>
           #endif
       #endif
   // --- sensors
