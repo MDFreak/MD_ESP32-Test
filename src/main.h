@@ -10,7 +10,6 @@
     #include <md_time.hpp>
     #include <md_defines.h>
     #include <md_util.h>
-    #include <ip_list.hpp>
     #include <md_filter.hpp>
     #include <project.h>
       #if (PROJECT == TOUCHTEST_1)
@@ -183,6 +182,7 @@
         #include <AsyncTCP.h>
         #include <ESPAsyncWebServer.h>
         #include <md_webserver.h>
+        #include <ip_list.hpp>
         #if (USE_MQTT > OFF)
             //#include <espMqttClient.h>
             #include <md_eMQTT5.hpp>
