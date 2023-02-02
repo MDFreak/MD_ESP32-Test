@@ -1099,12 +1099,13 @@
       #if ( USE_DISP > 0 )
           outStr   = "";
         #endif
-      //tmpval32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
+      tmpval32 = ESP.getFreeHeap();
       //heapFree("+loop");
       if (tmpval32 < freeHeap)
         {
           freeHeap = tmpval32;
-          SOUT(millis()); SOUT(" loop "); SOUT(dispIdx); SOUT(" freeHeap "); SOUTLN(freeHeap);
+          heapFree(" loop ");
+          //SOUT(millis()); SOUT(" loop "); SOUT(dispIdx); SOUT(" freeHeap "); SOUTLN(freeHeap);
         }
       if (firstrun == true)
         {
@@ -1757,8 +1758,8 @@
           if (dispT.TOut())    // handle touch output
             {
               dispIdx++;
-                    //SOUT(" #"); SOUT(millis()); SOUT(" Display dispIdx ... "); SOUT(dispIdx); SOUT(" ");
-                    //heapFree("+disp");
+                    SOUT(" #"); SOUT(millis()); SOUT(" Display dispIdx ... "); SOUT(dispIdx); SOUT(" ");
+                    heapFree("+disp");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (dispIdx)
@@ -2172,7 +2173,7 @@
         {
           uint32_t tmp32 = ESP.getFreeHeap();
           //uint32_t tmp32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
-          SOUT(" #"); SOUT(millis()); SOUT(" "); SOUT(text); SOUT(" "); SOUTLN(tmp32);
+          SOUT(" #"); SOUT(millis()); SOUT(" "); SOUT(text); SOUT(" free "); SOUTLN(tmp32);
         }
   // --- user output ---------------------
     // --- display

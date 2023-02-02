@@ -27,7 +27,7 @@
         #define ERRBIT_NTPTIME    0x00000008     // NTP timeserver connection
       // --- generic
         #define SCAN_I2C          ON // 128
-        #define TEST_NUM_CONVERT  ON
+        #define TEST_NUM_CONVERT  OFF
         #define CHECK_I2C_DEVICES
         //#define UTC_SEASONTIME UTC_WINTERTIME
         #define UTC_SEASONTIME UTC_SUMMERTIME
