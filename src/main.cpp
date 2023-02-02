@@ -2742,6 +2742,7 @@
           #if (USE_WIFI > OFF)
               bool ret = ISERR;
               dispStatus("  start WIFI");
+              heapFree(" before generating ipList ");
               if (startup)
                 {
                   ip_list ipList = ip_list(); // temporary object
@@ -2829,10 +2830,8 @@
 
                   ret = wifi.scanWIFI(&ipList);
                             SOUT(millis()); SOUT(" scanWIFI ret="); SOUTLN(ret);
-                  if (&ipList != NULL)
-                    {
-                      ipList.~ip_list();
-                    }
+                  ipList.~ip_list();
+                  heapFree(" before generating ipList ");
                 }
               ret = wifi.startWIFI();
                           SOUT(" startWIFI ret="); SOUT(ret);
