@@ -1081,8 +1081,10 @@
                 #endif
               SOUTLN();
               dispStatus("... end setup");
-              SOUT("... end setup -- error="); SOUTLN(md_error);
-              SOUTLN();
+                  //SOUT("... end setup -- error="); SOUTLN(md_error);
+                  //SOUTLN();
+              heapFree(" end setup ");
+
               usleep(400000);
             #endif
     }
