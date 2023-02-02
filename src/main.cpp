@@ -1114,7 +1114,7 @@
         }
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
       // --- network ---
-        #if (USE_WIFI > OFF)  // restart WIFI if offline
+        #if (XXXUSE_WIFI > OFF)  // restart WIFI if offline
             if(wifiT.TOut())
               {
                 //Serial.print("WiFi md_error = "); Serial.println(md_error);
@@ -1604,7 +1604,7 @@
                                       default:
                                         break;
                                     }
-                                */
+                                  */
 
                                   #if (USE_WEBCTRL_RGB > OFF)
                                       _tmp += 4;
@@ -2829,19 +2829,23 @@
 
                   ret = wifi.scanWIFI(&ipList);
                             SOUT(millis()); SOUT(" scanWIFI ret="); SOUTLN(ret);
+                  if (&ipList != NULL)
+                    {
+                      ipList.~ip_list();
+                    }
                 }
               ret = wifi.startWIFI();
                           SOUT(" startWIFI ret="); SOUT(ret);
-              md_error = setBit(md_error, ERRBIT_WIFI, ret);
-                    #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                      SOUT("  md_error="); SOUTLN(md_error);
-                      #endif
+              //md_error = setBit(md_error, ERRBIT_WIFI, ret);
+                    //#if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                      //SOUT("  md_error="); SOUTLN(md_error);
+                      //#endif
 
                     //if ((md_error & ERRBIT_WIFI) == 0)
-              if (ret == ISOK)
-                  dispStatus("WIFI connected");
-                else
-                  dispStatus("WIFI error");
+              //if (ret == ISOK)
+                  //dispStatus("WIFI connected");
+                //else
+                  //dispStatus("WIFI error");
 
               #if (USE_NTP_SERVER > OFF)
                   if((md_error & ERRBIT_WIFI) == 0) // WiFi ok
