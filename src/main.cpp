@@ -1148,7 +1148,7 @@
                       {
                         ntpGet = wifi.getNTPTime(&ntpTime);
                         setTime(ntpTime);
-                        ////////////////////////////////SOUT(" NTP time "); SOUT(ntpTime);
+                        SOUT(millis()); SOUTLN(" NTP time syncronized");
                       }
                   }
                 ntpT.startT();
@@ -2744,7 +2744,7 @@
           #if (USE_WIFI > OFF)
               bool ret = ISERR;
               dispStatus("  start WIFI");
-              heapFree(" before generating ipList ");
+                  //heapFree(" before generating ipList ");
               if (startup)
                 {
                   ip_list ipList = ip_list(); // temporary object
@@ -2801,7 +2801,7 @@
                               #endif
                       ipList.append(WIFI_FIXIP8, WIFI_GATEWAY8, WIFI_SUBNET, WIFI_SSID8, WIFI_SSID8_PW);
                     #endif
-                            SOUT(millis()); SOUTLN(" setup startWIFI locWIFI fertig");
+                            //SOUT(millis()); SOUTLN(" setup startWIFI locWIFI fertig");
 
                             //ip_cell* pip = (ip_cell*) ipList.pFirst();
                             //char stmp[NET_MAX_SSID_LEN] = "";
@@ -2830,15 +2830,15 @@
                                       pip->getPW(stmp); SOUT(" pw "); SOUTLN(stmp);
                                     */
 
-                  heapFree(" ipList generated ");
+                      //heapFree(" ipList generated ");
                   ret = wifi.scanWIFI(&ipList);
                             SOUT(millis()); SOUT(" scanWIFI ret="); SOUTLN(ret);
-                  heapFree(" before deleting ipList ");
+                      //heapFree(" before deleting ipList ");
                   ipList.~ip_list();
-                  heapFree(" after deleting ipList ");
+                      //heapFree(" after deleting ipList ");
                 }
               ret = wifi.startWIFI();
-                          SOUT(" startWIFI ret="); SOUT(ret);
+                          //SOUT(" startWIFI ret="); SOUT(ret);
               //md_error = setBit(md_error, ERRBIT_WIFI, ret);
               md_error = setBit(md_error, ERRBIT_WIFI, 0);
                     //#if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
