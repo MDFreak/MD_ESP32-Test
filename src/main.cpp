@@ -2837,6 +2837,7 @@
               ret = wifi.startWIFI();
                           SOUT(" startWIFI ret="); SOUT(ret);
               //md_error = setBit(md_error, ERRBIT_WIFI, ret);
+              md_error = setBit(md_error, ERRBIT_WIFI, 0);
                     //#if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
                       //SOUT("  md_error="); SOUTLN(md_error);
                       //#endif
