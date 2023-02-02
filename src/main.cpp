@@ -2828,10 +2828,12 @@
                                       pip->getPW(stmp); SOUT(" pw "); SOUTLN(stmp);
                                     */
 
+                  heapFree(" ipList generated ");
                   ret = wifi.scanWIFI(&ipList);
                             SOUT(millis()); SOUT(" scanWIFI ret="); SOUTLN(ret);
+                  heapFree(" before deleting ipList ");
                   ipList.~ip_list();
-                  heapFree(" before generating ipList ");
+                  heapFree(" after deleting ipList ");
                 }
               ret = wifi.startWIFI();
                           SOUT(" startWIFI ret="); SOUT(ret);
