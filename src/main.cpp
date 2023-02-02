@@ -1757,8 +1757,8 @@
           if (dispT.TOut())    // handle touch output
             {
               dispIdx++;
-                    SOUT(" #"); SOUT(millis()); SOUT(" Display dispIdx ... "); SOUT(dispIdx); SOUT(" ");
-                    heapFree("+disp");
+                    //SOUT(" #"); SOUT(millis()); SOUT(" Display dispIdx ... "); SOUT(dispIdx); SOUT(" ");
+                    //heapFree("+disp");
               #ifdef RUN_OLED_TEST
                   oled.clearBuffer();
                   switch (dispIdx)
@@ -1951,11 +1951,11 @@
                           #endif
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
-                            heapFree("+publish");
+                            //heapFree("+publish");
                             //
                             //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //SOUT(tmpOut); SOUTLN(" ");
-                            heapFree("+publish");
+                            //heapFree("+publish");
                             //sleep(2);
                           #endif
                       }
