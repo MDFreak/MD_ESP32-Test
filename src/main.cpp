@@ -2724,59 +2724,59 @@
                 {
                   ip_list ipList = ip_list(); // temporary object
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SOUT(millis()); SOUT(" setup startWIFI created ipList "); SOUTHEXLN((int) &ipList);
-                                SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 0");
+                                SHEXVAL( setup startWIFI created ipList ", (int) &ipList);
+                                STXT( setup startWIFI add WIFI 0");
                               #endif
                   ipList.append(WIFI_FIXIP0, WIFI_GATEWAY0, WIFI_SUBNET, WIFI_SSID0, WIFI_SSID0_PW);
                   #if (WIFI_ANZ_LOGIN > 1)
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 1");
+                                STXT(" setup startWIFI add WIFI 1");
                               #endif
                       ipList.append(WIFI_FIXIP1, WIFI_GATEWAY1, WIFI_SUBNET, WIFI_SSID1, WIFI_SSID1_PW);
                     #endif
                   #if (WIFI_ANZ_LOGIN > 2)
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SOUT(millis()); SOUTLN(" setup startWIFI add WIFI 2");
+                                STXT(" setup startWIFI add WIFI 2");
                               #endif
                       ipList.append(WIFI_FIXIP2, WIFI_GATEWAY2, WIFI_SUBNET, WIFI_SSID2, WIFI_SSID2_PW);
                     #endif
                   #if (WIFI_ANZ_LOGIN > 3)
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SOUT(millis()); SOUTLN(" setup add WIFI 3");
+                                STXT(" setup startWIFI add WIFI 3");
                               #endif
                       ipList.append(WIFI_FIXIP3, WIFI_GATEWAY3, WIFI_SUBNET, WIFI_SSID3, WIFI_SSID3_PW);
                     #endif
                   #if (WIFI_ANZ_LOGIN > 4)
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SOUT(millis()); SOUTLN(" setup add WIFI 4");
+                                STXT(" setup startWIFI add WIFI 4");
                               #endif
                       ipList.append(WIFI_FIXIP4, WIFI_GATEWAY4, WIFI_SUBNET, WIFI_SSID4, WIFI_SSID4_PW);
                     #endif
                   #if (WIFI_ANZ_LOGIN > 5)
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SOUT(millis()); SOUTLN(" setup add WIFI 5");
+                                STXT(" setup startWIFI add WIFI 5");
                               #endif
                       ipList.append(WIFI_FIXIP5, WIFI_GATEWAY5, WIFI_SUBNET, WIFI_SSID5, WIFI_SSID5_PW);
                     #endif
                   #if (WIFI_ANZ_LOGIN > 6)
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SOUT(millis()); SOUTLN(" setup add WIFI 6");
+                                STXT(" setup startWIFI add WIFI 6");
                               #endif
                       ipList.append(WIFI_FIXIP6, WIFI_GATEWAY6, WIFI_SUBNET, WIFI_SSID6, WIFI_SSID6_PW);
                     #endif
                   #if (WIFI_ANZ_LOGIN > 7)
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SOUT(millis()); SOUTLN(" setup add WIFI 7");
+                                STXT(" setup startWIFI add WIFI 7");
                               #endif
                       ipList.append(WIFI_FIXIP7, WIFI_GATEWAY7, WIFI_SUBNET, WIFI_SSID7, WIFI_SSID7_PW);
                     #endif
                   #if (WIFI_ANZ_LOGIN > 8)
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SOUT(millis()); SOUTLN(" setup add WIFI 8");
+                                STXT(" setup add WIFI 8");
                               #endif
                       ipList.append(WIFI_FIXIP8, WIFI_GATEWAY8, WIFI_SUBNET, WIFI_SSID8, WIFI_SSID8_PW);
                     #endif
-                            //SOUT(millis()); SOUTLN(" setup startWIFI locWIFI fertig");
+                            //STXT(UTLN(" setup startWIFI locWIFI fertig");
 
                             //ip_cell* pip = (ip_cell*) ipList.pFirst();
                             //char stmp[NET_MAX_SSID_LEN] = "";
@@ -2807,17 +2807,17 @@
 
                       //heapFree(" ipList generated ");
                   ret = wifi.scanWIFI(&ipList);
-                            SOUT(millis()); SOUT(" scanWIFI ret="); SOUTLN(ret);
+                            SVAL(" scanWIFI ret=", ret);
                       //heapFree(" before deleting ipList ");
                   ipList.~ip_list();
                       //heapFree(" after deleting ipList ");
                 }
               ret = wifi.startWIFI();
-                          //SOUT(" startWIFI ret="); SOUT(ret);
+                          //SVAL(" startWIFI ret ", ret);
               //md_error = setBit(md_error, ERRBIT_WIFI, ret);
               md_error = setBit(md_error, ERRBIT_WIFI, 0);
                     //#if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                      //SOUT("  md_error="); SOUTLN(md_error);
+                      //SVAL("  md_error ", md_error);
                       //#endif
 
                     //if ((md_error & ERRBIT_WIFI) == 0)
@@ -2873,24 +2873,24 @@
                   {
                     ret = pmdServ->md_startServer();
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                            SOUT("ret="); SOUTLN(ret);
+                            STXT("ret ", ret);
                           #endif
                   }
                 md_error = setBit(md_error, ERRBIT_SERVER, ret);
                       #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                        // SOUT("  md_error="); SOUTLN(md_error);
+                        // STXT("  md_error ", md_error);
                       #endif
 
                 //if ((md_error & ERRBIT_SERVER) == 0)
                 if (!getBit(md_error, ERRBIT_SERVER))
                   {
                     dispStatus("Webserver online");
-                    SOUTLN("Webserver online");
+                    STXT("Webserver online");
                   }
                   else
                   {
                     dispStatus("Webserver ERROR");
-                    SOUTLN("Webserver ERROR");
+                    STXT("Webserver ERROR");
                   }
               }
           }
@@ -2930,47 +2930,47 @@
                       tval  = ctmp[0];
                       idx   = ctmp[1] - '0';
                       ctmp += 2;
-                          SOUT(" msg client "); SOUT(pM->client());
-                          SOUT(" tMsg ");       SOUT(pM->msgType());
-                          SOUT(" tData ");      SOUT((char) pM->dataType());
-                          SOUT(" tval ");       SOUT(tval);
-                          SOUT(" payload ");    SOUT(pM->payload());
-                          SOUT(" idx ");        SOUTLN(idx);
-                          SOUT(" ctmp '");      SOUT(ctmp); SOUTLN("' ");
+                          SVAL(" msg client ", pM->client());
+                          SVAL(" tMsg ",       pM->msgType());
+                          SVAL(" tData ",      (char) pM->dataType());
+                          SVAL(" tval ",       tval);
+                          SVAL(" payload ",    pM->payload());
+                          SVAL(" idx ",        idx);
+                          SVAL(" ctmp '",      ctmp);
                       if (tdata == MD_SINGLE)
                         {
-                          SOUTLN("---- switch(tval) ----");
+                          //STXT("---- switch(tval) ----");
                           switch (tval)
                             {
                               case EL_TANALOG:
-                                  SOUT(" Analog nu ");
+                                  SOUT(" -- Analog nu ");
                                 break;
                               case EL_TSLIDER:
-                                  SOUTLN(" ---- Slider ----");
+                                  STXT(" -- Slider");
                                   itmp  = (int)strtol(ctmp, NULL, 10);
                                   switch (idx) // index of serverelement
                                     {
                                       case 1: // RGB-LED col24
                                         #if (USE_RGBLED_PWM > OFF)
-                                            SOUTLN("  ---- RGBLED bright ----"); SOUT(RGBLED[1]->bright()); SOUT(" neu ");
+                                            SVAL("  -- RGBLED bright old ", RGBLED[1]->bright());
                                             RGBLED[1]->bright(itmp);
                                             LEDout = TRUE;
-                                            SOUT(RGBLED[1]->bright()); SOUT(" ");
+                                            SVAL("  -- RGBLED bright new ", RGBLED[1]->bright());
                                           #endif
                                         break;
                                       case 2: // 2821 line col24
                                         #if (USE_WS2812_LINE_OUT >OFF)
-                                            SOUTLN("  ---- line bright ----"); SOUT(line2812[1]->bright()); SOUT(" neu ");
+                                            SVAL("  -- line bright old", line2812[1]->bright());
                                             line2812[1]->bright((uint8_t) itmp);
-                                            SOUT(line2812[1]->bright()); SOUT(" ");
+                                            SVAL("  -- line bright new", line2812[1]->bright());
                                           #endif
                                         break;
                                       case 3:
                                         #if (USE_WS2812_MATRIX_OUT > OFF)
                                             ppix = outM2812[1].text->pix24;
-                                            SOUTLN("  ---- matrix bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
+                                            SVAL("  -- matrix bright old", ppix->bright());
                                             ppix->bright((uint8_t) itmp);
-                                            SOUTLN(ppix->bright());
+                                            SVAL("  -- matrix bright new", ppix->bright());
                                           #endif
                                         break;
                                       case 4:
