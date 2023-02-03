@@ -383,7 +383,8 @@
         #if (USE_NTP_SERVER > OFF)
             msTimer ntpT    = msTimer(NTPSERVER_CYCLE);
             time_t  ntpTime = 0;
-            bool    ntpGet  = true;
+            //bool    ntpGet  = true;
+            uint8_t ntpOk   = FALSE;
           #endif // USE_WEBSERVER
       #endif
     #if (USE_WEBSERVER > OFF)
@@ -1132,19 +1133,17 @@
             if (ntpT.TOut() == true)
               {
                 setTime(++ntpTime);
-                if ((md_error & ERRBIT_WIFI) == OK)
+                //if ((md_error & ERRBIT_WIFI) == OK)
+                if (WiFi.status() == WL_CONNECTED)
                   { // WiFi online
-                    #ifdef UNUSED
-                        if (((md_error & ERRBIT_NTPTIME) > 0) || (year() < 2000))   // time not initialized
-                          {
-                            initNTPTime();
-                            ntpGet = true;
-                          }
-                      #endif
-
-                    if (ntpGet == true)
+                    if (!ntpOk)
                       {
-                        ntpGet = wifi.getNTPTime(&ntpTime);
+                        initNTPTime();
+                        iret = TRUE;
+                      }
+                    if (iret)
+                      {
+                        iret = wifi.getNTPTime(&ntpTime);
                         setTime(ntpTime);
                         STXT(" NTP time syncronized");
                       }
@@ -1306,162 +1305,160 @@
                 switch(inpIdx)
                   {
                     case 1:
-                      #if (USE_BME280_I2C > OFF)
-                          bme1.init();
-                          usleep(100);
-                          bme1T.doVal((int16_t)  ( bme1.readTemperature() + 0.5));
-                          bme1H.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
-                          bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
-                        #endif
+                        #if (USE_BME280_I2C > OFF)
+                            bme1.init();
+                            usleep(100);
+                            bme1T.doVal((int16_t)  ( bme1.readTemperature() + 0.5));
+                            bme1H.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
+                            bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
+                          #endif
                       break;
                     case 2:
-                      #if (USE_PHOTO_SENS_ANA > OFF)
-                          #if (PHOTO1_ADC > OFF)
-                              photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
-                            #endif
-                          #if (PHOTO1_1115 > OFF)
-                            #endif
-                        #endif
+                        #if (USE_PHOTO_SENS_ANA > OFF)
+                            #if (PHOTO1_ADC > OFF)
+                                photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
+                              #endif
+                            #if (PHOTO1_1115 > OFF)
+                              #endif
+                          #endif
                       break;
                     case 3:
-                      #if (USE_MQ135_GAS_ANA > OFF)
-                          #if (MQ135_GAS_ADC > OFF)
-                              gasVal.doVal(analogRead(PIN_MQ135));
-                                    //STXT(" gas measurment val = ", gasValue);
-                              gasValue = (int16_t) valGas.value((double) gasValue);
-                                    //STXT("    gasValue = ", gasValue);
-                            #endif
-                          #if (MQ135_GAS_1115 > OFF)
-                            #endif
-                        #endif
+                        #if (USE_MQ135_GAS_ANA > OFF)
+                            #if (MQ135_GAS_ADC > OFF)
+                                gasVal.doVal(analogRead(PIN_MQ135));
+                                      //STXT(" gas measurment val = ", gasValue);
+                                gasValue = (int16_t) valGas.value((double) gasValue);
+                                      //STXT("    gasValue = ", gasValue);
+                              #endif
+                            #if (MQ135_GAS_1115 > OFF)
+                              #endif
+                          #endif
                       break;
                     case 4:
-                      #if (USE_MQ3_ALK_ANA > OFF)
-                          #if (MQ3_ALK_ADC > OFF)
-                            #endif
-                          #if (MQ3_ALK_1115 > OFF)
-                              ads[0].setGain(MQ3_1115_ATT);
-                              //ads[0].setDataRate(RATE_ADS1115_860SPS);
-                              ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
-                              usleep(1200); // Wait for the conversion to complete
-                              while (!ads[0].conversionComplete());
-                              alk[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                              alkVal[0].doVal(alk[0]);   // Read the conversion results
-                              //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
-                            #endif
-                        #endif
+                        #if (USE_MQ3_ALK_ANA > OFF)
+                            #if (MQ3_ALK_ADC > OFF)
+                              #endif
+                            #if (MQ3_ALK_1115 > OFF)
+                                ads[0].setGain(MQ3_1115_ATT);
+                                //ads[0].setDataRate(RATE_ADS1115_860SPS);
+                                ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
+                                usleep(1200); // Wait for the conversion to complete
+                                while (!ads[0].conversionComplete());
+                                alk[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                                alkVal[0].doVal(alk[0]);   // Read the conversion results
+                                //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
+                              #endif
+                          #endif
                       break;
                     case 5:
-                      #if (USE_VCC_ANA > OFF)
-                          #if (VCC_ADC > OFF)
-                            #endif
-                          #if (VCC_1115 > OFF)
-                              ads[VCC50_IDX].setGain(VCC_1115_ATT);
-                              ads[VCC50_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
-                              usleep(1200); // Wait for the conversion to complete
-                              while (!ads[VCC50_IDX].conversionComplete());
-                              vcc[VCC50_IDX] = ads[VCC50_IDX].getLastConversionResults();   // Read the conversion results
-                              vccVal[VCC50_IDX].doVal(vcc[VCC50_IDX]);
-                              //vcc[VCC50_IDX] = (uint16_t) (1000 * ads[VCC50_IDX].computeVolts(vccVal[VCC50_IDX].doVal(ads[VCC50_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
-                              #if (VCC_1115 > 1)
-                                  ads[VCC33_IDX].setGain(VCC_1115_ATT);
-                                  ads[VCC33_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
-                                  usleep(1200); // Wait for the conversion to complete
-                                  while (!ads[VCC33_IDX].conversionComplete());
-                                  vcc[VCC33_IDX] = ads[VCC33_IDX].getLastConversionResults();   // Read the conversion results
-                                  vccVal[VCC33_IDX].doVal(vcc[VCC33_IDX]);
-                                  //vcc[VCC33_IDX] = (uint16_t) (1000 * ads[VCC33_IDX].computeVolts(vccVal[VCC33_IDX].doVal(ads[VCC33_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
-                                #endif
-                            #endif
-                        #endif
+                        #if (USE_VCC_ANA > OFF)
+                            #if (VCC_ADC > OFF)
+                              #endif
+                            #if (VCC_1115 > OFF)
+                                ads[VCC50_IDX].setGain(VCC_1115_ATT);
+                                ads[VCC50_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
+                                usleep(1200); // Wait for the conversion to complete
+                                while (!ads[VCC50_IDX].conversionComplete());
+                                vcc[VCC50_IDX] = ads[VCC50_IDX].getLastConversionResults();   // Read the conversion results
+                                vccVal[VCC50_IDX].doVal(vcc[VCC50_IDX]);
+                                //vcc[VCC50_IDX] = (uint16_t) (1000 * ads[VCC50_IDX].computeVolts(vccVal[VCC50_IDX].doVal(ads[VCC50_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
+                                #if (VCC_1115 > 1)
+                                    ads[VCC33_IDX].setGain(VCC_1115_ATT);
+                                    ads[VCC33_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
+                                    usleep(1200); // Wait for the conversion to complete
+                                    while (!ads[VCC33_IDX].conversionComplete());
+                                    vcc[VCC33_IDX] = ads[VCC33_IDX].getLastConversionResults();   // Read the conversion results
+                                    vccVal[VCC33_IDX].doVal(vcc[VCC33_IDX]);
+                                    //vcc[VCC33_IDX] = (uint16_t) (1000 * ads[VCC33_IDX].computeVolts(vccVal[VCC33_IDX].doVal(ads[VCC33_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
+                                  #endif
+                              #endif
+                          #endif
                       break;
                     case 6:
-                      #if (USE_POTI_ANA > OFF)
-                          #if (POTI1_ADC > OFF)
-                            #endif
-                          #if (POTI1_1115 > OFF)
-                              ads[0].setGain(POTI1_1115_ATT);
-                              ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHAN], /*continuous=*/false);
-                              usleep(1200); // Wait for the conversion to complete
-                              while (!ads[0].conversionComplete());
-                              poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                              potiVal[0].doVal(poti[0]);
-                              //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
-                            #endif
-                        #endif
+                        #if (USE_POTI_ANA > OFF)
+                            #if (POTI1_ADC > OFF)
+                              #endif
+                            #if (POTI1_1115 > OFF)
+                                ads[0].setGain(POTI1_1115_ATT);
+                                ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHAN], /*continuous=*/false);
+                                usleep(1200); // Wait for the conversion to complete
+                                while (!ads[0].conversionComplete());
+                                poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                                potiVal[0].doVal(poti[0]);
+                                //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
+                              #endif
+                          #endif
                       break;
                     case 7:
-                      #if (USE_ACS712_ANA > OFF)
-                          #if (I712_1_ADC > OFF)
-                            #endif
-                          #if (I712_1_1115 > OFF)
-                              ads[0].setGain(I712_1_1115_ATT);
-                              ads[0].startADCReading(MUX_BY_CHANNEL[I712_1_1115_CHAN], /*continuous=*/false);
-                              usleep(1200); // Wait for the conversion to complete
-                              while (!ads[0].conversionComplete());
-                              i712[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                              i712Val[0].doVal(i712[0]);
-                              // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
-                            #endif
-                        #endif
+                        #if (USE_ACS712_ANA > OFF)
+                            #if (I712_1_ADC > OFF)
+                              #endif
+                            #if (I712_1_1115 > OFF)
+                                ads[0].setGain(I712_1_1115_ATT);
+                                ads[0].startADCReading(MUX_BY_CHANNEL[I712_1_1115_CHAN], /*continuous=*/false);
+                                usleep(1200); // Wait for the conversion to complete
+                                while (!ads[0].conversionComplete());
+                                i712[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                                i712Val[0].doVal(i712[0]);
+                                // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
+                              #endif
+                          #endif
                       break;
                     case 8:
-                      #if (USE_CNT_INP > OFF)
-                          #ifdef USE_PW
-                              getCNTIn();
-                            #endif
-                        #endif
-
+                        #if (USE_CNT_INP > OFF)
+                            #ifdef USE_PW
+                                getCNTIn();
+                              #endif
+                          #endif
                       break;
                     case 9:
-                      #if (USE_TYPE_K_SPI > OFF)
-                          int8_t  tkerr = (int8_t) ISOK;
-                          int16_t ival = TypeK1.actT();
-                          tkerr = TypeK1.readErr();
-                                //SVAL(" typeK1 err ", tkerr);
-                          if (!tkerr)
-                            {
-                              tk1Val    = valTK1.value((double) ival);
-                                  //SVAL(" k1val ", tk1Val);
-                              ival      = TypeK1.refT();
-                                  //SVAL(" k1ref raw = ", (int) ival);
-                              tk1ValRef = valTK1ref.value((double) ival);
-                                  //SVAL(" k1ref = ", (int) tk1ValRef);
-                            }
-                          #if (USE_TYPE_K_SPI > 1)
-                              ival      = TypeK2.actT();
-                              tkerr     = TypeK2.readErr() % 8;
+                        #if (USE_TYPE_K_SPI > OFF)
+                            int8_t  tkerr = (int8_t) ISOK;
+                            int16_t ival = TypeK1.actT();
+                            tkerr = TypeK1.readErr();
                                   //SVAL(" typeK1 err ", tkerr);
-                              if (!tkerr)
-                                {
-                                  tk2Val    = valTK2.value((double) ival);
-                                      //SVAL(" k2val ", tk2Val);
-                                  ival      = TypeK2.refT();
-                                      //SVAL(" k2ref raw = ", (int) ival);
-                                  tk2ValRef = valTK2ref.value((double) ival);
-                                      //SVAL(" k2ref = ", (int) tk2ValRef);
-                                }
-                            #endif
-                        #endif
-
+                            if (!tkerr)
+                              {
+                                tk1Val    = valTK1.value((double) ival);
+                                    //SVAL(" k1val ", tk1Val);
+                                ival      = TypeK1.refT();
+                                    //SVAL(" k1ref raw = ", (int) ival);
+                                tk1ValRef = valTK1ref.value((double) ival);
+                                    //SVAL(" k1ref = ", (int) tk1ValRef);
+                              }
+                            #if (USE_TYPE_K_SPI > 1)
+                                ival      = TypeK2.actT();
+                                tkerr     = TypeK2.readErr() % 8;
+                                    //SVAL(" typeK1 err ", tkerr);
+                                if (!tkerr)
+                                  {
+                                    tk2Val    = valTK2.value((double) ival);
+                                        //SVAL(" k2val ", tk2Val);
+                                    ival      = TypeK2.refT();
+                                        //SVAL(" k2ref raw = ", (int) ival);
+                                    tk2ValRef = valTK2ref.value((double) ival);
+                                        //SVAL(" k2ref = ", (int) tk2ValRef);
+                                  }
+                              #endif
+                          #endif
                       break;
                     case 10:
-                      #if (USE_DIG_INP > OFF)
-                          getDIGIn();
-                        #endif
+                        #if (USE_DIG_INP > OFF)
+                            getDIGIn();
+                          #endif
                       break;
                     case 11:
-                      #if (USE_ESPHALL > OFF)
-                          valHall = hallRead();
-                        #endif
+                        #if (USE_ESPHALL > OFF)
+                            valHall = hallRead();
+                          #endif
                       break;
                     case 12:
-                      #if (USE_MCPWM > OFF)
-                          getCNTIn();
-                        #endif
+                        #if (USE_MCPWM > OFF)
+                            getCNTIn();
+                          #endif
                       break;
                     default:
-                      inpIdx = 0;
+                        inpIdx = 0;
                       break;
                   }
                     //heapFree("-meascyc");
@@ -1884,7 +1881,7 @@
                     #endif
                   outStr.concat("  ");
                   dispText(outStr, 12, 4, outStr.length());
-                        STXT(outStr);
+                        //STXT(outStr);
                   break;
                 case 7:  // temp sensor
                   #if (USE_DS18B20_1W_IO > OFF)
