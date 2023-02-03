@@ -1834,7 +1834,7 @@
                       outStr.concat(gasValue);
                       outStr.concat("  ");
                       dispText(outStr, 17, 3, outStr.length());
-                            //SOUTLN(outStr);
+                            //STXT(outStr);
                     #endif
                   break;
                 case 5:  // gas sensor
@@ -1851,7 +1851,7 @@
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
                       //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                //SOUT(tmpOut); SOUT(" ");
+                                //STXT(tmpOut);
                         #endif
                     #endif
                   break;
@@ -1874,12 +1874,12 @@
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
                       //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                          //SOUT(tmpOut); SOUT(" ");
+                          //STXT(tmpOut);
                         #endif
                     #endif
                   outStr.concat("  ");
                   dispText(outStr, 12, 4, outStr.length());
-                        SOUTLN(outStr); //SOUT(" ");
+                        STXT(outStr);
                   break;
                 case 7:  // temp sensor
                   #if (USE_DS18B20_1W_IO > OFF)
@@ -1936,13 +1936,13 @@
                             //heapFree("+publish");
                             //
                             //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  //SOUT(tmpOut); SOUTLN(" ");
+                                  //STXT(tmpOut);
                             //heapFree("+publish");
                             //sleep(2);
                           #endif
                       }
                     dispText(outStr , 0, 3, outStr.length());
-                            //SOUT(outStr); SOUT(" ");
+                            //STXT(outStr);
                     #endif
                 	break;
                 case 9:  // voltage, current
@@ -1955,13 +1955,11 @@
                         outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
-                              //SOUT(outStr);
-                              //SOUTLN(outStr);
-                              //SOUT(outStr); SOUT(" ");
+                              //STXT(outStr);
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                         //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  //SOUT(tmpOut); SOUT(" ");
+                                  //STXT(tmpOut);
                           #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
@@ -1974,13 +1972,11 @@
                         //outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 15, 2, outStr.length());
-                              //SOUT(outStr);
-                              //SOUTLN(outStr);
-                              //SOUT(outStr); SOUT(" ");
+                              //STXT(outStr);
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                         //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  //SOUT(tmpOut); SOUT(" ");
+                                  //STXT(tmpOut);
                           #endif
                       #endif
                    	break;
@@ -1994,8 +1990,7 @@
                         outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 15, 1, outStr.length());
-                              //SOUTLN(outStr);
-                              //SOUT(outStr); SOUT(" ");
+                              //STXT(outStr);
                         #if (USE_MQTT > OFF)
                             sprintf(tmpOut, "%d", tmpval16);
                             //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
@@ -2007,11 +2002,10 @@
                         int32_t valHall = 0;
                       #endif
                     #if (USE_DIG_INP > OFF)
-                      //SOUT(" SWD ");
                       outStr = "";
                       for (uint8_t i = 0 ; i < USE_GEN_SW_INP; i++)
                         {
-                          //SOUT(i); SOUT("="); SOUT(valInpDig[i]); SOUT(" ");
+                          //S2VAL(" SWD", i, valInpDig[i]);
                           tmpStr = "SWD";
                           tmpStr.concat(i);
                           tmpStr.concat(valInpDig[i]);
@@ -2025,10 +2019,10 @@
                             #endif
                         }
                       dispText(outStr , 17, 3, outStr.length());
-                            //SOUTLN();
+                            //STXT(outStr);
                     #endif
                   #if (USE_CTRL_POTI)
-                      //SOUT("POT "); SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" ");
+                      //SVAL("POT ", inpValADC[INP_POTI_CTRL]);
                     #endif
                   break;
                 case 12:  // WS2812 lines
@@ -2094,7 +2088,7 @@
                             outStr += (String) pwmInVal[i].highVal;
                                   //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
                           }
-                        //SOUT(outStr); SOUT(" ");
+                        //STXT(outStr);
                         //dispText(outStr ,  0, 1, outStr.length());
                     #endif
                   break;
@@ -2108,12 +2102,11 @@
                 }
               dispT.startT();
                       //heapFree("-dispIdx");
-                      //SOUT(" "); SOUT(millis()); SOUTLN("  disp end ");
+                      //STXT("  disp end ");
 
               #ifdef USE_STATUS
                   dispStatus("");
                 #endif
-                        //SOUTLN();
             }
           #endif // defined(DISP)
       // --- system control --------------------------------
@@ -2137,7 +2130,7 @@
           {
             String taskMessage = "loop task running on core ";
             taskMessage = taskMessage + xPortGetCoreID();
-            SOUTLN(taskMessage);
+            STXT(taskMessage);
             usLast = micros();
             firstrun = false;
           }
@@ -2154,7 +2147,7 @@
         {
           uint32_t tmp32 = ESP.getFreeHeap();
           //uint32_t tmp32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
-          SOUT(" #"); SOUT(millis()); SOUT(" "); SOUT(text); SOUT(" free "); SOUTLN(tmp32); SFLUSH();
+          SVAL(text, tmp32);
         }
   // --- user output ---------------------
     // --- display
@@ -2221,7 +2214,7 @@
                       #if ( USE_STATUS2 > OFF)
                           oled2.wrStatus(msg);
                         #endif
-                           //SOUT("  md_error="); SOUTLN(md_error);
+                           //SVAL("  md_error ", md_error);
                     #endif
                   #if (USE_TFT > 0)
                       #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
@@ -2250,7 +2243,7 @@
                                    // }
                                   // #endif
                           #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
-                              SOUT("  md_error="); SOUTLN(md_error);
+                              SVAL("  md_error ", md_error);
                             #endif
                     #endif // USE_DISP
                   info = false;
@@ -2268,10 +2261,10 @@
           #if (USE_DISP > 0)
               #if (USE_OLED_I2C > OFF)
                   oled1.wrText(msg, col, row, len);
-                            //SOUT((uint32_t) millis); SOUT(" dispText oled1 '"); SOUT(msg); SOUTLN("'");
+                            //SVAL(" dispText oled1 '", msg);
                   #if (USE_OLED_I2C > 1)
                       oled2.wrText(msg, col, row, len);
-                            //SOUT((uint32_t) millis); SOUT(" dispText oled2 '"); SOUT(msg); SOUTLN("'");
+                            //SVAL(" dispText oled2 '", msg);
                     #endif
                 #endif
               #if (USE_TFT > 0)
@@ -2293,13 +2286,13 @@
                     #if (USE_OLED1_I2C > OFF)
                         oled1.wrText(msg, col, row, len);
                             #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
-                                SOUT("  md_error="); SOUTLN(md_error);
+                                STXT("  md_error ", md_error);
                               #endif
                       #endif
                     #if defined(OLED2)
                         oled2.wrText(msg, col, row, len);
                             #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
-                              SOUT("  md_error="); SOUTLN(md_error);
+                              STXT("  md_error ", md_error);
                             #endif
                       #endif
                     #if (USE_TFT > 0)
@@ -2330,14 +2323,14 @@
                   #if (USE_TOUCHSCREEN_SPI > OFF)
                       touch.start(DISP_ORIENT, DISP_BCOL);
                           #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                            SOUT(millis()); SOUTLN(" startTouch ");
+                            STXT(" startTouch ");
                           #endif
                     #endif
                 #endif
 
               #if (USE_OLED_I2C > OFF)
                   oled1.begin((uint8_t) OLED1_MAXCOLS, (uint8_t) OLED1_MAXROWS);
-                  SOUT(millis()); SOUTLN(" oled1 gestartet");
+                  STXT(" oled2 gestartet");
                   #if (USE_OLED_I2C > 1)
                       oled2.begin((uint8_t) OLED2_MAXCOLS, (uint8_t) OLED2_MAXROWS);
                     #endif
@@ -2355,7 +2348,7 @@
               strip.show();
               usleep(400000);
               i32tmp = COL24_2812_L1 + (BRI_2812_L1 << 24);
-              SOUT(" strip BriCol org "); SOUTHEX(i32tmp);
+              SHEXVAL(" strip BriCol org ", i32tmp);
 
               line2812[0] = new md_LEDPix24();
               line2812[1] = new md_LEDPix24(i32tmp);
@@ -2376,7 +2369,7 @@
                   //                       (uint8_t) ((line2812[0]->col24() & 0x0000FF00u) >> 8 ),
                   //                       (uint8_t)  (line2812[0]->col24() & 0x000000FFu) ) );
               strip.show();
-              SOUTLN("ok");
+              STXT("ok");
             }
         #endif
 
@@ -2582,13 +2575,13 @@
                   switch (i)
                     {
                       case 0:
-                        SOUTLN("  pcnt_isr_handler unit 0");
+                        STXT("  pcnt_isr_handler unit 0");
                         sprintf(cmsg, "_unit %i pcnt_isr_handler_add_ ", i);
                         logESP(pcnt_isr_handler_add(unit, pcnt0_intr_hdl, &unit), cmsg, i);
                         break;
                       #if (USE_CNT_INP > 1)
                           case 1:
-                            SOUTLN("  pcnt_isr_handler unit 1");
+                            STXT("  pcnt_isr_handler unit 1");
                             sprintf(cmsg, "_unit %i pcnt_isr_handler_add_ ", i);
                             logESP(pcnt_isr_handler_add(unit, pcnt1_intr_hdl, &unit), cmsg, i);
                             break;
@@ -2675,7 +2668,7 @@
               for (uint8_t i = 0 ; i < DS18B20_ANZ ; i++ )
                 {
                   dsTemp[i] = dsSensors.getTempCByIndex(i);
-                        //SOUTLN(dsTemp[i]);
+                        //S2VAL(" DS18B20",i, dsTemp[i]);
                   if (i < 1) { outS  = "T1 "; }
                   else       { outS += "    T2  ";}
                   outS += (String) ((int) (dsTemp[i] + 0.5)) + "°";
@@ -2689,25 +2682,25 @@
   // --- memory --------------------------
     void testFlash()
       {
-        SOUTLN("mounting SPIFFS ... ");
+        STXT(" mounting SPIFFS ... ");
         if(!SPIFFS.begin(true))
           {
-           SOUTLN("ERROR");
+           STXT(" ERROR");
             return;
           }
 
         uint32_t bFree = SPIFFS.totalBytes();
-        SOUT("found "); SOUT(bFree); SOUTLN(" bytes free");
+        SVAL(" found bytes free ", bFree);
         //*
-        SOUT("dir: test_example.txt ");
+        STXT(" dir: test_example.txt ");
         File file = SPIFFS.open("/test_example.txt");
         if(!file)
           {
-            SOUTLN("Failed to open file for reading");
+            STXT("   Failed to open file for reading");
             return;
           }
 
-        SOUT("File Content: ");
+        STXT("   File Content: ");
         int8_t n = 0;
         while(n >= 0)
           {
