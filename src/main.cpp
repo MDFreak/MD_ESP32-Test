@@ -21,21 +21,23 @@
     static char     cmsg[MSG_MAXLEN+1] = "";
     static String   tmpStr;
     static uint8_t  firstrun = true;
-    static uint8_t  iret        =
-    //static uint16_t md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
-                             #if (USE_WIFI > OFF)
-                               + ERRBIT_WIFI
-                               #if (USE_NTP_SERVER > OFF)
-                                 + ERRBIT_NTPTIME
-                               #endif
-                             #endif
-                             #if (USE_WEBSERVER > OFF)
-                               + ERRBIT_SERVER
-                             #endif
-                             #if (USE_TOUCHSCREEN > OFF)
-                               + ERRBIT_TOUCH
-                             #endif
-                             ;
+    static uint8_t  iret        = 0;
+    #ifdef UNUSED
+        static uint16_t md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
+                                 #if (USE_WIFI > OFF)
+                                   + ERRBIT_WIFI
+                                   #if (USE_NTP_SERVER > OFF)
+                                     + ERRBIT_NTPTIME
+                                   #endif
+                                 #endif
+                                 #if (USE_WEBSERVER > OFF)
+                                   + ERRBIT_SERVER
+                                 #endif
+                                 #if (USE_TOUCHSCREEN > OFF)
+                                   + ERRBIT_TOUCH
+                                 #endif
+                                 ;
+      #endif
 	    // cycletime measurement
 
     #if ( DEV_I2C1 > OFF )
@@ -769,8 +771,8 @@
               uint8_t rep = WIFI_ANZ_LOGIN;
               while(rep > 0)
                 {
-                  startWIFI(true);
-                  if ((md_error & ERRBIT_WIFI) == OK)
+                  iret = startWIFI(true);
+                  if (iret == MD_OK)
                       {
                         dispStatus("WIFI connected",true);
                         break;
@@ -789,15 +791,16 @@
                       }
                   usleep(50000);
                 }
-              #if (USE_NTP_SERVER > OFF)   // get time from NTP server
-                  if ((md_error & ERRBIT_WIFI) == OK)
-                    {
-                      dispStatus("init NTP time", true);
-                      initNTPTime();
-                      ntpGet = true;
-                    }
+              #ifdef UNUSED
+                  #if (USE_NTP_SERVER > OFF)   // get time from NTP server
+                      if ((md_error & ERRBIT_WIFI) == OK)
+                        {
+                          dispStatus("init NTP time", true);
+                          initNTPTime();
+                          ntpGet = true;
+                        }
+                    #endif
                 #endif
-
             #endif // USE_WIFI
         // start Webserer
           #if (USE_WEBSERVER > OFF)
@@ -2719,7 +2722,7 @@
       bool startWIFI(bool startup)
         {
           #if (USE_WIFI > OFF)
-              bool ret = ISERR;
+              bool ret = MD_ERR;
               dispStatus("  start WIFI");
                   //heapFree(" before generating ipList ");
               if (startup)
