@@ -1235,7 +1235,7 @@
                       { // low freq
                         if (cntFilt[i] > -5)
                           {
-                            SOUTLN(); SOUT("SWDN filt "); SOUTLN(cntFilt[i]);
+                            SVAL("SWDN filt ", cntFilt[i]);
                             cntFilt[i]--;
                             usleep(500000);
                           }
@@ -1243,7 +1243,7 @@
                           {
                             cntThresh[i] /= 2;
                             doIt = true;
-                            SOUTLN(); SOUT("SWDN new "); SOUTLN(cntThresh[i]);
+                            STXT("SWDN new ", cntThresh[i]);
                             usleep(500000);
                           }
                       }
@@ -1251,7 +1251,7 @@
                       { // high freq
                         if (cntFilt[i] < 5)
                           {
-                            SOUTLN(); SOUT("SWUP filt "); SOUTLN(cntFilt[i]);
+                            STXT("SWUP filt ", cntFilt[i]);
                             cntFilt[i]++;
                             usleep(500000);
                           }
@@ -1259,7 +1259,7 @@
                           {
                             cntThresh[i] *= 2;
                             doIt = true;
-                            SOUTLN(); SOUT("SWUP new "); SOUTLN(cntThresh[i]);
+                            STXT("SWUP new ", cntThresh[i]);
                             usleep(500000);
                           }
                       }
@@ -1296,7 +1296,7 @@
               {
                 inpIdx++;
                     //heapFree("+meascyc");
-                    //SOUT(" #"); SOUT(millis()); SOUTLN(" MEASCYCLE ");
+                    //STXT(" # MEASCYCLE ");
                 inputT.startT();
                 switch(inpIdx)
                   {
@@ -1322,9 +1322,9 @@
                       #if (USE_MQ135_GAS_ANA > OFF)
                           #if (MQ135_GAS_ADC > OFF)
                               gasVal.doVal(analogRead(PIN_MQ135));
-                                    //SOUT(millis()); SOUT(" gas measurment val = "); SOUTLN(gasValue);
+                                    //STXT(" gas measurment val = ", gasValue);
                               gasValue = (int16_t) valGas.value((double) gasValue);
-                                    //SOUT(millis()); SOUT("    gasValue = "); SOUTLN(gasValue);
+                                    //STXT("    gasValue = ", gasValue);
                             #endif
                           #if (MQ135_GAS_1115 > OFF)
                             #endif
@@ -1413,35 +1413,29 @@
                           int8_t  tkerr = (int8_t) ISOK;
                           int16_t ival = TypeK1.actT();
                           tkerr = TypeK1.readErr();
-                                //SOUT(" typeK1 err "); SOUT(tkerr);
-                                //SOUT(" val "); SOUT( ival);
+                                //SVAL(" typeK1 err ", tkerr);
                           if (!tkerr)
                             {
                               tk1Val    = valTK1.value((double) ival);
-                                //SOUT(" / "); SOUT(tk1Val);
+                                  //SVAL(" k1val ", tk1Val);
                               ival      = TypeK1.refT();
-                                    //SOUT(millis()); SOUT(" ref raw = "); SOUT((int) ival);
+                                  //SVAL(" k1ref raw = ", (int) ival);
                               tk1ValRef = valTK1ref.value((double) ival);
-                                //SOUT(millis()); SOUT(" ival = "); SOUT((int) tk1ValRef);
+                                  //SVAL(" k1ref = ", (int) tk1ValRef);
                             }
-                                //SOUTLN();
                           #if (USE_TYPE_K_SPI > 1)
-                              ival    = TypeK2.actT();
+                              ival      = TypeK2.actT();
                               tkerr     = TypeK2.readErr() % 8;
-                                    //SOUT(" typeK2 err "); SOUT(tkerr);
-                                    //SOUT(" val "); SOUT(ival);
+                                  //SVAL(" typeK1 err ", tkerr);
                               if (!tkerr)
                                 {
                                   tk2Val    = valTK2.value((double) ival);
-                                    //SOUT(" / "); SOUT((int) tk2Val);
+                                      //SVAL(" k2val ", tk2Val);
                                   ival      = TypeK2.refT();
-                                    //SOUT(millis()); SOUT(" ref raw = "); SOUT(ival);
+                                      //SVAL(" k2ref raw = ", (int) ival);
                                   tk2ValRef = valTK2ref.value((double) ival);
-                                    //SOUT(millis()); SOUT(" ival = "); SOUT(tk2ValRef);
+                                      //SVAL(" k2ref = ", (int) tk2ValRef);
                                 }
-                                    //SOUTLN();
-                          #else
-                                    SOUTLN();
                             #endif
                         #endif
 
@@ -1493,13 +1487,13 @@
                   if (!(outM2812[0].text->pix24 == outM2812[1].text->pix24)) //{}
                     //else
                     {
-                      //SOUTLN(" changed matrix bright&color ");
+                      //STXT(" changed matrix bright&color ");
                         //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
                         //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
                         //SOUT(" / ");
                         //SOUTHEX(outM2812[1].text->pix24->bright()); SOUT(" "); SOUTHEXLN(outM2812[1].text->pix24->col24());
                       outM2812[0].text->pix24 = outM2812[1].text->pix24;
-                        //SOUTLN(" neu ");
+                        //STXT(" neu ");
                         //SOUT((uint32_t) *outM2812[0].text->pix24); SOUT(" / "); SOUTHEXLN((uint32_t) *outM2812[1].text->pix24);
                         //SOUTHEX(outM2812[0].text->pix24->bright()); SOUT(" "); SOUTHEX(  outM2812[0].text->pix24->col24());
                         //SOUT(" / ");
@@ -1510,7 +1504,7 @@
                         if (outM2812[0] == outM2812[1]) {}
                         else
                           {
-                            SOUT(" changed matrix bitmap "); SOUT(outM2812[0].text.pix24.bright());
+                            SVAL(" changed matrix bitmap ", outM2812[0].text.pix24.bright());
                             *outM2812[0].bmpE.pix24 = *outM2812[1].bmpE.pix24;
                           }
 
@@ -1520,9 +1514,9 @@
                             matrix_1.start_scroll_matrix((scroll2812_t*) &outM2812);
                           }
                       */
-                      //SOUT(" "); SOUTLN(micros());
+                      //SVAL(" M2812 ", micros());
                 matrix_1.scroll_matrix();
-                    //SOUT(" matrix ready "); SOUTLN(micros());
+                    //SVAL(" matrix ready ", micros());
                 ws2812_Mcnt++;
               //}
           #endif
@@ -1536,7 +1530,7 @@
                 if (*(line2812[1]) == *(line2812[0])) {}
                   else
                   {
-                    SOUTLN(" line changed ");
+                    STXT(" line changed ");
                     *line2812[0] = *line2812[1];
                     strip.setBrightness(line2812[0]->bright());
                     strip.fill(line2812[0]->col24());
@@ -1556,7 +1550,7 @@
                       #if (USE_RGBLED_PWM > OFF)
                           if (rgbledT.TOut())
                             {
-                                  //SOUT(" #"); SOUT(millis()); SOUTLN(" Out RGBLED");
+                                  //STXT(" # Out RGBLED");
                               rgbledT.startT();
                               #if (TEST_RGBLED_PWM > OFF)
                                 /*
@@ -1601,7 +1595,7 @@
                                       _tmp += 4;
                                       if (_tmp > 50)
                                         { _tmp = 0; }
-                                      //SOUT(millis()); SOUT(" _tmp = "); SOUTLN(_tmp);
+                                          //SVAL(" _tmp = ", _tmp);
                                       ledcWrite(PWM_RGB_RED,   webMD.getDutyCycle(0));
                                       ledcWrite(PWM_RGB_GREEN, webMD.getDutyCycle(1));
                                       ledcWrite(PWM_RGB_BLUE,  webMD.getDutyCycle(2));
@@ -1643,7 +1637,7 @@
                       #if (USE_FAN_PWM > OFF)
                           if (fanT.TOut())
                             {
-                                  //SOUT(" #"); SOUT(millis()); SOUTLN(" Out FAN");
+                                  //STXT(" # Out FAN");
                               fanT.startT();
                               if (fanIdx++ > 1000)
                                 {
@@ -1656,7 +1650,8 @@
 
                                   #if (USE_POTICTRL_FAN > 0)
                                       valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
-                                      //SOUT(inpValADC[INP_POTI_CTRL]); SOUT(" "); SOUTLN(valFan[INP_CNT_FAN_1]);
+                                          //SVAL(" fan poti ", inpValADC[INP_POTI_CTRL]);
+                                          //SVAL(" fan cnt ", valFan[INP_CNT_FAN_1]);
                                       valFanPWM[0] = valFan[INP_CNT_FAN_1];
                                       #if (USE_POTICTRL_FAN > 1)
                                           valFan[INP_CNT_FAN_2] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
@@ -1682,20 +1677,20 @@
                                   outStr = "SVB1";
                                   outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  SOUTLN(outStr);
+                                  STXT(outStr);
                                 #endif
                               #if (USE_WS2812_LINE_OUT > OFF)
                                   outStr = "SVB2";
                                   outStr.concat(line2812[0]->bright());    // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  SOUTLN(outStr);
+                                  STXT(outStr);
                                 #endif
                               #if (USE_WS2812_MATRIX_OUT > OFF)
                                   outStr = "SVB3";
                                   md_LEDPix24* ppix = outM2812[0].text->pix24;
                                   outStr.concat(ppix->bright());           // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  SOUTLN(outStr);                              outStr = "SVB3";
+                                  STXT(outStr);                              outStr = "SVB3";
                                 #endif
                                   //tmpStr = "SVB4";
                                   //tmpStr.concat(line2812[0]->bright());    // RGB-LED col24
@@ -1707,14 +1702,14 @@
                                   colToHexStr(ctmp, RGBLED[0]->col24());
                                   outStr.concat(ctmp);    // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  SOUTLN(outStr);
+                                  STXT(outStr);
                                 #endif
                               #if (USE_WS2812_LINE_OUT > OFF)
                                   outStr = "SVC2";
                                   colToHexStr(ctmp, line2812[0]->col24());
                                   outStr.concat(ctmp);    // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  SOUTLN(outStr);
+                                  STXT(outStr);
                                 #endif
                               #if (USE_WS2812_MATRIX_OUT > OFF)
                                   outStr = "SVC3";
@@ -1722,13 +1717,13 @@
                                   colToHexStr(ctmp, ppix->col24());
                                   outStr.concat(ctmp);    // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  SOUTLN(outStr);
+                                  STXT(outStr);
                                   outStr = "SVC4";
                                   ppix = outM2812[0].bmpB->pix24;
                                   colToHexStr(ctmp, ppix->col24());
                                   outStr.concat(ctmp);    // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  SOUTLN(outStr);
+                                  STXT(outStr);
                                 #endif
 
                               newClient = false;
@@ -1829,7 +1824,7 @@
                         outStr.concat(tk2ValRef);
                       #endif
                     outStr.concat("°)");
-                            SOUTLN(outStr); SOUT(" ");
+                            STXT(outStr);
                     #endif
                   break;
                 case 4:  // gas sensor
@@ -1852,9 +1847,7 @@
                       outStr.concat(alk[0]);
                       outStr.concat("  ");
                       dispText(outStr, 1, 1, outStr.length());
-                            //SOUT(outStr);
-                            //SOUTLN(outStr);
-                            //SOUT(outStr); SOUT(" ");
+                            //STXT(outStr);
                       #if (USE_MQTT > OFF)
                           sprintf(tmpOut, "%d", tmpval16);
                       //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
