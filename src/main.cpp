@@ -715,7 +715,7 @@
                     ledcSetup(PWM_FAN_2, PWM_FAN_FREQ, PWM_FAN_RES);
                     ledcAttachPin(PIN_PWM_FAN_2, PWM_FAN_2);
                     ledcWrite(PWM_FAN_2, 255);
-                    STXT("Test Fan 2");
+                    STXT(" Test Fan 2");
                     sleep(1);
                     ledcWrite(PWM_FAN_2, 0);
                   #endif
@@ -852,12 +852,13 @@
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
               dispStatus("init BME2801");
+              STXT(" init BME280 ...");
               bool bmeda = false;
               bmeda = bme1.begin(I2C_BME280, pbme1i2c);
               if (bmeda)
                   {
                     bme1.setSampling(bme1.MODE_SLEEP);
-                          STXT(" BME280(1) gefunden");
+                    STXT(" BME280(1) gefunden");
                     bme1T.begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
                     bme1P.begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
                     bme1H.begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
@@ -886,7 +887,7 @@
             #endif
         // photo sensor
           #if (USE_PHOTO_SENS_ANA > OFF)
-              SOUT("init poto sensors ... ");
+              STXT(" init photo sensors ...");
               photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
               photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
               #if (PHOTO1_ADC > OFF)
@@ -897,70 +898,70 @@
               #if (PHOTO1_1115 > OFF)
 
                 #endif
-              SOUTLN(" ready");
+              STXT(" photo sensors  ready");
             #endif
         // alcohol sensor
           #if (USE_MQ3_ALK_ANA > OFF)
-              SOUT("init alc sensors ... ");
+              STXT(" init alc sensors ... ");
               alkVal[0].begin(MQ3_FILT, MQ3_DROP, FILT_FL_MEAN);
               alkScal[0].setScale(MQ3_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
-              SOUTLN(" ready");
+              STXT(" alc sensors ready");
             #endif
         // vcc measure
           #if (USE_VCC_ANA > OFF)
-              SOUT("init vcc measure ... ");
+              STXT(" init vcc measure ... ");
               vccVal[0].begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
               vccScal[0].setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
-              SOUTLN(" ready");
+              STXT(" vcc measure ready");
             #endif
         // poti measure
           #if (USE_POTI_ANA > OFF)
-              SOUT("init poti ... ");
+              STXT(" init poti ... ");
               potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
               potiScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
-              SOUTLN(" ready");
+              STXT(" poti ready");
             #endif
 
         // ACS712 current measurement
           #if (USE_ACS712_ANA > OFF)
-              SOUT("init alc sensors ... ");
+              STXT("init alc sensors ... ");
               i712Val[0].begin(I712_1_FILT, I712_1_DROP, FILT_FL_MEAN);
               i712Scal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
-              SOUTLN(" ready");
+              STXT(" init alc sensors ready");
             #endif
 
         // K-type thermoelementation
           #if ( USE_TYPE_K_SPI > 0)
-                    SOUT(millis()); SOUT(" Tcouple1 ... " );
+                STXT(" Tcouple1 ... " );
                 dispStatus("init TypeK");
                 uint8_t tkerr = TypeK1.begin();
                 if (!tkerr)
                     {
-                            SOUT(" gefunden TK1 ");
+                      STXT(" TypeK gefunden TK1 ");
                       int16_t itmp = TypeK1.actT();
-                            SOUT(itmp); SOUT(" TK1cold ");
+                      STXT(" TK1cold ", itmp);
                       itmp = TypeK1.refT();
-                            SOUTLN(itmp);
+                      STXT(" TK1ref ", itmp);
                     }
                   else
                     {
-                      SOUTLN(" nicht gefunden");
+                      STXT(" TypeK nicht gefunden TK1 ");
                     }
                 #if ( USE_TYPE_K_SPI > 1)
-                          SOUT(millis()); SOUT(" Tcouple2 ... " );
+                      STXT(" Tcouple2 ... " );
                       int16_t itmp = 0;
                       tkerr = TypeK2.begin();
                       if (!tkerr)
                           {
-                                  SOUT(" gefunden TK2 ");
+                            STXT(" TypeK gefunden TK2 ");
                             itmp = TypeK2.actT();
-                                  SOUT(itmp); SOUT(" TK2cold ");
+                            STXT(" TK2cold ", itmp);
                             itmp = TypeK2.refT();
-                                  SOUTLN(itmp);
+                            STXT(" TK2ref ", itmp);
                           }
                         else
                           {
-                            SOUTLN(" nicht gefunden");
+                            STXT(" TypeK nicht gefunden TK2 ");
                           }
                   #endif
             #endif
@@ -969,12 +970,11 @@
           #if (USE_FLASH_MEM > OFF)
               testFlash();
             #endif
-
         // SD card
           #if (USE_SD_SPI > OFF)
               //File sdFile;
               pinMode(SD_CS, OUTPUT); // chip select pin must be set to OUTPUT mode
-                    SOUT(" init SD ... ");
+              STXT(" init SD ... ");
               //psdSPI.begin(SD_SCL, SD_MISO, SD_MOSI, SD_CS);
               //psdSPI.end();
               if (SD.begin(SD_CS, psdSPI))
@@ -982,14 +982,14 @@
                   if (SD.exists("/test.txt"))
                     { // if "file.txt" exists, fill will be deleted
                       if (SD.remove("/test.txt") == true)
-                        { SOUT(" file removed "); }
+                        { STXT("   file removed "); }
                     }
                   sdFile = SD.open("/test.txt", FILE_WRITE); // open "file.txt" to write data
                   if (sdFile)
                     {
                       sdFile.println("test ok"); // write test text
                       sdFile.close();
-                      SOUT(" wrote text ");
+                      STXT("   wrote text ");
                       sdFile = SD.open("/test.txt", FILE_READ);
                       if (sdFile)
                         {
@@ -1001,21 +1001,23 @@
                               SOUT(c);
                             }
                           sdFile.close();
-                          SOUTLN(" ready ");
+                          STXT(" SD ready ");
                         }
                       else
-                        { SOUTLN(" ERR could not open file (read)"); }
+                        {
+                          STXT(" ERR could not open file (read)");
+                        }
                     }
                   else
-                    { SOUTLN(" ERR could not open file (write)"); }
+                    { STXT(" ERR could not open file (write)"); }
                 }
               else
-                { SOUTLN(" ERROR SD could not be initialised "); }
+                { STXT(" ERROR SD could not be initialised "); }
             #endif
         // FRAM
           #if (USE_FRAM_I2C > OFF)
             // Read the first byte
-            SOUT("FRAM addr "); SOUTHEX(FRAM1_I2C_ADDR);
+            SHEXVAL("FRAM addr ",FRAM1_I2C_ADDR);
             dispStatus("init FRAM");
             bool ret = !fram.begin(FRAM1_I2C_SDA, FRAM1_I2C_SCL, FRAM1_I2C_ADDR);
             if (ret == ISOK)
@@ -1023,15 +1025,14 @@
                 SOUT(" ok ProdID= ");
                 uint16_t prodID, manuID;
                 fram.getDeviceID(&manuID, &prodID);
-                SOUT(" product "); SOUT(prodID); SOUT(" producer "); SOUTLN(manuID);
-
-                SOUTLN(" FRAM selftest "); SOUTLN(fram.selftest());
+                SVAL(" product ", prodID); SVAL(" producer ", manuID);
+                SVAL(" FRAM selftest ", fram.selftest());
               }
             #endif
       // --- services using interrupt
         // start counter
           #if (USE_CNT_INP > OFF)
-              SOUT("config counter Pins " );
+              STXT("config counter Pins " );
               for (uint8_t i = 0 ; i < USE_CNT_INP ; i++ )
                 {
                   switch (i)
@@ -1062,7 +1063,6 @@
                       default: break;
                     }
                 }
-              SOUTLN();
               initGenPCNT();
                       //attachInterrupt(digitalPinToInterrupt(PIN_PWM_FAN_1), &pcnt_intr_handler, FALLING);
 
@@ -1078,10 +1078,7 @@
                   digitalWrite(PIN_BOARD_LED, OFF);
                   SYS_LED_ON = OFF;
                 #endif
-              SOUTLN();
               dispStatus("... end setup");
-                  //SOUT("... end setup -- error="); SOUTLN(md_error);
-                  //SOUTLN();
               heapFree(" end setup ");
 
               usleep(400000);
@@ -1104,11 +1101,10 @@
         {
           freeHeap = tmpval32;
           heapFree(" loop ");
-          //SOUT(millis()); SOUT(" loop "); SOUT(dispIdx); SOUT(" freeHeap "); SOUTLN(freeHeap);
         }
       if (firstrun == true)
         {
-          SOUT("loop task running on core "); SOUTLN(xPortGetCoreID()); SFLUSH();
+          SVAL("loop task running on core ", xPortGetCoreID());
           usLast = micros();
           firstrun = false;
         }
@@ -1121,7 +1117,6 @@
                 wifiT.startT();
                 if((md_error & ERRBIT_WIFI) != OK)
                   {
-                    SOUTLN("WiFi restartWIFI");
                     dispStatus("WiFi restartWIFI");
                     startWIFI(false);
                   }
@@ -1146,21 +1141,17 @@
                       {
                         ntpGet = wifi.getNTPTime(&ntpTime);
                         setTime(ntpTime);
-                        SOUT(millis()); SOUTLN(" NTP time syncronized");
+                        STXT(" NTP time syncronized");
                       }
                   }
                 ntpT.startT();
-                      #if (DEBUG_MODE == CFG_DEBUG_DETAILS)
-                        //SOUT("Datum "); SOUT(day()); SOUT("."); SOUT(month()); SOUT("."); SOUT(year()); SOUT(" ");
-                        //SOUT("Zeit "); SOUT(hour()); SOUT("."); SOUT(minute()); SOUT(":"); SOUTLN(second());
-                        #endif
               }
           #endif // USE_NTP_SERVER
         #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
             // read only 1 message / cycle for cycle time
-            //heapFree("webserv +readmsg");
+                //heapFree("webserv +readmsg");
             readMessage();
-            //heapFree("webserv -readmsg");
+                //heapFree("webserv -readmsg");
           #endif
       // --- direct input ---
         #if (USE_TOUCHSCREEN > OFF)
