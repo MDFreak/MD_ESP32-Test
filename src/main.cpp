@@ -5,8 +5,24 @@
 // --- declarations
 // ----------------------------------------------------------------
   // ------ system -----------------------
-    static bool firstrun = true;
-    static uint16_t     md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
+    static uint64_t anzUsCycles = 0ul;
+    static uint64_t usLast      = 0ul;
+    static uint64_t usTmp       = 0ul;
+    static uint64_t usPerCycle  = 0ul;
+    static uint32_t freeHeap    = 10000000;
+    static uint16_t tmpval16;
+    static uint32_t tmpval32;
+      //static uint64_t anzMsCycles = 0;
+	    //static uint64_t msLast = 0;
+  	  //static uint64_t msPerCycle = 0;
+
+	    //static uint32_t anzMsCycles = 0;
+	    //static uint64_t msLast      = 0;
+    static char     cmsg[MSG_MAXLEN+1] = "";
+    static String   tmpStr;
+    static uint8_t  firstrun = true;
+    static uint8_t  iret        =
+    //static uint16_t md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
                              #if (USE_WIFI > OFF)
                                + ERRBIT_WIFI
                                #if (USE_NTP_SERVER > OFF)
@@ -21,21 +37,7 @@
                              #endif
                              ;
 	    // cycletime measurement
-    static uint64_t anzUsCycles = 0ul;
-    static uint64_t usLast      = 0ul;
-    static uint64_t usTmp       = 0ul;
-    static uint64_t usPerCycle  = 0ul;
-    static uint32_t freeHeap    = 10000000;
-    static char     cmsg[MSG_MAXLEN+1] = "";
-    static String   tmpStr;
-    static uint16_t tmpval16;
-    static uint32_t tmpval32;
-      //static uint64_t anzMsCycles = 0;
-	    //static uint64_t msLast = 0;
-  	  //static uint64_t msPerCycle = 0;
 
-	    //static uint32_t anzMsCycles = 0;
-	    //static uint64_t msLast      = 0;
     #if ( DEV_I2C1 > OFF )
         TwoWire i2c1 = TwoWire(0);
       #endif
@@ -2724,8 +2726,8 @@
                 {
                   ip_list ipList = ip_list(); // temporary object
                             #if (DEBUG_MODE > CFG_DEBUG_STARTUP)
-                                SHEXVAL( setup startWIFI created ipList ", (int) &ipList);
-                                STXT( setup startWIFI add WIFI 0");
+                                SHEXVAL(" setup startWIFI created ipList ", (int) &ipList);
+                                STXT(" setup startWIFI add WIFI 0");
                               #endif
                   ipList.append(WIFI_FIXIP0, WIFI_GATEWAY0, WIFI_SUBNET, WIFI_SSID0, WIFI_SSID0_PW);
                   #if (WIFI_ANZ_LOGIN > 1)
@@ -2873,12 +2875,12 @@
                   {
                     ret = pmdServ->md_startServer();
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                            STXT("ret ", ret);
+                            SVAL(" ret ", ret);
                           #endif
                   }
                 md_error = setBit(md_error, ERRBIT_SERVER, ret);
                       #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                        // STXT("  md_error ", md_error);
+                        // SVAL("  md_error ", md_error);
                       #endif
 
                 //if ((md_error & ERRBIT_SERVER) == 0)
@@ -2976,54 +2978,60 @@
                                       case 4:
                                         #if (USE_WS2812_MATRIX_OUT > OFF)
                                             ppix = outM2812[1].bmpB->pix24;
-                                            SOUTLN("  ---- smilyB bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
+                                            SVAL("  -- smilyB bright old"); SOUT(ppix->bright());
                                             ppix->bright((uint8_t) itmp);
-                                            SOUTLN(ppix->bright());
+                                            SVAL("  -- smilyB bright new"); SOUT(ppix->bright());
                                             ppix = outM2812[1].bmpE->pix24;
-                                            SOUTLN("  ---- smilyE bright ----"); SOUT(ppix->bright()); SOUT(" neu ");
+                                            SVAL("  -- smilyE bright old"); SOUT(ppix->bright());
                                             ppix->bright((uint8_t) itmp);
+                                            SVAL("  -- smilyE bright new"); SOUT(ppix->bright());
                                           #endif
                                         break;
                                     }
                                 break;
                               case EL_TCOLOR:
-                                  SOUTLN(" ---- Color ----");
+                                  STXT(" ---- Color ----");
                                   itmp  = (int)strtol(ctmp, NULL, 16);
                                   switch (idx) // index of serverelement
                                     {
                                       case 1: // RGB-LED col24
                                         #if (USE_RGBLED_PWM > OFF)
-                                            SOUTLN("  ---- RGBLED color ----"); SOUTHEX(RGBLED[1]->col24()); SOUT(" neu ");
+                                            SVAL("  -- RGBLED color old", RGBLED[1]->col24());
                                             RGBLED[1]->col24(itmp);
                                             LEDout = TRUE;
-                                            SOUTHEXLN(RGBLED[1]->col24());
+                                            SVAL("  -- RGBLED color new", RGBLED[1]->col24());
                                           #endif
                                         break;
                                       case 2: // 2821 line col24
                                         #if (USE_WS2812_LINE_OUT >OFF)
-                                            SOUTLN(" ---- line2812 color24 ----"); SOUTHEX(line2812[1]->col24());
+                                            SHEXVAL(" -- line2812 color24 old ", line2812[1]->col24());
                                             line2812[1]->col24(itmp);
-                                            SOUT(" neu 24/16"); SOUTHEX(line2812[1]->col24()); SOUT(" / "); SOUTLN(Col16(line2812[1]->col24()));
+                                            SHEXVAL(" -- line2812 color24 new ", line2812[1]->col24());
+                                            SHEXVAL(" -- line2812 color16 new ", Col16(line2812[1]->col24()));
                                           #endif
                                         break;
                                       case 3: // 2821 matrix col16
                                         #if (USE_WS2812_MATRIX_OUT > OFF)
                                             ppix = outM2812[1].text->pix24;
-                                            SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
+                                            SHEXVAL(" -- matrix color24 old", ppix->col24());
                                             ppix->col24(itmp);
-                                            SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                            SHEXVAL(" -- matrix color24 new", ppix->col24());
+                                            SHEXVAL(" -- matrix color16 new", Col16(ppix->col24()));
                                           #endif
                                         break;
                                       case 4: // 2821 matrix col16 bmp
                                         #if (USE_WS2812_MATRIX_OUT > OFF)
                                             ppix = outM2812[1].bmpB->pix24;
-                                            SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
+                                            SHEXVAL(" -- matrixB color24 old", ppix->col24());
                                             ppix->col24(itmp);
-                                            SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                            SHEXVAL(" -- matrixB color24 new", ppix->col24());
+                                            SHEXVAL(" -- matrixB color16 new", Col16(ppix->col24()));
+                                            SHEXVAL(" -- matrixB color24 old", ppix->col24());
                                             ppix = outM2812[1].bmpE->pix24;
-                                            SOUTLN(" ---- matrix color24 ----"); SOUTHEX(ppix->col24());
+                                            SHEXVAL(" -- matrixE color24 old", ppix->col24());
                                             ppix->col24(itmp);
-                                            SOUT(" neu 24/16 "); SOUTHEX(ppix->col24()); SOUT(" / "); SOUTHEX(Col16(ppix->col24())); SOUT(" ");
+                                            SHEXVAL(" -- matrixE color24 new", ppix->col24());
+                                            SHEXVAL(" -- matrixE color16 new", Col16(ppix->col24()));
                                           #endif
                                         break;
                                     }
@@ -3052,7 +3060,7 @@
                   }
                 SOUT("'"); SOUT(pM->payload()); SOUT("'");
                 inMsgs->rem();
-                SOUT(" inMsgs.count "); SOUTLN(inMsgs->count());
+                SVAL(" inMsgs.count ", inMsgs->count());
               }
           }
           /*
@@ -3188,9 +3196,7 @@
           {
             char temp[32] = "";
             uint16_t packetIdSub;
-            SOUT("Connected to MQTT ");
-            SOUT("Session present: ");
-            SOUTLN(sessionPresent);
+            SVAL("  Connected to MQTT - Session: ", sessionPresent);
             /*
               for (uint8_t i=0; i<6; i++)
                 {
@@ -3225,7 +3231,7 @@
 
         void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
           {
-            SOUTLN("Disconnected from MQTT.");
+            STXT("Disconnected from MQTT.");
             if (WiFi.isConnected())
               {
                 xTimerStart(mqttReconnectTimer, 0);
@@ -3234,32 +3240,28 @@
 
         void onMqttSubscribe(uint16_t packetId, uint8_t qos)
           {
-            SOUT("Subscribe ack Id/qos "); SOUT(packetId); SOUT("/");
-            SOUTLN(qos);
+            S2VAL("Subscribe ack Id/qos ", packetId, qos);
           }
 
         void onMqttUnsubscribe(uint16_t packetId)
           {
-            SOUTLN("Unsubscribe acknowledged.");
-            SOUT("  packetId: ");
-            SOUTLN(packetId);
+            SVAL("Unsubscribe acknowledged packetId: ", packetId);
           }
 
         void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total)
           {
-            SOUT("Publish rec topic/payload/len: ");
-            SOUT(topic); SOUT("/"); SOUT(payload); SOUT("/"); SOUTLN(len);
-                  //SOUT("  qos: ");   SOUTLN(properties.qos);
-                  //SOUT("  dup: ");   SOUTLN(properties.dup);
-                  //SOUT("  retain: ");SOUTLN(properties.retain);
-                  //SOUT("  len: ");   SOUTLN(len);
-                  //SOUT("  index: "); SOUTLN(index);
-                  //SOUT("  total: "); SOUTLN(total);
+            S3VAL("Publish rec topic/payload/len: ", topic, payload, len);
+                  //SVAL("  qos: ", properties.qos);
+                  //SVAL("  dup: ", properties.dup);
+                  //SVAL("  retain: ", properties.retain);
+                  //SVAL("  len: ", len);
+                  //SVAL("  index: ", index);
+                  //SVAL("  total: ", total);
           }
 
         void onMqttPublish(uint16_t packetId)
           {
-            SOUT("Publish ack Id"); SOUTLN(packetId);
+            SVAL("Publish ack Id", packetId);
           }
 #endif
       #endif
@@ -3275,7 +3277,7 @@
 
         if (_stop)
           {
-            SOUTLN(); SOUTLN(" !!! STOP for ever ... goodby !!!");
+            STXT(" !!! STOP for ever ... goodby !!!");
             while (1)
               {
                 sleep(1000);
