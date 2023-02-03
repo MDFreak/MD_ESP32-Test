@@ -592,7 +592,9 @@
         // start system
           Serial.begin(SER_BAUDRATE);
           usleep(3000); // power-up safety delay
-          SOUTLN(); SOUT(millis()); SOUTLN(" setup start ...");
+          SOUTLN();
+          STXT(" setup start ...");
+          //SOUT(millis()); SOUTLN(" setup start ...");
           #if (SCAN_I2C > OFF)
               scanI2C(&i2c1, PIN_I2C1_SDA, PIN_I2C1_SCL);
               #if (USE_I2C > 1)
@@ -1109,9 +1111,7 @@
         }
       if (firstrun == true)
         {
-          String taskMessage = "loop task running on core ";
-          taskMessage = taskMessage + xPortGetCoreID();
-          SOUTLN(taskMessage);
+          SOUT("loop task running on core "); SOUTLN(xPortGetCoreID()); SFLUSH();
           usLast = micros();
           firstrun = false;
         }
@@ -2173,7 +2173,7 @@
         {
           uint32_t tmp32 = ESP.getFreeHeap();
           //uint32_t tmp32 = heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_32BIT);
-          SOUT(" #"); SOUT(millis()); SOUT(" "); SOUT(text); SOUT(" free "); SOUTLN(tmp32);
+          SOUT(" #"); SOUT(millis()); SOUT(" "); SOUT(text); SOUT(" free "); SOUTLN(tmp32); SFLUSH();
         }
   // --- user output ---------------------
     // --- display
