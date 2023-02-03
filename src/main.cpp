@@ -592,9 +592,7 @@
         // start system
           Serial.begin(SER_BAUDRATE);
           usleep(3000); // power-up safety delay
-          SOUTLN();
           STXT(" setup start ...");
-          //SOUT(millis()); SOUTLN(" setup start ...");
           #if (SCAN_I2C > OFF)
               scanI2C(&i2c1, PIN_I2C1_SDA, PIN_I2C1_SCL);
               #if (USE_I2C > 1)
@@ -643,7 +641,7 @@
                 ledcSetup(PWM_RGB_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
                 ledcAttachPin(PIN_RGB_RED,   PWM_RGB_RED);
                 ledcWrite(PWM_RGB_RED, 255);
-                SOUTLN("LED rot");
+                STXT(" LED rot");
                 usleep(300000);
                 ledcWrite(PWM_RGB_RED, 0);
 
@@ -652,7 +650,7 @@
                 ledcSetup(PWM_RGB_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
                 ledcAttachPin(PIN_RGB_GREEN, PWM_RGB_GREEN);
                 ledcWrite(PWM_RGB_GREEN, 255);
-                SOUTLN("LED gruen");
+                STXT(" LED gruen");
                 usleep(500000);
                 ledcWrite(PWM_RGB_GREEN, 0);
 
@@ -661,7 +659,7 @@
                 ledcSetup(PWM_RGB_BLUE,   PWM_LEDS_FREQ, PWM_LEDS_RES);
                 ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
                 ledcWrite(PWM_RGB_BLUE, 255);
-                SOUTLN("LED blau");
+                STXT(" LED blau");
                 usleep(500000);
                 ledcWrite(PWM_RGB_BLUE, 0);
 
@@ -671,15 +669,15 @@
 
         // WS2812 LEDs
           #if (USE_WS2812_MATRIX_OUT > OFF)
-              SOUTLN("start WS2812 matrix ...");
+              STXT("start WS2812 matrix ...");
               dispStatus("start WS2812 Matrix");
               initWS2812Matrix();
               ws2812T1.startT();
-              SOUTLN(" ok");
+              STXT(" ok");
             #endif
 
           #if (USE_WS2812_LINE_OUT > OFF)
-              SOUT("start NEOPIXEL LED strip ... ");
+              STXT("start NEOPIXEL LED strip ... ");
               initWS2812Line();
               sleep(1);
             #endif
@@ -708,7 +706,7 @@
                 ledcSetup(PWM_FAN_1, PWM_FAN_FREQ, PWM_FAN_RES);
                 ledcAttachPin(PIN_PWM_FAN_1, PWM_FAN_1);
                 ledcWrite(PWM_FAN_1, 255);
-                SOUTLN("Test Fan 1");
+                STXT(" Test Fan 1");
                 sleep(1);
                 ledcWrite(PWM_FAN_1, 0);
               // Fan 2
@@ -717,7 +715,7 @@
                     ledcSetup(PWM_FAN_2, PWM_FAN_FREQ, PWM_FAN_RES);
                     ledcAttachPin(PIN_PWM_FAN_2, PWM_FAN_2);
                     ledcWrite(PWM_FAN_2, 255);
-                    SOUTLN("Test Fan 2");
+                    STXT("Test Fan 2");
                     sleep(1);
                     ledcWrite(PWM_FAN_2, 0);
                   #endif
@@ -731,7 +729,7 @@
       // --- user input
         // start digital inputs
           #if (USE_DIG_INP > OFF)
-              SOUT("config digSW Pins " );
+              STXT(" config digSW Pins " );
               #if (USE_WS2812_PWR_IN_SW > OFF)
                   pinMode(PIN_WS2812_PWR_IN_SW, INPUT_PULLUP);
                   SOUT(PIN_WS2812_PWR_IN_SW); SOUT(" ");
@@ -744,8 +742,10 @@
                   pinInpDig[INP_REED_1] = PIN_INP_REED_1;
                   polInpDig[INP_REED_1] = POL_REED_1;
                   modInpDig[INP_REED_1] = MOD_REED_1;
-                  SOUT(" polInpDig "); SOUT(polInpDig[INP_REED_1]); SOUT(" ");
-                  SOUT(" modInpDig "); SOUT(modInpDig[INP_REED_1]); SOUT(" ");
+                  //SOUT(" polInpDig "); SOUT(polInpDig[INP_REED_1]); SOUT(" ");
+                  //SOUT(" modInpDig "); SOUT(modInpDig[INP_REED_1]); SOUT(" ");
+                  SVAL(" modInpDig ", modInpDig[INP_REED_1]);
+                  SVAL(" polInpDig ", polInpDig[INP_REED_1]);
                 #endif
               for (uint8_t i = 0 ; i < USE_DIG_INP ; i++ )
                 {
@@ -819,7 +819,7 @@
             #endif
         // start MQTT
           #if (USE_MQTT > OFF)
-              SOUTLN("Connecting to MQTT...");
+              STXT("Connecting to MQTT...");
               //mqttClient.onConnect(onMqttConnect);
               //mqttClient.onDisconnect(onMqttDisconnect);
               //mqttClient.onSubscribe(onMqttSubscribe);
@@ -843,47 +843,44 @@
             #endif
         // temp. sensor DS18D20
           #if (USE_DS18B20_1W_IO > OFF)
-                  SOUT(millis()); SOUT(" DS18D20 ... " );
               dispStatus("init DS18D20");
               dsSensors.begin();
               String DS18Str = getDS18D20Str();
               dispStatus(DS18Str);
-                  SOUTLN(DS18Str);
+                  SVAL(" DS18D20 ... ", DS18Str);
             #endif
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
-                    SOUT(millis()); SOUT(" BME280 ... " );
               dispStatus("init BME2801");
               bool bmeda = false;
               bmeda = bme1.begin(I2C_BME280, pbme1i2c);
               if (bmeda)
                   {
                     bme1.setSampling(bme1.MODE_SLEEP);
-                          SOUTLN(" gefunden");
+                          STXT(" BME280(1) gefunden");
                     bme1T.begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
                     bme1P.begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
                     bme1H.begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
                   }
                 else
                   {
-                    SOUT(" nicht gefunden");
+                    STXT(" BME280(1) nicht gefunden");
                   }
               #if (USE_BME280_I2C > 1)
-                        SOUT(millis()); SOUT(" BME280 ... " );
-                  dispStatus("init BME280");
+                  dispStatus("init BME280(2)");
                   bmeda = false;
                   bmeda = bme2.begin(I2C_BME280, pbme2i2c);
                   if (bmeda)
                       {
                         bme2.setSampling(bme2.MODE_SLEEP);
-                              SOUTLN(" gefunden");
+                          STXT(" BME280(2) gefunden");
                         bme2T.begin(BME2802T_FILT, BME2802T_Drop, FILT_NU);
                         bmeP.begin(BME2802P_FILT, BME2802P_Drop, FILT_NU);
                         bmeH.begin(BME2802H_FILT, BME2802H_Drop, FILT_NU);
                       }
                     else
                       {
-                        SOUT(" nicht gefunden");
+                        STXT(" BME280(1) nicht gefunden");
                       }
                 #endif
             #endif
