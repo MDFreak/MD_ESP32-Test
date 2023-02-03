@@ -1140,12 +1140,16 @@
                       {
                         initNTPTime();
                         iret = TRUE;
-                      }
-                    if (iret)
-                      {
-                        iret = wifi.getNTPTime(&ntpTime);
-                        setTime(ntpTime);
-                        STXT(" NTP time syncronized");
+                        if (iret)
+                          {
+                            iret = wifi.getNTPTime(&ntpTime);
+                            if (iret == WIFI_OK)
+                              {
+                                setTime(ntpTime);
+                                STXT(" NTP time syncronized");
+                                ntpOk = TRUE;
+                              }
+                          }
                       }
                   }
                 ntpT.startT();
@@ -2128,14 +2132,14 @@
                   }
             }
           #endif
-       if (firstrun == true)
-          {
-            String taskMessage = "loop task running on core ";
-            taskMessage = taskMessage + xPortGetCoreID();
-            STXT(taskMessage);
-            usLast = micros();
-            firstrun = false;
-          }
+        if (firstrun == true)
+            {
+              String taskMessage = "loop task running on core ";
+              taskMessage = taskMessage + xPortGetCoreID();
+              STXT(taskMessage);
+              usLast = micros();
+              firstrun = false;
+            }
         anzUsCycles++;
           //usleep(20);
           //delay(1);
@@ -2817,7 +2821,7 @@
               ret = wifi.startWIFI();
                           //SVAL(" startWIFI ret ", ret);
               //md_error = setBit(md_error, ERRBIT_WIFI, ret);
-              md_error = setBit(md_error, ERRBIT_WIFI, 0);
+              //md_error = setBit(md_error, ERRBIT_WIFI, 0);
                     //#if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
                       //SVAL("  md_error ", md_error);
                       //#endif
@@ -2828,10 +2832,12 @@
                 //else
                   //dispStatus("WIFI error");
 
-              #if (USE_NTP_SERVER > OFF)
-                  if((md_error & ERRBIT_WIFI) == 0) // WiFi ok
-                    if((md_error & ERRBIT_NTPTIME) != 0) // WiFi ok
-                      wifi.initNTP();
+              #ifdef UNUSED
+                  #if (USE_NTP_SERVER > OFF)
+                      if((md_error & ERRBIT_WIFI) == 0) // WiFi ok
+                        if((md_error & ERRBIT_NTPTIME) != 0) // WiFi ok
+                          wifi.initNTP();
+                    #endif
                 #endif
             #endif // USE_WIFI
             return ret;
@@ -2845,11 +2851,11 @@
                     #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
                       Serial.print("initNTPTime ret="); Serial.print(ret);
                     #endif
-              md_error = setBit(md_error, ERRBIT_NTPTIME, ret);
+              //md_error = setBit(md_error, ERRBIT_NTPTIME, ret);
                     #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                      Serial.print("  md_error="); Serial.println(md_error);
+                      //Serial.print("  md_error="); Serial.println(md_error);
                     #endif
-              if ((md_error & ERRBIT_WIFI) == OK)
+              if (ret = MD_OK)
                 {
                   dispStatus("NTPTime ok");
                 }
