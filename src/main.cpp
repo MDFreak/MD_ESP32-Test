@@ -22,22 +22,6 @@
     static String   tmpStr;
     static uint8_t  firstrun = true;
     static uint8_t  iret        = 0;
-    #ifdef UNUSED
-        static uint16_t md_error  = 0    // Error-Status bitkodiert -> 0: alles ok
-                                 #if (USE_WIFI > OFF)
-                                   + ERRBIT_WIFI
-                                   #if (USE_NTP_SERVER > OFF)
-                                     + ERRBIT_NTPTIME
-                                   #endif
-                                 #endif
-                                 #if (USE_WEBSERVER > OFF)
-                                   + ERRBIT_SERVER
-                                 #endif
-                                 #if (USE_TOUCHSCREEN > OFF)
-                                   + ERRBIT_TOUCH
-                                 #endif
-                                 ;
-      #endif
 	    // cycletime measurement
 
     #if ( DEV_I2C1 > OFF )
@@ -793,16 +777,6 @@
                       }
                   usleep(50000);
                 }
-              #ifdef UNUSED
-                  #if (USE_NTP_SERVER > OFF)   // get time from NTP server
-                      if ((md_error & ERRBIT_WIFI) == OK)
-                        {
-                          dispStatus("init NTP time", true);
-                          initNTPTime();
-                          ntpGet = true;
-                        }
-                    #endif
-                #endif
             #endif // USE_WIFI
         // start Webserer
           #if (USE_WEBSERVER > OFF)
@@ -821,7 +795,6 @@
                 #else
                     startWebServer();
                   #endif
-                    //md_error = setBit(md_error, ERRBIT_SERVER, webMD.md_handleClient());
               }
             #endif
         // start MQTT
@@ -1117,24 +1090,10 @@
         }
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
       // --- network ---
-        #if (XXXUSE_WIFI > OFF)  // restart WIFI if offline
-            if(wifiT.TOut())
-              {
-                //Serial.print("WiFi md_error = "); Serial.println(md_error);
-                wifiT.startT();
-                if((md_error & ERRBIT_WIFI) != OK)
-                  {
-                    dispStatus("WiFi restartWIFI");
-                    startWIFI(false);
-                  }
-              }
-          #endif // USE_WIFI
-
         #if (USE_NTP_SERVER > OFF)   // get time from NTP server
             if (ntpT.TOut() == true)
               {
                 setTime(++ntpTime);
-                //if ((md_error & ERRBIT_WIFI) == OK)
                 if (WiFi.status() == WL_CONNECTED)
                   { // WiFi online
                     if (!ntpOk)
@@ -2221,7 +2180,6 @@
                       #if ( USE_STATUS2 > OFF)
                           oled2.wrStatus(msg);
                         #endif
-                           //SVAL("  md_error ", md_error);
                     #endif
                   #if (USE_TFT > 0)
                       #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
@@ -2249,9 +2207,6 @@
                                    //     #endif
                                    // }
                                   // #endif
-                          #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
-                              SVAL("  md_error ", md_error);
-                            #endif
                     #endif // USE_DISP
                   info = false;
                 }
@@ -2292,15 +2247,9 @@
                 #if (USE_DISP > 0)
                     #if (USE_OLED1_I2C > OFF)
                         oled1.wrText(msg, col, row, len);
-                            #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
-                                STXT("  md_error ", md_error);
-                              #endif
                       #endif
                     #if defined(OLED2)
                         oled2.wrText(msg, col, row, len);
-                            #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
-                              STXT("  md_error ", md_error);
-                            #endif
                       #endif
                     #if (USE_TFT > 0)
                         #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
@@ -2836,10 +2785,6 @@
               bool ret = wifi.initNTP();
                     #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
                       Serial.print("initNTPTime ret="); Serial.print(ret);
-                    #endif
-              //md_error = setBit(md_error, ERRBIT_NTPTIME, ret);
-                    #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                      //Serial.print("  md_error="); Serial.println(md_error);
                     #endif
               if (ret = MD_OK)
                 {
