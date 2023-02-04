@@ -468,7 +468,8 @@
             md_server*   pmdServ   = new md_server();
             static bool  newClient = false;
           #endif
-        msTimer   servT = msTimer(WEBSERVER_CYCLE);
+        msTimer   servT  = msTimer(WEBSERVER_CYCLE);
+        uint8_t   webOn  = OFF;
       #endif // USE_WEBSERVER
     #if (USE_MQTT > OFF)
         //AsyncMqttClient  mqttClient;
@@ -2720,10 +2721,10 @@
 
   // --- network -------------------------
     // --- WIFI
-      bool startWIFI(bool startup)
+      uint8_t startWIFI(bool startup)
         {
+          bool ret = MD_ERR;
           #if (USE_WIFI > OFF)
-              bool ret = MD_ERR;
               dispStatus("  start WIFI");
                   //heapFree(" before generating ipList ");
               if (startup)
@@ -2819,28 +2820,13 @@
                       //heapFree(" after deleting ipList ");
                 }
               ret = wifi.startWIFI();
-                          //SVAL(" startWIFI ret ", ret);
-              //md_error = setBit(md_error, ERRBIT_WIFI, ret);
-              //md_error = setBit(md_error, ERRBIT_WIFI, 0);
-                    //#if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                      //SVAL("  md_error ", md_error);
-                      //#endif
-
-                    //if ((md_error & ERRBIT_WIFI) == 0)
-              //if (ret == ISOK)
-                  //dispStatus("WIFI connected");
-                //else
-                  //dispStatus("WIFI error");
-
-              #ifdef UNUSED
-                  #if (USE_NTP_SERVER > OFF)
-                      if((md_error & ERRBIT_WIFI) == 0) // WiFi ok
-                        if((md_error & ERRBIT_NTPTIME) != 0) // WiFi ok
-                          wifi.initNTP();
-                    #endif
-                #endif
+                  //SVAL(" startWIFI ret ", ret);
+              if (ret == MD_OK)
+                  dispStatus("WIFI connected");
+                else
+                  dispStatus("WIFI error");
             #endif // USE_WIFI
-            return ret;
+          return ret;
         }
 
     // --- NTP server
@@ -2870,27 +2856,24 @@
       #if (USE_WEBSERVER > OFF)
         void startWebServer()
           {
-            bool ret = ISERR;
-            //if ((md_error & ERRBIT_SERVER) != 0)
-            if (getBit(md_error, ERRBIT_SERVER))
+            iret = MD_ERR;
+            if (!webOn)
               {
                 dispStatus("start webserver");
-                SOUT("startServer ... ");
-                //if ((md_error & ERRBIT_WIFI) == 0)
-                if (!getBit(md_error, ERRBIT_WIFI))
+                STXT(" startServer ... ");
+                if (WiFi.status() == WL_CONNECTED)
                   {
-                    ret = pmdServ->md_startServer();
+                    iret = pmdServ->md_startServer();
                         #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                            SVAL(" ret ", ret);
+                            SVAL(" webserver ret ", iret);
                           #endif
+                    if (iret == MD_OK)
+                      {
+                        webOn = TRUE;
+                      }
                   }
-                md_error = setBit(md_error, ERRBIT_SERVER, ret);
-                      #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
-                        // SVAL("  md_error ", md_error);
-                      #endif
 
-                //if ((md_error & ERRBIT_SERVER) == 0)
-                if (!getBit(md_error, ERRBIT_SERVER))
+                if (webOn)
                   {
                     dispStatus("Webserver online");
                     STXT("Webserver online");

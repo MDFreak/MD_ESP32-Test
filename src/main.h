@@ -289,8 +289,10 @@
     // ------ network -------------------------
       // --- WIFI
         #if (USE_WIFI > OFF)
-            bool startWIFI(bool startup);
-            void initNTPTime();
+            uint8_t startWIFI(bool startup);
+            #if (USE_NTP_SERVER > OFF)
+                void    initNTPTime();
+              #endif
           #endif
 
       // --- webserver
