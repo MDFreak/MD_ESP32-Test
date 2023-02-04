@@ -499,38 +499,32 @@
         md_val<double> gasVal;
         //md_val<uint16_t> gasThres;
       #endif
-
     #if (USE_MQ3_ALK_ANA > OFF)
         md_val<int16_t> alkVal[USE_MQ3_ALK_ANA];
         md_scale<int16_t> alkScal[USE_MQ3_ALK_ANA];
         uint16_t alk[USE_MQ3_ALK_ANA];
       #endif
-
     #if (USE_PHOTO_SENS_ANA > OFF)
         md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
         md_scale<int16_t> photoScal[USE_PHOTO_SENS_ANA];
         int16_t           bright[USE_PHOTO_SENS_ANA];
       #endif
-
     #if (USE_POTI_ANA > OFF)
         md_val<int16_t>   potiVal[USE_POTI_ANA];
         md_scale<int16_t> potiScal[USE_POTI_ANA];
         uint16_t          poti[USE_POTI_ANA];
       #endif
-
     #if (USE_VCC_ANA > OFF)
         md_val<int16_t>   vccVal[USE_VCC_ANA];
         md_scale<int16_t> vccScal[USE_VCC_ANA];
         uint16_t          vcc[USE_VCC_ANA];
       #endif
-
     #if (USE_ACS712_ANA > OFF)
         md_val<int16_t>   i712Val[USE_ACS712_ANA];
         md_scale<int16_t> i712Scal[USE_ACS712_ANA];
         //float i712[USE_ACS712_ANA];
         uint16_t          i712[USE_ACS712_ANA];
       #endif
-
     #if (USE_TYPE_K_SPI > 0)
         //SPIClass* tkSPI = new SPIClass();
         //md_31855_ktype TypeK1(TYPEK1_CS_PIN, tkSPI);
@@ -610,7 +604,6 @@
               pinMode(PIN_BOARD_LED, OUTPUT);
               digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
             #endif
-
       // --- user output
         // start display - output to user
           #if (USE_TRAFFIC_COL16_OUT > 0)
@@ -634,7 +627,6 @@
                 STXT(" LED rot");
                 usleep(300000);
                 ledcWrite(PWM_RGB_RED, 0);
-
               // RGB green
                 pinMode(PIN_RGB_GREEN, OUTPUT);
                 ledcSetup(PWM_RGB_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
@@ -643,7 +635,6 @@
                 STXT(" LED gruen");
                 usleep(500000);
                 ledcWrite(PWM_RGB_GREEN, 0);
-
               // RGB blue
                 pinMode(PIN_RGB_BLUE, OUTPUT);
                 ledcSetup(PWM_RGB_BLUE,   PWM_LEDS_FREQ, PWM_LEDS_RES);
@@ -652,11 +643,9 @@
                 STXT(" LED blau");
                 usleep(500000);
                 ledcWrite(PWM_RGB_BLUE, 0);
-
             #endif
           startDisp();
           dispStatus("setup start ...", true);
-
         // WS2812 LEDs
           #if (USE_WS2812_MATRIX_OUT > OFF)
               STXT("start WS2812 matrix ...");
@@ -1000,7 +989,7 @@
             SHEXVAL("FRAM addr ",FRAM1_I2C_ADDR);
             dispStatus("init FRAM");
             bool ret = !fram.begin(FRAM1_I2C_SDA, FRAM1_I2C_SCL, FRAM1_I2C_ADDR);
-            if (ret == ISOK)
+            if (ret != MD_ERR)
               {
                 SOUT(" ok ProdID= ");
                 uint16_t prodID, manuID;
@@ -1060,8 +1049,7 @@
                 #endif
               dispStatus("... end setup");
               heapFree(" end setup ");
-
-              usleep(400000);
+              //usleep(400000);
             #endif
     }
 
