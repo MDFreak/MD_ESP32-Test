@@ -457,10 +457,11 @@
       #endif // USE_WEBSERVER
     #if (USE_MQTT > OFF)
         //AsyncMqttClient  mqttClient;
-        TimerHandle_t    mqttReconnectTimer;
-        char tmpMQTT[40];
-        char tmpOut[40];
-        void* mqttID = NULL;
+        //TimerHandle_t    mqttReconnectTimer;
+        //char tmpMQTT[40];
+        //char tmpOut[40];
+        //void* mqttID = NULL;
+
       #endif
   // ------ sensors ----------------------
     #if (USE_BME280_I2C > OFF)
