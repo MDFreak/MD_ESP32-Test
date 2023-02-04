@@ -2777,7 +2777,6 @@
             #endif // USE_WIFI
           return ret;
         }
-
     // --- NTP server
       void initNTPTime()
         {
@@ -2796,7 +2795,6 @@
                 }
             #endif // USE_NTP_SERVER
         }
-
     // --- webserver
       #if (USE_WEBSERVER > OFF)
         void startWebServer()
@@ -2817,7 +2815,6 @@
                         webOn = TRUE;
                       }
                   }
-
                 if (webOn)
                   {
                     dispStatus("Webserver online");
