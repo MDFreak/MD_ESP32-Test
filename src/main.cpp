@@ -463,7 +463,7 @@
             char tmpOut[40];
             void* mqttID = NULL;
           #endif
-
+        MQTTv5 eMQTT();
       #endif
   // ------ sensors ----------------------
     #if (USE_BME280_I2C > OFF)
