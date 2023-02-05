@@ -163,6 +163,7 @@
             // topics
               #define MQTT_LEDBRIGHT      "rgb-bright"
               #define MQTT_LEDCOLPICK     "rgb-colpick"
+              #define MQTT_MQ3ALK         "mq3alk"
               #define MQTT_BME280T        "bme280t"
               #define MQTT_BME280P        "bme280p"
               #define MQTT_BME280H        "bme280h"

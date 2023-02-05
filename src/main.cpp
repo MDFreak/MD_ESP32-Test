@@ -476,12 +476,22 @@
             const  String topDevice    = MQTT_TOPDEV;
             static String topLEDBright = MQTT_LEDBRIGHT;
             static String topLEDCol    = MQTT_LEDCOLPICK;
+            static String topMQ3alk    = MQTT_MQ3ALK;
             static String topBME280t   = MQTT_BME280T;
             static String topBME280p   = MQTT_BME280P;
             static String topBME280h   = MQTT_BME280H;
             static String topLicht     = MQTT_LICHT;
             static String topPoti      = MQTT_POTI;
             static String topVCC50     = MQTT_VCC50;
+            static String valLEDBright = "";
+            static String valLEDCol    = "";
+            static String valMQ3alk    = "";
+            static String valBME280t   = "";
+            static String valBME280p   = "";
+            static String valBME280h   = "";
+            static String valLicht     = "";
+            static String valPoti      = "";
+            static String valVCC50     = "";
             static char   cMQTT[20]    = "";
             static String tmpMQTT      = "";
             static int8_t errMQTT      = 0;
@@ -845,6 +855,9 @@
                   topLEDCol = topDevice + topLEDCol;
                   errMQTT = (int8_t) mqtt.subscribe(topLEDCol.c_str());
                       soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
+                  topMQ3alk = topDevice + topMQ3alk;
+                  errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
+                      soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
                   topBME280t = topDevice + topBME280t;
                   errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
                       soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
@@ -1865,11 +1878,14 @@
                       dispText(outStr, 1, 1, outStr.length());
                             //STXT(outStr);
                       #if (USE_MQTT > OFF)
+            static char   cMQTT[20]    = "";
+            static String tmpMQTT      = "";
+            static int8_t errMQTT      = 0;
                           //sprintf(cMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
                           //sprintf(tmpMQTT, "%d", tmpval16);
-                          //tmpMQTT = tmpval16;
-                          //mqtt.publish(tmpMQTT, tmpMQTT.length());
-                                //STXT(tmpOut);
+                          valMQ3alk = tmpval16;
+                          errMQTT = (int8_t) mqtt.publish(topMQ3alk.c_str(), (uint8_t*) valMQ3alk.c_str(), tmpMQTT.length());
+                              cerr;
                         #endif
                     #endif
                   break;
