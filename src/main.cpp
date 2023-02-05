@@ -464,10 +464,10 @@
             void* mqttID = NULL;
           #endif
         #ifdef X_RYL699
-            const  char mqttID[]       = MQTT_DEVICE;
-            const  char topLEDBright[] = MQTT_LEDBRIGHT;
-            const  char topTemp1[]     = MQTT_TEMP1;
-            static char tmpMQTT[40]    = "";
+            const  String mqttID       = MQTT_DEVICE;
+            const  String topLEDBright = MQTT_LEDBRIGHT;
+            const  String topTemp1     = MQTT_TEMP1;
+            static String tmpMQTT      = "";
             struct MessageReceiver : public Network::Client::MessageReceived
               {
                 void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic,
@@ -481,7 +481,7 @@
                   }
               };
             MessageReceiver msgHdl;
-            Network::Client::MQTTv5 mqtt((const char*) mqttID, &msgHdl);
+            Network::Client::MQTTv5 mqtt(mqttID.c_str(), &msgHdl);
           #endif
       #endif
   // ------ sensors ----------------------
@@ -821,9 +821,9 @@
                 #endif
               #ifdef X_RYL699
                   mqtt.connectTo(MQTT_HOST, MQTT_PORT);
-                  *tmpMQTT = 0;
-                  strcat(tmpMQTT, mqttID); strcat(tmpMQTT, topLEDBright);
-                  mqtt.subscribe(tmpMQTT);
+                  tmpMQTT.clear();
+                  tmpMQTT.concat(mqttID); tmpMQTT.concat("/"), tmpMQTT.concat(topLEDBright);
+                  mqtt.subscribe(tmpMQTT.c_str());
                   *tmpMQTT = 0;
                   strcat(tmpMQTT, mqttID); strcat(tmpMQTT, topTemp1);
                   mqtt.subscribe(tmpMQTT);
