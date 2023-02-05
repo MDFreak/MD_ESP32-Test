@@ -475,7 +475,13 @@
             const  String mqttID       = MQTT_DEVICE;
             const  String topDevice    = MQTT_TOPDEV;
             static String topLEDBright = MQTT_LEDBRIGHT;
+            static String topLEDCol    = MQTT_LEDCOLPICK;
             static String topBME280t   = MQTT_BME280T;
+            static String topBME280p   = MQTT_BME280P;
+            static String topBME280h   = MQTT_BME280H;
+            static String topLicht     = MQTT_LICHT;
+            static String topPoti      = MQTT_POTI;
+            static String topVCC50     = MQTT_VCC50;
             static char   cMQTT[20]    = "";
             static String tmpMQTT      = "";
             static int8_t errMQTT      = 0;
@@ -836,9 +842,27 @@
                   topLEDBright = topDevice + topLEDBright;
                   errMQTT = (int8_t) mqtt.subscribe(topLEDBright.c_str());
                       soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
-                  topTemp1 = topDevice + topTemp1;
-                  errMQTT = (int8_t) mqtt.subscribe(topTemp1.c_str());
-                      soutMQTTerr(" MQTT subscribe Temp1", errMQTT);
+                  topLEDCol = topDevice + topLEDCol;
+                  errMQTT = (int8_t) mqtt.subscribe(topLEDCol.c_str());
+                      soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
+                  topBME280t = topDevice + topBME280t;
+                  errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
+                      soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
+                  topBME280p = topDevice + topBME280p;
+                  errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
+                      soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
+                  topBME280h = topDevice + topBME280h;
+                  errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
+                      soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
+                  topLicht = topDevice + topLicht;
+                  errMQTT = (int8_t) mqtt.subscribe(topLicht.c_str());
+                      soutMQTTerr(" MQTT subscribe Licht", errMQTT);
+                  topPoti = topDevice + topPoti;
+                  errMQTT = (int8_t) mqtt.subscribe(topPoti.c_str());
+                      soutMQTTerr(" MQTT subscribe poti", errMQTT);
+                  topVCC50 = topDevice + topVCC50;
+                  errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
+                      soutMQTTerr(" MQTT subscribe vcc50", errMQTT);
                 #endif
             #endif
       // --- sensors
@@ -1857,15 +1881,13 @@
                       outStr.concat(photoVal[0].getVal());
                       #if (USE_WEBSERVER > OFF)
                           tmpval16 = photoVal[0].getVal();
-                          #if (USE_MQTT > OFF)
-                              //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
-                            #endif
                           tmpStr = "SVA";
                           tmpStr.concat("3");
                           tmpStr.concat(tmpval16);
                           pmdServ->updateAll(tmpStr);
                         #endif
                       #if (USE_MQTT > OFF)
+                              //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
                           //sprintf(tmpOut, "%d", tmpval16);
                       //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           //STXT(tmpOut);
@@ -1942,15 +1964,13 @@
                 case 9:  // voltage, current
                     #if (USE_VCC_ANA > OFF)
                         tmpval16 = vcc[VCC50_IDX];
-                        #if (USE_MQTT > OFF)
-                            //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
-                          #endif
                         outStr = "  V ";
                         outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
+                            //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
                             //sprintf(tmpOut, "%d", tmpval16);
                         //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //STXT(tmpOut);
