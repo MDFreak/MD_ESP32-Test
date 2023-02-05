@@ -464,6 +464,14 @@
             void* mqttID = NULL;
           #endif
         #ifdef X_RYL699
+            const char cerrMQTT[10][20]  =
+              {
+                "success",          "UnknownError",
+                "TimedOut",         "AlreadyConnected",
+                "BadParameter",     "BadProperties",
+                "NetworkError",     "NotConnected",
+                "TranscientPacket", "WaitingForResult"
+              };
             const  String mqttID       = MQTT_DEVICE;
             const  String topDevice    = MQTT_TOPDEV;
             static String topLEDBright = MQTT_LEDBRIGHT;
@@ -1831,8 +1839,8 @@
                       #if (USE_MQTT > OFF)
                           //sprintf(cMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
                           //sprintf(tmpMQTT, "%d", tmpval16);
-                          tmpMQTT = tmpval16;
-                          mqtt.publish(tmpMQTT, tmpMQTT.length);
+                          //tmpMQTT = tmpval16;
+                          //mqtt.publish(tmpMQTT, tmpMQTT.length());
                                 //STXT(tmpOut);
                         #endif
                     #endif
@@ -1846,7 +1854,7 @@
                       #if (USE_WEBSERVER > OFF)
                           tmpval16 = photoVal[0].getVal();
                           #if (USE_MQTT > OFF)
-                              sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
+                              //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
                             #endif
                           tmpStr = "SVA";
                           tmpStr.concat("3");
@@ -1854,7 +1862,7 @@
                           pmdServ->updateAll(tmpStr);
                         #endif
                       #if (USE_MQTT > OFF)
-                          sprintf(tmpOut, "%d", tmpval16);
+                          //sprintf(tmpOut, "%d", tmpval16);
                       //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           //STXT(tmpOut);
                         #endif
@@ -1882,7 +1890,7 @@
                             case 0:
                               tmpval16 = bme1T.getVal();
                               #if (USE_MQTT > OFF)
-                                  sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
+                                  //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
                                 #endif
                               tmpStr.concat(tmpval16);
                               outStr.concat(tmpval16);
@@ -1891,7 +1899,7 @@
                             case 1:
                               tmpval16 = bme1P.getVal();
                               #if (USE_MQTT > OFF)
-                                  sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
+                                  //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
                                 #endif
                               tmpStr.concat(tmpval16);
                               outStr.concat(tmpval16);
@@ -1900,7 +1908,7 @@
                             case 2:
                               tmpval16 = bme1H.getVal();
                               #if (USE_MQTT > OFF)
-                                  sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
+                                  //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
                                 #endif
                               tmpStr.concat(tmpval16);
                               outStr.concat(tmpval16);
@@ -1914,7 +1922,7 @@
                             pmdServ->updateAll(tmpStr);
                           #endif
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpOut, "%d", tmpval16);
+                            //sprintf(tmpOut, "%d", tmpval16);
                             //heapFree("+publish");
                             //
                             //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
@@ -1931,7 +1939,7 @@
                     #if (USE_VCC_ANA > OFF)
                         tmpval16 = vcc[VCC50_IDX];
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
+                            //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
                           #endif
                         outStr = "  V ";
                         outStr.concat(tmpval16);
@@ -1939,7 +1947,7 @@
                         dispText(outStr, 1, 2, outStr.length());
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpOut, "%d", tmpval16);
+                            //sprintf(tmpOut, "%d", tmpval16);
                         //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //STXT(tmpOut);
                           #endif
@@ -1947,7 +1955,7 @@
                     #if (USE_ACS712_ANA > OFF)
                         tmpval16 = i712[0];
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, I712_1_MQTT);
+                            //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, I712_1_MQTT);
                           #endif
                         outStr = "  I ";
                         outStr.concat(i712[0]);
@@ -1956,7 +1964,7 @@
                         dispText(outStr, 15, 2, outStr.length());
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpOut, "%d", tmpval16);
+                            //sprintf(tmpOut, "%d", tmpval16);
                         //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                   //STXT(tmpOut);
                           #endif
@@ -1966,7 +1974,7 @@
                     #if (USE_POTI_ANA > OFF)
                         tmpval16 = potiScal[0].scale((float) poti[0]);
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
+                            //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
                           #endif
                         outStr = "  P ";
                         outStr.concat(tmpval16);
@@ -1974,7 +1982,7 @@
                         dispText(outStr, 15, 1, outStr.length());
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
-                            sprintf(tmpOut, "%d", tmpval16);
+                            //sprintf(tmpOut, "%d", tmpval16);
                             //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                           #endif
                       #endif

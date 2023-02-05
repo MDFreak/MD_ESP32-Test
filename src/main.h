@@ -322,8 +322,9 @@
                                    //size_t len, size_t index, size_t total);
                 void onMqttPublish(uint16_t packetId);
               #endif
-            //#ifdef X_RYL699
-              //#endif
+            #ifdef X_RYL699
+                void soutMQTTerr(String text, int8_t errMQTT);
+              #endif
           #endif
     // -------------------------
 
