@@ -1878,14 +1878,10 @@
                       dispText(outStr, 1, 1, outStr.length());
                             //STXT(outStr);
                       #if (USE_MQTT > OFF)
-            static char   cMQTT[20]    = "";
-            static String tmpMQTT      = "";
-            static int8_t errMQTT      = 0;
-                          //sprintf(cMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
-                          //sprintf(tmpMQTT, "%d", tmpval16);
                           valMQ3alk = tmpval16;
-                          errMQTT = (int8_t) mqtt.publish(topMQ3alk.c_str(), (uint8_t*) valMQ3alk.c_str(), tmpMQTT.length());
-                              cerr;
+                              SVAL(topMQ3alk, valMQ3alk);
+                          errMQTT = (int8_t) mqtt.publish(topMQ3alk.c_str(), (uint8_t*) valMQ3alk.c_str(), valMQ3alk.length());
+                              soutMQTTerr(" MQTT publish MQ3alk", errMQTT);
                         #endif
                     #endif
                   break;
@@ -1903,10 +1899,10 @@
                           pmdServ->updateAll(tmpStr);
                         #endif
                       #if (USE_MQTT > OFF)
-                              //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
-                          //sprintf(tmpOut, "%d", tmpval16);
-                      //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                          //STXT(tmpOut);
+                          valLicht = tmpval16;
+                              SVAL(topLicht, valLicht);
+                          errMQTT = (int8_t) mqtt.publish(topLicht.c_str(), (uint8_t*) valLicht.c_str(), valLicht.length());
+                              soutMQTTerr(" MQTT publish MQ3alk", errMQTT);
                         #endif
                     #endif
                   outStr.concat("  ");
@@ -1932,7 +1928,10 @@
                             case 0:
                               tmpval16 = bme1T.getVal();
                               #if (USE_MQTT > OFF)
-                                  //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
+                                  valBME280t = tmpval16;
+                                      SVAL(topBME280t, valBME280t);
+                                  errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                      soutMQTTerr(" MQTT publish BME280t", errMQTT);
                                 #endif
                               tmpStr.concat(tmpval16);
                               outStr.concat(tmpval16);
@@ -1941,7 +1940,10 @@
                             case 1:
                               tmpval16 = bme1P.getVal();
                               #if (USE_MQTT > OFF)
-                                  //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
+                                  valBME280p = tmpval16;
+                                      SVAL(topBME280p, valBME280p);
+                                  errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
+                                      soutMQTTerr(" MQTT publish BME280p", errMQTT);
                                 #endif
                               tmpStr.concat(tmpval16);
                               outStr.concat(tmpval16);
@@ -1950,7 +1952,10 @@
                             case 2:
                               tmpval16 = bme1H.getVal();
                               #if (USE_MQTT > OFF)
-                                  //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
+                                  valBME280h = tmpval16;
+                                      SVAL(topBME280h, valBME280h);
+                                  errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
+                                      soutMQTTerr(" MQTT publish BME280h", errMQTT);
                                 #endif
                               tmpStr.concat(tmpval16);
                               outStr.concat(tmpval16);
@@ -1962,15 +1967,6 @@
                         // send to websocket
                         #if (USE_WEBSERVER > OFF)
                             pmdServ->updateAll(tmpStr);
-                          #endif
-                        #if (USE_MQTT > OFF)
-                            //sprintf(tmpOut, "%d", tmpval16);
-                            //heapFree("+publish");
-                            //
-                            //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  //STXT(tmpOut);
-                            //heapFree("+publish");
-                            //sleep(2);
                           #endif
                       }
                     dispText(outStr , 0, 3, outStr.length());
@@ -1986,10 +1982,6 @@
                         dispText(outStr, 1, 2, outStr.length());
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
-                            //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, VCC50_MQTT);
-                            //sprintf(tmpOut, "%d", tmpval16);
-                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  //STXT(tmpOut);
                           #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
@@ -2004,9 +1996,10 @@
                         dispText(outStr, 15, 2, outStr.length());
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
-                            //sprintf(tmpOut, "%d", tmpval16);
-                        //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
-                                  //STXT(tmpOut);
+                            valVCC50 = tmpval16;
+                                SVAL(topVCC50, valVCC50);
+                            errMQTT = (int8_t) mqtt.publish(topVCC50.c_str(), (uint8_t*) valVCC50.c_str(), valVCC50.length());
+                                soutMQTTerr(" MQTT publish VCC50", errMQTT);
                           #endif
                       #endif
                    	break;
@@ -2022,8 +2015,10 @@
                         dispText(outStr, 15, 1, outStr.length());
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
-                            //sprintf(tmpOut, "%d", tmpval16);
-                            //mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                            valPoti = tmpval16;
+                                SVAL(topPoti, valPoti);
+                            errMQTT = (int8_t) mqtt.publish(topPoti.c_str(), (uint8_t*) valPoti.c_str(), valPoti.length());
+                                soutMQTTerr(" MQTT publish Poti", errMQTT);
                           #endif
                       #endif
                     break;
@@ -2122,7 +2117,19 @@
                         //dispText(outStr ,  0, 1, outStr.length());
                     #endif
                   break;
-
+                case 15: // RGB-LED
+                    #if (USE_MQTT > OFF)
+                        valLEDBright = (RGBLED[0]->bright());    // RGB-LED col24
+                            SVAL(topLEDBright, valLEDBright);
+                        errMQTT = (int8_t) mqtt.publish(topLEDBright.c_str(), (uint8_t*) valLEDBright.c_str(), valLEDBright.length());
+                            soutMQTTerr(" MQTT publish LEDBright", errMQTT);
+                        colToHexStr(cMQTT, RGBLED[0]->col24());
+                        valLEDCol = cMQTT;    // RGB-LED col24
+                            SVAL(topLEDCol, valLEDCol);
+                        errMQTT = (int8_t) mqtt.publish(topLEDCol.c_str(), (uint8_t*) valLEDCol.c_str(), valLEDCol.length());
+                            soutMQTTerr(" MQTT publish LEDCol", errMQTT);
+                      #endif
+                  break;
                 default:
                   dispIdx = 0;
                   if (SYS_LED_ON == ON) { SYS_LED_ON = OFF; }
