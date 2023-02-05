@@ -322,29 +322,8 @@
                                    //size_t len, size_t index, size_t total);
                 void onMqttPublish(uint16_t packetId);
               #endif
-            #ifdef X_RYL699
-                struct messageHdl : public Network::Client::MessageReceived
-                  {
-                      messageHdl(const Network::Client::MQTTv5::DynamicStringView & topic,
-                                 const Network::Client::MQTTv5::DynamicBinDataView & payload,
-                                 const uint16 packetIdentifier,
-                                 const Network::Client::MQTTv5::PropertiesView & properties)
-                        {
-                          messageReceived(topic, payload, packetIdentifier, properties);
-                        }
-                      void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic,
-                                           const Network::Client::MQTTv5::DynamicBinDataView & payload,
-                                           const uint16 packetIdentifier,
-                                           const Network::Client::MQTTv5::PropertiesView & properties)
-                        {
-                          fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
-                          fprintf(stdout, "  Topic: %.*s\n", topic.length, topic.data);
-                          fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
-                        }
-                  };
-                Network::Client::MessageReceived recMQTT((),);
-
-              #endif
+            //#ifdef X_RYL699
+              //#endif
           #endif
     // -------------------------
 
