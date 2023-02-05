@@ -71,7 +71,7 @@
         msTimer dispT            = msTimer(DISP_CYCLE_MS);
         uint8_t dispIdx  = 0;
       #endif
-// ------ user input ---------------
+  // ------ user input ---------------
     #if (USE_TOUCHSCREEN > OFF)
         md_touch  touch  =  md_touch(TOUCH_CS, TFT_CS, TFT_DC, TFT_RST, TFT_LED, LED_ON);
         md_touch* ptouch =  &touch;
@@ -793,16 +793,21 @@
         // start MQTT
           #if (USE_MQTT > OFF)
               STXT("Connecting to MQTT...");
-              //mqttClient.onConnect(onMqttConnect);
-              //mqttClient.onDisconnect(onMqttDisconnect);
-              //mqttClient.onSubscribe(onMqttSubscribe);
-              //mqttClient.onUnsubscribe(onMqttUnsubscribe);
-              //mqttClient.onMessage(onMqttMessage);
-              //mqttClient.onPublish(onMqttPublish);
-              //mqttClient.setServer(MQTT_HOST, MQTT_PORT);
-              //mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, mqttID,
-                                                //reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
-              //mqttClient.connect();
+              #ifdef MARVIN_ROGER
+                  //mqttClient.onConnect(onMqttConnect);
+                  //mqttClient.onDisconnect(onMqttDisconnect);
+                  //mqttClient.onSubscribe(onMqttSubscribe);
+                  //mqttClient.onUnsubscribe(onMqttUnsubscribe);
+                  //mqttClient.onMessage(onMqttMessage);
+                  //mqttClient.onPublish(onMqttPublish);
+                  //mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+                  //mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, mqttID,
+                                                    //reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
+                  //mqttClient.connect();
+                #endif
+              #ifdef X_RYL699
+                  mqtt.connectTo(MQTT_HOST, MQTT_PORT);
+                #endif
             #endif
       // --- sensors
         // ADC ADS1115

@@ -146,8 +146,12 @@
       // --- MQTT Mosquitto client
         #if (USE_MQTT > OFF)
             //#define MARVIN_ROGER          // library
+            #ifdef MARVIN_ROGER
+                #define MQTT_HOST         IPAddress(10, 0, 0, 203)
+              #endif
             #define X_RYL699              // library
-            #define MQTT_HOST             IPAddress(10, 0, 0, 203)
+            #ifdef X_RYL699
+                #define MQTT_HOST         "10.0.0.203"
             #define MQTT_PORT             1883
             #define MQTT_SECURE           OFF
             #define MQTT_DEVICE           "esp-24"
