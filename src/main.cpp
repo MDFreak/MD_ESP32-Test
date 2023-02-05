@@ -475,9 +475,10 @@
             const  String mqttID       = MQTT_DEVICE;
             const  String topDevice    = MQTT_TOPDEV;
             static String topLEDBright = MQTT_LEDBRIGHT;
-            static String topTemp1     = MQTT_TEMP1;
+            static String topBME280t   = MQTT_BME280T;
             static char   cMQTT[20]    = "";
             static String tmpMQTT      = "";
+            static int8_t errMQTT      = 0;
             struct MessageReceiver : public Network::Client::MessageReceived
               {
                 void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic,
@@ -830,11 +831,14 @@
                   //mqttClient.connect();
                 #endif
               #ifdef X_RYL699
-                  mqtt.connectTo(MQTT_HOST, MQTT_PORT);
+                  errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
+                      soutMQTTerr(" MQTT connect", errMQTT);
                   topLEDBright = topDevice + topLEDBright;
-                  mqtt.subscribe(topLEDBright.c_str());
+                  errMQTT = (int8_t) mqtt.subscribe(topLEDBright.c_str());
+                      soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
                   topTemp1 = topDevice + topTemp1;
-                  mqtt.subscribe(topTemp1.c_str());
+                  errMQTT = (int8_t) mqtt.subscribe(topTemp1.c_str());
+                      soutMQTTerr(" MQTT subscribe Temp1", errMQTT);
                 #endif
             #endif
       // --- sensors
@@ -3214,14 +3218,11 @@
                 }
             #endif
           #ifdef X_RYL699
-
-String publishTopic, publishMessage;
-String publish(const char * topic, const char * message)
-{
-    // Remember the message to publish that we'll do once connected
-    publishTopic = topic; publishMessage = message;
-    return "";
-}
+              void soutMQTTerr(String text, int8_t errMQTT)
+                {
+                  errMQTT *= -1;
+                  SVAL(text, cerrMQTT[errMQTT]);
+                }
             #endif
       #endif
   // --- error ESP -------------------------

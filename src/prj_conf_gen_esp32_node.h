@@ -162,7 +162,13 @@
               #endif
             // topics
               #define MQTT_LEDBRIGHT      "rgb-bright"
-              #define MQTT_TEMP1          "temp"
+              #define MQTT_LEDCOLPICK     "rgb-colpick"
+              #define MQTT_BME280T        "bme280t"
+              #define MQTT_BME280P        "bme280p"
+              #define MQTT_BME280H        "bme280h"
+              #define MQTT_LICHT          "licht"
+              #define MQTT_POTI           "poti"
+              #define MQTT_VCC50          "vcc50"
             //
           #endif
 
