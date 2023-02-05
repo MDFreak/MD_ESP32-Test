@@ -464,11 +464,11 @@
             void* mqttID = NULL;
           #endif
         #ifdef X_RYL699
-            const char mqttID[40]     = MQTT_DEVICE;
-            const char topLEDBright[] = MQTT_LEDBRIGHT;
-            const char topTemp1[]     = MQTT_TEMP1;
-            static char tmpMQTT[40]   = "";
-            struct messageHdl : public Network::Client::MessageReceived
+            const  char mqttID[]       = MQTT_DEVICE;
+            const  char topLEDBright[] = MQTT_LEDBRIGHT;
+            const  char topTemp1[]     = MQTT_TEMP1;
+            static char tmpMQTT[40]    = "";
+            struct MessageReceiver : public Network::Client::MessageReceived
               {
                 void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic,
                                      const Network::Client::MQTTv5::DynamicBinDataView & payload,
@@ -480,8 +480,8 @@
                     fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
                   }
               };
-            static messageHdl msgHdl;
-            static Network::Client::MQTTv5 mqtt(&mqttID[0], (msgHdl->messageReceived));
+            MessageReceiver msgHdl;
+            Network::Client::MQTTv5 mqtt((const char*) mqttID, &msgHdl);
           #endif
       #endif
   // ------ sensors ----------------------
