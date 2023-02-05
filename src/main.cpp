@@ -464,7 +464,8 @@
             void* mqttID = NULL;
           #endif
         const char mqttID[] = "ESP_24";
-        static Network::Client::MQTTv5 mqtt(mqttID, );
+        const char topLEDBright[] = "esp-test/rgb-bright";
+        static Network::Client::MQTTv5 mqtt(mqttID, &recMQTT);
       #endif
   // ------ sensors ----------------------
     #if (USE_BME280_I2C > OFF)
@@ -564,7 +565,7 @@
 // --- callback functions -----------------------------------
 // ----------------------------------------------------------------
   // ------ MQTT callback functions --------------------------------
-    Network::Client::MessageReceived mqttRec();
+    Network::Client::MessageReceived recMQTT(("esp-test/rgb-bright",20),);
 // ----------------------------------------------------------------
 // --- system setup -----------------------------------
 // ----------------------------------------------------------------
