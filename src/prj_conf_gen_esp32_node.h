@@ -68,7 +68,6 @@
                 #define BME2802_I2C     I2C2
               #endif
           #endif
-
         #if (USE_ADC1115_I2C > OFF)
             #ifndef USE_INPUT_CYCLE
                 #define USE_INPUT_CYCLE
@@ -152,6 +151,7 @@
             #define X_RYL699              // library
             #ifdef X_RYL699
                 #define MQTT_HOST         "10.0.0.203"
+              #endif
             #define MQTT_PORT             1883
             #define MQTT_SECURE           OFF
             #define MQTT_DEVICE           "esp-24"

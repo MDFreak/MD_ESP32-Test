@@ -464,7 +464,7 @@
             void* mqttID = NULL;
           #endif
         #ifdef X_RYL699
-            const char mqttID[]       = MQTT_DEVICE;
+            const char mqttID[40]     = MQTT_DEVICE;
             const char topLEDBright[] = MQTT_LEDBRIGHT;
             const char topTemp1[]     = MQTT_TEMP1;
             static char tmpMQTT[40]   = "";
@@ -480,7 +480,8 @@
                     fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
                   }
               };
-            static Network::Client::MQTTv5 mqtt(mqttID, &messageHdl::messageReceived);
+            static messageHdl msgHdl;
+            static Network::Client::MQTTv5 mqtt(&mqttID[0], (msgHdl->messageReceived));
           #endif
       #endif
   // ------ sensors ----------------------
