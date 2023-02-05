@@ -463,9 +463,13 @@
             char tmpOut[40];
             void* mqttID = NULL;
           #endif
-        const char mqttID[] = "ESP_24";
-        const char topLEDBright[] = "esp-test/rgb-bright";
+        #ifdef X_RYL699
+        const char mqttID[]       = MQTT_DEVICE;
+        const char topLEDBright[] = MQTT_LEDBRIGHT;
+        const char topTemp1[]     = MQTT_TEMP1;
+        const char top[]          = {MQTT_DEVICE*,'/'};
         static Network::Client::MQTTv5 mqtt(mqttID, &recMQTT);
+          #endif
       #endif
   // ------ sensors ----------------------
     #if (USE_BME280_I2C > OFF)
@@ -561,11 +565,6 @@
         SPIClass psdSPI(VSPI);
         File sdFile;                       // file object that is used to read and write data
       #endif
-// ----------------------------------------------------------------
-// --- callback functions -----------------------------------
-// ----------------------------------------------------------------
-  // ------ MQTT callback functions --------------------------------
-    Network::Client::MessageReceived recMQTT(("esp-test/rgb-bright",20),);
 // ----------------------------------------------------------------
 // --- system setup -----------------------------------
 // ----------------------------------------------------------------
@@ -3102,93 +3101,95 @@
         #endif // USE_WEBSERVER
     // --- MQTT
       #if (USE_MQTT > OFF)
-#ifdef UNUSED
-        void connectToMqtt()
-          {
-                  SOUT("Connecting to MQTT ...");
-              //AsyncMqttClient& setKeepAlive(uint16_t `keepAlive`);   // Set keep alive. Defaults to 15 seconds
-              //AsyncMqttClient& setClientId(const char\* `clientId`); // Defaults to `esp8266<chip ID on 6 hex caracters>`
-              //AsyncMqttClient& setCleanSession(bool `cleanSession`); // Defaults to `true`
-              //AsyncMqttClient& setMaxTopicLength(uint16_t `maxLen`); // Defaults to `128`
-              //AsyncMqttClient& setCredentials(const char\* `username`, const char\* `password` = nullptr);
-              //AsyncMqttClient& setWill(const char\* `topic`, uint8_t `qos`, bool `retain`, const char\* `payload` = nullptr, size_t `length` = 0); //Defaults to none
-                  SOUT("  connect ...");
-            mqttClient.connect();
-                  SOUT("  MQTT connected");
-          }
-
-        void onMqttConnect(bool sessionPresent)
-          {
-            char temp[32] = "";
-            uint16_t packetIdSub;
-            SVAL("  Connected to MQTT - Session: ", sessionPresent);
-            /*
-              for (uint8_t i=0; i<6; i++)
+          #ifdef MARVIN_ROGER
+              void connectToMqtt()
                 {
-                  switch(i)
-                    {
-                      case 0:
-                        sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
-                        break;
-                      case 1:
-                        sprintf(temp, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
-                        break;
-                      case 2:
-                        sprintf(temp, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
-                        break;
-                      case 3:
-                        sprintf(temp, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
-                        break;
-                      case 4:
-                        sprintf(temp, "%s%s", MQTT_DEVICE, POTI1_MQTT);
-                        break;
-                      case 5:
-                        sprintf(temp, "%s%s", MQTT_DEVICE, VCC50_MQTT);
-                        break;
-                    }
-                  packetIdSub = mqttClient.subscribe(temp, 0);
-                        SOUT("Subscribing "); SOUT(temp); SOUT(" Id: ");
-                        SOUTLN(packetIdSub);
-                    //mqttClient.publish("temp", 0, true);
+                        SOUT("Connecting to MQTT ...");
+                    //AsyncMqttClient& setKeepAlive(uint16_t `keepAlive`);   // Set keep alive. Defaults to 15 seconds
+                    //AsyncMqttClient& setClientId(const char\* `clientId`); // Defaults to `esp8266<chip ID on 6 hex caracters>`
+                    //AsyncMqttClient& setCleanSession(bool `cleanSession`); // Defaults to `true`
+                    //AsyncMqttClient& setMaxTopicLength(uint16_t `maxLen`); // Defaults to `128`
+                    //AsyncMqttClient& setCredentials(const char\* `username`, const char\* `password` = nullptr);
+                    //AsyncMqttClient& setWill(const char\* `topic`, uint8_t `qos`, bool `retain`, const char\* `payload` = nullptr, size_t `length` = 0); //Defaults to none
+                        SOUT("  connect ...");
+                  mqttClient.connect();
+                        SOUT("  MQTT connected");
                 }
-              */
-          }
 
-        void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
-          {
-            STXT("Disconnected from MQTT.");
-            if (WiFi.isConnected())
-              {
-                xTimerStart(mqttReconnectTimer, 0);
-              }
-          }
+              void onMqttConnect(bool sessionPresent)
+                {
+                  char temp[32] = "";
+                  uint16_t packetIdSub;
+                  SVAL("  Connected to MQTT - Session: ", sessionPresent);
+                  /*
+                    for (uint8_t i=0; i<6; i++)
+                      {
+                        switch(i)
+                          {
+                            case 0:
+                              sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
+                              break;
+                            case 1:
+                              sprintf(temp, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
+                              break;
+                            case 2:
+                              sprintf(temp, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
+                              break;
+                            case 3:
+                              sprintf(temp, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
+                              break;
+                            case 4:
+                              sprintf(temp, "%s%s", MQTT_DEVICE, POTI1_MQTT);
+                              break;
+                            case 5:
+                              sprintf(temp, "%s%s", MQTT_DEVICE, VCC50_MQTT);
+                              break;
+                          }
+                        packetIdSub = mqttClient.subscribe(temp, 0);
+                              SOUT("Subscribing "); SOUT(temp); SOUT(" Id: ");
+                              SOUTLN(packetIdSub);
+                          //mqttClient.publish("temp", 0, true);
+                      }
+                    */
+                }
 
-        void onMqttSubscribe(uint16_t packetId, uint8_t qos)
-          {
-            S2VAL("Subscribe ack Id/qos ", packetId, qos);
-          }
+              void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
+                {
+                  STXT("Disconnected from MQTT.");
+                  if (WiFi.isConnected())
+                    {
+                      xTimerStart(mqttReconnectTimer, 0);
+                    }
+                }
 
-        void onMqttUnsubscribe(uint16_t packetId)
-          {
-            SVAL("Unsubscribe acknowledged packetId: ", packetId);
-          }
+              void onMqttSubscribe(uint16_t packetId, uint8_t qos)
+                {
+                  S2VAL("Subscribe ack Id/qos ", packetId, qos);
+                }
 
-        void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total)
-          {
-            S3VAL("Publish rec topic/payload/len: ", topic, payload, len);
-                  //SVAL("  qos: ", properties.qos);
-                  //SVAL("  dup: ", properties.dup);
-                  //SVAL("  retain: ", properties.retain);
-                  //SVAL("  len: ", len);
-                  //SVAL("  index: ", index);
-                  //SVAL("  total: ", total);
-          }
+              void onMqttUnsubscribe(uint16_t packetId)
+                {
+                  SVAL("Unsubscribe acknowledged packetId: ", packetId);
+                }
 
-        void onMqttPublish(uint16_t packetId)
-          {
-            SVAL("Publish ack Id", packetId);
-          }
-#endif
+              void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total)
+                {
+                  S3VAL("Publish rec topic/payload/len: ", topic, payload, len);
+                        //SVAL("  qos: ", properties.qos);
+                        //SVAL("  dup: ", properties.dup);
+                        //SVAL("  retain: ", properties.retain);
+                        //SVAL("  len: ", len);
+                        //SVAL("  index: ", index);
+                        //SVAL("  total: ", total);
+                }
+
+              void onMqttPublish(uint16_t packetId)
+                {
+                  SVAL("Publish ack Id", packetId);
+                }
+            #endif
+          #ifdef X_RYL699
+            #endif
       #endif
   // --- error ESP -------------------------
     void logESP(const esp_err_t _err, const char *_msg, uint8_t nr, bool _stop)
@@ -3209,4 +3210,9 @@
               }
           }
       }
+// ----------------------------------------------------------------
+// --- callback functions -----------------------------------
+// ----------------------------------------------------------------
+  // ------ MQTT callback functions --------------------------------
+    Network::Client::MessageReceived recMQTT(("esp-test/rgb-bright",20),);
 // --- end of code -----------------------------------------------

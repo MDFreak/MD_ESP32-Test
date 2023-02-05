@@ -145,14 +145,19 @@
 
       // --- MQTT Mosquitto client
         #if (USE_MQTT > OFF)
+            //#define MARVIN_ROGER          // library
+            #define X_RYL699              // library
             #define MQTT_HOST             IPAddress(10, 0, 0, 203)
             #define MQTT_PORT             1883
             #define MQTT_SECURE           OFF
-            #define MQTT_DEVICE           "esp-test/"
+            #define MQTT_DEVICE           "esp-24"
             #if(MQTT_SECURE > OFF)
                 #define MQTT_BROKER_USER  "<user>"
                 #define MQTT_BROKER_PASS  "<pass>"
               #endif
+            // topics
+              #define MQTT_LEDBRIGHT      "rgb-bright"
+              #define MQTT_TEMP1          "temp"
             //
           #endif
 
