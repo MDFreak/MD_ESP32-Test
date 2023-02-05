@@ -465,9 +465,10 @@
           #endif
         #ifdef X_RYL699
             const  String mqttID       = MQTT_DEVICE;
-            const  String topLEDBright = MQTT_LEDBRIGHT;
-            const  String topTemp1     = MQTT_TEMP1;
             const  String topDevice    = MQTT_TOPDEV;
+            static String topLEDBright = MQTT_LEDBRIGHT;
+            static String topTemp1     = MQTT_TEMP1;
+            static char   cMQTT[20]    = "";
             static String tmpMQTT      = "";
             struct MessageReceiver : public Network::Client::MessageReceived
               {
@@ -822,12 +823,10 @@
                 #endif
               #ifdef X_RYL699
                   mqtt.connectTo(MQTT_HOST, MQTT_PORT);
-                  tmpMQTT.clear();
-                  tmpMQTT.concat(topDevice); tmpMQTT.concat(topLEDBright);
-                  mqtt.subscribe(tmpMQTT.c_str());
-                  tmpMQTT.clear();
-                  tmpMQTT.concat(topDevice); tmpMQTT.concat(topTemp1);
-                  mqtt.subscribe(tmpMQTT.c_str());
+                  topLEDBright = topDevice + topLEDBright;
+                  mqtt.subscribe(topLEDBright.c_str());
+                  topTemp1 = topDevice + topTemp1;
+                  mqtt.subscribe(topTemp1.c_str());
                 #endif
             #endif
       // --- sensors
@@ -1830,9 +1829,10 @@
                       dispText(outStr, 1, 1, outStr.length());
                             //STXT(outStr);
                       #if (USE_MQTT > OFF)
-                          sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
-                          sprintf(tmpOut, "%d", tmpval16);
-                      //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
+                          //sprintf(cMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
+                          //sprintf(tmpMQTT, "%d", tmpval16);
+                          tmpMQTT = tmpval16;
+                          mqtt.publish(tmpMQTT, tmpMQTT.length);
                                 //STXT(tmpOut);
                         #endif
                     #endif
