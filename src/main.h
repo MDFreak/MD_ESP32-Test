@@ -184,8 +184,11 @@
         #include <md_webserver.h>
         #include <ip_list.hpp>
         #if (USE_MQTT > OFF)
-            //#include <espMqttClient.h>
+            #ifdef MARVIN_ROGER
+                #include <espMqttClient.h>
+              #endif
             #include <md_eMQTT5.hpp>
+
           #endif
       #endif
   // --- sensors

@@ -456,11 +456,13 @@
         uint8_t   webOn  = OFF;
       #endif // USE_WEBSERVER
     #if (USE_MQTT > OFF)
-        //AsyncMqttClient  mqttClient;
-        //TimerHandle_t    mqttReconnectTimer;
-        //char tmpMQTT[40];
-        //char tmpOut[40];
-        //void* mqttID = NULL;
+        #ifdef MARVIN_ROGER
+            AsyncMqttClient  mqttClient;
+            TimerHandle_t    mqttReconnectTimer;
+            char tmpMQTT[40];
+            char tmpOut[40];
+            void* mqttID = NULL;
+          #endif
 
       #endif
   // ------ sensors ----------------------
