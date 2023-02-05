@@ -467,6 +467,7 @@
         const char mqttID[]       = MQTT_DEVICE;
         const char topLEDBright[] = MQTT_LEDBRIGHT;
         const char topTemp1[]     = MQTT_TEMP1;
+        static char tmpMQTT[40]   = "";
         static Network::Client::MQTTv5 mqtt(mqttID, &recMQTT);
           #endif
       #endif
@@ -807,6 +808,12 @@
                 #endif
               #ifdef X_RYL699
                   mqtt.connectTo(MQTT_HOST, MQTT_PORT);
+                  *tmpMQTT = 0;
+                  strcat(tmpMQTT, mqttID); strcat(tmpMQTT, topLEDBright);
+                  mqtt.subscribe(tmpMQTT);
+                  *tmpMQTT = 0;
+                  strcat(tmpMQTT, mqttID); strcat(tmpMQTT, topTemp1);
+                  mqtt.subscribe(tmpMQTT);
                 #endif
             #endif
       // --- sensors
@@ -3119,7 +3126,6 @@
                   mqttClient.connect();
                         SOUT("  MQTT connected");
                 }
-
               void onMqttConnect(bool sessionPresent)
                 {
                   char temp[32] = "";
@@ -3156,7 +3162,6 @@
                       }
                     */
                 }
-
               void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
                 {
                   STXT("Disconnected from MQTT.");
@@ -3165,17 +3170,14 @@
                       xTimerStart(mqttReconnectTimer, 0);
                     }
                 }
-
               void onMqttSubscribe(uint16_t packetId, uint8_t qos)
                 {
                   S2VAL("Subscribe ack Id/qos ", packetId, qos);
                 }
-
               void onMqttUnsubscribe(uint16_t packetId)
                 {
                   SVAL("Unsubscribe acknowledged packetId: ", packetId);
                 }
-
               void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total)
                 {
                   S3VAL("Publish rec topic/payload/len: ", topic, payload, len);
@@ -3186,13 +3188,30 @@
                         //SVAL("  index: ", index);
                         //SVAL("  total: ", total);
                 }
-
               void onMqttPublish(uint16_t packetId)
                 {
                   SVAL("Publish ack Id", packetId);
                 }
             #endif
           #ifdef X_RYL699
+struct MessageReceiver : public Network::Client::MessageReceived
+{
+    void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic, const Network::Client::MQTTv5::DynamicBinDataView & payload,
+                         const uint16 packetIdentifier, const Network::Client::MQTTv5::PropertiesView & properties)
+    {
+        fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
+        fprintf(stdout, "  Topic: %.*s\n", topic.length, topic.data);
+        fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
+    }
+};
+
+String publishTopic, publishMessage;
+String publish(const char * topic, const char * message)
+{
+    // Remember the message to publish that we'll do once connected
+    publishTopic = topic; publishMessage = message;
+    return "";
+}
             #endif
       #endif
   // --- error ESP -------------------------
@@ -3219,24 +3238,5 @@
 // ----------------------------------------------------------------
   // ------ MQTT callback functions --------------------------------
     Network::Client::MessageReceived recMQTT(("esp-test/rgb-bright",20),);
-struct MessageReceiver : public Network::Client::MessageReceived
-{
-    void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic, const Network::Client::MQTTv5::DynamicBinDataView & payload,
-                         const uint16 packetIdentifier, const Network::Client::MQTTv5::PropertiesView & properties)
-    {
-        fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
-        fprintf(stdout, "  Topic: %.*s\n", topic.length, topic.data);
-        fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
-    }
-
-};
-
-String publishTopic, publishMessage;
-String publish(const char * topic, const char * message)
-{
-    // Remember the message to publish that we'll do once connected
-    publishTopic = topic; publishMessage = message;
-    return "";
-}
 
 // --- end of code -----------------------------------------------
