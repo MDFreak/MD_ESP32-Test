@@ -467,6 +467,7 @@
             const  String mqttID       = MQTT_DEVICE;
             const  String topLEDBright = MQTT_LEDBRIGHT;
             const  String topTemp1     = MQTT_TEMP1;
+            const  String topDevice    = MQTT_TOPDEV;
             static String tmpMQTT      = "";
             struct MessageReceiver : public Network::Client::MessageReceived
               {
@@ -822,11 +823,11 @@
               #ifdef X_RYL699
                   mqtt.connectTo(MQTT_HOST, MQTT_PORT);
                   tmpMQTT.clear();
-                  tmpMQTT.concat(mqttID); tmpMQTT.concat("/"), tmpMQTT.concat(topLEDBright);
+                  tmpMQTT.concat(topDevice); tmpMQTT.concat(topLEDBright);
                   mqtt.subscribe(tmpMQTT.c_str());
-                  *tmpMQTT = 0;
-                  strcat(tmpMQTT, mqttID); strcat(tmpMQTT, topTemp1);
-                  mqtt.subscribe(tmpMQTT);
+                  tmpMQTT.clear();
+                  tmpMQTT.concat(topDevice); tmpMQTT.concat(topTemp1);
+                  mqtt.subscribe(tmpMQTT.c_str());
                 #endif
             #endif
       // --- sensors
@@ -1823,15 +1824,13 @@
                 case 5:  // gas sensor
                   #if (USE_MQ3_ALK_ANA > OFF)
                       tmpval16 = alk[0];
-                      #if (USE_MQTT > OFF)
-                          sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
-                        #endif
                       outStr = "  a ";
                       outStr.concat(alk[0]);
                       outStr.concat("  ");
                       dispText(outStr, 1, 1, outStr.length());
                             //STXT(outStr);
                       #if (USE_MQTT > OFF)
+                          sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, MQ3_MQTT);
                           sprintf(tmpOut, "%d", tmpval16);
                       //    mqttClient.publish(tmpMQTT, 0, true, tmpOut, 6);
                                 //STXT(tmpOut);
