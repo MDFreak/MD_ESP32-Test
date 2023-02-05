@@ -463,7 +463,8 @@
             char tmpOut[40];
             void* mqttID = NULL;
           #endif
-        MQTTv5 eMQTT();
+        const char[] = "ESP_24";
+        static Network::Client::MQTTv5 mqtt();
       #endif
   // ------ sensors ----------------------
     #if (USE_BME280_I2C > OFF)
