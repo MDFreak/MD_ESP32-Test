@@ -463,8 +463,8 @@
             char tmpOut[40];
             void* mqttID = NULL;
           #endif
-        const char[] = "ESP_24";
-        static Network::Client::MQTTv5 mqtt();
+        const char mqttID[] = "ESP_24";
+        static Network::Client::MQTTv5 mqtt(mqttID, );
       #endif
   // ------ sensors ----------------------
     #if (USE_BME280_I2C > OFF)
@@ -561,9 +561,10 @@
         File sdFile;                       // file object that is used to read and write data
       #endif
 // ----------------------------------------------------------------
-// ---  -----------------------------------
+// --- callback functions -----------------------------------
 // ----------------------------------------------------------------
-
+  // ------ MQTT callback functions --------------------------------
+    Network::Client::MessageReceived mqttRec();
 // ----------------------------------------------------------------
 // --- system setup -----------------------------------
 // ----------------------------------------------------------------
