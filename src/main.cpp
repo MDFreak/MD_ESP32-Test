@@ -1879,7 +1879,7 @@
                       outStr.concat(alk[0]);
                       outStr.concat("  ");
                       dispText(outStr, 1, 1, outStr.length());
-                            //STXT(outStr);
+                          //STXT(outStr);
                       #if (USE_MQTT > OFF)
                           valMQ3alk = tmpval16;
                               SVAL(topMQ3alk, valMQ3alk);
@@ -1891,9 +1891,10 @@
                 case 6:  // light sensor
                   #if (USE_PHOTO_SENS_ANA > OFF)
                       outStr = "          ";
-                      dispText(outStr, 12, 4, outStr.length());
-                      outStr = "";
                       outStr.concat(photoVal[0].getVal());
+                      outStr.concat("  ");
+                      dispText(outStr, 12, 4, outStr.length());
+                          //STXT(outStr);
                       #if (USE_WEBSERVER > OFF)
                           tmpval16 = photoVal[0].getVal();
                           tmpStr = "SVA";
@@ -1908,9 +1909,6 @@
                               soutMQTTerr(" MQTT publish MQ3alk", errMQTT);
                         #endif
                     #endif
-                  outStr.concat("  ");
-                  dispText(outStr, 12, 4, outStr.length());
-                        //STXT(outStr);
                   break;
                 case 7:  // temp sensor
                   #if (USE_DS18B20_1W_IO > OFF)
@@ -1976,7 +1974,7 @@
                             //STXT(outStr);
                     #endif
                 	break;
-                case 9:  // voltage, current
+                case 9:  // voltage 5V
                     #if (USE_VCC_ANA > OFF)
                         tmpval16 = vcc[VCC50_IDX];
                         outStr = "  V ";
@@ -2006,7 +2004,9 @@
                           #endif
                       #endif
                    	break;
-                case 10:  // poti,
+                case 9:  // voltage 5V
+                    #if (USE_VCC_ANA > OFF)
+                case 11:  // poti,
                     #if (USE_POTI_ANA > OFF)
                         tmpval16 = potiScal[0].scale((float) poti[0]);
                         #if (USE_MQTT > OFF)
@@ -2025,7 +2025,7 @@
                           #endif
                       #endif
                     break;
-                case 11:  // digital inputs
+                case 12:  // digital inputs
                     #if (USE_ESPHALL > OFF)
                         int32_t valHall = 0;
                       #endif
@@ -2053,7 +2053,7 @@
                       //SVAL("POT ", inpValADC[INP_POTI_CTRL]);
                     #endif
                   break;
-                case 12:  // WS2812 lines
+                case 13:  // WS2812 lines
                   #if ((USE_WS2812_MATRIX_OUT > OFF) || (USE_WS2812_LINE_OUT > OFF))
                       outStr = "              ";
                       dispText(outStr ,  0, 0, outStr.length());
@@ -2074,7 +2074,7 @@
                       dispText(outStr ,  0, 0, outStr.length());
                     #endif
                   break;
-                case 13:  // counter values
+                case 14:  // counter values
                   #if (USE_CNT_INP > OFF)
                         outStr = "              ";
                         dispText(outStr ,  0, 2, outStr.length());
@@ -2103,7 +2103,7 @@
                         #endif
                     #endif
                   break;
-                case 14: // pwm counter values
+                case 15: // pwm counter values
                   #if (USE_PWM_INP > OFF)
                         outStr = "              ";
                         dispText(outStr ,  0, 1, outStr.length());
@@ -2120,7 +2120,7 @@
                         //dispText(outStr ,  0, 1, outStr.length());
                     #endif
                   break;
-                case 15: // RGB-LED
+                case 16: // RGB-LED
                     #if (USE_MQTT > OFF)
                         valLEDBright = (RGBLED[0]->bright());    // RGB-LED col24
                             SVAL(topLEDBright, valLEDBright);

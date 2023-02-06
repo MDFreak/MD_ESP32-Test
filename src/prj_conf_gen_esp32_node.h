@@ -170,6 +170,7 @@
               #define MQTT_LICHT          "licht"
               #define MQTT_POTI           "poti"
               #define MQTT_VCC50          "vcc50"
+              #define MQTT_VCC33          "vcc33"
             //
           #endif
 
@@ -410,8 +411,6 @@
             #define PWM_FAN_FREQ            4500u
             #define PWM_FAN_RES             8
           #endif
-
-
     // --- user input
       // --- keypads
         #if defined(KEYS)
