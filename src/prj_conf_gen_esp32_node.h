@@ -787,14 +787,13 @@
               sensitivity: type 20A -> 100mV/A ->   500 - 4500 mV
               sensitivity: type 30A ->  66mV/A ->   520 - 4480 mV
             */
-          #define I712_1_FILT             9
-          #define I712_1_DROP             2
+          #define I712_FILT               9
+          #define I712_DROP               2
           #define I712_1_IMAX             5000 // mA
-          #define I712_1_MQTT             "icc"
           #define I712_1_ADC              OFF // not recommended, low resolution
-            #if (I712_1_ADC > OFF)
-                #define I712_1_ADC_ATT   ADC_ATTEN_DB_11
-              #endif
+          #if (I712_1_ADC > OFF)
+              #define I712_1_ADC_ATT   ADC_ATTEN_DB_11
+            #endif
           #define I712_1_1115             ON
           #if (I712_1_1115 > OFF)
               #define I712_1_1115_DEV     0
@@ -817,6 +816,43 @@
                   #define I712_1_SCAL_GAIN      1
                   #define I712_1_SCAL_OFFRAW    0
                 #endif
+            #endif
+          #if (USE_ACS712_ANA > 1)
+              #define I712_2_IMAX             5000 // mA
+              #define I712_2_ADC              OFF // not recommended, low resolution
+              #define I712_2_1115             ON
+              #if (I712_2_ADC > OFF)
+                  #define I712_2_ADC_ATT   ADC_ATTEN_DB_11
+                #endif
+              #if (I712_2_1115 > OFF)
+                  #define I712_2_1115_DEV     0
+                  #define I712_2_1115_CHAN    2
+                  #if  (I712_2_IMAX ==  5000)
+                      #define I712_2_1115_ATT       GAIN_ONE
+                      #define I712_2_SCAL_OFFRAW    0
+                      #define I712_2_SCAL_GAIN      1
+                      #define I712_2_SCAL_OFFREAL   0
+                    #endif
+                  #if (I712_2_IMAX == 20000)
+                      #define I712_2_1115_ATT      GAIN_TWOTHIRDS
+                      #define I712_2_SCAL_OFFRAW    0
+                      #define I712_2_SCAL_GAIN      1
+                      #define I712_2_SCAL_OFFRAW    0
+                    #endif
+                  #if (I712_2_IMAX == 30000)
+                      #define I712_2_1115_ATT      GAIN_TWOTHIRDS
+                      #define I712_2_SCAL_OFFRAW    0
+                      #define I712_2_SCAL_GAIN      1
+                      #define I712_2_SCAL_OFFRAW    0
+                    #endif
+                #endif
+
+            #endif
+          #if (USE_MQTT > OFF)
+              #define MQTT_I712_1         "icc1"
+              #define MQTT_I712_2         "icc2"
+              #define MQTT_I712_3         "icc3"
+              #define MQTT_I712_4         "icc4"
             #endif
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI

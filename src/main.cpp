@@ -538,7 +538,7 @@
         //float ds1Temp[DS18B20_ANZ];
         #if (USE_DS18B20_1W_IO > 1)
             OneWire ds2OneWire(DS2_ONEWIRE_PIN);
-            DallasTemperature ds1Sensors(&ds2OneWire);
+            DallasTemperature ds2Sensors(&ds2OneWire);
             int16_t ds2Temp[DS18B20_ANZ];
             //float ds2Temp[DS18B20_ANZ];
           #endif
@@ -606,8 +606,20 @@
         //float i712[USE_ACS712_ANA];
         uint16_t          i712[USE_ACS712_ANA];
         #if (USE_MQTT > OFF)
-            static String topVCC33     = MQTT_VCC33;
-            static String valVCC33     = "";
+            static String topi712[USE_ACS712_ANA] =
+              {
+                MQTT_I712_1
+                #if (USE_MQTT > 1)
+                    , MQTT_I712_2
+                    #if (USE_MQTT > 2)
+                        , MQTT_I712_3
+                        #if (USE_MQTT > 3)
+                            , MQTT_I712_2
+                          #endif
+                      #endif
+                  #endif
+              };
+            static String vali712[USE_ACS712_ANA];
           #endif
       #endif
     #if (USE_TYPE_K_SPI > 0)
@@ -927,7 +939,7 @@
         // temp. sensor DS18D20
           #if (USE_DS18B20_1W_IO > OFF)
               dispStatus("init DS18D20");
-              dsSensors.begin();
+              ds1Sensors.begin();
               String DS18Str = getDS18D20Str();
               dispStatus(DS18Str);
                   SVAL(" DS18D20 ... ", DS18Str);
