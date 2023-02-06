@@ -692,14 +692,14 @@
                   #define PHOTO2_1115_CHAN 0
                 #endif
             #endif
-              #define MQTT_MQ3ALK         "mq3alk"
-              #define MQTT_LICHT          "licht"
-              #define MQTT_POTI           "poti"
-              #define MQTT_VCC50          "vcc50"
-              #define MQTT_VCC33          "vcc33"
+#define MQTT_MQ3ALK         "mq3alk"
+#define MQTT_LICHT          "licht"
+#define MQTT_POTI           "poti"
+#define MQTT_VCC50          "vcc50"
+#define MQTT_VCC33          "vcc33"
           #if (USE_MQTT > OFF)
-              #define MQTT_TYPEK1           "ttypek-1"
-              #define MQTT_TYPEK2           "ttypek-2"
+              #define MQTT_PHOTO1           "licht-1"
+              #define MQTT_PHOTO2           "licht-2"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -735,7 +735,6 @@
       #if (USE_POTI_ANA > OFF)
           #define POTI1_FILT              9
           #define POTI1_DROP              1
-          #define POTI1_MQTT              "poti1"
           #define POTI1_ADC               OFF
           #if (POTI1_ADC > OFF)
               #define POTI1_ADC_ATT     ADC_ATTEN_DB_11
@@ -770,8 +769,8 @@
                 #endif
             #endif
           #if (USE_MQTT > OFF)
-              #define POTI1_MQTT          "poti1"
-              #define POTI2_MQTT          "poti2"
+              #define MQTT_POTI1          "poti1"
+              #define MQTT_POTI2          "poti2"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -973,7 +972,7 @@
           #if (USE_DS18B20_1W_IO > OFF)
               #define DS1_ONEWIRE_PIN     27
               #if (USE_DS18B20_1W_IO > 1)
-                  #define DS1_ONEWIRE_PIN 0
+                  #define DS1_ONEWIRE_PIN 32
                 #endif
             #endif
           #if (USE_TYPE_K_SPI > OFF)
