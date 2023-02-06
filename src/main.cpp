@@ -1487,6 +1487,9 @@
                             getCNTIn();
                           #endif
                       break;
+                    case 13:
+                        mqtt.eventLoop();
+                      break;
                     default:
                         inpIdx = 0;
                       break;
@@ -1859,7 +1862,7 @@
                             STXT(outStr);
                     #endif
                   break;
-                case 4:  // gas sensor
+                case 4:  // gas sensor MQ135
                   #if (USE_MQ135_GAS_ANA > OFF)
                       //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
                       outStr = "CO2 ";
@@ -1869,7 +1872,7 @@
                             //STXT(outStr);
                     #endif
                   break;
-                case 5:  // gas sensor
+                case 5:  // gas sensor MQ3 alcohol
                   #if (USE_MQ3_ALK_ANA > OFF)
                       tmpval16 = alk[0];
                       outStr = "  a ";
@@ -1925,41 +1928,41 @@
                         tmpStr.concat(i);
                         switch (i)
                           {
-                            case 0:
-                              tmpval16 = bme1T.getVal();
-                              #if (USE_MQTT > OFF)
-                                  valBME280t = tmpval16;
-                                      SVAL(topBME280t, valBME280t);
-                                  errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
-                                      soutMQTTerr(" MQTT publish BME280t", errMQTT);
-                                #endif
-                              tmpStr.concat(tmpval16);
-                              outStr.concat(tmpval16);
-                              outStr.concat("°  ");
+                            case 0:  // BME280 temperature
+                                tmpval16 = bme1T.getVal();
+                                tmpStr.concat(tmpval16);
+                                outStr.concat(tmpval16);
+                                outStr.concat("°  ");
+                                #if (USE_MQTT > OFF)
+                                    valBME280t = tmpval16;
+                                        //SVAL(topBME280t, valBME280t);
+                                    errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                        //soutMQTTerr(" MQTT publish BME280t", errMQTT);
+                                  #endif
                               break;
-                            case 1:
-                              tmpval16 = bme1P.getVal();
-                              #if (USE_MQTT > OFF)
-                                  valBME280p = tmpval16;
-                                      SVAL(topBME280p, valBME280p);
-                                  errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
-                                      soutMQTTerr(" MQTT publish BME280p", errMQTT);
-                                #endif
-                              tmpStr.concat(tmpval16);
-                              outStr.concat(tmpval16);
-                              outStr.concat("%  ");
+                            case 1:  // BME280 air pressure
+                                tmpval16 = bme1P.getVal();
+                                tmpStr.concat(tmpval16);
+                                outStr.concat(tmpval16);
+                                outStr.concat("%  ");
+                                #if (USE_MQTT > OFF)
+                                    valBME280p = tmpval16;
+                                        //SVAL(topBME280p, valBME280p);
+                                    errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
+                                        //soutMQTTerr(" MQTT publish BME280p", errMQTT);
+                                  #endif
                               break;
-                            case 2:
-                              tmpval16 = bme1H.getVal();
-                              #if (USE_MQTT > OFF)
-                                  valBME280h = tmpval16;
-                                      SVAL(topBME280h, valBME280h);
-                                  errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
-                                      soutMQTTerr(" MQTT publish BME280h", errMQTT);
-                                #endif
-                              tmpStr.concat(tmpval16);
-                              outStr.concat(tmpval16);
-                              outStr.concat("mb");
+                            case 2:   // BME280 humidity
+                                tmpval16 = bme1H.getVal();
+                                tmpStr.concat(tmpval16);
+                                outStr.concat(tmpval16);
+                                outStr.concat("mb");
+                                #if (USE_MQTT > OFF)
+                                    valBME280h = tmpval16;
+                                        SVAL(topBME280h, valBME280h);
+                                    errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
+                                        //soutMQTTerr(" MQTT publish BME280h", errMQTT);
+                                  #endif
                               break;
                             default:
                               break;
