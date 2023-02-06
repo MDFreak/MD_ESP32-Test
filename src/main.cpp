@@ -253,6 +253,10 @@
         outRGBVal_t  outValRGB[USE_RGBLED_PWM];
         md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1), new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
         uint8_t      LEDout    = FALSE;
+        #if (USE_MQTT > OFF)
+            static String topLEDBright = MQTT_RGB_BRIGHT;
+            static String topLEDCol    = MQTT_RGB_COLPICK;
+          #endif
         #if (TEST_RGBLED_PWM > OFF)
             //uint8_t  colRGBLED = 0;
             //uint16_t incRGBLED = 10;
@@ -474,13 +478,13 @@
               };
             const  String mqttID       = MQTT_DEVICE;
             const  String topDevice    = MQTT_TOPDEV;
-            static String topLEDBright = MQTT_LEDBRIGHT;
-            static String topLEDCol    = MQTT_LEDCOLPICK;
+            static String topLEDBright = MQTT_RGB_BRIGHT;
+            static String topLEDCol    = MQTT_RGB_COLPICK;
             static String topMQ3alk    = MQTT_MQ3ALK;
-            static String topBME280t   = MQTT_BME280T;
-            static String topBME280p   = MQTT_BME280P;
-            static String topBME280h   = MQTT_BME280H;
-            static String topLicht     = MQTT_LICHT;
+            static String topBME280t   = MQTT_BME280T1;
+            static String topBME280p   = MQTT_BME280P1;
+            static String topBME280h   = MQTT_BME280H1;
+            static String topLicht1    = MQTT_PHOTO1;
             static String topPoti      = MQTT_POTI;
             static String topVCC50     = MQTT_VCC50;
             static String valLEDBright = "";
@@ -570,10 +574,15 @@
         md_scale<int16_t> potiScal[USE_POTI_ANA];
         uint16_t          poti[USE_POTI_ANA];
       #endif
-    #if (USE_VCC_ANA > OFF)
-        md_val<int16_t>   vccVal[USE_VCC_ANA];
-        md_scale<int16_t> vccScal[USE_VCC_ANA];
-        uint16_t          vcc[USE_VCC_ANA];
+    #if (USE_VCC50_ANA > OFF)
+        md_val<int16_t>   vcc50Val;
+        md_scale<int16_t> vcc50Scal;
+        uint16_t          vcc50;
+      #endif
+    #if (USE_VCC33_ANA > OFF)
+        md_val<int16_t>   vcc33Val;
+        md_scale<int16_t> vcc33Scal;
+        uint16_t          vcc33;
       #endif
     #if (USE_ACS712_ANA > OFF)
         md_val<int16_t>   i712Val[USE_ACS712_ANA];
@@ -1847,26 +1856,26 @@
                   break;
                 case 3:  // k-type sensor
                   #if (USE_TYPE_K_SPI > OFF)
-                    outStr = "";
-                    outStr = "TK1 ";
-                    outStr.concat(tk1Val);
-                    outStr.concat("°");
-                    //dispText(outStr ,  0, 1, outStr.length());
-                    #if (USE_TYPE_K_SPI > 1)
-                        //outStr = "";
-                        outStr.concat(" TK2 ");
-                        outStr.concat(tk2Val);
-                        outStr.concat("° ");
-                      #endif
-                    dispText(outStr ,  0, 2, outStr.length());
-                    outStr.concat(" (");
-                    outStr.concat(tk1ValRef);
-                    #if (USE_TYPE_K > 1)
-                        outStr.concat("° / ");
-                        outStr.concat(tk2ValRef);
-                      #endif
-                    outStr.concat("°)");
-                            STXT(outStr);
+                      outStr = "";
+                      outStr = "TK1 ";
+                      outStr.concat(tk1Val);
+                      outStr.concat("°");
+                      //dispText(outStr ,  0, 1, outStr.length());
+                      #if (USE_TYPE_K_SPI > 1)
+                          //outStr = "";
+                          outStr.concat(" TK2 ");
+                          outStr.concat(tk2Val);
+                          outStr.concat("° ");
+                        #endif
+                      dispText(outStr ,  0, 2, outStr.length());
+                      outStr.concat(" (");
+                      outStr.concat(tk1ValRef);
+                      #if (USE_TYPE_K > 1)
+                          outStr.concat("° / ");
+                          outStr.concat(tk2ValRef);
+                        #endif
+                      outStr.concat("°)");
+                              STXT(outStr);
                     #endif
                   break;
                 case 4:  // gas sensor MQ135
@@ -1926,64 +1935,64 @@
                   break;
                 case 8:  // BME 280 temp, humidity, pressure
                   #if ( USE_BME280_I2C > OFF )
-                    outStr = "";
-                    for (uint8_t i = 0; i < 3 ; i++)
-                      {
-                        tmpStr = "SVA";
-                        tmpStr.concat(i);
-                        switch (i)
-                          {
-                            case 0:  // BME280 temperature
-                                tmpval16 = bme1T.getVal();
-                                tmpStr.concat(tmpval16);
-                                outStr.concat(tmpval16);
-                                outStr.concat("°  ");
-                                #if (USE_MQTT > OFF)
-                                    valBME280t = tmpval16;
-                                        //SVAL(topBME280t, valBME280t);
-                                    errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
-                                        //soutMQTTerr(" MQTT publish BME280t", errMQTT);
-                                  #endif
-                              break;
-                            case 1:  // BME280 air pressure
-                                tmpval16 = bme1P.getVal();
-                                tmpStr.concat(tmpval16);
-                                outStr.concat(tmpval16);
-                                outStr.concat("%  ");
-                                #if (USE_MQTT > OFF)
-                                    valBME280p = tmpval16;
-                                        //SVAL(topBME280p, valBME280p);
-                                    errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
-                                        //soutMQTTerr(" MQTT publish BME280p", errMQTT);
-                                  #endif
-                              break;
-                            case 2:   // BME280 humidity
-                                tmpval16 = bme1H.getVal();
-                                tmpStr.concat(tmpval16);
-                                outStr.concat(tmpval16);
-                                outStr.concat("mb");
-                                #if (USE_MQTT > OFF)
-                                    valBME280h = tmpval16;
-                                        SVAL(topBME280h, valBME280h);
-                                    errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
-                                        //soutMQTTerr(" MQTT publish BME280h", errMQTT);
-                                  #endif
-                              break;
-                            default:
-                              break;
-                          }
-                        // send to websocket
-                        #if (USE_WEBSERVER > OFF)
-                            pmdServ->updateAll(tmpStr);
-                          #endif
-                      }
-                    dispText(outStr , 0, 3, outStr.length());
-                            //STXT(outStr);
+                      outStr = "";
+                      for (uint8_t i = 0; i < 3 ; i++)
+                        {
+                          tmpStr = "SVA";
+                          tmpStr.concat(i);
+                          switch (i)
+                            {
+                              case 0:  // BME280 temperature
+                                  tmpval16 = bme1T.getVal();
+                                  tmpStr.concat(tmpval16);
+                                  outStr.concat(tmpval16);
+                                  outStr.concat("°  ");
+                                  #if (USE_MQTT > OFF)
+                                      valBME280t = tmpval16;
+                                          //SVAL(topBME280t, valBME280t);
+                                      errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                          //soutMQTTerr(" MQTT publish BME280t", errMQTT);
+                                    #endif
+                                break;
+                              case 1:  // BME280 air pressure
+                                  tmpval16 = bme1P.getVal();
+                                  tmpStr.concat(tmpval16);
+                                  outStr.concat(tmpval16);
+                                  outStr.concat("%  ");
+                                  #if (USE_MQTT > OFF)
+                                      valBME280p = tmpval16;
+                                          //SVAL(topBME280p, valBME280p);
+                                      errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
+                                          //soutMQTTerr(" MQTT publish BME280p", errMQTT);
+                                    #endif
+                                break;
+                              case 2:   // BME280 humidity
+                                  tmpval16 = bme1H.getVal();
+                                  tmpStr.concat(tmpval16);
+                                  outStr.concat(tmpval16);
+                                  outStr.concat("mb");
+                                  #if (USE_MQTT > OFF)
+                                      valBME280h = tmpval16;
+                                          SVAL(topBME280h, valBME280h);
+                                      errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
+                                          //soutMQTTerr(" MQTT publish BME280h", errMQTT);
+                                    #endif
+                                break;
+                              default:
+                                break;
+                            }
+                          // send to websocket
+                          #if (USE_WEBSERVER > OFF)
+                              pmdServ->updateAll(tmpStr);
+                            #endif
+                        }
+                      dispText(outStr , 0, 3, outStr.length());
+                              //STXT(outStr);
                     #endif
                 	break;
                 case 9:  // voltage 5V
                     #if (USE_VCC_ANA > OFF)
-                        tmpval16 = vcc[VCC50_IDX];
+                        tmpval16 = vcc50;
                         outStr = "  V ";
                         outStr.concat(tmpval16);
                         outStr.concat("  ");

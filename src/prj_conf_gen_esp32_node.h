@@ -378,6 +378,10 @@
                       #endif
                   #endif
               #endif
+            #if (USE_MQTT > OFF)
+                #define MQTT_LIN_BRIGHT     "lin-bright"
+                #define MQTT_LIN_COLPICK    "lin-colpick"
+              #endif
           #endif
 
       // --- PWM
@@ -391,8 +395,8 @@
             #define BRI_RGBLED_1            15
             #define COL24_RGBLED_1          0xBE2727u   // bright 10 + red 10 + green 10 + blue 10
             #if (USE_MQTT > OFF)
-                #define MQTT_LIN_BRIGHT     "rgb-bright"
-                #define MQTT_LIN_COLPICK    "rgb-colpick"
+                #define MQTT_RGB_BRIGHT     "rgb-bright"
+                #define MQTT_RGB_COLPICK    "rgb-colpick"
               #endif
             #endif
         #if (USE_FAN_PWM > OFF)
@@ -559,9 +563,9 @@
               #define BME2802H_Drop         0
             #endif
           #if (USE_MQTT > OFF)
-              #define MQTT_BME2801T         "bme280t1"
-              #define MQTT_BME2801P         "bme280p1"
-              #define MQTT_BME2801H         "bme280h1"
+              #define MQTT_BME2801T1        "bme280t1"
+              #define MQTT_BME2801P1        "bme280p1"
+              #define MQTT_BME2801H1        "bme280h1"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -658,7 +662,6 @@
       #if (USE_PHOTO_SENS_ANA > OFF)
           #define PHOTO1_FILT               5
           #define PHOTO1_DROP               1
-          #define PHOTO1_MQTT               "licht"
           #define PHOTO1_ADC                ON
           #if (PHOTO1_ADC > OFF)
               #define PHOTO1_ADC_ATT        ADC_ATTEN_DB_11
@@ -703,34 +706,32 @@
       #if (USE_VCC_ANA > OFF)
           #define VCC_FILT                5
           #define VCC_DROP                1
-
           #if (USE_VCC50_ANA > OFF)
-          #define VCC50_ADC               OFF
-            #if (VCC_ADC > OFF)
-                #define VCC_ADC_ATT       ADC_ATTEN_DB_11
-                #define VCC_SCAL_OFFRAW   0
-                #define VCC_SCAL_GAIN     1
-                #define VCC_SCAL_OFFREAL  0
-              #endif
-          #define VCC50_1115              ON
-            #if (VCC_1115 > OFF)
-                #define VCC_1115_DEV      0
-                #define VCC_1115_CHAN     2
-                #define VCC_1115_ATT      GAIN_TWOTHIRDS
-                #define VCC_OFFRAW        0
-                #define VCC_GAIN          1
-                #define VCC_OFFREAL       0
-              #endif
-          #if (USE_MQTT > OFF)
-              #define VCC50_MQTT              "vcc50"
-              #define VCC33_MQTT              "vcc33"
-              #define MQTT_PHOTO1           "licht1"
-              #define MQTT_PHOTO2           "licht2"
+              #define VCC50_ADC           OFF
+              #define VCC50_1115          ON
             #endif
-          #define VCC33_IDX               1
-#define MQTT_POTI           "poti"
-#define MQTT_VCC50          "vcc50"
-#define MQTT_VCC33          "vcc33"
+          #if (USE_VCC33_ANA > OFF)
+              #define VCC33_ADC           OFF
+              #define VCC33_1115          ON
+            #endif
+          #if ((VCC50_ADC + VCC33_ADC) > OFF)
+              #define VCC_ADC_ATT         ADC_ATTEN_DB_11
+              #define VCC_SCAL_OFFRAW     0
+              #define VCC_SCAL_GAIN       1
+              #define VCC_SCAL_OFFREAL    0
+            #endif
+          #if ((VCC50_1115 + VCC33_1115) > OFF)
+              #define VCC_1115_DEV      0
+              #define VCC_1115_CHAN     2
+              #define VCC_1115_ATT      GAIN_TWOTHIRDS
+              #define VCC_OFFRAW        0
+              #define VCC_GAIN          1
+              #define VCC_OFFREAL       0
+            #endif
+          #if (USE_MQTT > OFF)
+              #define MQTT_VCC50          "vcc50"
+              #define MQTT_VCC33          "vcc33"
+            #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
@@ -975,7 +976,7 @@
           #if (USE_DS18B20_1W_IO > OFF)
               #define DS1_ONEWIRE_PIN     27
               #if (USE_DS18B20_1W_IO > 1)
-                  #define DS1_ONEWIRE_PIN 32
+                  #define DS2_ONEWIRE_PIN 32
                 #endif
             #endif
           #if (USE_TYPE_K_SPI > OFF)
