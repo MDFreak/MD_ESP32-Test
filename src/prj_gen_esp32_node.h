@@ -69,7 +69,8 @@
       #define USE_PHOTO_SENS_ANA    1   // ADC or ADS1115
       #define USE_ACS712_ANA        1   // only ADS1115
       #define USE_POTI_ANA          1   // ADC or ADS1115
-      #define USE_VCC_ANA           1   // ADC or ADS1115
+      #define USE_VCC50_ANA         1   // ADC or ADS1115
+      #define USE_VCC33_ANA         1   // ADC or ADS1115
       #define USE_ADC1115_I2C       1   // ADC 4 channels 16Bit
     // --- network  components
       #define USE_WIFI              ON  // ON
@@ -88,6 +89,7 @@
       #define USE_PWM_OUT           3 * USE_RGBLED_PWM + USE_FAN_PWM + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
       #define USE_CNT_INP           USE_GEN_CNT_INP     // max 2 * 8 independent
       #define USE_PWM_INP           USE_GEN_PWM_INP
+      #define USE_VCC_ANA           USE_VCC50_ANA + USE_VCC33_ANA
       // #define USE_ADC1              USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
       // #define USE_ADC2              OFF // not to use
       #define USE_DIG_INP           USE_GEN_SW_INP + USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //

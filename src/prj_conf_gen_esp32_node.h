@@ -692,14 +692,9 @@
                   #define PHOTO2_1115_CHAN 0
                 #endif
             #endif
-#define MQTT_MQ3ALK         "mq3alk"
-#define MQTT_LICHT          "licht"
-#define MQTT_POTI           "poti"
-#define MQTT_VCC50          "vcc50"
-#define MQTT_VCC33          "vcc33"
           #if (USE_MQTT > OFF)
-              #define MQTT_PHOTO1           "licht-1"
-              #define MQTT_PHOTO2           "licht-2"
+              #define MQTT_PHOTO1           "licht1"
+              #define MQTT_PHOTO2           "licht2"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -708,18 +703,16 @@
       #if (USE_VCC_ANA > OFF)
           #define VCC_FILT                5
           #define VCC_DROP                1
-          #define VCC50_IDX               0
-          #define VCC33_IDX               1
-          #define VCC50_MQTT              "vcc50"
-          #define VCC33_MQTT              "vcc33"
-          #define VCC_ADC                 OFF
+
+          #if (USE_VCC50_ANA > OFF)
+          #define VCC50_ADC               OFF
             #if (VCC_ADC > OFF)
                 #define VCC_ADC_ATT       ADC_ATTEN_DB_11
                 #define VCC_SCAL_OFFRAW   0
                 #define VCC_SCAL_GAIN     1
                 #define VCC_SCAL_OFFREAL  0
               #endif
-          #define VCC_1115                ON
+          #define VCC50_1115              ON
             #if (VCC_1115 > OFF)
                 #define VCC_1115_DEV      0
                 #define VCC_1115_CHAN     2
@@ -728,6 +721,16 @@
                 #define VCC_GAIN          1
                 #define VCC_OFFREAL       0
               #endif
+          #if (USE_MQTT > OFF)
+              #define VCC50_MQTT              "vcc50"
+              #define VCC33_MQTT              "vcc33"
+              #define MQTT_PHOTO1           "licht1"
+              #define MQTT_PHOTO2           "licht2"
+            #endif
+          #define VCC33_IDX               1
+#define MQTT_POTI           "poti"
+#define MQTT_VCC50          "vcc50"
+#define MQTT_VCC33          "vcc33"
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
