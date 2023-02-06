@@ -513,7 +513,7 @@
     // --- sensors
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION            9
-          #define DS18B20_ANZ               1
+          #define DS18B20_ANZ               USE_DS18B20_1W_IO
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
@@ -942,7 +942,10 @@
             #endif
         // --- sensors
           #if (USE_DS18B20_1W_IO > OFF)
-              #define DS_ONEWIRE_PIN      27
+              #define DS1_ONEWIRE_PIN      27
+              #if (USE_DS18B20_1W_IO > 1)
+                  #define DS1_ONEWIRE_PIN  0
+                #endif
             #endif
           #if (USE_TYPE_K_SPI > OFF)
               #define TYPEK_DATA_PIN      PIN_SPI_MISO

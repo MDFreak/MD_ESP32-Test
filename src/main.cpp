@@ -535,10 +535,17 @@
           #endif
       #endif
     #if (USE_DS18B20_1W_IO > OFF)
-        OneWire dsOneWire(DS_ONEWIRE_PIN);
-        DallasTemperature dsSensors(&dsOneWire);
         DeviceAddress     dsAddr[DS18B20_ANZ];
-        float dsTemp[DS18B20_ANZ];
+        OneWire ds1OneWire(DS1_ONEWIRE_PIN);
+        DallasTemperature ds1Sensors(&ds1OneWire);
+        int16_t ds1Temp[DS18B20_ANZ];
+        //float ds1Temp[DS18B20_ANZ];
+        #if (USE_DS18B20_1W_IO > 1)
+            OneWire ds2OneWire(DS2_ONEWIRE_PIN);
+            DallasTemperature ds1Sensors(&ds2OneWire);
+            int16_t ds2Temp[DS18B20_ANZ];
+            //float ds2Temp[DS18B20_ANZ];
+          #endif
       #endif
     #if (USE_ADC1115_I2C > OFF)
         Adafruit_ADS1115 ads[USE_ADC1115_I2C];
