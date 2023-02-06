@@ -405,7 +405,11 @@
             #define PWM_LEDS_RES            8
             #define BRI_RGBLED_1            15
             #define COL24_RGBLED_1          0xBE2727u   // bright 10 + red 10 + green 10 + blue 10
-          #endif
+            #if (USE_MQTT > OFF)
+                #define RGBLED_BRIGHT_MQTT         "rgb-bright"
+                #define DS18B202_MQTT         "ds18b20-2"
+              #endif
+            #endif
         #if (USE_FAN_PWM > OFF)
             #ifndef USE_OUTPUT_CYCLE
                 #define USE_OUTPUT_CYCLE
@@ -413,6 +417,10 @@
             #define PWM_FAN_CYCLE_MS        390u
             #define PWM_FAN_FREQ            4500u
             #define PWM_FAN_RES             8
+            #if (USE_MQTT > OFF)
+                #define FAN1_MQTT           "fan1"
+                #define FAN2_MQTT           "fan2"
+              #endif
           #endif
     // --- user input
       // --- keypads
@@ -667,12 +675,12 @@
           #define PHOTO1_DROP               1
           #define PHOTO1_MQTT               "licht"
           #define PHOTO1_ADC                ON
-            #if (PHOTO1_ADC > OFF)
-                #define PHOTO1_ADC_ATT      ADC_ATTEN_DB_11
-                #define PHOTO1_SCAL_OFFRAW  0
-                #define PHOTO1_SCAL_GAIN    1
-                #define PHOTO1_SCAL_OFFREAL 0
-              #endif
+          #if (PHOTO1_ADC > OFF)
+              #define PHOTO1_ADC_ATT        ADC_ATTEN_DB_11
+              #define PHOTO1_SCAL_OFFRAW    0
+              #define PHOTO1_SCAL_GAIN      1
+              #define PHOTO1_SCAL_OFFREAL   0
+            #endif
           #define PHOTO1_1115               OFF
             #if (PHOTO1_1115 > OFF)
                 #define PHOTO1_1115_DEV     0
@@ -689,18 +697,18 @@
               #define PHOTO2_SCAL_MIN       0
               #define PHOTO2_SCAL_MAX       100
               #define PHOTO2_ADC            ON
-                #if (PHOTO2_ADC > OFF)
-                    #define PHOTO2_ADC_ATT  ADC_ATTEN_DB_11
-                  #endif
+              #if (PHOTO2_ADC > OFF)
+                  #define PHOTO2_ADC_ATT  ADC_ATTEN_DB_11
+                #endif
               #define PHOTO2_1115           OFF
-                #if (PHOTO2_1115 > OFF)
-                    #define PHOTO2_1115_ATT  GAIN_ONE
-                    #define PHOTO2_1115_DEV  0
-                    #define PHOTO2_1115_CHAN 0
-                  #endif
+              #if (PHOTO2_1115 > OFF)
+                  #define PHOTO2_1115_ATT  GAIN_ONE
+                  #define PHOTO2_1115_DEV  0
+                  #define PHOTO2_1115_CHAN 0
+                #endif
             #endif
           #if (USE_MQTT > OFF)
-              #define PHOTO1_MQTT           "ttypek-1"
+              #define TYPEK1_MQTT           "ttypek-1"
               #define TYPEK2_MQTT           "ttypek-2"
             #endif
           #ifndef USE_INPUT_CYCLE
@@ -737,39 +745,43 @@
       #if (USE_POTI_ANA > OFF)
           #define POTI1_FILT              9
           #define POTI1_DROP              1
-          #define POTI1_MQTT              "poti"
+          #define POTI1_MQTT              "poti1"
           #define POTI1_ADC               OFF
-            #if (POTI1_ADC > OFF)
-                #define POTI1_ADC_ATT     ADC_ATTEN_DB_11
-                #define VCC_SCAL_OFFRAW   0
-                #define VCC_SCAL_GAIN     1
-                #define VCC_SCAL_OFFREAL  0
-              #endif
+          #if (POTI1_ADC > OFF)
+              #define POTI1_ADC_ATT     ADC_ATTEN_DB_11
+              #define VCC_SCAL_OFFRAW   0
+              #define VCC_SCAL_GAIN     1
+              #define VCC_SCAL_OFFREAL  0
+            #endif
           #define POTI1_1115              ON
-            #if (POTI1_1115 > OFF)
-                #define POTI1_1115_DEV    0
-                #define POTI1_1115_CHAN   0
-                #define POTI1_1115_ATT    GAIN_TWO
-                #define POTI1_OFFRAW      0
-                #define POTI1_GAIN        1
-                #define POTI1_OFFREAL     0
-              #endif
+          #if (POTI1_1115 > OFF)
+              #define POTI1_1115_DEV      0
+              #define POTI1_1115_CHAN     0
+              #define POTI1_1115_ATT      GAIN_TWO
+              #define POTI1_OFFRAW        0
+              #define POTI1_GAIN          1
+              #define POTI1_OFFREAL       0
+            #endif
           #if (USE_POTI_ANA > 1)
-              #define POTI2_FILT            7
-              #define POTI2_DROP            0
-              #define POTI2_SCAL            OFF
-              #define POTI2_SCAL_MIN        0
-              #define POTI2_SCAL_MAX        100
-              #define POTI2_ADC             ON
+              #define POTI2_FILT          7
+              #define POTI2_DROP          0
+              #define POTI2_SCAL          OFF
+              #define POTI2_SCAL_MIN      0
+              #define POTI2_SCAL_MAX      100
+              #define POTI2_ADC           ON
               #if (POTI2_ADC > OFF)
                   #define POTI2_ADC_ATT   ADC_ATTEN_DB_11
                 #endif
               #define POTI2_1115            OFF
-                #if (POTI2_1115 > OFF)
-                    #define POTI2_1115_DEV  0
-                    #define POTI2_1115_CHAN 0
-                    #define POTI2_1115_ATT  GAIN_TWOTHIRDS
-                  #endif
+              #if (POTI2_1115 > OFF)
+                  #define POTI2_1115_DEV  0
+                  #define POTI2_1115_CHAN 0
+                  #define POTI2_1115_ATT  GAIN_TWOTHIRDS
+                #endif
+            #endif
+          #if (USE_MQTT > OFF)
+              #define POTI1_MQTT          "poti1"
+              #define POTI2_MQTT          "poti2"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -969,9 +981,9 @@
             #endif
         // --- sensors
           #if (USE_DS18B20_1W_IO > OFF)
-              #define DS1_ONEWIRE_PIN      27
+              #define DS1_ONEWIRE_PIN     27
               #if (USE_DS18B20_1W_IO > 1)
-                  #define DS1_ONEWIRE_PIN  0
+                  #define DS1_ONEWIRE_PIN 0
                 #endif
             #endif
           #if (USE_TYPE_K_SPI > OFF)
