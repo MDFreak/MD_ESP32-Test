@@ -51,7 +51,6 @@
                 #define OLED2_I2C       I2C2
               #endif
           #endif
-
         #if (USE_FRAM_I2C > OFF)
             #define FRAM1_I2C_ADDR      I2C_FRAM_50
             #define FRAM1_SIZE          0x8000
@@ -61,6 +60,10 @@
                 #define FRAM1_SIZE      0x8000
                 #define FRAM2_I2C       I2C2
               #endif
+          #endif
+        #if (USE_CCS811_I2C > OFF )
+            #define CCS811_I2C_ADDR     I2C_CSS811_
+            #define CCS811_I2C          I2C1
           #endif
         #if (USE_BME280_I2C > OFF )
             #define BME2801_I2C         I2C1
@@ -518,7 +521,12 @@
               #define USE_INPUT_CYCLE
             #endif
         #endif
+      #if (USE_CSS811_I2C > OFF)
 
+          #ifndef USE_INPUT_CYCLE
+              #define USE_INPUT_CYCLE
+            #endif
+        #endif
       #if (USE_BME280_I2C > OFF)
           #define BME2801_I2C               I2C1
           #define BME2801T_FILT             0
@@ -821,7 +829,6 @@
             #define PIN_SPI_MOSI          23
             #define PIN_SPI_MISO          19
             #define PIN_SPI_SCL           18
-
         // --- display
           #if (USE_OLED_I2C > OFF)
               #define OLED1_I2C_SCL       PIN_I2C1_SCL
@@ -831,17 +838,14 @@
                   #define OLED2_I2C_SDA   PIN_I2C1_SDA
                 #endif
             #endif
-
         // --- user input
           #if (USE_CTRL_POTI > OFF)
               #define PIN_INP_POTI_1      35   // ADC 1-5
               #define ADC_INP_POTI_1      NU   // ADC 1-5
             #endif
-
           #if (USE_CTRL_SW_INP > OFF)
               #define PIN_INP_SW_1        32   // INPUT_PULLUP
             #endif
-
           #if (USE_DIG_INP > OFF)
               #if (USE_GEN_SW_INP > OFF)
                   #define PIN_INP_REED_1  15
@@ -875,22 +879,18 @@
               #define PIN_TL_YELLOW       25   // RGB green
               #define PIN_TL_GREEN        33   // RGB blue
             #endif
-
           #if (USE_RGBLED_PWM > OFF)
               #define PIN_RGB_RED         33 //26   // RGB red
               #define PIN_RGB_GREEN       26   // RGB blue
               #define PIN_RGB_BLUE        14 //33   // RGB blue
             #endif
-
           #if (USE_FAN_PWM > OFF)
               #define PIN_PWM_FAN_1       0
               #define PIN_PWM_FAN_2       4
             #endif
-
           #if (USE_OUT_FREQ_PWM > OFF)
               #define PIN_FREQ_1          26
             #endif
-
           #if (USE_WS2812_MATRIX_OUT > OFF)
               #define PIN_WS2812_M1      16
               #if (USE_WS2812_PWR_IN_SW > OFF)
@@ -902,7 +902,6 @@
                 //#define PIN_WS2812_M3  x
                 //#define PIN_WS2812_M4  x
             #endif
-
           #if (USE_WS2812_LINE_OUT > OFF)
               #if (USE_WS2812_PWR_IN_SW > OFF)
                   #define PIN_WS2812_PWR_IN_SW 36
@@ -961,7 +960,6 @@
               #define PIN_MQ135           35
               #define ADC_MQ135           5   // ADC 1-3
             #endif
-
           #if (USE_PHOTO_SENS_ANA > OFF)
               #define PIN_PHOTO1_SENS     39
               #define ADC_PHOTO1_SENS     3
@@ -1003,19 +1001,16 @@
                   #define PWM_RGB_GREEN   2
                   #define PWM_RGB_BLUE    3
                 #endif
-
               #if (USE_FAN_PWM > OFF)
                   #define PWM_FAN_1       4
                   #if (USE_FAN_PWM > 1)
                       #define PWM_FAN_2   5
                     #endif
                 #endif
-
               #if (USE_OUT_FREQ_PWM > OFF)
                   #define PWM_FREQ_1      6
                 #endif
             #endif
-
         // --- counter channels  0..7
           #if (USE_CNT_INP > OFF)
               #define USE_CNT_UNIT       PCNT_UNIT_0
