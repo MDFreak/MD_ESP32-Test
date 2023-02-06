@@ -517,12 +517,33 @@
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION            9
           #define DS18B20_ANZ               USE_DS18B20_1W_IO
+          #define DS18B201T_FILT            0
+          #define DS18B201T_Drop            0
+          #if (USE_DS18B20_1W_IO > 1)
+              #define DS18B202T_FILT        0
+              #define DS18B202T_Drop        0
+            #endif
+          #if (USE_MQTT > OFF)
+              #define DS18B201_MQTT         "ds18b20-1"
+              #define DS18B202_MQTT         "ds18b20-2"
+            #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
         #endif
-      #if (USE_CSS811_I2C > OFF)
-
+      #if (USE_CCS811_I2C > OFF)
+          #define CCS811_I2C                I2C1
+          #define CCS811T_FILT              0  // temperature
+          #define CCS811T_Drop              0  // [-40 - 125°C]
+          #define CCS811E_FILT              0  // eCO2 value in air
+          #define CCS811E_Drop              0  // [0 - 32768 ppm]
+          #define CCS811V_FILT              0  // TVOC value carbon value in air
+          #define CCS811V_Drop              0  // [400 - 29206 ppm]
+          #if (USE_MQTT > OFF)
+              #define CCS811T_MQTT         "ccs811t"
+              #define CCS811E_MQTT         "ccs811e"
+              #define CCS811V_MQTT         "ccs811v"
+            #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
@@ -535,11 +556,6 @@
           #define BME2801P_Drop             0
           #define BME2801H_FILT             0
           #define BME2801H_Drop             0
-          #if (USE_MQTT > OFF)
-              #define BME2801T_MQTT         "bme280t"
-              #define BME2801P_MQTT         "bme280p"
-              #define BME2801H_MQTT         "bme280h"
-            #endif
           #if (USE_BME280_I2C > 1)
               #define BME2802_I2C           I2C2
               #define BME2802T_FILT         0
@@ -549,11 +565,15 @@
               #define BME2802H_FILT         0
               #define BME2802H_Drop         0
             #endif
+          #if (USE_MQTT > OFF)
+              #define BME2801T_MQTT         "bme280t1"
+              #define BME2801P_MQTT         "bme280p1"
+              #define BME2801H_MQTT         "bme280h1"
+            #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
         #endif
-
       /* analog channels
         ADC channels
           ***_ADC_RES 12                    --> resolution 12 bit (def)
@@ -590,7 +610,6 @@
       #if (USE_ADC1115_I2C > OFF)
           #define ADS0_DATARATE             RATE_ADS1115_860SPS
         #endif
-
       #if (USE_MQ135_GAS_ANA > OFF)
           #define MQ135_GAS_ADC             ON
           #define MQ135_GAS_1115            OFF
@@ -609,7 +628,6 @@
           #define MQ3_DROP                  1
           #define MQ3_EM_WIN                100      // window for traffic light
           #define MQ3_SCAL                  OFF
-          #define MQ3_MQTT                  "alc"
           #define MQ3_ALK_ADC               OFF
           #define MQ3_ALK_1115              ON
           #if (MQ3_ALK_1115 > OFF)
@@ -620,23 +638,30 @@
               #define MQ3_GAIN              0
               #define MQ3_OFFREAL           0
             #endif
+          #if (USE_MQTT > OFF)
+              #define MQ3_MQTT              "alc"
+            #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
         #endif
-
       #if (USE_TYPE_K_SPI > OFF)
           #define TYPEK_FILT      11        // floating  measure filtering
           #define TYPEK_DROP_PEEK 2         // drop biggest / lowest
           #define TYPEK1_OFFSET   0.        // offset unit °C
           #define TYPEK1_GAIN     1.        // result = (measure * gain) + offset
-          #define TYPEK2_OFFSET   0.        // offset unit °C
-          #define TYPEK2_GAIN     1.        // result = (measure * gain) + offset
+          #if (USE_TYPE_K_SPI > OFF)
+              #define TYPEK2_OFFSET   0.        // offset unit °C
+              #define TYPEK2_GAIN     1.        // result = (measure * gain) + offset
+            #endif
+          #if (USE_MQTT > OFF)
+              #define TYPEK1_MQTT           "ttypek-1"
+              #define TYPEK2_MQTT           "ttypek-2"
+            #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
         #endif
-
       #if (USE_PHOTO_SENS_ANA > OFF)
           #define PHOTO1_FILT               5
           #define PHOTO1_DROP               1
@@ -674,11 +699,14 @@
                     #define PHOTO2_1115_CHAN 0
                   #endif
             #endif
+          #if (USE_MQTT > OFF)
+              #define PHOTO1_MQTT           "ttypek-1"
+              #define TYPEK2_MQTT           "ttypek-2"
+            #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
         #endif
-
       #if (USE_VCC_ANA > OFF)
           #define VCC_FILT                5
           #define VCC_DROP                1
