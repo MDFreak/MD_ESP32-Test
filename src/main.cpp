@@ -254,8 +254,10 @@
         md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1), new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
         uint8_t      LEDout    = FALSE;
         #if (USE_MQTT > OFF)
-            static String topLEDBright = MQTT_RGB_BRIGHT;
-            static String topLEDCol    = MQTT_RGB_COLPICK;
+            static String topRGBBright = MQTT_RGB_BRIGHT;
+            static String topRGBCol    = MQTT_RGB_COLPICK;
+            static String valRGBBright = "";
+            static String valRGBCol    = "";
           #endif
         #if (TEST_RGBLED_PWM > OFF)
             //uint8_t  colRGBLED = 0;
@@ -478,24 +480,6 @@
               };
             const  String mqttID       = MQTT_DEVICE;
             const  String topDevice    = MQTT_TOPDEV;
-            static String topLEDBright = MQTT_RGB_BRIGHT;
-            static String topLEDCol    = MQTT_RGB_COLPICK;
-            static String topMQ3alk    = MQTT_MQ3ALK;
-            static String topBME280t   = MQTT_BME280T1;
-            static String topBME280p   = MQTT_BME280P1;
-            static String topBME280h   = MQTT_BME280H1;
-            static String topLicht1    = MQTT_PHOTO1;
-            static String topPoti      = MQTT_POTI;
-            static String topVCC50     = MQTT_VCC50;
-            static String valLEDBright = "";
-            static String valLEDCol    = "";
-            static String valMQ3alk    = "";
-            static String valBME280t   = "";
-            static String valBME280p   = "";
-            static String valBME280h   = "";
-            static String valLicht     = "";
-            static String valPoti      = "";
-            static String valVCC50     = "";
             static char   cMQTT[20]    = "";
             static String tmpMQTT      = "";
             static int8_t errMQTT      = 0;
@@ -537,6 +521,14 @@
             md_val<uint16_t> bme2P;
             md_val<uint16_t> bme2H;
           #endif
+        #if (USE_MQTT > OFF)
+            static String topBME280t   = MQTT_BME2801T;
+            static String topBME280p   = MQTT_BME2801P;
+            static String topBME280h   = MQTT_BME2801H;
+            static String valBME280t   = "";
+            static String valBME280p   = "";
+            static String valBME280h   = "";
+          #endif
       #endif
     #if (USE_DS18B20_1W_IO > OFF)
         DeviceAddress     dsAddr[DS18B20_ANZ];
@@ -563,32 +555,60 @@
         md_val<int16_t> alkVal[USE_MQ3_ALK_ANA];
         md_scale<int16_t> alkScal[USE_MQ3_ALK_ANA];
         uint16_t alk[USE_MQ3_ALK_ANA];
+        #if (USE_MQTT > OFF)
+            static String topMQ3alk    = MQTT_MQ3;
+            static String valMQ3alk    = "";
+          #endif
       #endif
     #if (USE_PHOTO_SENS_ANA > OFF)
         md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
         md_scale<int16_t> photoScal[USE_PHOTO_SENS_ANA];
         int16_t           bright[USE_PHOTO_SENS_ANA];
+        #if (USE_MQTT > OFF)
+            static String topLicht1    = MQTT_PHOTO1;
+            static String valLicht1    = "";
+          #endif
       #endif
     #if (USE_POTI_ANA > OFF)
         md_val<int16_t>   potiVal[USE_POTI_ANA];
         md_scale<int16_t> potiScal[USE_POTI_ANA];
         uint16_t          poti[USE_POTI_ANA];
+        #if (USE_MQTT > OFF)
+            static String topPoti1      = MQTT_POTI1;
+            static String valPoti1      = "";
+            #if (USE_MQTT > 1)
+                static String topPoti1      = MQTT_POTI1;
+                static String valPoti1      = "";
+              #endif
+          #endif
       #endif
     #if (USE_VCC50_ANA > OFF)
         md_val<int16_t>   vcc50Val;
         md_scale<int16_t> vcc50Scal;
         uint16_t          vcc50;
+        #if (USE_MQTT > OFF)
+            static String topVCC50     = MQTT_VCC50;
+            static String valVCC50     = "";
+          #endif
       #endif
     #if (USE_VCC33_ANA > OFF)
         md_val<int16_t>   vcc33Val;
         md_scale<int16_t> vcc33Scal;
         uint16_t          vcc33;
+        #if (USE_MQTT > OFF)
+            static String topVCC33     = MQTT_VCC33;
+            static String valVCC33     = "";
+          #endif
       #endif
     #if (USE_ACS712_ANA > OFF)
         md_val<int16_t>   i712Val[USE_ACS712_ANA];
         md_scale<int16_t> i712Scal[USE_ACS712_ANA];
         //float i712[USE_ACS712_ANA];
         uint16_t          i712[USE_ACS712_ANA];
+        #if (USE_MQTT > OFF)
+            static String topVCC33     = MQTT_VCC33;
+            static String valVCC33     = "";
+          #endif
       #endif
     #if (USE_TYPE_K_SPI > 0)
         //SPIClass* tkSPI = new SPIClass();
@@ -2020,8 +2040,9 @@
                           #endif
                       #endif
                    	break;
-                case 9:  // voltage 5V
+                case 10:  // voltage 5V
                     #if (USE_VCC_ANA > OFF)
+                      #endif
                 case 11:  // poti,
                     #if (USE_POTI_ANA > OFF)
                         tmpval16 = potiScal[0].scale((float) poti[0]);

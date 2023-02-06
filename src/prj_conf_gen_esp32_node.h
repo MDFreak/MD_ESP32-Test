@@ -563,9 +563,9 @@
               #define BME2802H_Drop         0
             #endif
           #if (USE_MQTT > OFF)
-              #define MQTT_BME2801T1        "bme280t1"
-              #define MQTT_BME2801P1        "bme280p1"
-              #define MQTT_BME2801H1        "bme280h1"
+              #define MQTT_BME2801T         "bme280t1"
+              #define MQTT_BME2801P         "bme280p1"
+              #define MQTT_BME2801H         "bme280h1"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
