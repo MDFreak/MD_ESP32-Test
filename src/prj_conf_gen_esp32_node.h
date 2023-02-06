@@ -163,18 +163,6 @@
                 #define MQTT_BROKER_USER  "<user>"
                 #define MQTT_BROKER_PASS  "<pass>"
               #endif
-            // topics
-              #define MQTT_LEDBRIGHT      "rgb-bright"
-              #define MQTT_LEDCOLPICK     "rgb-colpick"
-              #define MQTT_MQ3ALK         "mq3alk"
-              #define MQTT_BME280T        "bme280t"
-              #define MQTT_BME280P        "bme280p"
-              #define MQTT_BME280H        "bme280h"
-              #define MQTT_LICHT          "licht"
-              #define MQTT_POTI           "poti"
-              #define MQTT_VCC50          "vcc50"
-              #define MQTT_VCC33          "vcc33"
-            //
           #endif
 
     // --- user output
@@ -299,9 +287,6 @@
 
       // WS2812 LEDs
         #if (USE_WS2812_MATRIX_OUT > OFF)
-            #ifndef USE_OUTPUT_CYCLE
-                #define USE_OUTPUT_CYCLE
-              #endif
             #define COLCHAR_2812            6
             #define COLBMP_2812             8
             #define ROWBMP_2812             8
@@ -312,22 +297,18 @@
             #define COL24_2812_BM1          0xF0B63Cu   // color r-g-b (5-6-5) = 240, 182, 56
             #define BRI_2812_M1             255
             #define BRI_2812_BM1            255
-
             #define ROW1_2812_M1            NEO_MATRIX_TOP
             #define COL1_2812_M1            NEO_MATRIX_LEFT
             #define DIR_2812_M1             NEO_MATRIX_COLUMNS
             #define ORI_2812_M1             NEO_MATRIX_ZIGZAG
-
             #define TYPE_2812_M1            WS2812B
             #define COLORD_2812_M1          NEO_GRB
             #define ROWPIX_2812_M1          8
             #define LEDS_2812_M1            COLPIX_2812_M1 * ROWPIX_2812_M1
-
             #define ROW1_2812_T1            NEO_MATRIX_TOP
             #define COL1_2812_T1            NEO_MATRIX_LEFT
             #define DIR_2812_T1             NEO_MATRIX_COLUMNS
             #define ORI_2812_T1             NEO_MATRIX_ZIGZAG
-
             #define COLPIX_2812_T1          8
             #define ROWPIX_2812_T1          8
             #define COLTIL_2812_M1          16  // needs correct value
@@ -337,9 +318,6 @@
             #define OFFBEG_2812_M1          1 //+ COLPIX_2812_T1
             #define OFFEND_2812_M1          0 //+ COLPIX_2812_T1
             #if (USE_WS2812_MATRIX_OUT > 1)
-                #ifndef USE_OUTPUT_CYCLE
-                    #define USE_OUTPUT_CYCLE
-                  #endif
                 #define UPD_2812_M2_MS      8
                 #define LEDS_2812_M2        512
                 #define BRIGHT_2812_M2      5
@@ -351,6 +329,13 @@
                 #define ROWPIX_2812_T2      8
                 #define COLTIL_2812_M2      4
                 #define ROWTIL_2812_M2      1
+              #endif
+            #if (USE_MQTT > OFF)
+                #define MQTT_MAX_BRIGHT   "max-bright"
+                #define MQTT_MAX_COLPICK  "max-colpick"
+              #endif
+            #ifndef USE_OUTPUT_CYCLE
+                #define USE_OUTPUT_CYCLE
               #endif
           #endif
 
@@ -406,8 +391,8 @@
             #define BRI_RGBLED_1            15
             #define COL24_RGBLED_1          0xBE2727u   // bright 10 + red 10 + green 10 + blue 10
             #if (USE_MQTT > OFF)
-                #define RGBLED_BRIGHT_MQTT         "rgb-bright"
-                #define DS18B202_MQTT         "ds18b20-2"
+                #define MQTT_LIN_BRIGHT     "rgb-bright"
+                #define MQTT_LIN_COLPICK    "rgb-colpick"
               #endif
             #endif
         #if (USE_FAN_PWM > OFF)
@@ -418,8 +403,8 @@
             #define PWM_FAN_FREQ            4500u
             #define PWM_FAN_RES             8
             #if (USE_MQTT > OFF)
-                #define FAN1_MQTT           "fan1"
-                #define FAN2_MQTT           "fan2"
+                #define MQTT_FAN1           "fan1"
+                #define MQTT_FAN2           "fan2"
               #endif
           #endif
     // --- user input
@@ -532,8 +517,8 @@
               #define DS18B202T_Drop        0
             #endif
           #if (USE_MQTT > OFF)
-              #define DS18B201_MQTT         "ds18b20-1"
-              #define DS18B202_MQTT         "ds18b20-2"
+              #define MQTT_DS18B201         "ds18b20-1"
+              #define MQTT_DS18B202         "ds18b20-2"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -548,9 +533,9 @@
           #define CCS811V_FILT              0  // TVOC value carbon value in air
           #define CCS811V_Drop              0  // [400 - 29206 ppm]
           #if (USE_MQTT > OFF)
-              #define CCS811T_MQTT         "ccs811t"
-              #define CCS811E_MQTT         "ccs811e"
-              #define CCS811V_MQTT         "ccs811v"
+              #define MQTT_CCS811T         "ccs811t"
+              #define MQTT_CCS811E         "ccs811e"
+              #define MQTT_CCS811V         "ccs811v"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -574,9 +559,9 @@
               #define BME2802H_Drop         0
             #endif
           #if (USE_MQTT > OFF)
-              #define BME2801T_MQTT         "bme280t1"
-              #define BME2801P_MQTT         "bme280p1"
-              #define BME2801H_MQTT         "bme280h1"
+              #define MQTT_BME2801T         "bme280t1"
+              #define MQTT_BME2801P         "bme280p1"
+              #define MQTT_BME2801H         "bme280h1"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -647,7 +632,7 @@
               #define MQ3_OFFREAL           0
             #endif
           #if (USE_MQTT > OFF)
-              #define MQ3_MQTT              "alc"
+              #define MQTT_MQ3              "alc"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -707,9 +692,14 @@
                   #define PHOTO2_1115_CHAN 0
                 #endif
             #endif
+              #define MQTT_MQ3ALK         "mq3alk"
+              #define MQTT_LICHT          "licht"
+              #define MQTT_POTI           "poti"
+              #define MQTT_VCC50          "vcc50"
+              #define MQTT_VCC33          "vcc33"
           #if (USE_MQTT > OFF)
-              #define TYPEK1_MQTT           "ttypek-1"
-              #define TYPEK2_MQTT           "ttypek-2"
+              #define MQTT_TYPEK1           "ttypek-1"
+              #define MQTT_TYPEK2           "ttypek-2"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
