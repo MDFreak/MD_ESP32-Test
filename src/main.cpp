@@ -1000,7 +1000,7 @@
               dispStatus("init BME2801");
               STXT(" init BME280 ...");
               bool bmeda = false;
-              bmeda = bme1.begin(I2C_BME280, pbme1i2c);
+              bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
               if (bmeda)
                   {
                     bme1.setSampling(bme1.MODE_SLEEP);
