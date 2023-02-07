@@ -67,6 +67,7 @@
       #define USE_MQ135_GAS_ANA     OFF // [0, 1, ....] limited by analog inputs
       #define USE_MQ3_ALK_ANA       1   // ADC or ADS1115
       #define USE_PHOTO_SENS_ANA    1   // ADC or ADS1115
+      #define USE_INA3221_I2C       1
       #define USE_ACS712_ANA        1   // only ADS1115
       #define USE_POTI_ANA          1   // ADC or ADS1115
       #define USE_VCC50_ANA         1   // ADC or ADS1115

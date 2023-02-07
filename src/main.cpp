@@ -546,13 +546,11 @@
         DeviceAddress     dsAddr[DS18B20_ANZ];
         OneWire ds1OneWire(DS1_ONEWIRE_PIN);
         DallasTemperature ds1Sensors(&ds1OneWire);
-        int16_t ds1Temp[DS18B20_ANZ];
+        int16_t dsTemp[DS18B20_ANZ];
         //float ds1Temp[DS18B20_ANZ];
         #if (USE_DS18B20_1W_IO > 1)
             OneWire ds2OneWire(DS2_ONEWIRE_PIN);
             DallasTemperature ds2Sensors(&ds2OneWire);
-            int16_t ds2Temp[DS18B20_ANZ];
-            //float ds2Temp[DS18B20_ANZ];
           #endif
       #endif
     #if (USE_ADC1115_I2C > OFF)
@@ -1058,8 +1056,8 @@
         // vcc measure
           #if (USE_VCC_ANA > OFF)
               STXT(" init vcc measure ... ");
-              vccVal[0].begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
-              vccScal[0].setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
+              vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+              vcc50Scal.setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
               STXT(" vcc measure ready");
             #endif
         // poti measure
@@ -1072,10 +1070,10 @@
 
         // ACS712 current measurement
           #if (USE_ACS712_ANA > OFF)
-              STXT("init alc sensors ... ");
-              i712Val[0].begin(I712_1_FILT, I712_1_DROP, FILT_FL_MEAN);
+              STXT("init current sensors ... ");
+              i712Val[0].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
               i712Scal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
-              STXT(" init alc sensors ready");
+              STXT(" current sensors ready");
             #endif
 
         // K-type thermoelementation
@@ -2004,10 +2002,10 @@
                           pmdServ->updateAll(tmpStr);
                         #endif
                       #if (USE_MQTT > OFF)
-                          valLicht = tmpval16;
-                              SVAL(topLicht, valLicht);
-                          errMQTT = (int8_t) mqtt.publish(topLicht.c_str(), (uint8_t*) valLicht.c_str(), valLicht.length());
-                              soutMQTTerr(" MQTT publish MQ3alk", errMQTT);
+                          valLicht1 = tmpval16;
+                              SVAL(topLicht1, valLicht1);
+                          errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valLicht1.c_str(), valLicht1.length());
+                              soutMQTTerr(" MQTT publish Licht1", errMQTT);
                         #endif
                     #endif
                   break;
@@ -2120,10 +2118,10 @@
                         dispText(outStr, 15, 1, outStr.length());
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
-                            valPoti = tmpval16;
-                                SVAL(topPoti, valPoti);
-                            errMQTT = (int8_t) mqtt.publish(topPoti.c_str(), (uint8_t*) valPoti.c_str(), valPoti.length());
-                                soutMQTTerr(" MQTT publish Poti", errMQTT);
+                            valPoti1 = tmpval16;
+                                SVAL(topPoti1, valPoti1);
+                            errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(), (uint8_t*) valPoti1.c_str(), valPoti1.length());
+                                soutMQTTerr(" MQTT publish Poti1", errMQTT);
                           #endif
                       #endif
                     break;
@@ -2224,15 +2222,15 @@
                   break;
                 case 16: // RGB-LED
                     #if (USE_MQTT > OFF)
-                        valLEDBright = (RGBLED[0]->bright());    // RGB-LED col24
-                            SVAL(topLEDBright, valLEDBright);
-                        errMQTT = (int8_t) mqtt.publish(topLEDBright.c_str(), (uint8_t*) valLEDBright.c_str(), valLEDBright.length());
-                            soutMQTTerr(" MQTT publish LEDBright", errMQTT);
+                        valRGBBright = (RGBLED[0]->bright());    // RGB-LED col24
+                            SVAL(topRGBBright, valRGBBright);
+                        errMQTT = (int8_t) mqtt.publish(topRGBBright.c_str(), (uint8_t*) valRGBBright.c_str(), valRGBBright.length());
+                            soutMQTTerr(" MQTT publish RGBBright", errMQTT);
                         colToHexStr(cMQTT, RGBLED[0]->col24());
-                        valLEDCol = cMQTT;    // RGB-LED col24
-                            SVAL(topLEDCol, valLEDCol);
-                        errMQTT = (int8_t) mqtt.publish(topLEDCol.c_str(), (uint8_t*) valLEDCol.c_str(), valLEDCol.length());
-                            soutMQTTerr(" MQTT publish LEDCol", errMQTT);
+                        valRGBCol = cMQTT;    // RGB-LED col24
+                            SVAL(topRGBCol, valRGBCol);
+                        errMQTT = (int8_t) mqtt.publish(topRGBCol.c_str(), (uint8_t*) valRGBCol.c_str(), valRGBCol.length());
+                            soutMQTTerr(" MQTT publish RGBCol", errMQTT);
                       #endif
                   break;
                 default:
@@ -2796,10 +2794,21 @@
         {
           String outS = "";
           #if (USE_DS18B20_1W_IO > OFF)
-              dsSensors.requestTemperatures(); // Send the command to get temperatures
               for (uint8_t i = 0 ; i < DS18B20_ANZ ; i++ )
                 {
-                  dsTemp[i] = dsSensors.getTempCByIndex(i);
+                  switch (i)
+                    {
+                      case 0:
+                        ds1Sensors.requestTemperatures(); // Send the command to get temperatures
+                        dsTemp[i] = ds1Sensors.getTempCByIndex(i);
+                        break;
+                      case 1:
+                        ds2Sensors.requestTemperatures(); // Send the command to get temperatures
+                        dsTemp[i] = ds2Sensors.getTempCByIndex(i);
+                        break;
+                      default:
+                        break;
+                    }
                         //S2VAL(" DS18B20",i, dsTemp[i]);
                   if (i < 1) { outS  = "T1 "; }
                   else       { outS += "    T2  ";}
