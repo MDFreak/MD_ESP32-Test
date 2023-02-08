@@ -1113,10 +1113,6 @@
                       }
                 #endif
             #endif
-        // temp. current sensor INA3221
-          #if (USE_INA3221_I2C > OFF)
-
-            #endif
         // temp. air quality sensor CCS811
           #if (USE_CCS811_I2C > OFF)
               dispStatus("init CCS811");
@@ -1133,9 +1129,9 @@
                       #endif
                     ccs811.setTempOffset((float) bme1T);
                     STXT(" CCS811 gefunden");
-                    ccsTVal.begin(CCS811T_FILT, CCS811T_Drop, FILT_NU);
-                    ccsEVal.begin(CCS811E_FILT, CCS811E_Drop, FILT_NU);
-                    ccsVVal.begin(CCS811V_FILT, CCS811V_Drop, FILT_NU);
+                    ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
+                    ccsEVal.begin(CCS811E_FILT, CCS811E_Drop);
+                    ccsVVal.begin(CCS811V_FILT, CCS811V_Drop);
                     #if (USE_MQTT > OFF)
                         topCCS811t = topDevice + topCCS811t;
                         errMQTT = (int8_t) mqtt.subscribe(topCCS811t.c_str());
@@ -1153,23 +1149,57 @@
                     STXT(" CCS811 nicht gefunden");
                   }
             #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        // temp. current sensor INA3221
+          #if (USE_INA3221_I2C > OFF)
+              dispStatus("init INA3221");
+              STXT(" init INA3221 ...");
+              ina32211.begin();
+              inaIVal[0][0].begin(INA3221I1_FILT, INA3221I1_DROP);
+              inaIVal[0][1].begin(INA3221I2_FILT, INA3221I2_DROP);
+              inaIVal[0][2].begin(INA3221I3_FILT, INA3221I3_DROP);
+              inaUVal[0][0].begin(INA3221U1_FILT, INA3221U1_DROP);
+              inaUVal[0][1].begin(INA3221U2_FILT, INA3221U2_DROP);
+              inaUVal[0][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+              #if (USE_INA3221_I2C > 1)
+                  dispStatus("init INA3221");
+                  STXT(" init INA3221 ...");
+                  ina32211.begin();
+                  inaIVal[1][0].begin(INA3221I1_FILT, INA3221I1_DROP);
+                  inaIVal[1][1].begin(INA3221I2_FILT, INA3221I2_DROP);
+                  inaIVal[1][2].begin(INA3221I3_FILT, INA3221I3_DROP);
+                  inaUVal[1][0].begin(INA3221U1_FILT, INA3221U1_DROP);
+                  inaUVal[1][1].begin(INA3221U2_FILT, INA3221U2_DROP);
+                  inaUVal[1][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+                  #if (USE_INA3221_I2C > 2)
+                      dispStatus("init INA3221");
+                      STXT(" init INA3221 ...");
+                      ina32211.begin();
+                      inaIVal[2][0].begin(INA3221I1_FILT, INA3221I1_DROP);
+                      inaIVal[2][1].begin(INA3221I2_FILT, INA3221I2_DROP);
+                      inaIVal[2][2].begin(INA3221I3_FILT, INA3221I3_DROP);
+                      inaUVal[2][0].begin(INA3221U1_FILT, INA3221U1_DROP);
+                      inaUVal[2][1].begin(INA3221U2_FILT, INA3221U2_DROP);
+                      inaUVal[2][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+                      #if (USE_INA3221_I2C > 3)
+                          dispStatus("init INA3221");
+                          STXT(" init INA3221 ...");
+                          ina32211.begin();
+                          inaIVal[3][0].begin(INA3221I1_FILT, INA3221I1_DROP);
+                          inaIVal[3][1].begin(INA3221I2_FILT, INA3221I2_DROP);
+                          inaIVal[3][2].begin(INA3221I3_FILT, INA3221I3_DROP);
+                          inaUVal[3][0].begin(INA3221U1_FILT, INA3221U1_DROP);
+                          inaUVal[3][1].begin(INA3221U2_FILT, INA3221U2_DROP);
+                          inaUVal[3][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+                        #endif
+                    #endif
+                #endif
+              #if (USE_MQTT > OFF)
+                  topCCS811t = topDevice + topCCS811t;
+                  errMQTT = (int8_t) mqtt.subscribe(topCCS811t.c_str());
+                      soutMQTTerr(" MQTT subscribe CCS811t", errMQTT);
+                #endif
+            #endif
+        // temp. temperature sensor DS18B20
           #if (USE_DS18B20_1W_IO > OFF)
               dispStatus("init DS18D20");
               ds1Sensors.begin();
