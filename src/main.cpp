@@ -522,36 +522,35 @@
           #else
             TwoWire* pbme1i2c = &i2c2;
           #endif
-        md_val<int16_t>  bme1TVal;
-        md_val<uint16_t> bme1PVal;
-        md_val<uint16_t> bme1HVal;
-        int16_t          bme1T;
-        int16_t          bme1P;
-        int16_t          bme1H;
-        int16_t          bme1Told;
-        int16_t          bme1Pold;
-        int16_t          bme1Hold;
+        md_val<int16_t>  bmeTVal[USE_BME280_I2C];
+        md_val<uint16_t> bmePVal[USE_BME280_I2C];
+        md_val<uint16_t> bmeHVal[USE_BME280_I2C];
+        int16_t          bmeT[USE_BME280_I2C];
+        int16_t          bmeP[USE_BME280_I2C];
+        int16_t          bmeH[USE_BME280_I2C];
+        int16_t          bmeTold[USE_BME280_I2C];
+        int16_t          bmePold[USE_BME280_I2C];
+        int16_t          bmeHold[USE_BME280_I2C];
         #if (USE_BME280_I2C > 1)
+            Adafruit_BME280  bme2;
             #if (BME2802_I2C == I2C1)
                 TwoWire* pbme2i2c = &i2c1;
               #else
                 TwoWire* pbme2i2c = &i2c2;
               #endif
-            Adafruit_BME280  bme2;
-            md_val<int16_t>  bme2T;
-            md_val<uint16_t> bme2P;
-            md_val<uint16_t> bme2H;
-            int16_t          bme1Told;
-            int16_t          bme1Pold;
-            int16_t          bme1Hold;
           #endif
         #if (USE_MQTT > OFF)
-            static String valBME280t;
-            static String valBME280p;
-            static String valBME280h;
-            static String topBME280t   = MQTT_BME2801T;
-            static String topBME280p   = MQTT_BME2801P;
-            static String topBME280h   = MQTT_BME2801H;
+            static String valBME280t[USE_BME280_I2C];
+            static String valBME280p[USE_BME280_I2C];
+            static String valBME280h[USE_BME280_I2C];
+            static String topBME2801t = MQTT_BME2801T;
+            static String topBME2801p = MQTT_BME2801P;
+            static String topBME2801h = MQTT_BME2801H;
+            #if (USE_BME280_I2C > 1)
+                static String topBME2802t = MQTT_BME2802T;
+                static String topBME2802p = MQTT_BME2802P;
+                static String topBME2802h = MQTT_BME2802H;
+              #endif
           #endif
       #endif
     #if (USE_CCS811_I2C > OFF)
@@ -1004,16 +1003,6 @@
                       errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
                           soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
                     #endif
-                  #if (USE_DS18B20_1W_IO > OFF)
-                      topDS18B20[0] = topDevice + topDS18B20[0];
-                      errMQTT = (int8_t) mqtt.subscribe(topDS18B20[0].c_str());
-                          soutMQTTerr(" MQTT subscribe DS18B201 ", errMQTT);
-                      #if (USE_DS18B20_1W_IO > OFF)
-                          topDS18B20[1] = topDevice + topDS18B20[1];
-                          errMQTT = (int8_t) mqtt.subscribe(topDS18B20[1].c_str());
-                              soutMQTTerr(" MQTT subscribe DS18B202 ", errMQTT);
-                        #endif
-                    #endif
                   #if (USE_MQ3_ALK_ANA > OFF)
                       topMQ3alk = topDevice + topMQ3alk;
                       errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
@@ -1079,28 +1068,33 @@
               bool bmeda = false;
               bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
               if (bmeda)
-                  {
-                    bme1.setSampling(bme1.MODE_SLEEP);
-                    STXT(" BME280(1) gefunden");
-                    bme1T.begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
-                    bme1P.begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
-                    bme1H.begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
-                    #if (USE_MQTT > OFF)
-                        topBME280t = topDevice + topBME280t;
-                        errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
-                            soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
-                        topBME280p = topDevice + topBME280p;
-                        errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
-                            soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
-                        topBME280h = topDevice + topBME280h;
-                        errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
-                            soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
-                      #endif
-                  }
+                {
+                  bme1.setSampling(bme1.MODE_SLEEP);
+                  STXT(" BME280(1) gefunden");
+                  bmeTVal[0].begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
+                  bmePVal[0].begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
+                  bmeHVal[0].begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
+                  #if (USE_BME280_I2C > OFF)
+                      bmeTVal[1].begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
+                      bmePVal[1].begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
+                      bmeHVal[1].begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
+                    #endif
+                  #if (USE_MQTT > OFF)
+                      topBME2801t = topDevice + topBME2801t;
+                      errMQTT = (int8_t) mqtt.subscribe(topBME2801t.c_str());
+                          soutMQTTerr(" MQTT subscribe BME2801t", errMQTT);
+                      topBME2801p = topDevice + topBME2801p;
+                      errMQTT = (int8_t) mqtt.subscribe(topBME2801p.c_str());
+                          soutMQTTerr(" MQTT subscribe BME2801p", errMQTT);
+                      topBME2801h = topDevice + topBME2801h;
+                      errMQTT = (int8_t) mqtt.subscribe(topBME2801h.c_str());
+                          soutMQTTerr(" MQTT subscribe BME2801h", errMQTT);
+                    #endif
+                }
                 else
-                  {
-                    STXT(" BME280(1) nicht gefunden");
-                  }
+                {
+                  STXT(" BME280(1) nicht gefunden");
+                }
               #if (USE_BME280_I2C > 1)
                   dispStatus("init BME280(2)");
                   bmeda = false;
@@ -1119,6 +1113,11 @@
                       }
                 #endif
             #endif
+        // temp. current sensor INA3221
+          #if (USE_INA3221_I2C > OFF)
+
+            #endif
+        // temp. air quality sensor CCS811
           #if (USE_CCS811_I2C > OFF)
               dispStatus("init CCS811");
               STXT(" init CCS811 ...");
@@ -1153,17 +1152,42 @@
                   {
                     STXT(" CCS811 nicht gefunden");
                   }
-              #if (USE_BME280_I2C > 1)
-                #endif
             #endif
-        // temp. sensor DS18D20
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           #if (USE_DS18B20_1W_IO > OFF)
               dispStatus("init DS18D20");
               ds1Sensors.begin();
               String DS18Str = getDS18D20Str();
+
               #if (USE_DS18B20_1W_IO > OFF)
                   ds2Sensors.begin();
-
+                #endif
+                  #if (USE_DS18B20_1W_IO > OFF)
+                      topDS18B20[0] = topDevice + topDS18B20[0];
+                      errMQTT = (int8_t) mqtt.subscribe(topDS18B20[0].c_str());
+                          soutMQTTerr(" MQTT subscribe DS18B201 ", errMQTT);
+                      #if (USE_DS18B20_1W_IO > OFF)
+                          topDS18B20[1] = topDevice + topDS18B20[1];
+                          errMQTT = (int8_t) mqtt.subscribe(topDS18B20[1].c_str());
+                              soutMQTTerr(" MQTT subscribe DS18B202 ", errMQTT);
+                        #endif
+                    #endif
 
               dispStatus(DS18Str);
                   SVAL(" DS18D20 ... ", DS18Str);
@@ -2139,9 +2163,9 @@
                           pmdServ->updateAll(tmpStr);
                         #endif
                       #if (USE_MQTT > OFF)
-                          valLicht1 = tmpval16;
-                              SVAL(topLicht1, valLicht1);
-                          errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valLicht1.c_str(), valLicht1.length());
+                          valLicht = tmpval16;
+                              SVAL(topLicht1, valLicht);
+                          errMQTT = (int8_t) mqtt.publish(topLicht.c_str(), (uint8_t*) valLicht.c_str(), valLicht1.length());
                               soutMQTTerr(" MQTT publish Licht1", errMQTT);
                         #endif
                     #endif
@@ -2163,7 +2187,7 @@
                           switch (i)
                             {
                               case 0:  // BME280 temperature
-                                  tmpval16 = bme1T.getVal();
+                                  tmpval16 = bme1TVal.getVal();
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("°  ");
@@ -2175,7 +2199,7 @@
                                     #endif
                                 break;
                               case 1:  // BME280 air pressure
-                                  tmpval16 = bme1P.getVal();
+                                  tmpval16 = bme1PVal.getVal();
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("%  ");
@@ -2187,7 +2211,7 @@
                                     #endif
                                 break;
                               case 2:   // BME280 humidity
-                                  tmpval16 = bme1H.getVal();
+                                  tmpval16 = bme1HVal.getVal();
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("mb");
@@ -2439,7 +2463,6 @@
                 #endif
             #endif
         }
-
       void dispStatus(String msg, bool direct)
         {
           #ifdef USE_STATUS
@@ -2523,12 +2546,10 @@
                 }
             #endif // USE_STATUS
         }
-
       void dispStatus(const char* msg, bool direct)
         {
           dispStatus((String) msg);
         }
-
       void dispText(String msg, uint8_t col, uint8_t row, uint8_t len)
         {
           #if (USE_DISP > 0)
@@ -2550,7 +2571,6 @@
                 #endif
             #endif
         }
-
       void dispText(char* msg, uint8_t col, uint8_t row, uint8_t len)
         {
           dispText((String) msg, col, row, len);
@@ -2575,14 +2595,12 @@
                   #endif
               */
         }
-
       void startDisp()
         {
           #if (USE_DISP > 0)
               #ifdef USE_STATUS
                 statOut[OLED1_MAXCOLS] = 0;  // limit strlen
                 #endif
-
               #if (USE_TFT > 0)
                   #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                       mlcd.start(plcd);
@@ -2594,7 +2612,6 @@
                           #endif
                     #endif
                 #endif
-
               #if (USE_OLED_I2C > OFF)
                   oled1.begin((uint8_t) OLED1_MAXCOLS, (uint8_t) OLED1_MAXROWS);
                   STXT(" oled2 gestartet");
@@ -2931,17 +2948,19 @@
         {
           String outS = "";
           #if (USE_DS18B20_1W_IO > OFF)
-              for (uint8_t i = 0 ; i < DS18B20_ANZ ; i++ )
+              for (uint8_t i = 0 ; i < USE_DS18B20_1W_IO ; i++ )
                 {
                   switch (i)
                     {
                       case 0:
-                        ds1Sensors.requestTemperatures(); // Send the command to get temperatures
-                        dsTemp[i] = ds1Sensors.getTempCByIndex(i);
+                          ds1Sensors.requestTemperatures(); // Send the command to get temperatures
+                          dsTemp[i] = ds1Sensors.getTempCByIndex(i);
                         break;
                       case 1:
-                        ds2Sensors.requestTemperatures(); // Send the command to get temperatures
-                        dsTemp[i] = ds2Sensors.getTempCByIndex(i);
+                        #if (USE_DS18B20_1W_IO > 1)
+                            ds2Sensors.requestTemperatures(); // Send the command to get temperatures
+                            dsTemp[i] = ds2Sensors.getTempCByIndex(i);
+                          #endif
                         break;
                       default:
                         break;
