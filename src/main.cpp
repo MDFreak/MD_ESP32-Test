@@ -658,7 +658,7 @@
             static String valLicht[USE_PHOTO_SENS_ANA];
             static String topLicht1 = MQTT_PHOTO1;
             #if (USE_MQTT > OFF)
-                static String topLicht2 = MQTT_PHOTO1;
+                static String topLicht2 = MQTT_PHOTO2;
               #endif
           #endif
       #endif
@@ -1122,12 +1122,12 @@
               if (ccsda)
                   {
                     #if (USE_BME280_I2C > OFF)
-                        bme1T = ((int16_t)  ( bme1.readTemperature() + 0.5));
-                        ccs811.setTempOffset((float) bme1T);
+                        bmeT[0] = ((int16_t)  ( bme1.readTemperature() + 0.5));
+                        ccs811.setTempOffset((float) bmeT[0]);
                     #else
                         ccs811.setTempOffset((float) 25);
                       #endif
-                    ccs811.setTempOffset((float) bme1T);
+                    ccs811.setTempOffset((float) bmeT[0]);
                     STXT(" CCS811 gefunden");
                     ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
                     ccsEVal.begin(CCS811E_FILT, CCS811E_Drop);
@@ -1304,6 +1304,18 @@
               dispStatus(DS18Str);
                   SVAL(" DS18D20 ... ", DS18Str);
             #endif
+        // alcohol sensor
+          #if (USE_MQ3_ALK_ANA > OFF)
+              STXT(" init alc sensors ... ");
+              alkVal.begin(MQ3_FILT, MQ3_DROP, FILT_FL_MEAN);
+              alkScal.setScale(MQ3_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+              #if (USE_MQTT > OFF)
+                  topMQ3alk = topDevice + topMQ3alk;
+                  errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
+                      soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
+                #endif
+              STXT(" alc sensors ready");
+            #endif
         // photo sensor
           #if (USE_PHOTO_SENS_ANA > OFF)
               STXT(" init photo sensors ...");
@@ -1315,16 +1327,14 @@
                                             (adc_atten_t)    PHOTO1_ADC_ATT);
                 #endif
               #if (PHOTO1_1115 > OFF)
-
+                #endif
+              #if (USE_MQTT > OFF)
+                  photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP);
+                  topLicht1 = topDevice + topLicht1;
+                  errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
+                      soutMQTTerr(" MQTT subscribe Licht", errMQTT);
                 #endif
               STXT(" photo sensors  ready");
-            #endif
-        // alcohol sensor
-          #if (USE_MQ3_ALK_ANA > OFF)
-              STXT(" init alc sensors ... ");
-              alkVal[0].begin(MQ3_FILT, MQ3_DROP, FILT_FL_MEAN);
-              alkScal[0].setScale(MQ3_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
-              STXT(" alc sensors ready");
             #endif
         // vcc measure
           #if (USE_VCC_ANA > OFF)
@@ -1710,9 +1720,9 @@
                         #if (USE_BME280_I2C > OFF)
                             bme1.init();
                             usleep(100);
-                            bme1TVal.doVal((int16_t)  ( bme1.readTemperature() + 0.5));
-                            bme1HVal.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
-                            bme1PVal.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
+                            bmeTVal[0].doVal((int16_t)  ( bme1.readTemperature() + 0.5));
+                            bmeHVal[0].doVal((uint16_t) ( bme1.readHumidity() + 0.5));
+                            bmePVal[0].doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
                           #endif
                       break;
                     case 2:
@@ -1746,8 +1756,8 @@
                                 ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
                                 while (!ads[0].conversionComplete());
-                                alk[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                                alkVal[0].doVal(alk[0]);   // Read the conversion results
+                                alk = ads[0].getLastConversionResults();   // Read the conversion results
+                                alkVal.doVal(alk);   // Read the conversion results
                                 //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
                               #endif
                           #endif
@@ -2246,9 +2256,9 @@
                   break;
                 case 5:  // gas sensor MQ3 alcohol
                   #if (USE_MQ3_ALK_ANA > OFF)
-                      tmpval16 = alk[0];
+                      tmpval16 = alk;
                       outStr = "  a ";
-                      outStr.concat(alk[0]);
+                      outStr.concat(alk);
                       outStr.concat("  ");
                       dispText(outStr, 1, 1, outStr.length());
                           //STXT(outStr);
@@ -2275,8 +2285,8 @@
                           pmdServ->updateAll(tmpStr);
                         #endif
                       #if (USE_MQTT > OFF)
-                          valLicht = tmpval16;
-                              SVAL(topLicht1, valLicht);
+                          valLicht[0] = tmpval16;
+                              SVAL(topLicht1, valLicht[0]);
                           errMQTT = (int8_t) mqtt.publish(topLicht.c_str(), (uint8_t*) valLicht.c_str(), valLicht1.length());
                               soutMQTTerr(" MQTT publish Licht1", errMQTT);
                         #endif
