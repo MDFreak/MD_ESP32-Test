@@ -985,6 +985,9 @@
                 #endif
             #endif
         // --- user output
+          #if (USE_GEN_DIG_OUT > OFF)
+              #define PIN_GEN_DIG_OUT     15   // Online controlled output
+            #endif
           #if (USE_TRAFFIC_LED_OUT > OFF)
               #define PIN_TL_RED          26   // RGB red
               #define PIN_TL_YELLOW       25   // RGB green

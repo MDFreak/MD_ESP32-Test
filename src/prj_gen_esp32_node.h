@@ -48,6 +48,8 @@
         #define USE_RGBLED_PWM        1
         #define USE_WS2812_MATRIX_OUT OFF // [0, 1..4]
         #define USE_WS2812_LINE_OUT   OFF // [0, 1..4]
+      // --- digital output
+        #define USE_GEN_DIG_OUT       1
     // --- user input components
       // --- touchscreen ---
         #define USE_TOUCHSCREEN     OFF
