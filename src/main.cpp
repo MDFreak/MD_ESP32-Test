@@ -58,7 +58,7 @@
     #if (USE_ESPHALL > OFF)
         int32_t valHall = 0;
       #endif
-// ------ system cycles ---------------
+// --- system cycles ---------------
     #ifdef USE_INPUT_CYCLE
         msTimer inputT           = msTimer(INPUT_CYCLE_MS);
         uint8_t inpIdx   = 0;
@@ -548,15 +548,59 @@
             static String valBME280h   = "";
           #endif
       #endif
+    #if (USE_CCS811_I2C > OFF)
+        Adafruit_CCS811  ccs811;
+        #if (CCS811_I2C == I2C1)
+            TwoWire* pcssi2c = &i2c1;
+          #else
+            TwoWire* pcssi2c = &i2c2;
+          #endif
+        md_val<int16_t>  cssT;
+        md_val<uint16_t> cssE;
+        md_val<uint16_t> ccsV;
+        int16_t          cssTold;
+        int16_t          cssEold;
+        int16_t          ccsVold;
+        #if (USE_MQTT > OFF)
+            static String topCCS811t   = MQTT_CCS811T;
+            static String topCCS811e   = MQTT_CCS811E;
+            static String topCCS811v   = MQTT_CCS811V;
+            static String valCCS811t   = "";
+            static String valCCS811e   = "";
+            static String valCCS811v   = "";
+          #endif
+      #endif
+    #if (USE_INA3221_I2C > OFF)
+        SDL_Arduino_INA3221  ina32211(INA32211_ADDR);
+        #if (INA32211_I2C == I2C1)
+            TwoWire* ina1i2c = &i2c1;
+          #else
+            TwoWire* ina1i2c = &i2c2;
+          #endif
+        md_val<int16_t>  inaI[3];
+        md_val<uint16_t> inaU[3];
+        int16_t          inaIold[3];
+        int16_t          inaUold[3];
+        #if (USE_MQTT > OFF)
+            static String topINA32211I[3] = { MQTT_INA32211I1, MQTT_INA32211I2, MQTT_INA32211I3 };
+            static String topINA32211U[3] = { MQTT_INA32211I1, MQTT_INA32211I2, MQTT_INA32211I3 };
+            static String valINA32211I[3] = { "", "", "" };
+            static String valINA32211U[3] = { "", "", "" };
+          #endif
+      #endif
     #if (USE_DS18B20_1W_IO > OFF)
-        DeviceAddress     dsAddr[DS18B20_ANZ];
-        OneWire ds1OneWire(DS1_ONEWIRE_PIN);
+        OneWire           ds1OneWire(DS1_ONEWIRE_PIN);
         DallasTemperature ds1Sensors(&ds1OneWire);
-        int16_t dsTemp[DS18B20_ANZ];
-        //float ds1Temp[DS18B20_ANZ];
+        md_val<uint16_t>  dsTempVal[USE_DS18B20_1W_IO];
+        int16_t           dsTemp   [USE_DS18B20_1W_IO];
+        int16_t           dsTempold[USE_DS18B20_1W_IO];
         #if (USE_DS18B20_1W_IO > 1)
-            OneWire ds2OneWire(DS2_ONEWIRE_PIN);
+            OneWire           ds2OneWire(DS2_ONEWIRE_PIN);
             DallasTemperature ds2Sensors(&ds2OneWire);
+          #endif
+        #if (USE_MQTT > OFF)
+            static String topDS18B20[USE_DS18B20_1W_IO] = { MQTT_DS18B201, MQTT_DS18B202};
+            static String valDS18B20[USE_DS18B20_1W_IO] = { "", "" };
           #endif
       #endif
     #if (USE_ADC1115_I2C > OFF)
@@ -602,6 +646,7 @@
         md_val<int16_t>   vcc50Val;
         md_scale<int16_t> vcc50Scal;
         uint16_t          vcc50;
+        uint16_t          vcc50old;
         #if (USE_MQTT > OFF)
             static String topVCC50     = MQTT_VCC50;
             static String valVCC50     = "";
@@ -610,7 +655,8 @@
     #if (USE_VCC33_ANA > OFF)
         md_val<int16_t>   vcc33Val;
         md_scale<int16_t> vcc33Scal;
-        uint16_t          vcc33;
+        int16_t           vcc33;
+        int16_t           vcc33old;
         #if (USE_MQTT > OFF)
             static String topVCC33     = MQTT_VCC33;
             static String valVCC33     = "";
@@ -620,7 +666,7 @@
         md_val<int16_t>   i712Val[USE_ACS712_ANA];
         md_scale<int16_t> i712Scal[USE_ACS712_ANA];
         //float i712[USE_ACS712_ANA];
-        uint16_t          i712[USE_ACS712_ANA];
+        int16_t           i712[USE_ACS712_ANA];
         #if (USE_MQTT > OFF)
             static String topi712[USE_ACS712_ANA] =
               {
@@ -814,6 +860,10 @@
           #if (USE_BUZZER_PWM > OFF)
 
             #endif
+        // start digital output
+          #if (USE_GEN_DIG_OUT > OFF)
+              pinMode(PIN_GEN_DIG_OUT, OUTPUT);
+            #endif
       // --- user input
         // start digital inputs
           #if (USE_DIG_INP > OFF)
@@ -923,6 +973,14 @@
                           soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
                     #endif
                   #if (USE_DS18B20_1W_IO > OFF)
+                      topDS18B20[0] = topDevice + topDS18B20[0];
+                      errMQTT = (int8_t) mqtt.subscribe(topDS18B20[0].c_str());
+                          soutMQTTerr(" MQTT subscribe DS18B201 ", errMQTT);
+                      #if (USE_DS18B20_1W_IO > OFF)
+                          topDS18B20[1] = topDevice + topDS18B20[1];
+                          errMQTT = (int8_t) mqtt.subscribe(topDS18B20[1].c_str());
+                              soutMQTTerr(" MQTT subscribe DS18B202 ", errMQTT);
+                        #endif
                     #endif
                   #if (USE_MQ3_ALK_ANA > OFF)
                       topMQ3alk = topDevice + topMQ3alk;

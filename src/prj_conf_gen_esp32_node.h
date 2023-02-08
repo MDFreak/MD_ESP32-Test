@@ -513,9 +513,8 @@
     // --- sensors
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION            9
-          #define DS18B20_ANZ               USE_DS18B20_1W_IO
-          #define DS18B20T_FILT             0
-          #define DS18B20T_Drop             0
+          #define DS18B20_FILT              0
+          #define DS18B20_Drop              0
           #if (USE_MQTT > OFF)
               #define MQTT_DS18B201         "ds18b201"
               #define MQTT_DS18B202         "ds18b202"
