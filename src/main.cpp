@@ -612,9 +612,10 @@
         //md_val<uint16_t> gasThres;
       #endif
     #if (USE_MQ3_ALK_ANA > OFF)
-        md_val<int16_t> alkVal[USE_MQ3_ALK_ANA];
-        md_scale<int16_t> alkScal[USE_MQ3_ALK_ANA];
-        uint16_t alk[USE_MQ3_ALK_ANA];
+        md_val<int16_t> alkVal;
+        md_scale<int16_t> alkScal;
+        uint16_t alk;
+        uint16_t alkold;
         #if (USE_MQTT > OFF)
             static String topMQ3alk    = MQTT_MQ3;
             static String valMQ3alk    = "";
@@ -633,12 +634,13 @@
         md_val<int16_t>   potiVal[USE_POTI_ANA];
         md_scale<int16_t> potiScal[USE_POTI_ANA];
         uint16_t          poti[USE_POTI_ANA];
+        uint16_t          potiold[USE_POTI_ANA];
         #if (USE_MQTT > OFF)
-            static String topPoti1      = MQTT_POTI1;
-            static String valPoti1      = "";
+            static String topPoti1 = MQTT_POTI1;
+            static String valPoti1 = "";
             #if (USE_MQTT > 1)
-                static String topPoti1      = MQTT_POTI1;
-                static String valPoti1      = "";
+                static String topPoti2      = MQTT_POTI2;
+                static String valPoti2      = "";
               #endif
           #endif
       #endif
@@ -668,19 +670,16 @@
         //float i712[USE_ACS712_ANA];
         int16_t           i712[USE_ACS712_ANA];
         #if (USE_MQTT > OFF)
-            static String topi712[USE_ACS712_ANA] =
-              {
-                MQTT_I712_1
-                #if (USE_MQTT > 1)
-                    , MQTT_I712_2
-                    #if (USE_MQTT > 2)
-                        , MQTT_I712_3
-                        #if (USE_MQTT > 3)
-                            , MQTT_I712_2
-                          #endif
+            static String topi7121 = MQTT_I712_1;
+            #if (USE_MQTT > 1)
+                static String topi7122 = MQTT_I712_2;
+                #if (USE_MQTT > 2)
+                    static String topi7123 = MQTT_I712_3;
+                    #if (USE_MQTT > 3)
+                        static String topi7124 = MQTT_I712_4;
                       #endif
                   #endif
-              };
+              #endif
             static String vali712[USE_ACS712_ANA];
           #endif
       #endif
@@ -1019,21 +1018,21 @@
                           soutMQTTerr(" MQTT subscribe vcc33", errMQTT);
                     #endif
                   #if (USE_ACS712_ANA > OFF)
-                      topi712[0] = topDevice + topi712[0];
-                      errMQTT = (int8_t) mqtt.subscribe(topi712[0].c_str());
+                      topi7121 = topDevice + topi7121;
+                      errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
                           soutMQTTerr(" MQTT subscribe topi712[0]", errMQTT);
                       #if (USE_ACS712_ANA > 1)
-                          topi712[1] = topDevice + topi712[1];
-                          errMQTT = (int8_t) mqtt.subscribe(topi712[1].c_str());
-                              soutMQTTerr(" MQTT subscribe topi712[1]", errMQTT);
+                          topi7122 = topDevice + topi7122;
+                          errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
+                              soutMQTTerr(" MQTT subscribe topi7122", errMQTT);
                           #if (USE_ACS712_ANA > 2)
-                              topi712[2] = topDevice + topi712[2];
-                              errMQTT = (int8_t) mqtt.subscribe(topi712[2].c_str());
-                                  soutMQTTerr(" MQTT subscribe topi712[2]", errMQTT);
+                              topi7123 = topDevice + topi7123;
+                              errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
+                                  soutMQTTerr(" MQTT subscribe topi7123", errMQTT);
                               #if (USE_ACS712_ANA > 3)
-                                  topi712[3] = topDevice + topi712[3];
-                                  errMQTT = (int8_t) mqtt.subscribe(topi712[3].c_str());
-                                      soutMQTTerr(" MQTT subscribe topi712[3]", errMQTT);
+                                  topi7124 = topDevice + topi7124;
+                                  errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
+                                      soutMQTTerr(" MQTT subscribe topi7124", errMQTT);
                                 #endif
                             #endif
                         #endif
