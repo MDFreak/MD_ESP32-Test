@@ -139,12 +139,10 @@
                 #define WIFI_SUBNET       0x0000FFFFul // 255.255.255.0
               #endif
           #endif
-
       // --- webserver
         #if (USE_WEBSERVER > OFF)
             #define WEBSERVER_CYCLE       1000ul  // Intervallzeit [us]
           #endif
-
       // --- MQTT Mosquitto client
         #if (USE_MQTT > OFF)
             //#define MARVIN_ROGER          // library
@@ -164,7 +162,6 @@
                 #define MQTT_BROKER_PASS  "<pass>"
               #endif
           #endif
-
     // --- user output
       // --- display
         #if (USE_DISP > 0)

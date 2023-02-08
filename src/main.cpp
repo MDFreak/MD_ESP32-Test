@@ -732,8 +732,15 @@
             int16_t     tk2ValRef;
           #endif
       #endif
-
-  // ------ memories
+    #if (USE_CNT_INP > OFF)
+      #endif
+    #if (USE_DIG_INP > OFF)
+      #endif
+    #if (USE_ESPHALL > OFF)
+      #endif
+    #if (USE_MCPWM > OFF)
+      #endif
+// ------ memories
     #if (USE_FLASH_MEM > OFF)
         #include <SPIFFS.h>
       #endif
@@ -1353,19 +1360,49 @@
               STXT(" init vcc measure ... ");
               vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
               vcc50Scal.setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
-              if (USE_MQTT > OFF)
-                  topPoti1 = topDevice + topPoti1;
-                  errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
-                      soutMQTTerr(" MQTT subscribe Poti1", errMQTT);
+              #if (USE_MQTT > OFF)
+                  topVCC50 = topDevice + topVCC50;
+                  errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
+                      soutMQTTerr(" MQTT subscribe VCC50", errMQTT);
                 #endif
               STXT(" vcc measure ready");
             #endif
-
+          #if (USE_VCC33_ANA > OFF)
+              STXT(" init vcc measure ... ");
+              vcc33Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+              vcc33Scal.setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
+              #if (USE_MQTT > OFF)
+                  topVCC33 = topDevice + topVCC33;
+                  errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
+                      soutMQTTerr(" MQTT subscribe VCC33", errMQTT);
+                #endif
+              STXT(" vcc measure ready");
+            #endif
         // ACS712 current measurement
           #if (USE_ACS712_ANA > OFF)
               STXT("init current sensors ... ");
               i712Val[0].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
               i712Scal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
+              #if (USE_MQTT > OFF)
+                  topi7121 = topDevice + topi7121;
+                  errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
+                      soutMQTTerr(" MQTT subscribe i7121", errMQTT);
+                  #if (USE_MQTT > 1)
+                      topi7122 = topDevice + topi7122;
+                      errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
+                          soutMQTTerr(" MQTT subscribe i7122", errMQTT);
+                      #if (USE_MQTT > 2)
+                          topi7123 = topDevice + topi7123;
+                          errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
+                              soutMQTTerr(" MQTT subscribe i7123", errMQTT);
+                          #if (USE_MQTT > 3)
+                              topi7124 = topDevice + topi7124;
+                              errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
+                                  soutMQTTerr(" MQTT subscribe i7124", errMQTT);
+                            #endif
+                        #endif
+                    #endif
+                #endif
               STXT(" current sensors ready");
             #endif
 
@@ -1736,15 +1773,21 @@
                           #endif
                       break;
                     case 2:
-                        #if (USE_PHOTO_SENS_ANA > OFF)
-                            #if (PHOTO1_ADC > OFF)
-                                photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
-                              #endif
-                            #if (PHOTO1_1115 > OFF)
-                              #endif
+                        #if (USE_CCS811_I2C > OFF)
                           #endif
                       break;
                     case 3:
+                        #if (USE_INA3221_I2C > OFF)
+                          #endif
+                      break;
+                    case 4:
+                        #if (USE_DS18B20_1W_IO > OFF)
+                            outStr = "";
+                            outStr = getDS18D20Str();
+                            dispText(outStr ,  0, 4, outStr.length());
+                          #endif
+                      break;
+                    case 5:
                         #if (USE_MQ135_GAS_ANA > OFF)
                             #if (MQ135_GAS_ADC > OFF)
                                 gasVal.doVal(analogRead(PIN_MQ135));
@@ -1756,7 +1799,7 @@
                               #endif
                           #endif
                       break;
-                    case 4:
+                    case 6:
                         #if (USE_MQ3_ALK_ANA > OFF)
                             #if (MQ3_ALK_ADC > OFF)
                               #endif
@@ -1772,7 +1815,31 @@
                               #endif
                           #endif
                       break;
-                    case 5:
+                    case 7:
+                        #if (USE_PHOTO_SENS_ANA > OFF)
+                            #if (PHOTO1_ADC > OFF)
+                                photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
+                              #endif
+                            #if (PHOTO1_1115 > OFF)
+                              #endif
+                          #endif
+                      break;
+                    case 8:
+                        #if (USE_POTI_ANA > OFF)
+                            #if (POTI1_ADC > OFF)
+                              #endif
+                            #if (POTI1_1115 > OFF)
+                                ads[0].setGain(POTI1_1115_ATT);
+                                ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHAN], /*continuous=*/false);
+                                usleep(1200); // Wait for the conversion to complete
+                                while (!ads[0].conversionComplete());
+                                poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                                potiVal[0].doVal(poti[0]);
+                                //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
+                              #endif
+                          #endif
+                      break;
+                    case 9:
                         #if (USE_VCC_ANA > OFF)
                             #if (VCC_ADC > OFF)
                               #endif
@@ -1796,22 +1863,31 @@
                               #endif
                           #endif
                       break;
-                    case 6:
-                        #if (USE_POTI_ANA > OFF)
-                            #if (POTI1_ADC > OFF)
+                    case 10:
+                        #if (USE_VCC_ANA > OFF)
+                            #if (VCC_ADC > OFF)
                               #endif
-                            #if (POTI1_1115 > OFF)
-                                ads[0].setGain(POTI1_1115_ATT);
-                                ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHAN], /*continuous=*/false);
+                            #if (VCC_1115 > OFF)
+                                ads[VCC50_IDX].setGain(VCC_1115_ATT);
+                                ads[VCC50_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
-                                while (!ads[0].conversionComplete());
-                                poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                                potiVal[0].doVal(poti[0]);
-                                //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
+                                while (!ads[VCC50_IDX].conversionComplete());
+                                vcc[VCC50_IDX] = ads[VCC50_IDX].getLastConversionResults();   // Read the conversion results
+                                vccVal[VCC50_IDX].doVal(vcc[VCC50_IDX]);
+                                //vcc[VCC50_IDX] = (uint16_t) (1000 * ads[VCC50_IDX].computeVolts(vccVal[VCC50_IDX].doVal(ads[VCC50_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
+                                #if (VCC_1115 > 1)
+                                    ads[VCC33_IDX].setGain(VCC_1115_ATT);
+                                    ads[VCC33_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
+                                    usleep(1200); // Wait for the conversion to complete
+                                    while (!ads[VCC33_IDX].conversionComplete());
+                                    vcc[VCC33_IDX] = ads[VCC33_IDX].getLastConversionResults();   // Read the conversion results
+                                    vccVal[VCC33_IDX].doVal(vcc[VCC33_IDX]);
+                                    //vcc[VCC33_IDX] = (uint16_t) (1000 * ads[VCC33_IDX].computeVolts(vccVal[VCC33_IDX].doVal(ads[VCC33_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
+                                  #endif
                               #endif
                           #endif
                       break;
-                    case 7:
+                    case 11:
                         #if (USE_ACS712_ANA > OFF)
                             #if (I712_1_ADC > OFF)
                               #endif
@@ -1826,14 +1902,7 @@
                               #endif
                           #endif
                       break;
-                    case 8:
-                        #if (USE_CNT_INP > OFF)
-                            #ifdef USE_PW
-                                getCNTIn();
-                              #endif
-                          #endif
-                      break;
-                    case 9:
+                    case 12:
                         #if (USE_TYPE_K_SPI > OFF)
                             int8_t  tkerr = (int8_t) ISOK;
                             int16_t ival = TypeK1.actT();
@@ -1864,22 +1933,29 @@
                               #endif
                           #endif
                       break;
-                    case 10:
+                    case 13:
+                        #if (USE_CNT_INP > OFF)
+                            #ifdef USE_PW
+                                getCNTIn();
+                              #endif
+                          #endif
+                      break;
+                    case 14:
                         #if (USE_DIG_INP > OFF)
                             getDIGIn();
                           #endif
                       break;
-                    case 11:
+                    case 15:
                         #if (USE_ESPHALL > OFF)
                             valHall = hallRead();
                           #endif
                       break;
-                    case 12:
+                    case 16:
                         #if (USE_MCPWM > OFF)
                             getCNTIn();
                           #endif
                       break;
-                    case 13:
+                    case 17:
                         mqtt.eventLoop();
                       break;
                     default:
