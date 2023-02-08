@@ -57,7 +57,7 @@
       // --- keypads ---
         #define USE_KEYPADSHIELD    OFF
         // MC_UI_Keypad_ANA0_RO
-      #define USE_GEN_SW_INP        1   // 1
+      #define USE_GEN_SW_INP        OFF   // 1
       #define USE_GEN_CNT_INP       OFF // 1
       #define USE_GEN_PWM_INP       OFF // 2
     // --- sensors

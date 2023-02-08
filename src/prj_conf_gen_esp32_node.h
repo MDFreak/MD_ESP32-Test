@@ -1011,7 +1011,7 @@
                   #define PIN_WS2812_PWR_IN_SW 36
                 #endif
               #if (USE_WS2812_MATRIX_OUT > 1)
-                  #define PIN_WS2812_M2   17
+                  #define PIN_WS2812_M2   32
                 #endif
                 //#define PIN_WS2812_M3  x
                 //#define PIN_WS2812_M4  x
@@ -1020,7 +1020,7 @@
               #if (USE_WS2812_PWR_IN_SW > OFF)
                   #define PIN_WS2812_PWR_IN_SW 36
                 #endif
-              #define PIN_WS2812_L1      17
+              #define PIN_WS2812_L1      12
                 //#define PIN_WS2812_L2    17
                 //#define PIN_WS2812_L3  x
                 //#define PIN_WS2812_L4  x
@@ -1071,8 +1071,10 @@
               #define ADC_MQ135           5   // ADC 1-3
             #endif
           #if (USE_MQ3_ALK_ANA > OFF)
-              #define PIN_MQ135           35
-              #define ADC_MQ135           5   // ADC 1-3
+              #if (MQ3_ALK_ADC > OFF)
+                  #define PIN_MQ135           35
+                  #define ADC_MQ135           5   // ADC 1-3
+                #endif
             #endif
           #if (USE_PHOTO_SENS_ANA > OFF)
               #define PIN_PHOTO1_SENS     39
@@ -1118,7 +1120,7 @@
               #if (USE_FAN_PWM > OFF)
                   #define PWM_FAN_1       4
                   #if (USE_FAN_PWM > 1)
-                      #define PWM_FAN_2   5
+                      #define PWM_FAN_2   0
                     #endif
                 #endif
               #if (USE_OUT_FREQ_PWM > OFF)

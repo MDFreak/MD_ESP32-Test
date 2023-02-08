@@ -202,6 +202,12 @@
         #include <Adafruit_Sensor.h>
         #include <Adafruit_BME280.h>
       #endif
+    #if (USE_CCS811_I2C > OFF)
+        #include <Adafruit_CCS811.h>
+      #endif
+    #if (USE_INA3221_I2C > OFF)
+        #include <SDL_Arduino_INA3221.h>
+      #endif
     #if ( USE_TYPE_K_SPI > OFF )
         #include <md_31855_ktype.h>
       #endif
