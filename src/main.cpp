@@ -23,7 +23,6 @@
     static uint8_t  firstrun = true;
     static uint8_t  iret        = 0;
 	    // cycletime measurement
-
     #if ( DEV_I2C1 > OFF )
         TwoWire i2c1 = TwoWire(0);
       #endif
@@ -36,12 +35,10 @@
     #if ( DEV_HSPI > OFF )
         //SPIClass pHSPI(HSPI);
       #endif
-
     #if ( USE_LED_BLINK_OUT > 0 )
         msTimer ledT = msTimer(BLINKTIME_MS);
         uint8_t SYS_LED_ON = ON;
       #endif
-
     #if ( USE_DISP > 0 )
         uint32_t      ze     = 1;      // aktuelle Schreibzeile
         char          outBuf[OLED1_MAXCOLS + 1] = "";
@@ -893,10 +890,8 @@
                   #endif
 
             #endif
-
         // start freq generator
           #if (USE_BUZZER_PWM > OFF)
-
             #endif
         // start digital output
           #if (USE_GEN_DIG_OUT > OFF)
@@ -1055,7 +1050,6 @@
                             #endif
                         #endif
                     #endif
-
                 #endif
             #endif
       // --- sensors
@@ -1298,7 +1292,6 @@
                   ds2Sensors.begin();
                 #endif
                   #if (USE_DS18B20_1W_IO > OFF)
-
                       topDS18B201 = topDevice + topDS18B201;
                       errMQTT = (int8_t) mqtt.subscribe(topDS18B201.c_str());
                           soutMQTTerr(" MQTT subscribe DS18B201 ", errMQTT);
@@ -1391,11 +1384,11 @@
                       topi7122 = topDevice + topi7122;
                       errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
                           soutMQTTerr(" MQTT subscribe i7122", errMQTT);
-                      #if (USE_MQTT > 2)
+                      #if (USE_ACS712_ANA > 2)
                           topi7123 = topDevice + topi7123;
                           errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
                               soutMQTTerr(" MQTT subscribe i7123", errMQTT);
-                          #if (USE_MQTT > 3)
+                          #if (USE_ACS712_ANA > 3)
                               topi7124 = topDevice + topi7124;
                               errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
                                   soutMQTTerr(" MQTT subscribe i7124", errMQTT);

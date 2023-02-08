@@ -895,12 +895,12 @@
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
       // --- cycle timing
-        #define DISP_CYCLE_MS       400ul   // Intervallzeit [us]
+        #define DISP_CYCLE_MS       100ul   // Intervallzeit [us]
         // output status line
         #define STAT_DELTIME_MS     5000ul  // default time to clear status
         #define STAT_NEWTIME_MS     1000ul  // default time to clear status
         #ifdef USE_INPUT_CYCLE
-            #define INPUT_CYCLE_MS  50u
+            #define INPUT_CYCLE_MS  10u
           #endif
         #ifdef USE_OUTPUT_CYCLE
             #define OUTPUT_CYCLE_MS 20u
