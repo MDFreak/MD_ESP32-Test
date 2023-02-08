@@ -512,6 +512,9 @@
           #endif
       #endif
   // ------ sensors ----------------------
+    #if (USE_ADC1115_I2C > OFF)
+        Adafruit_ADS1115 ads[USE_ADC1115_I2C];
+      #endif
     #if (USE_BME280_I2C > OFF)
         Adafruit_BME280  bme1;
         #if (BME2801_I2C == I2C1)
@@ -540,12 +543,12 @@
             int16_t          bme1Hold;
           #endif
         #if (USE_MQTT > OFF)
+            static String valBME280t;
+            static String valBME280p;
+            static String valBME280h;
             static String topBME280t   = MQTT_BME2801T;
             static String topBME280p   = MQTT_BME2801P;
             static String topBME280h   = MQTT_BME2801H;
-            static String valBME280t   = "";
-            static String valBME280p   = "";
-            static String valBME280h   = "";
           #endif
       #endif
     #if (USE_CCS811_I2C > OFF)
@@ -555,19 +558,22 @@
           #else
             TwoWire* pcssi2c = &i2c2;
           #endif
-        md_val<int16_t>  cssT;
-        md_val<uint16_t> cssE;
-        md_val<uint16_t> ccsV;
-        int16_t          cssTold;
-        int16_t          cssEold;
-        int16_t          ccsVold;
+        md_val<int16_t>   cssT;
+        md_scale<int16_t> ccsTSkal;
+        md_val<uint16_t>  cssE;
+        md_scale<int16_t> ccsESkal;
+        md_val<uint16_t>  ccsV;
+        md_scale<int16_t> ccsVSkal;
+        int16_t           cssTold;
+        int16_t           cssEold;
+        int16_t           ccsVold;
         #if (USE_MQTT > OFF)
+            static String valCCS811t;
+            static String valCCS811e;
+            static String valCCS811v;
             static String topCCS811t   = MQTT_CCS811T;
             static String topCCS811e   = MQTT_CCS811E;
             static String topCCS811v   = MQTT_CCS811V;
-            static String valCCS811t   = "";
-            static String valCCS811e   = "";
-            static String valCCS811v   = "";
           #endif
       #endif
     #if (USE_INA3221_I2C > OFF)
@@ -577,34 +583,51 @@
           #else
             TwoWire* ina1i2c = &i2c2;
           #endif
-        md_val<int16_t>  inaI[3];
-        md_val<uint16_t> inaU[3];
-        int16_t          inaIold[3];
-        int16_t          inaUold[3];
+        md_val<int16_t>    inaIVal[USE_INA3221_I2C][3];
+        md_scale<int16_t>  inaISkal[USE_INA3221_I2C][3];
+        md_val<uint16_t>   inaUVal[USE_INA3221_I2C][3];
+        md_scale<int16_t>  inaUSkal[USE_INA3221_I2C][3];
+        int16_t            inaI[USE_INA3221_I2C][3];
+        int16_t            inaU[USE_INA3221_I2C][3];
+        int16_t            inaIold[USE_INA3221_I2C][3];
+        int16_t            inaUold[USE_INA3221_I2C][3];
         #if (USE_MQTT > OFF)
+            static String valINA3221I[USE_INA3221_I2C][3];
+            static String valINA3221U[USE_INA3221_I2C][3];
             static String topINA32211I[3] = { MQTT_INA32211I1, MQTT_INA32211I2, MQTT_INA32211I3 };
-            static String topINA32211U[3] = { MQTT_INA32211I1, MQTT_INA32211I2, MQTT_INA32211I3 };
-            static String valINA32211I[3] = { "", "", "" };
-            static String valINA32211U[3] = { "", "", "" };
+            static String topINA32211U[3] = { MQTT_INA32211U1, MQTT_INA32211U2, MQTT_INA32211U3 };
+            #if (USE_MQTT > 1)
+                static String topINA32211I[3] = { MQTT_INA32212I1, MQTT_INA32212I2, MQTT_INA32212I3 };
+                static String topINA32211U[3] = { MQTT_INA32212U1, MQTT_INA32212U2, MQTT_INA32212U3 };
+                #if (USE_MQTT > 2)
+                    static String topINA32211I[3] = { MQTT_INA32213I1, MQTT_INA32213I2, MQTT_INA32213I3 };
+                    static String topINA32211U[3] = { MQTT_INA32213U1, MQTT_INA32213U2, MQTT_INA32213U3 };
+                  #endif
+                  #if (USE_MQTT > 3)
+                      static String topINA32211I[3] = { MQTT_INA32214I1, MQTT_INA32214I2, MQTT_INA32214I3 };
+                      static String topINA32211U[3] = { MQTT_INA32214U1, MQTT_INA32214U2, MQTT_INA32214U3 };
+                    #endif
+              #endif
           #endif
       #endif
     #if (USE_DS18B20_1W_IO > OFF)
-        OneWire           ds1OneWire(DS1_ONEWIRE_PIN);
-        DallasTemperature ds1Sensors(&ds1OneWire);
-        md_val<uint16_t>  dsTempVal[USE_DS18B20_1W_IO];
-        int16_t           dsTemp   [USE_DS18B20_1W_IO];
-        int16_t           dsTempold[USE_DS18B20_1W_IO];
+        OneWire             ds1OneWire(DS1_ONEWIRE_PIN);
+        DallasTemperature   ds1Sensors(&ds1OneWire);
+        md_val<uint16_t>    dsTempVal[USE_DS18B20_1W_IO];
+        md_scale<uint16_t>  dsTempSkal[USE_DS18B20_1W_IO];
+        int16_t             dsTemp   [USE_DS18B20_1W_IO];
+        int16_t             dsTempold[USE_DS18B20_1W_IO];
         #if (USE_DS18B20_1W_IO > 1)
             OneWire           ds2OneWire(DS2_ONEWIRE_PIN);
             DallasTemperature ds2Sensors(&ds2OneWire);
           #endif
         #if (USE_MQTT > OFF)
-            static String topDS18B20[USE_DS18B20_1W_IO] = { MQTT_DS18B201, MQTT_DS18B202};
-            static String valDS18B20[USE_DS18B20_1W_IO] = { "", "" };
+            static String valDS18B20[USE_DS18B20_1W_IO];
+            static String topDS18B201 = MQTT_DS18B201;
+            #if (USE_DS18B20_1W_IO > 1)
+                static String topDS18B201 = MQTT_DS18B201;
+              #endif
           #endif
-      #endif
-    #if (USE_ADC1115_I2C > OFF)
-        Adafruit_ADS1115 ads[USE_ADC1115_I2C];
       #endif
     #if (USE_MQ135_GAS_ANA > OFF)
         //filterValue tholdGas(MQ135_ThresFilt,1);
@@ -617,17 +640,21 @@
         uint16_t alk;
         uint16_t alkold;
         #if (USE_MQTT > OFF)
-            static String topMQ3alk    = MQTT_MQ3;
-            static String valMQ3alk    = "";
+            static String topMQ3alk = MQTT_MQ3;
+            static String valMQ3alk;
           #endif
       #endif
     #if (USE_PHOTO_SENS_ANA > OFF)
         md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
         md_scale<int16_t> photoScal[USE_PHOTO_SENS_ANA];
         int16_t           bright[USE_PHOTO_SENS_ANA];
+        int16_t           brightOld[USE_PHOTO_SENS_ANA];
         #if (USE_MQTT > OFF)
-            static String topLicht1    = MQTT_PHOTO1;
-            static String valLicht1    = "";
+            static String valLicht[USE_PHOTO_SENS_ANA];
+            static String topLicht1 = MQTT_PHOTO1;
+            #if (USE_MQTT > OFF)
+                static String topLicht2 = MQTT_PHOTO1;
+              #endif
           #endif
       #endif
     #if (USE_POTI_ANA > OFF)
@@ -636,9 +663,9 @@
         uint16_t          poti[USE_POTI_ANA];
         uint16_t          potiold[USE_POTI_ANA];
         #if (USE_MQTT > OFF)
+            static String valPoti[USE_POTI_ANA];
             static String topPoti1 = MQTT_POTI1;
-            static String valPoti1 = "";
-            #if (USE_MQTT > 1)
+            #if (USE_POTI_ANA > 1)
                 static String topPoti2      = MQTT_POTI2;
                 static String valPoti2      = "";
               #endif
@@ -650,8 +677,8 @@
         uint16_t          vcc50;
         uint16_t          vcc50old;
         #if (USE_MQTT > OFF)
+            static String valVCC50;
             static String topVCC50     = MQTT_VCC50;
-            static String valVCC50     = "";
           #endif
       #endif
     #if (USE_VCC33_ANA > OFF)
@@ -660,8 +687,8 @@
         int16_t           vcc33;
         int16_t           vcc33old;
         #if (USE_MQTT > OFF)
+            static String valVCC33;
             static String topVCC33     = MQTT_VCC33;
-            static String valVCC33     = "";
           #endif
       #endif
     #if (USE_ACS712_ANA > OFF)
