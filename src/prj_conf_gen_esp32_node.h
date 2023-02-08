@@ -849,7 +849,7 @@
 
             #endif
           #if (USE_MQTT > OFF)
-              #define MQTT_I712_1         "icc1"
+              #define MQTT_I712_1         "acs7121"
               #define MQTT_I712_2         "icc2"
               #define MQTT_I712_3         "icc3"
               #define MQTT_I712_4         "icc4"
