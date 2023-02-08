@@ -1013,17 +1013,6 @@
                       errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
                           soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
                     #endif
-                  #if (USE_BME280_I2C > OFF)
-                      topBME280t = topDevice + topBME280t;
-                      errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
-                          soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
-                      topBME280p = topDevice + topBME280p;
-                      errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
-                          soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
-                      topBME280h = topDevice + topBME280h;
-                      errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
-                          soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
-                    #endif
                   #if (USE_PHOTO_SENS_ANA > OFF)
                       topLicht1 = topDevice + topLicht1;
                       errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
@@ -1077,14 +1066,6 @@
                   ads[0].begin(ADC1115_1_ADDR, &i2c1);
                 #endif
             #endif
-        // temp. sensor DS18D20
-          #if (USE_DS18B20_1W_IO > OFF)
-              dispStatus("init DS18D20");
-              ds1Sensors.begin();
-              String DS18Str = getDS18D20Str();
-              dispStatus(DS18Str);
-                  SVAL(" DS18D20 ... ", DS18Str);
-            #endif
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
               dispStatus("init BME2801");
@@ -1098,6 +1079,17 @@
                     bme1T.begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
                     bme1P.begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
                     bme1H.begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
+                    #if (USE_MQTT > OFF)
+                        topBME280t = topDevice + topBME280t;
+                        errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
+                            soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
+                        topBME280p = topDevice + topBME280p;
+                        errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
+                            soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
+                        topBME280h = topDevice + topBME280h;
+                        errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
+                            soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
+                      #endif
                   }
                 else
                   {
@@ -1120,6 +1112,60 @@
                         STXT(" BME280(1) nicht gefunden");
                       }
                 #endif
+            #endif
+          #if (USE_CCS811_I2C > OFF)
+              dispStatus("init CCS811");
+              STXT(" init CCS811 ...");
+              bool ccsda = false;
+              ccsda = ccs811.begin(I2C_CCS811_AQ_5A, pbme1i2c);
+              if (ccsda)
+                  {
+                    bme1.setSampling(bme1.MODE_SLEEP);
+                    STXT(" BME280(1) gefunden");
+                    bme1T.begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
+                    bme1P.begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
+                    bme1H.begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
+                    #if (USE_MQTT > OFF)
+                        topBME280t = topDevice + topBME280t;
+                        errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
+                            soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
+                        topBME280p = topDevice + topBME280p;
+                        errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
+                            soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
+                        topBME280h = topDevice + topBME280h;
+                        errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
+                            soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
+                      #endif
+                  }
+                else
+                  {
+                    STXT(" BME280(1) nicht gefunden");
+                  }
+              #if (USE_BME280_I2C > 1)
+                  dispStatus("init BME280(2)");
+                  bmeda = false;
+                  bmeda = bme2.begin(I2C_BME280, pbme2i2c);
+                  if (bmeda)
+                      {
+                        bme2.setSampling(bme2.MODE_SLEEP);
+                          STXT(" BME280(2) gefunden");
+                        bme2T.begin(BME2802T_FILT, BME2802T_Drop, FILT_NU);
+                        bmeP.begin(BME2802P_FILT, BME2802P_Drop, FILT_NU);
+                        bmeH.begin(BME2802H_FILT, BME2802H_Drop, FILT_NU);
+                      }
+                    else
+                      {
+                        STXT(" BME280(1) nicht gefunden");
+                      }
+                #endif
+            #endif
+        // temp. sensor DS18D20
+          #if (USE_DS18B20_1W_IO > OFF)
+              dispStatus("init DS18D20");
+              ds1Sensors.begin();
+              String DS18Str = getDS18D20Str();
+              dispStatus(DS18Str);
+                  SVAL(" DS18D20 ... ", DS18Str);
             #endif
         // photo sensor
           #if (USE_PHOTO_SENS_ANA > OFF)
