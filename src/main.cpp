@@ -522,16 +522,22 @@
         md_val<int16_t>  bme1T;
         md_val<uint16_t> bme1P;
         md_val<uint16_t> bme1H;
+        int16_t          bme1Told;
+        int16_t          bme1Pold;
+        int16_t          bme1Hold;
         #if (USE_BME280_I2C > 1)
             #if (BME2802_I2C == I2C1)
                 TwoWire* pbme2i2c = &i2c1;
               #else
                 TwoWire* pbme2i2c = &i2c2;
               #endif
-            Adafruit_BME280 bme2;
-            md_val<int16_t> bme2T;
+            Adafruit_BME280  bme2;
+            md_val<int16_t>  bme2T;
             md_val<uint16_t> bme2P;
             md_val<uint16_t> bme2H;
+            int16_t          bme1Told;
+            int16_t          bme1Pold;
+            int16_t          bme1Hold;
           #endif
         #if (USE_MQTT > OFF)
             static String topBME280t   = MQTT_BME2801T;
