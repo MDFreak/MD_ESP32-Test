@@ -522,9 +522,12 @@
           #else
             TwoWire* pbme1i2c = &i2c2;
           #endif
-        md_val<int16_t>  bme1T;
-        md_val<uint16_t> bme1P;
-        md_val<uint16_t> bme1H;
+        md_val<int16_t>  bme1TVal;
+        md_val<uint16_t> bme1PVal;
+        md_val<uint16_t> bme1HVal;
+        int16_t          bme1T;
+        int16_t          bme1P;
+        int16_t          bme1H;
         int16_t          bme1Told;
         int16_t          bme1Pold;
         int16_t          bme1Hold;
@@ -558,14 +561,17 @@
           #else
             TwoWire* pcssi2c = &i2c2;
           #endif
-        md_val<int16_t>   cssT;
+        md_val<int16_t>   ccsTVal;
         md_scale<int16_t> ccsTSkal;
-        md_val<uint16_t>  cssE;
+        md_val<uint16_t>  ccsEVal;
         md_scale<int16_t> ccsESkal;
-        md_val<uint16_t>  ccsV;
+        md_val<uint16_t>  ccsVVal;
         md_scale<int16_t> ccsVSkal;
-        int16_t           cssTold;
-        int16_t           cssEold;
+        int16_t           ccsT;
+        int16_t           ccsE;
+        int16_t           ccsV;
+        int16_t           cssT;
+        int16_t           ccsEold;
         int16_t           ccsVold;
         #if (USE_MQTT > OFF)
             static String valCCS811t;
@@ -1120,43 +1126,34 @@
               ccsda = ccs811.begin(I2C_CCS811_AQ_5A, pbme1i2c);
               if (ccsda)
                   {
-                    bme1.setSampling(bme1.MODE_SLEEP);
-                    STXT(" BME280(1) gefunden");
-                    bme1T.begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
-                    bme1P.begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
-                    bme1H.begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
+                    #if (USE_BME280_I2C > OFF)
+                        bme1T = ((int16_t)  ( bme1.readTemperature() + 0.5));
+                        ccs811.setTempOffset((float) bme1T);
+                    #else
+                        ccs811.setTempOffset((float) 25);
+                      #endif
+                    ccs811.setTempOffset((float) bme1T);
+                    STXT(" CCS811 gefunden");
+                    ccsTVal.begin(CCS811T_FILT, CCS811T_Drop, FILT_NU);
+                    ccsEVal.begin(CCS811E_FILT, CCS811E_Drop, FILT_NU);
+                    ccsVVal.begin(CCS811V_FILT, CCS811V_Drop, FILT_NU);
                     #if (USE_MQTT > OFF)
-                        topBME280t = topDevice + topBME280t;
-                        errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
-                            soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
-                        topBME280p = topDevice + topBME280p;
-                        errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
-                            soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
-                        topBME280h = topDevice + topBME280h;
-                        errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
-                            soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
+                        topCCS811t = topDevice + topCCS811t;
+                        errMQTT = (int8_t) mqtt.subscribe(topCCS811t.c_str());
+                            soutMQTTerr(" MQTT subscribe CCS811t", errMQTT);
+                        topCCS811e = topDevice + topCCS811e;
+                        errMQTT = (int8_t) mqtt.subscribe(topCCS811e.c_str());
+                            soutMQTTerr(" MQTT subscribe CCS811e", errMQTT);
+                        topCCS811v = topDevice + topCCS811v;
+                        errMQTT = (int8_t) mqtt.subscribe(topCCS811v.c_str());
+                            soutMQTTerr(" MQTT subscribe CCS811v", errMQTT);
                       #endif
                   }
                 else
                   {
-                    STXT(" BME280(1) nicht gefunden");
+                    STXT(" CCS811 nicht gefunden");
                   }
               #if (USE_BME280_I2C > 1)
-                  dispStatus("init BME280(2)");
-                  bmeda = false;
-                  bmeda = bme2.begin(I2C_BME280, pbme2i2c);
-                  if (bmeda)
-                      {
-                        bme2.setSampling(bme2.MODE_SLEEP);
-                          STXT(" BME280(2) gefunden");
-                        bme2T.begin(BME2802T_FILT, BME2802T_Drop, FILT_NU);
-                        bmeP.begin(BME2802P_FILT, BME2802P_Drop, FILT_NU);
-                        bmeH.begin(BME2802H_FILT, BME2802H_Drop, FILT_NU);
-                      }
-                    else
-                      {
-                        STXT(" BME280(1) nicht gefunden");
-                      }
                 #endif
             #endif
         // temp. sensor DS18D20
@@ -1164,6 +1161,10 @@
               dispStatus("init DS18D20");
               ds1Sensors.begin();
               String DS18Str = getDS18D20Str();
+              #if (USE_DS18B20_1W_IO > OFF)
+                  ds2Sensors.begin();
+
+
               dispStatus(DS18Str);
                   SVAL(" DS18D20 ... ", DS18Str);
             #endif
@@ -1573,9 +1574,9 @@
                         #if (USE_BME280_I2C > OFF)
                             bme1.init();
                             usleep(100);
-                            bme1T.doVal((int16_t)  ( bme1.readTemperature() + 0.5));
-                            bme1H.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
-                            bme1P.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
+                            bme1TVal.doVal((int16_t)  ( bme1.readTemperature() + 0.5));
+                            bme1HVal.doVal((uint16_t) ( bme1.readHumidity() + 0.5));
+                            bme1PVal.doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
                           #endif
                       break;
                     case 2:
