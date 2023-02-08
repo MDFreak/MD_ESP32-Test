@@ -1336,19 +1336,29 @@
                 #endif
               STXT(" photo sensors  ready");
             #endif
-        // vcc measure
-          #if (USE_VCC_ANA > OFF)
-              STXT(" init vcc measure ... ");
-              vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
-              vcc50Scal.setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
-              STXT(" vcc measure ready");
-            #endif
         // poti measure
           #if (USE_POTI_ANA > OFF)
               STXT(" init poti ... ");
               potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
               potiScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
+              #if (USE_MQTT)
+                  topPoti1 = topDevice + topPoti1;
+                  errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
+                      soutMQTTerr(" MQTT subscribe Poti1", errMQTT);
+                #endif
               STXT(" poti ready");
+            #endif
+        // vcc measure
+          #if (USE_VCC50_ANA > OFF)
+              STXT(" init vcc measure ... ");
+              vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+              vcc50Scal.setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
+              if (USE_MQTT > OFF)
+                  topPoti1 = topDevice + topPoti1;
+                  errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
+                      soutMQTTerr(" MQTT subscribe Poti1", errMQTT);
+                #endif
+              STXT(" vcc measure ready");
             #endif
 
         // ACS712 current measurement
@@ -2287,7 +2297,7 @@
                       #if (USE_MQTT > OFF)
                           valLicht[0] = tmpval16;
                               SVAL(topLicht1, valLicht[0]);
-                          errMQTT = (int8_t) mqtt.publish(topLicht.c_str(), (uint8_t*) valLicht.c_str(), valLicht1.length());
+                          errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valLicht[0].c_str(), valLicht[0].length());
                               soutMQTTerr(" MQTT publish Licht1", errMQTT);
                         #endif
                     #endif
@@ -2309,38 +2319,38 @@
                           switch (i)
                             {
                               case 0:  // BME280 temperature
-                                  tmpval16 = bme1TVal.getVal();
+                                  tmpval16 = bmeTVal[i].getVal();
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("°  ");
                                   #if (USE_MQTT > OFF)
-                                      valBME280t = tmpval16;
+                                      valBME280t[i] = tmpval16;
                                           //SVAL(topBME280t, valBME280t);
-                                      errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                      errMQTT = (int8_t) mqtt.publish(topBME2801t.c_str(), (uint8_t*) valBME280t[i].c_str(), valBME280t[i].length());
                                           //soutMQTTerr(" MQTT publish BME280t", errMQTT);
                                     #endif
                                 break;
                               case 1:  // BME280 air pressure
-                                  tmpval16 = bme1PVal.getVal();
+                                  tmpval16 = bmePVal[i].getVal();
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("%  ");
                                   #if (USE_MQTT > OFF)
-                                      valBME280p = tmpval16;
+                                      valBME280p[i] = tmpval16;
                                           //SVAL(topBME280p, valBME280p);
-                                      errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
+                                      errMQTT = (int8_t) mqtt.publish(topBME2801p.c_str(), (uint8_t*) valBME280p[i].c_str(), valBME280p[i].length());
                                           //soutMQTTerr(" MQTT publish BME280p", errMQTT);
                                     #endif
                                 break;
                               case 2:   // BME280 humidity
-                                  tmpval16 = bme1HVal.getVal();
+                                  tmpval16 = bmeHVal[i].getVal();
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("mb");
                                   #if (USE_MQTT > OFF)
-                                      valBME280h = tmpval16;
-                                          SVAL(topBME280h, valBME280h);
-                                      errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
+                                      valBME280h[i] = tmpval16;
+                                          SVAL(topBME2801h, valBME280h[i]);
+                                      errMQTT = (int8_t) mqtt.publish(topBME2801h.c_str(), (uint8_t*) valBME280h[i].c_str(), valBME280h[i].length());
                                           //soutMQTTerr(" MQTT publish BME280h", errMQTT);
                                     #endif
                                 break;
@@ -2401,9 +2411,9 @@
                         dispText(outStr, 15, 1, outStr.length());
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
-                            valPoti1 = tmpval16;
-                                SVAL(topPoti1, valPoti1);
-                            errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(), (uint8_t*) valPoti1.c_str(), valPoti1.length());
+                            valPoti[0] = tmpval16;
+                                SVAL(topPoti1, valPoti[0]);
+                            errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(), (uint8_t*) valPoti[0].c_str(), valPoti[0].length());
                                 soutMQTTerr(" MQTT publish Poti1", errMQTT);
                           #endif
                       #endif
