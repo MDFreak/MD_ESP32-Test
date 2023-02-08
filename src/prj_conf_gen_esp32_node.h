@@ -514,15 +514,11 @@
       #if (USE_DS18B20_1W_IO > OFF)
           #define DS_T_PRECISION            9
           #define DS18B20_ANZ               USE_DS18B20_1W_IO
-          #define DS18B201T_FILT            0
-          #define DS18B201T_Drop            0
-          #if (USE_DS18B20_1W_IO > 1)
-              #define DS18B202T_FILT        0
-              #define DS18B202T_Drop        0
-            #endif
+          #define DS18B20T_FILT             0
+          #define DS18B20T_Drop             0
           #if (USE_MQTT > OFF)
-              #define MQTT_DS18B201         "ds18b20-1"
-              #define MQTT_DS18B202         "ds18b20-2"
+              #define MQTT_DS18B201         "ds18b201"
+              #define MQTT_DS18B202         "ds18b202"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -545,8 +541,53 @@
               #define USE_INPUT_CYCLE
             #endif
         #endif
+      #if (USE_INA3221_I2C > OFF)
+          #define INA32211_I2C              I2C1
+          #define INA32211_ADDR             I2C_INA3221_41
+          #define INA3221I1_FILT            0  // current in1
+          #define INA3221I1_Drop            0  // [-5000 - +5000 mA]
+          #define INA3221I2_FILT            0  // current in2
+          #define INA3221I2_Drop            0  // [-5000 - +5000 mA]
+          #define INA3221I3_FILT            0  // current in3
+          #define INA3221I3_Drop            0  // [-5000 - +5000 mA]
+          #define INA3221U1_FILT            0  // voltage in1+
+          #define INA3221U1_Drop            0  // [0 - 26000 mV]
+          #define INA3221U2_FILT            0  // voltage in2+
+          #define INA3221U2_Drop            0  // [0 - 26000 mV]
+          #define INA3221U3_FILT            0  // voltage in3+
+          #define INA3221U3_Drop            0  // [0 - 26000 mV]
+          #if (USE_INA3221_I2C > 1)
+              #define INA32212_I2C              I2C1
+              #define INA32211_ADDR             I2C_INA3221_42
+            #endif
+            #if (USE_INA3221_I2C > 1)
+                #define INA32212_I2C              I2C1
+                #define INA32211_ADDR             I2C_INA3221_43
+              #endif
+          #if (USE_MQTT > OFF)
+              #define MQTT_INA32211I1         "ina32211i1"
+              #define MQTT_INA32211I2         "ina32211i2"
+              #define MQTT_INA32211I3         "ina32211i3"
+              #define MQTT_INA32211U1         "ina32211u1"
+              #define MQTT_INA32211U2         "ina32211u2"
+              #define MQTT_INA32211U3         "ina32211u3"
+              #define MQTT_INA32212I1         "ina32212i1"
+              #define MQTT_INA32212I2         "ina32212i2"
+              #define MQTT_INA32212I3         "ina32212i3"
+              #define MQTT_INA32212U1         "ina32212u1"
+              #define MQTT_INA32212U2         "ina32212u2"
+              #define MQTT_INA32212U3         "ina32212u3"
+              #define MQTT_INA32213I1         "ina32213i1"
+              #define MQTT_INA32213I2         "ina32213i2"
+              #define MQTT_INA32213I3         "ina32213i3"
+              #define MQTT_INA32213U1         "ina32213u1"
+              #define MQTT_INA32213U2         "ina32213u2"
+              #define MQTT_INA32213U3         "ina32213u3"
+            #endif
+        #endif
       #if (USE_BME280_I2C > OFF)
           #define BME2801_I2C               I2C1
+          #define BME2801_ADDR              I2C_BME280_76
           #define BME2801T_FILT             0
           #define BME2801T_Drop             0
           #define BME2801P_FILT             0
@@ -555,6 +596,7 @@
           #define BME2801H_Drop             0
           #if (USE_BME280_I2C > 1)
               #define BME2802_I2C           I2C2
+              #define BME2801_ADDR          I2C_BME280_76
               #define BME2802T_FILT         0
               #define BME2802T_Drop         0
               #define BME2802P_FILT         0
@@ -850,9 +892,9 @@
             #endif
           #if (USE_MQTT > OFF)
               #define MQTT_I712_1         "acs7121"
-              #define MQTT_I712_2         "icc2"
-              #define MQTT_I712_3         "icc3"
-              #define MQTT_I712_4         "icc4"
+              #define MQTT_I712_2         "acs7122"
+              #define MQTT_I712_3         "acs7123"
+              #define MQTT_I712_4         "acs7124"
             #endif
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
