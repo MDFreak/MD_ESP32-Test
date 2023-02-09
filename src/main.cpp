@@ -509,10 +509,10 @@
       #endif
   // ------ sensors ----------------------
     #if (USE_ADC1115_I2C > OFF)
-        Adafruit_ADS1115 ads[USE_ADC1115_I2C];
+        static Adafruit_ADS1115 ads[USE_ADC1115_I2C];
       #endif
     #if (USE_BME280_I2C > OFF)
-        Adafruit_BME280  bme1;
+        static Adafruit_BME280  bme1;
         #if (BME2801_I2C == I2C1)
             TwoWire* pbme1i2c = &i2c1;
           #else
@@ -1748,24 +1748,24 @@
             pwmInVal->highVal = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0);
           #endif
       // --- standard input cycle ---
-        SOUT(" 3");
+        //SOUT(" 3");
         #ifdef USE_INPUT_CYCLE
-            SOUT("a1 ");
+            //SOUT("a1 ");
             if (inputT.TOut())
               {
-                SOUT("b1 ");
-                heapFree("b1 ");
+                //SOUT("b1 ");
+                //heapFree("b1 ");
                 inpIdx++;
-                SOUT("b1a ");
+                //SOUT("b1a ");
                     //heapFree("+meascyc");
                     //STXT(" # MEASCYCLE ");
                 inputT.startT();
-                SOUT("b1b ");
+                //SOUT("b1b ");
                 switch(inpIdx)
                   {
                     case 1: // USE_BME280_I2C
-                        SOUT("c1 ");
-                        heapFree("c1 ");
+                        //SOUT("c1 ");
+                        //heapFree("c1 ");
                         #if (USE_BME280_I2C > OFF)
                             //bme1.init();
                             //usleep(100);
@@ -1778,25 +1778,25 @@
                           #endif
                       break;
                     case 2:
-                        SOUT(" c2");
+                        //SOUT(" c2");
                         #if (USE_CCS811_I2C > OFF)
                           #endif
                       break;
                     case 3:
-                        SOUT(" c3");
+                        //SOUT(" c3");
                         #if (USE_INA3221_I2C > OFF)
                           #endif
                       break;
                     case 4: // USE_DS18B20_1W_IO
-                        SOUT(" c4");
+                        //SOUT(" c4");
                         #if (USE_DS18B20_1W_IO > OFF)
                             outStr = "";
-                            outStr = getDS18D20Str();
+                            //outStr = getDS18D20Str();
                             dispText(outStr ,  0, 1, outStr.length());
                           #endif
                       break;
                     case 5:
-                        SOUT(" c5");
+                        //SOUT(" c5");
                         #if (USE_MQ135_GAS_ANA > OFF)
                             #if (MQ135_GAS_ADC > OFF)
                                 gasVal.doVal(analogRead(PIN_MQ135));
@@ -1809,6 +1809,7 @@
                           #endif
                       break;
                     case 6:
+                        //SOUT(" c6");
                         #if (USE_MQ3_ALK_ANA > OFF)
                             #if (MQ3_ALK_ADC > OFF)
                               #endif
@@ -1825,6 +1826,7 @@
                           #endif
                       break;
                     case 7:
+                        //SOUT(" c7");
                         #if (USE_PHOTO_SENS_ANA > OFF)
                             #if (PHOTO1_ADC > OFF)
                                 photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
@@ -1834,6 +1836,7 @@
                           #endif
                       break;
                     case 8:
+                        //SOUT(" c8");
                         #if (USE_POTI_ANA > OFF)
                             #if (POTI1_ADC > OFF)
                               #endif
@@ -1849,21 +1852,23 @@
                           #endif
                       break;
                     case 9: // USE_VCC50_ANA
+                        //SOUT(" c9");
                         #if (USE_VCC50_ANA > OFF)
                             #if (VCC50_ADC > OFF)
                               #endif
-                            #if (VCC50_1115 > OFF)
+                            #if (VCC50_1115 > 10)  //OFF)
                                 ads[VCC50_1115_CHAN].setGain(VCC_1115_ATT);
                                 ads[VCC50_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC50_1115_CHAN], /*continuous=*/false);
-                                usleep(1200); // Wait 1200us for the conversion to complete
+                                //usleep(1200); // Wait 1200us for the conversion to complete
                                 while (!ads[VCC50_1115_CHAN].conversionComplete());
                                 vcc50 = ads[VCC50_1115_CHAN].getLastConversionResults();   // Read the conversion results
-                                vcc50Val.doVal(vcc50);
+                                //vcc50Val.doVal(vcc50);
                               #endif
                           #endif
                       break;
                     case 10: // USE_VCC33_ANA
-                        #if (USE_VCC33_ANA > OFF)
+                        //SOUT(" c10");
+                        #if (USE_VCC33_ANA > 10) //OFF)
                             #if (VCC33_ADC > OFF)
                               #endif
                             #if (VCC33_1115 > OFF)
@@ -1877,6 +1882,7 @@
                               #endif
                           #endif
                     case 11:
+                        //SOUT(" c11");
                         #if (USE_ACS712_ANA > OFF)
                             #if (I712_1_ADC > OFF)
                               #endif
@@ -1892,6 +1898,7 @@
                           #endif
                       break;
                     case 12:
+                        //SOUT(" c12");
                         #if (USE_TYPE_K_SPI > OFF)
                             int8_t  tkerr = (int8_t) ISOK;
                             int16_t ival = TypeK1.actT();
@@ -1923,6 +1930,7 @@
                           #endif
                       break;
                     case 13:
+                        //SOUT(" c13");
                         #if (USE_CNT_INP > OFF)
                             #ifdef USE_PW
                                 getCNTIn();
@@ -1930,22 +1938,27 @@
                           #endif
                       break;
                     case 14:
+                        //SOUT(" c14");
                         #if (USE_DIG_INP > OFF)
                             getDIGIn();
                           #endif
                       break;
                     case 15:
+                        //SOUT(" c15");
                         #if (USE_ESPHALL > OFF)
                             valHall = hallRead();
                           #endif
                       break;
                     case 16:
+                        //SOUT(" c16");
                         #if (USE_MCPWM > OFF)
                             getCNTIn();
                           #endif
                       break;
                     case 17:
+                        //SOUT(" c17");
                         mqtt.eventLoop();
+                        //SOUT(" c17a");
                       break;
                     default:
                         inpIdx = 0;
@@ -1955,7 +1968,7 @@
               }
           #endif
       // --- direct output ---
-        SOUT(" 4");
+        //SOUT(" 4");
         #if (USE_WS2812_MATRIX_OUT > OFF)
             //if (ws2812T1.TOut())
               //{
@@ -2415,7 +2428,7 @@
                                   outStr.concat("mb");
                                   #if (USE_MQTT > OFF)
                                       valBME280h[i] = tmpval16;
-                                          SVAL(topBME2801h, valBME280h[i]);
+                                          //SVAL(topBME2801h, valBME280h[i]);
                                       errMQTT = (int8_t) mqtt.publish(topBME2801h.c_str(), (uint8_t*) valBME280h[i].c_str(), valBME280h[i].length());
                                           //soutMQTTerr(" MQTT publish BME280h", errMQTT);
                                     #endif
