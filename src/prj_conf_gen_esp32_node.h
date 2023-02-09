@@ -762,7 +762,6 @@
             #endif
           #if ((VCC50_1115 + VCC33_1115) > OFF)
               #define VCC_1115_DEV      0
-              #define VCC_1115_CHAN     2
               #define VCC_1115_ATT      GAIN_TWOTHIRDS
               #define VCC_OFFRAW        0
               #define VCC_GAIN          1

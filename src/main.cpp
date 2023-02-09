@@ -1071,15 +1071,15 @@
               bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
               if (bmeda)
                 {
-                  bme1.setSampling(bme1.MODE_SLEEP);
+                  bme1.setSampling(bme1.MODE_FORCED, bme1.SAMPLING_X4, bme1.SAMPLING_X4, bme1.SAMPLING_X4 );
                   STXT(" BME280(1) gefunden");
-                  bmeTVal[0].begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
-                  bmePVal[0].begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
-                  bmeHVal[0].begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
+                  bmeTVal[0].begin(BME2801T_FILT, BME2801T_Drop);
+                  bmePVal[0].begin(BME2801P_FILT, BME2801P_Drop);
+                  bmeHVal[0].begin(BME2801H_FILT, BME2801H_Drop);
                   #if (USE_BME280_I2C > OFF)
-                      bmeTVal[1].begin(BME2801T_FILT, BME2801T_Drop, FILT_NU);
-                      bmePVal[1].begin(BME2801P_FILT, BME2801P_Drop, FILT_NU);
-                      bmeHVal[1].begin(BME2801H_FILT, BME2801H_Drop, FILT_NU);
+                      bmeTVal[1].begin(BME2801T_FILT, BME2801T_Drop);
+                      bmePVal[1].begin(BME2801P_FILT, BME2801P_Drop);
+                      bmeHVal[1].begin(BME2801H_FILT, BME2801H_Drop);
                     #endif
                   #if (USE_MQTT > OFF)
                       topBME2801t = topDevice + topBME2801t;
@@ -1761,7 +1761,7 @@
                         #if (USE_BME280_I2C > OFF)
                             bme1.init();
                             usleep(100);
-                            bmeTVal[0].doVal((int16_t)  ( bme1.readTemperature() + 0.5));
+                            bmeTVal[0].doVal((int16_t)  ( bme1.readTemperature() *10));
                             bmeHVal[0].doVal((uint16_t) ( bme1.readHumidity() + 0.5));
                             bmePVal[0].doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
                           #endif
@@ -1833,7 +1833,7 @@
                               #endif
                           #endif
                       break;
-                    case 9:
+                    case 9: // USE_VCC50_ANA
                         #if (USE_VCC50_ANA > OFF)
                             #if (VCC50_ADC > OFF)
                               #endif
@@ -1850,12 +1850,12 @@
                             #if (VCC33_ADC > OFF)
                               #endif
                             #if (VCC33_1115 > OFF)
-                                ads[VCC33_1115_CHAN].setGain(VCC33_1115_ATT);
-                                ads[VCC33_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
+                                ads[VCC33_1115_CHAN].setGain(VCC_1115_ATT);
+                                ads[VCC33_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC33_1115_CHAN], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
-                                while (!ads[VCC33_1115_IDX].conversionComplete());
-                                vcc33 = ads[VCC33_1115_IDX].getLastConversionResults();   // Read the conversion results
-                                vccVal[VCC33_IDX].doVal(vcc[VCC33_IDX]);
+                                while (!ads[VCC33_1115_CHAN].conversionComplete());
+                                vcc33 = ads[VCC33_1115_CHAN].getLastConversionResults();   // Read the conversion results
+                                vcc33Val.doVal(vcc33);
                                 //vcc[VCC33_IDX] = (uint16_t) (1000 * ads[VCC33_IDX].computeVolts(vccVal[VCC33_IDX].doVal(ads[VCC33_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
                               #endif
                           #endif
