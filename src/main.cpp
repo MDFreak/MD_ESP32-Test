@@ -1550,7 +1550,7 @@
                 #endif
               dispStatus("... end setup");
               heapFree(" end setup ");
-              //usleep(400000);
+              usleep(400000);
             #endif
     }
 
@@ -1763,10 +1763,10 @@
                             //usleep(100);
                             bmeTVal[0].doVal((int16_t)  ( bme1.readTemperature() *10));
                             bmeHVal[0].doVal((uint16_t) ( bme1.readHumidity() *10));
-                            bmePVal[0].doVal((uint16_t) (bme1.readPressure() / 10.0F);
-                              SVAL("280readT ", bmeTVal[0].getVal());
-                              SVAL("280readH ", bmeHVal[0].getVal());
-                              SVAL("280readP ", bmePVal[0].getVal());
+                            bmePVal[0].doVal((uint16_t) (bme1.readPressure() / 10.0F));
+                              //SVAL("280readT ", bmeTVal[0].getVal());
+                              //SVAL("280readH ", bmeHVal[0].getVal());
+                              //SVAL("280readP ", bmePVal[0].getVal());
                           #endif
                       break;
                     case 2:
@@ -2327,7 +2327,7 @@
                           //STXT(outStr);
                       #if (USE_MQTT > OFF)
                           valMQ3alk = tmpval16;
-                              SVAL(topMQ3alk, valMQ3alk);
+                              //SVAL(topMQ3alk, valMQ3alk);
                           errMQTT = (int8_t) mqtt.publish(topMQ3alk.c_str(), (uint8_t*) valMQ3alk.c_str(), valMQ3alk.length());
                               //soutMQTTerr(" MQTT publish MQ3alk", errMQTT);
                         #endif
@@ -2349,7 +2349,7 @@
                         #endif
                       #if (USE_MQTT > OFF)
                           valLicht[0] = tmpval16;
-                              SVAL(topLicht1, valLicht[0]);
+                              //SVAL(topLicht1, valLicht[0]);
                           errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valLicht[0].c_str(), valLicht[0].length());
                               //soutMQTTerr(" MQTT publish Licht1", errMQTT);
                         #endif
@@ -2443,7 +2443,7 @@
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
                             valVCC50 = tmpval16;
-                                SVAL(topVCC50, valVCC50);
+                                //SVAL(topVCC50, valVCC50);
                             errMQTT = (int8_t) mqtt.publish(topVCC50.c_str(), (uint8_t*) valVCC50.c_str(), valVCC50.length());
                                 //soutMQTTerr(" MQTT publish VCC50", errMQTT);
                           #endif
@@ -2465,7 +2465,7 @@
                               //STXT(outStr);
                         #if (USE_MQTT > OFF)
                             valPoti[0] = tmpval16;
-                                SVAL(topPoti1, valPoti[0]);
+                                //SVAL(topPoti1, valPoti[0]);
                             errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(), (uint8_t*) valPoti[0].c_str(), valPoti[0].length());
                                 //soutMQTTerr(" MQTT publish Poti1", errMQTT);
                           #endif
@@ -2569,12 +2569,12 @@
                 case 16: // RGB-LED
                     #if (USE_MQTT > OFF)
                         valRGBBright = (RGBLED[0]->bright());    // RGB-LED col24
-                            SVAL(topRGBBright, valRGBBright);
+                            //SVAL(topRGBBright, valRGBBright);
                         errMQTT = (int8_t) mqtt.publish(topRGBBright.c_str(), (uint8_t*) valRGBBright.c_str(), valRGBBright.length());
                             //soutMQTTerr(" MQTT publish RGBBright", errMQTT);
                         colToHexStr(cMQTT, RGBLED[0]->col24());
                         valRGBCol = cMQTT;    // RGB-LED col24
-                            SVAL(topRGBCol, valRGBCol);
+                            //SVAL(topRGBCol, valRGBCol);
                         errMQTT = (int8_t) mqtt.publish(topRGBCol.c_str(), (uint8_t*) valRGBCol.c_str(), valRGBCol.length());
                             //soutMQTTerr(" MQTT publish RGBCol", errMQTT);
                       #endif
@@ -3410,37 +3410,37 @@
                                     {
                                       case 1: // RGB-LED col24
                                         #if (USE_RGBLED_PWM > OFF)
-                                            SVAL("  -- RGBLED bright old ", RGBLED[1]->bright());
+                                            //SVAL("  -- RGBLED bright old ", RGBLED[1]->bright());
                                             RGBLED[1]->bright(itmp);
                                             LEDout = TRUE;
-                                            SVAL("  -- RGBLED bright new ", RGBLED[1]->bright());
+                                            //SVAL("  -- RGBLED bright new ", RGBLED[1]->bright());
                                           #endif
                                         break;
                                       case 2: // 2821 line col24
                                         #if (USE_WS2812_LINE_OUT >OFF)
-                                            SVAL("  -- line bright old", line2812[1]->bright());
+                                            //SVAL("  -- line bright old", line2812[1]->bright());
                                             line2812[1]->bright((uint8_t) itmp);
-                                            SVAL("  -- line bright new", line2812[1]->bright());
+                                            //SVAL("  -- line bright new", line2812[1]->bright());
                                           #endif
                                         break;
                                       case 3:
                                         #if (USE_WS2812_MATRIX_OUT > OFF)
                                             ppix = outM2812[1].text->pix24;
-                                            SVAL("  -- matrix bright old", ppix->bright());
+                                            //SVAL("  -- matrix bright old", ppix->bright());
                                             ppix->bright((uint8_t) itmp);
-                                            SVAL("  -- matrix bright new", ppix->bright());
+                                            //SVAL("  -- matrix bright new", ppix->bright());
                                           #endif
                                         break;
                                       case 4:
                                         #if (USE_WS2812_MATRIX_OUT > OFF)
                                             ppix = outM2812[1].bmpB->pix24;
-                                            SVAL("  -- smilyB bright old"); SOUT(ppix->bright());
+                                            //SVAL("  -- smilyB bright old"); SOUT(ppix->bright());
                                             ppix->bright((uint8_t) itmp);
-                                            SVAL("  -- smilyB bright new"); SOUT(ppix->bright());
+                                            //SVAL("  -- smilyB bright new"); SOUT(ppix->bright());
                                             ppix = outM2812[1].bmpE->pix24;
-                                            SVAL("  -- smilyE bright old"); SOUT(ppix->bright());
+                                            //SVAL("  -- smilyE bright old"); SOUT(ppix->bright());
                                             ppix->bright((uint8_t) itmp);
-                                            SVAL("  -- smilyE bright new"); SOUT(ppix->bright());
+                                            //SVAL("  -- smilyE bright new"); SOUT(ppix->bright());
                                           #endif
                                         break;
                                     }
@@ -3452,10 +3452,10 @@
                                     {
                                       case 1: // RGB-LED col24
                                         #if (USE_RGBLED_PWM > OFF)
-                                            SVAL("  -- RGBLED color old", RGBLED[1]->col24());
+                                            //SVAL("  -- RGBLED color old", RGBLED[1]->col24());
                                             RGBLED[1]->col24(itmp);
                                             LEDout = TRUE;
-                                            SVAL("  -- RGBLED color new", RGBLED[1]->col24());
+                                            //SVAL("  -- RGBLED color new", RGBLED[1]->col24());
                                           #endif
                                         break;
                                       case 2: // 2821 line col24
@@ -3637,7 +3637,7 @@
               void soutMQTTerr(String text, int8_t errMQTT)
                 {
                   errMQTT *= -1;
-                  SVAL(text, cerrMQTT[errMQTT]);
+                  //SVAL(text, cerrMQTT[errMQTT]);
                 }
             #endif
       #endif
