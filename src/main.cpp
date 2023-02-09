@@ -56,21 +56,21 @@
       #endif
 // --- system cycles ---------------
     #ifdef USE_INPUT_CYCLE
-        msTimer inputT           = msTimer(INPUT_CYCLE_MS);
-        uint8_t inpIdx   = 0;
+        static msTimer inputT           = msTimer(INPUT_CYCLE_MS);
+        static uint8_t inpIdx   = 0;
       #endif
     #ifdef USE_OUTPUT_CYCLE
-        msTimer outpT            = msTimer(OUTPUT_CYCLE_MS);
-        uint8_t outpIdx  = 0;
+        static msTimer outpT            = msTimer(OUTPUT_CYCLE_MS);
+        static uint8_t outpIdx  = 0;
       #endif
     #if (USE_DISP > OFF)
-        msTimer dispT            = msTimer(DISP_CYCLE_MS);
-        uint8_t dispIdx  = 0;
+        static msTimer dispT            = msTimer(DISP_CYCLE_MS);
+        static uint8_t dispIdx  = 0;
       #endif
   // ------ user input ---------------
     #if (USE_TOUCHSCREEN > OFF)
-        md_touch  touch  =  md_touch(TOUCH_CS, TFT_CS, TFT_DC, TFT_RST, TFT_LED, LED_ON);
-        md_touch* ptouch =  &touch;
+        static md_touch  touch  =  md_touch(TOUCH_CS, TFT_CS, TFT_DC, TFT_RST, TFT_LED, LED_ON);
+        static md_touch* ptouch =  &touch;
       #endif
 
     #if (USE_KEYPADSHIELD > OFF)
@@ -1748,16 +1748,24 @@
             pwmInVal->highVal = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0);
           #endif
       // --- standard input cycle ---
+        SOUT(" 3");
         #ifdef USE_INPUT_CYCLE
+            SOUT("a1 ");
             if (inputT.TOut())
               {
+                SOUT("b1 ");
+                heapFree("b1 ");
                 inpIdx++;
+                SOUT("b1a ");
                     //heapFree("+meascyc");
                     //STXT(" # MEASCYCLE ");
                 inputT.startT();
+                SOUT("b1b ");
                 switch(inpIdx)
                   {
                     case 1: // USE_BME280_I2C
+                        SOUT("c1 ");
+                        heapFree("c1 ");
                         #if (USE_BME280_I2C > OFF)
                             //bme1.init();
                             //usleep(100);
@@ -1770,10 +1778,12 @@
                           #endif
                       break;
                     case 2:
+                        SOUT(" c2");
                         #if (USE_CCS811_I2C > OFF)
                           #endif
                       break;
                     case 3:
+                        SOUT(" c3");
                         #if (USE_INA3221_I2C > OFF)
                           #endif
                       break;
@@ -1943,6 +1953,7 @@
               }
           #endif
       // --- direct output ---
+        SOUT(" 4");
         #if (USE_WS2812_MATRIX_OUT > OFF)
             //if (ws2812T1.TOut())
               //{
