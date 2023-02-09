@@ -22,7 +22,6 @@
     static String   tmpStr;
     static uint8_t  firstrun = true;
     static uint8_t  iret        = 0;
-	    // cycletime measurement
     #if ( DEV_I2C1 > OFF )
         TwoWire i2c1 = TwoWire(0);
       #endif
@@ -36,8 +35,11 @@
         //SPIClass pHSPI(HSPI);
       #endif
     #if ( USE_LED_BLINK_OUT > 0 )
-        msTimer ledT = msTimer(BLINKTIME_MS);
-        uint8_t SYS_LED_ON = ON;
+        uint8_t SYS_LED_ON = OFF;
+        #if (PIN_BOARD_LED > NC)
+            msTimer ledT = msTimer(BLINKTIME_MS);
+            SYS_LED_ON = ON;
+          #endif
       #endif
     #if ( USE_DISP > 0 )
         uint32_t      ze     = 1;      // aktuelle Schreibzeile
@@ -791,8 +793,10 @@
               SOUTLN();
             #endif
           #if (USE_LED_BLINK_OUT > 0)
-              pinMode(PIN_BOARD_LED, OUTPUT);
-              digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
+              #if (PIN_BOARD_LED > NC)
+                  pinMode(PIN_BOARD_LED, OUTPUT);
+                  digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
+                #endif
             #endif
       // --- user output
         // start display - output to user
@@ -2345,7 +2349,7 @@
                           valMQ3alk = tmpval16;
                               SVAL(topMQ3alk, valMQ3alk);
                           errMQTT = (int8_t) mqtt.publish(topMQ3alk.c_str(), (uint8_t*) valMQ3alk.c_str(), valMQ3alk.length());
-                              soutMQTTerr(" MQTT publish MQ3alk", errMQTT);
+                              //soutMQTTerr(" MQTT publish MQ3alk", errMQTT);
                         #endif
                     #endif
                   break;
@@ -2367,7 +2371,7 @@
                           valLicht[0] = tmpval16;
                               SVAL(topLicht1, valLicht[0]);
                           errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valLicht[0].c_str(), valLicht[0].length());
-                              soutMQTTerr(" MQTT publish Licht1", errMQTT);
+                              //soutMQTTerr(" MQTT publish Licht1", errMQTT);
                         #endif
                     #endif
                   break;
@@ -2461,7 +2465,7 @@
                             valVCC50 = tmpval16;
                                 SVAL(topVCC50, valVCC50);
                             errMQTT = (int8_t) mqtt.publish(topVCC50.c_str(), (uint8_t*) valVCC50.c_str(), valVCC50.length());
-                                soutMQTTerr(" MQTT publish VCC50", errMQTT);
+                                //soutMQTTerr(" MQTT publish VCC50", errMQTT);
                           #endif
                       #endif
                    	break;
@@ -2483,7 +2487,7 @@
                             valPoti[0] = tmpval16;
                                 SVAL(topPoti1, valPoti[0]);
                             errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(), (uint8_t*) valPoti[0].c_str(), valPoti[0].length());
-                                soutMQTTerr(" MQTT publish Poti1", errMQTT);
+                                //soutMQTTerr(" MQTT publish Poti1", errMQTT);
                           #endif
                       #endif
                     break;
@@ -2587,7 +2591,7 @@
                         valRGBBright = (RGBLED[0]->bright());    // RGB-LED col24
                             SVAL(topRGBBright, valRGBBright);
                         errMQTT = (int8_t) mqtt.publish(topRGBBright.c_str(), (uint8_t*) valRGBBright.c_str(), valRGBBright.length());
-                            soutMQTTerr(" MQTT publish RGBBright", errMQTT);
+                            //soutMQTTerr(" MQTT publish RGBBright", errMQTT);
                         colToHexStr(cMQTT, RGBLED[0]->col24());
                         valRGBCol = cMQTT;    // RGB-LED col24
                             SVAL(topRGBCol, valRGBCol);
@@ -3732,7 +3736,7 @@
                 }
             #endif
           #ifdef X_RYL699
-              void soutMQTTerr(String text, int8_t errMQTT)
+              void //soutMQTTerr(String text, int8_t errMQTT)
                 {
                   errMQTT *= -1;
                   SVAL(text, cerrMQTT[errMQTT]);
