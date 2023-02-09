@@ -1757,13 +1757,16 @@
                 inputT.startT();
                 switch(inpIdx)
                   {
-                    case 1:
+                    case 1: // USE_BME280_I2C
                         #if (USE_BME280_I2C > OFF)
-                            bme1.init();
-                            usleep(100);
+                            //bme1.init();
+                            //usleep(100);
                             bmeTVal[0].doVal((int16_t)  ( bme1.readTemperature() *10));
-                            bmeHVal[0].doVal((uint16_t) ( bme1.readHumidity() + 0.5));
-                            bmePVal[0].doVal((uint16_t) ((bme1.readPressure() / 100.0F) + 0.5));
+                            bmeHVal[0].doVal((uint16_t) ( bme1.readHumidity() *10));
+                            bmePVal[0].doVal((uint16_t) (bme1.readPressure() / 10.0F);
+                              SVAL("280readT ", bmeTVal[0].getVal());
+                              SVAL("280readH ", bmeHVal[0].getVal());
+                              SVAL("280readP ", bmePVal[0].getVal());
                           #endif
                       break;
                     case 2:
@@ -1846,6 +1849,8 @@
                                 vcc50Val.doVal(vcc50);
                               #endif
                           #endif
+                      break;
+                    case 10: // USE_VCC33_ANA
                         #if (USE_VCC33_ANA > OFF)
                             #if (VCC33_ADC > OFF)
                               #endif
@@ -1859,31 +1864,6 @@
                                 //vcc[VCC33_IDX] = (uint16_t) (1000 * ads[VCC33_IDX].computeVolts(vccVal[VCC33_IDX].doVal(ads[VCC33_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
                               #endif
                           #endif
-                      break;
-                    case 10:
-                        #if (USE_VCC_ANA > OFF)
-                            #if (VCC_ADC > OFF)
-                              #endif
-                            #if (VCC_1115 > OFF)
-                                ads[VCC50_1115_CHAN].setGain(VCC_1115_ATT);
-                                ads[VCC50_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
-                                usleep(1200); // Wait for the conversion to complete
-                                while (!ads[VCC50_1115_CHAN].conversionComplete());
-                                vcc[VCC50_1115_CHAN] = ads[VCC50_1115_CHAN].getLastConversionResults();   // Read the conversion results
-                                vccVal[VCC50_1115_CHAN].doVal(vcc[VCC50_1115_CHAN]);
-                                //vcc[VCC50_1115_CHAN] = (uint16_t) (1000 * ads[VCC50_1115_CHAN].computeVolts(vccVal[VCC50_1115_CHAN].doVal(ads[VCC50_1115_CHAN].readADC_SingleEnded(VCC_1115_CHAN))));
-                                #if (VCC_1115 > 1)
-                                    ads[VCC33_IDX].setGain(VCC_1115_ATT);
-                                    ads[VCC33_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
-                                    usleep(1200); // Wait for the conversion to complete
-                                    while (!ads[VCC33_IDX].conversionComplete());
-                                    vcc[VCC33_IDX] = ads[VCC33_IDX].getLastConversionResults();   // Read the conversion results
-                                    vccVal[VCC33_IDX].doVal(vcc[VCC33_IDX]);
-                                    //vcc[VCC33_IDX] = (uint16_t) (1000 * ads[VCC33_IDX].computeVolts(vccVal[VCC33_IDX].doVal(ads[VCC33_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
-                                  #endif
-                              #endif
-                          #endif
-                      break;
                     case 11:
                         #if (USE_ACS712_ANA > OFF)
                             #if (I712_1_ADC > OFF)
