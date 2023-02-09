@@ -1771,7 +1771,7 @@
                             //usleep(100);
                             bmeTVal[0].doVal((int16_t)  ( bme1.readTemperature() *10));
                             bmeHVal[0].doVal((uint16_t) ( bme1.readHumidity() *10));
-                            bmePVal[0].doVal((uint16_t) (bme1.readPressure() / 10.0F));
+                            bmePVal[0].doVal((uint16_t) (bme1.readPressure() / 10));
                               //SVAL("280readT ", bmeTVal[0].getVal());
                               //SVAL("280readH ", bmeHVal[0].getVal());
                               //SVAL("280readP ", bmePVal[0].getVal());
@@ -1788,6 +1788,7 @@
                           #endif
                       break;
                     case 4: // USE_DS18B20_1W_IO
+                        SOUT(" c4");
                         #if (USE_DS18B20_1W_IO > OFF)
                             outStr = "";
                             outStr = getDS18D20Str();
@@ -1795,6 +1796,7 @@
                           #endif
                       break;
                     case 5:
+                        SOUT(" c5");
                         #if (USE_MQ135_GAS_ANA > OFF)
                             #if (MQ135_GAS_ADC > OFF)
                                 gasVal.doVal(analogRead(PIN_MQ135));
