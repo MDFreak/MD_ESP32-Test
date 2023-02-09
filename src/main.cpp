@@ -1774,11 +1774,11 @@
                         #if (USE_INA3221_I2C > OFF)
                           #endif
                       break;
-                    case 4:
+                    case 4: // USE_DS18B20_1W_IO
                         #if (USE_DS18B20_1W_IO > OFF)
                             outStr = "";
                             outStr = getDS18D20Str();
-                            dispText(outStr ,  0, 4, outStr.length());
+                            dispText(outStr ,  0, 1, outStr.length());
                           #endif
                       break;
                     case 5:
@@ -1834,17 +1834,17 @@
                           #endif
                       break;
                     case 9:
-                        #if (USE_VCC_ANA > OFF)
-                            #if (VCC_ADC > OFF)
+                        #if (USE_VCC50_ANA > OFF)
+                            #if (VCC50_ADC > OFF)
                               #endif
-                            #if (VCC_1115 > OFF)
-                                ads[VCC50_IDX].setGain(VCC_1115_ATT);
-                                ads[VCC50_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
+                            #if (VCC50_1115 > OFF)
+                                ads[VCC50_1115_CHAN].setGain(VCC_1115_ATT);
+                                ads[VCC50_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
-                                while (!ads[VCC50_IDX].conversionComplete());
-                                vcc[VCC50_IDX] = ads[VCC50_IDX].getLastConversionResults();   // Read the conversion results
-                                vccVal[VCC50_IDX].doVal(vcc[VCC50_IDX]);
-                                //vcc[VCC50_IDX] = (uint16_t) (1000 * ads[VCC50_IDX].computeVolts(vccVal[VCC50_IDX].doVal(ads[VCC50_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
+                                while (!ads[VCC50_1115_CHAN].conversionComplete());
+                                vcc[VCC50_1115_CHAN] = ads[VCC50_1115_CHAN].getLastConversionResults();   // Read the conversion results
+                                vccVal[VCC50_1115_CHAN].doVal(vcc[VCC50_1115_CHAN]);
+                                //vcc[VCC50_1115_CHAN] = (uint16_t) (1000 * ads[VCC50_1115_CHAN].computeVolts(vccVal[VCC50_1115_CHAN].doVal(ads[VCC50_1115_CHAN].readADC_SingleEnded(VCC_1115_CHAN))));
                                 #if (VCC_1115 > 1)
                                     ads[VCC33_IDX].setGain(VCC_1115_ATT);
                                     ads[VCC33_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
@@ -1862,13 +1862,13 @@
                             #if (VCC_ADC > OFF)
                               #endif
                             #if (VCC_1115 > OFF)
-                                ads[VCC50_IDX].setGain(VCC_1115_ATT);
-                                ads[VCC50_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
+                                ads[VCC50_1115_CHAN].setGain(VCC_1115_ATT);
+                                ads[VCC50_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
-                                while (!ads[VCC50_IDX].conversionComplete());
-                                vcc[VCC50_IDX] = ads[VCC50_IDX].getLastConversionResults();   // Read the conversion results
-                                vccVal[VCC50_IDX].doVal(vcc[VCC50_IDX]);
-                                //vcc[VCC50_IDX] = (uint16_t) (1000 * ads[VCC50_IDX].computeVolts(vccVal[VCC50_IDX].doVal(ads[VCC50_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
+                                while (!ads[VCC50_1115_CHAN].conversionComplete());
+                                vcc[VCC50_1115_CHAN] = ads[VCC50_1115_CHAN].getLastConversionResults();   // Read the conversion results
+                                vccVal[VCC50_1115_CHAN].doVal(vcc[VCC50_1115_CHAN]);
+                                //vcc[VCC50_1115_CHAN] = (uint16_t) (1000 * ads[VCC50_1115_CHAN].computeVolts(vccVal[VCC50_1115_CHAN].doVal(ads[VCC50_1115_CHAN].readADC_SingleEnded(VCC_1115_CHAN))));
                                 #if (VCC_1115 > 1)
                                     ads[VCC33_IDX].setGain(VCC_1115_ATT);
                                     ads[VCC33_IDX].startADCReading(MUX_BY_CHANNEL[VCC_1115_CHAN], /*continuous=*/false);
@@ -2593,7 +2593,7 @@
                         valRGBCol = cMQTT;    // RGB-LED col24
                             SVAL(topRGBCol, valRGBCol);
                         errMQTT = (int8_t) mqtt.publish(topRGBCol.c_str(), (uint8_t*) valRGBCol.c_str(), valRGBCol.length());
-                            soutMQTTerr(" MQTT publish RGBCol", errMQTT);
+                            //soutMQTTerr(" MQTT publish RGBCol", errMQTT);
                       #endif
                   break;
                 default:
@@ -3650,87 +3650,6 @@
         #endif // USE_WEBSERVER
     // --- MQTT
       #if (USE_MQTT > OFF)
-          #ifdef MARVIN_ROGER
-              void connectToMqtt()
-                {
-                        SOUT("Connecting to MQTT ...");
-                    //AsyncMqttClient& setKeepAlive(uint16_t `keepAlive`);   // Set keep alive. Defaults to 15 seconds
-                    //AsyncMqttClient& setClientId(const char\* `clientId`); // Defaults to `esp8266<chip ID on 6 hex caracters>`
-                    //AsyncMqttClient& setCleanSession(bool `cleanSession`); // Defaults to `true`
-                    //AsyncMqttClient& setMaxTopicLength(uint16_t `maxLen`); // Defaults to `128`
-                    //AsyncMqttClient& setCredentials(const char\* `username`, const char\* `password` = nullptr);
-                    //AsyncMqttClient& setWill(const char\* `topic`, uint8_t `qos`, bool `retain`, const char\* `payload` = nullptr, size_t `length` = 0); //Defaults to none
-                        SOUT("  connect ...");
-                  mqttClient.connect();
-                        SOUT("  MQTT connected");
-                }
-              void onMqttConnect(bool sessionPresent)
-                {
-                  char temp[32] = "";
-                  uint16_t packetIdSub;
-                  SVAL("  Connected to MQTT - Session: ", sessionPresent);
-                  /*
-                    for (uint8_t i=0; i<6; i++)
-                      {
-                        switch(i)
-                          {
-                            case 0:
-                              sprintf(temp, "%s%s", MQTT_DEVICE, BME2801T_MQTT);
-                              break;
-                            case 1:
-                              sprintf(temp, "%s%s", MQTT_DEVICE, BME2801P_MQTT);
-                              break;
-                            case 2:
-                              sprintf(temp, "%s%s", MQTT_DEVICE, BME2801H_MQTT);
-                              break;
-                            case 3:
-                              sprintf(temp, "%s%s", MQTT_DEVICE, PHOTO1_MQTT);
-                              break;
-                            case 4:
-                              sprintf(temp, "%s%s", MQTT_DEVICE, POTI1_MQTT);
-                              break;
-                            case 5:
-                              sprintf(temp, "%s%s", MQTT_DEVICE, VCC50_MQTT);
-                              break;
-                          }
-                        packetIdSub = mqttClient.subscribe(temp, 0);
-                              SOUT("Subscribing "); SOUT(temp); SOUT(" Id: ");
-                              SOUTLN(packetIdSub);
-                          //mqttClient.publish("temp", 0, true);
-                      }
-                    */
-                }
-              void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
-                {
-                  STXT("Disconnected from MQTT.");
-                  if (WiFi.isConnected())
-                    {
-                      xTimerStart(mqttReconnectTimer, 0);
-                    }
-                }
-              void onMqttSubscribe(uint16_t packetId, uint8_t qos)
-                {
-                  S2VAL("Subscribe ack Id/qos ", packetId, qos);
-                }
-              void onMqttUnsubscribe(uint16_t packetId)
-                {
-                  SVAL("Unsubscribe acknowledged packetId: ", packetId);
-                }
-              void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total)
-                {
-                  S3VAL("Publish rec topic/payload/len: ", topic, payload, len);
-                        //SVAL("  qos: ", properties.qos);
-                        //SVAL("  dup: ", properties.dup);
-                        //SVAL("  retain: ", properties.retain);
-                        //SVAL("  len: ", len);
-                        //SVAL("  index: ", index);
-                        //SVAL("  total: ", total);
-                }
-              void onMqttPublish(uint16_t packetId)
-                {
-                  SVAL("Publish ack Id", packetId);
-                }
-            #endif
           #ifdef X_RYL699
               void soutMQTTerr(String text, int8_t errMQTT)
                 {

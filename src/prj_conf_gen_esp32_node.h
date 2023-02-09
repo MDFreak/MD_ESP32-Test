@@ -747,10 +747,12 @@
           #if (USE_VCC50_ANA > OFF)
               #define VCC50_ADC           OFF
               #define VCC50_1115          ON
+              #define VCC50_1115_CHAN     2    //
             #endif
           #if (USE_VCC33_ANA > OFF)
               #define VCC33_ADC           OFF
               #define VCC33_1115          ON
+              #define VCC50_1115_CHAN     0    //
             #endif
           #if ((VCC50_ADC + VCC33_ADC) > OFF)
               #define VCC_ADC_ATT         ADC_ATTEN_DB_11

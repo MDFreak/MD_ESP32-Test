@@ -597,7 +597,7 @@
       #if (USE_VCC_ANA > OFF)
           #define VCC_FILT                5
           #define VCC_DROP                1
-          #define VCC50_IDX               0
+          #define VCC50_1115_CHAN               0
           #define VCC33_IDX               1
           #define VCC50_MQTT              "vcc50"
           #define VCC33_MQTT              "vcc33"
