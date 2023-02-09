@@ -923,7 +923,7 @@
       // --- pins, connections
         // --- system
           #if (USE_LED_BLINK_OUT > OFF)
-              #define PIN_BOARD_LED     NC
+              #define PIN_BOARD_LED    2 // NC
             #endif
           // --- I2C board connection
             #define PIN_I2C1_SDA          21

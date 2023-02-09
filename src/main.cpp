@@ -35,11 +35,8 @@
         //SPIClass pHSPI(HSPI);
       #endif
     #if ( USE_LED_BLINK_OUT > 0 )
-        uint8_t SYS_LED_ON = OFF;
-        #if (PIN_BOARD_LED > NC)
-            msTimer ledT = msTimer(BLINKTIME_MS);
-            SYS_LED_ON = ON;
-          #endif
+        msTimer ledT   = msTimer(BLINKTIME_MS);
+        uint8_t sysLED = ON;
       #endif
     #if ( USE_DISP > 0 )
         uint32_t      ze     = 1;      // aktuelle Schreibzeile
@@ -795,7 +792,7 @@
           #if (USE_LED_BLINK_OUT > 0)
               #if (PIN_BOARD_LED > NC)
                   pinMode(PIN_BOARD_LED, OUTPUT);
-                  digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
+                  digitalWrite(PIN_BOARD_LED, sysLED);
                 #endif
             #endif
       // --- user output
@@ -1547,9 +1544,9 @@
             #endif
       // --- finish setup
           #if (DEBUG_MODE >= CFG_DEBUG_STARTUP)
-              #if (USE_COL16_BLINK_OUT > 0)
-                  digitalWrite(PIN_BOARD_LED, OFF);
-                  SYS_LED_ON = OFF;
+              #if (USE_LED_BLINK_OUT > 0)
+                  sysLED = OFF;
+                  digitalWrite(PIN_BOARD_LED, sysLED);
                 #endif
               dispStatus("... end setup");
               heapFree(" end setup ");
@@ -2601,9 +2598,6 @@
                   break;
                 default:
                   dispIdx = 0;
-                  if (SYS_LED_ON == ON) { SYS_LED_ON = OFF; }
-                  else                  { SYS_LED_ON = ON ; }
-                  digitalWrite(PIN_BOARD_LED, SYS_LED_ON);
                   break;
                 }
               dispT.startT();
@@ -2616,21 +2610,23 @@
             }
           #endif // defined(DISP)
       // --- system control --------------------------------
-        #if (USE_COL16_BLINK_OUT > 0)
-          if (ledT.TOut())    // handle touch output
-            {
-              ledT.startT();
-              if (SYS_LED_ON == TRUE)
+        #if (USE_LED_BLINK_OUT > 0)
+            #if (PIN_BOARD_LED > NC)
+                if (ledT.TOut())    // handle touch output
                   {
-                    digitalWrite(PIN_BOARD_LED, OFF);
-                    SYS_LED_ON = OFF;
+                    ledT.startT();
+                    if (sysLED == TRUE)
+                        {
+                          digitalWrite(PIN_BOARD_LED, OFF);
+                          sysLED = OFF;
+                        }
+                      else
+                        {
+                          digitalWrite(PIN_BOARD_LED, ON);
+                          sysLED = ON;
+                        }
                   }
-                else
-                  {
-                    digitalWrite(PIN_BOARD_LED, ON);
-                    SYS_LED_ON = ON;
-                  }
-            }
+              #endif
           #endif
         if (firstrun == true)
             {
@@ -3736,7 +3732,7 @@
                 }
             #endif
           #ifdef X_RYL699
-              void //soutMQTTerr(String text, int8_t errMQTT)
+              void soutMQTTerr(String text, int8_t errMQTT)
                 {
                   errMQTT *= -1;
                   SVAL(text, cerrMQTT[errMQTT]);
