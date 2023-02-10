@@ -518,15 +518,15 @@
           #else
             TwoWire* pbme1i2c = &i2c2;
           #endif
-        md_val<int16_t>  bmeTVal[USE_BME280_I2C];
-        md_val<uint16_t> bmePVal[USE_BME280_I2C];
-        md_val<uint16_t> bmeHVal[USE_BME280_I2C];
-        int16_t          bmeT[USE_BME280_I2C];
-        int16_t          bmeP[USE_BME280_I2C];
-        int16_t          bmeH[USE_BME280_I2C];
-        int16_t          bmeTold[USE_BME280_I2C];
-        int16_t          bmePold[USE_BME280_I2C];
-        int16_t          bmeHold[USE_BME280_I2C];
+        md_val<float> bmeTVal[USE_BME280_I2C];
+        md_val<float> bmePVal[USE_BME280_I2C];
+        md_val<float> bmeHVal[USE_BME280_I2C];
+        float         bmeT[USE_BME280_I2C];
+        float         bmeP[USE_BME280_I2C];
+        float         bmeH[USE_BME280_I2C];
+        float         bmeTold[USE_BME280_I2C];
+        float         bmePold[USE_BME280_I2C];
+        float         bmeHold[USE_BME280_I2C];
         #if (USE_BME280_I2C > 1)
             Adafruit_BME280  bme2;
             #if (BME2802_I2C == I2C1)
@@ -1769,12 +1769,30 @@
                         #if (USE_BME280_I2C > OFF)
                             //bme1.init();
                             //usleep(100);
-                            bmeTVal[0].doVal((int16_t)  ( bme1.readTemperature() *10));
-                            bmeHVal[0].doVal((uint16_t) ( bme1.readHumidity() *10));
-                            bmePVal[0].doVal((uint16_t) (bme1.readPressure() / 10));
-                              //SVAL("280readT ", bmeTVal[0].getVal());
-                              //SVAL("280readH ", bmeHVal[0].getVal());
-                              //SVAL("280readP ", bmePVal[0].getVal());
+                            bmeTVal[0].doVal((int16_t)  ( bme1.readTemperature()));
+                            bmeHVal[0].doVal((uint16_t) ( bme1.readHumidity()));
+                            bmePVal[0].doVal((uint16_t) (bme1.readPressure()));
+                            bmeT[0] = bmeTVal[0].getVal();
+                            bmeH[0] = bmeHVal[0].getVal();
+                            bmeP[0] = bmePVal[0].getVal();
+                              SVAL("280readT ", bmeT[0]);
+                              SVAL("280readH ", bmeH[0]);
+                              SVAL("280readP ", bmeP[0]);
+                            // Ausgabe auf MQTT
+                            #if (MQTT > OFF)
+                                valBME280t[i] = tmpval16;
+                                    //SVAL(topBME280t, valBME280t);
+                                errMQTT = (int8_t) mqtt.publish(topBME2801t.c_str(), (uint8_t*) valBME280t[i].c_str(), valBME280t[i].length());
+                                    //soutMQTTerr(" MQTT publish BME280t", errMQTT);
+                                valBME280p[i] = tmpval16;
+                                    //SVAL(topBME280p, valBME280p);
+                                errMQTT = (int8_t) mqtt.publish(topBME2801p.c_str(), (uint8_t*) valBME280p[i].c_str(), valBME280p[i].length());
+                                    //soutMQTTerr(" MQTT publish BME280p", errMQTT);
+                                valBME280h[i] = tmpval16;
+                                    //SVAL(topBME2801h, valBME280h[i]);
+                                errMQTT = (int8_t) mqtt.publish(topBME2801h.c_str(), (uint8_t*) valBME280h[i].c_str(), valBME280h[i].length());
+                                    //soutMQTTerr(" MQTT publish BME280h", errMQTT);
+                              #endif
                           #endif
                       break;
                     case 2:
@@ -2183,7 +2201,7 @@
                                   outStr = "SVB1";
                                   outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  STXT(outStr);
+                                  //STXT(outStr);
                                 #endif
                               #if (USE_WS2812_LINE_OUT > OFF)
                                   outStr = "SVB2";
@@ -2208,7 +2226,7 @@
                                   colToHexStr(ctmp, RGBLED[0]->col24());
                                   outStr.concat(ctmp);    // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  STXT(outStr);
+                                  //STXT(outStr);
                                 #endif
                               #if (USE_WS2812_LINE_OUT > OFF)
                                   outStr = "SVC2";
@@ -2402,36 +2420,18 @@
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("°  ");
-                                  #if (USE_MQTT > OFF)
-                                      valBME280t[i] = tmpval16;
-                                          //SVAL(topBME280t, valBME280t);
-                                      errMQTT = (int8_t) mqtt.publish(topBME2801t.c_str(), (uint8_t*) valBME280t[i].c_str(), valBME280t[i].length());
-                                          //soutMQTTerr(" MQTT publish BME280t", errMQTT);
-                                    #endif
                                 break;
                               case 1:  // BME280 air pressure
                                   tmpval16 = bmePVal[i].getVal();
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("%  ");
-                                  #if (USE_MQTT > OFF)
-                                      valBME280p[i] = tmpval16;
-                                          //SVAL(topBME280p, valBME280p);
-                                      errMQTT = (int8_t) mqtt.publish(topBME2801p.c_str(), (uint8_t*) valBME280p[i].c_str(), valBME280p[i].length());
-                                          //soutMQTTerr(" MQTT publish BME280p", errMQTT);
-                                    #endif
                                 break;
                               case 2:   // BME280 humidity
                                   tmpval16 = bmeHVal[i].getVal();
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("mb");
-                                  #if (USE_MQTT > OFF)
-                                      valBME280h[i] = tmpval16;
-                                          //SVAL(topBME2801h, valBME280h[i]);
-                                      errMQTT = (int8_t) mqtt.publish(topBME2801h.c_str(), (uint8_t*) valBME280h[i].c_str(), valBME280h[i].length());
-                                          //soutMQTTerr(" MQTT publish BME280h", errMQTT);
-                                    #endif
                                 break;
                               default:
                                 break;
