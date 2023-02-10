@@ -546,22 +546,25 @@
           #else
             TwoWire* pcssi2c = &i2c2;
           #endif
-        md_val<int16_t>   ccsTVal;
-        md_scale<int16_t> ccsTSkal;
-        md_val<uint16_t>  ccsEVal;
-        md_scale<int16_t> ccsESkal;
-        md_val<uint16_t>  ccsVVal;
-        md_scale<int16_t> ccsVSkal;
-        int16_t           ccsT;
-        int16_t           ccsE;
-        int16_t           ccsV;
-        int16_t           cssT;
-        int16_t           ccsEold;
-        int16_t           ccsVold;
+        md_val<float>   ccsTVal;
+        md_val<float>   ccsEVal;
+        md_val<float>   ccsVVal;
+        //md_scale<float> ccsESkal;
+        //md_scale<float> ccsTSkal;
+        //md_scale<float> ccsVSkal;
+        float           ccsT;
+        float           ccsE;
+        float           ccsV;
+        float           cssTold;
+        float           ccsEold;
+        float           ccsVold;
+        static String   valCCS811t = "";
+        static String   valCCS811e = "";
+        static String   valCCS811v = "";
+        static int8_t   outCCS811t = OFF;
+        static int8_t   outCCS811h = OFF;
+        static int8_t   outCCS811p = OFF;
         #if (USE_MQTT > OFF)
-            static String valCCS811t;
-            static String valCCS811e;
-            static String valCCS811v;
             static String topCCS811t   = MQTT_CCS811T;
             static String topCCS811e   = MQTT_CCS811E;
             static String topCCS811v   = MQTT_CCS811V;
@@ -1084,7 +1087,7 @@
               if (ccsda)
                   {
                     #if (USE_BME280_I2C > OFF)
-                        if (bme1 != NULL)
+                        if (&bme1)
                           {
                             bmeT = bme1.readTemperature();
                             bmeH = bme1.readHumidity();
@@ -1734,44 +1737,49 @@
                   {
                     case 1: // USE_BME280_I2C
                         //SOUT("c1 ");
-                        //heapFree("c1 ");
                         #if (USE_BME280_I2C > OFF)
-                            //bme1.init();
-                            //usleep(100);
                             bmeT       = round(bme1.readTemperature() * 10) / 10;
                             valBME280t = bmeT;
-                                SVAL("280readT ", bmeT);
+                                //SVAL(" 280readT ", bmeT);
                             #if (BME280T_FILT > 0)
                                 bmeT = bmeTVal.doVal( bme1.readTemperature());
-                                  SVAL("280readT ", bmeT);
+                                  SVAL(" 280readT ", bmeT);
                               #endif
+                            if (bmeT != bmeTold)
+                              {
+                                valCCS811t = bmeT;
+                                outBME280t = TRUE;
+                                bmeTold = bmeT;
+                                    SVAL(" 280readT  new ", bmeT);
+                              }
+
                             bmeH       = round(bme1.readHumidity() * 10) / 10;
                             valBME280h = bmeH;
-                                SVAL("280readH ", bmeH);
+                                //SVAL(" 280readH ", bmeH);
                             #if (BME280H_FILT > 0)
                                 bmeH = bmeHVal[0].doVal( bme1.readHumidity());
-                                  SVAL("280readH ", bmeH);
+                                  SVAL(" 280readH ", bmeH);
                               #endif
                             bmeP       = round((bme1.readPressure() / 100) + 0.5);
                             valBME280p = bmeP;
-                                SVAL("280readP ", bmeP);
+                                //SVAL(" 280readP ", bmeP);
                             #if (BME280P_FILT > 0)
                                 bmeP = bmePVal[0].doVal(bme1.readPressure());
-                                  SVAL("280readP ", bmeP);
+                                  SVAL(" 280readP ", bmeP);
                               #endif
                             // Ausgabe auf MQTT
                             #if (USE_MQTT > OFF)
                                 errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
                                 soutMQTTerr(topBME280t.c_str(), errMQTT);
-                                    SVAL(topBME280t, valBME280t);
+                                    //SVAL(topBME280t, valBME280t);
                                 valBME280p = bmeP;
-                                    SVAL(topBME280p, valBME280p);
                                 errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
                                 soutMQTTerr(topBME280p.c_str(), errMQTT);
+                                    //SVAL( topBME280p, valBME280p);
                                 valBME280h = bmeH;
-                                    SVAL(topBME280h, valBME280h);
                                 errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
                                 soutMQTTerr(topBME280h.c_str(), errMQTT);
+                                    //SVAL(topBME280h, valBME280h);
                               #endif
                           #endif
                       break;
@@ -1779,19 +1787,24 @@
                         //SOUT(" c2");
                         #if (USE_CCS811_I2C > OFF)
                             ccsT       = round(ccs811.calculateTemperature() * 10) / 10;
-                                ccs
-                                SVAL(" 280readT ", bmeT);
+                            valCCS811t = bmeT;
+                                SVAL(" 811readT ", ccsT);
                             #if (CCS811T_FILT > 0)
-                                bmeT = bmeTVal.doVal( bme1.readTemperature());
-                                  SVAL("280readT ", bmeT);
+                                ccsT = cssTVal.doVal( css811.readTemperature());
+                                  SVAL(" 811readT ", ccsT);
                               #endif
                             if (bmeT != bmeTold)
                               {
-                                valBME280t = bmeT;
-                                outBME280t = TRUE;
+                                valCCS811t = bmeT;
+                                outCCS811t = TRUE;
                                 bmeTold = bmeT;
-                                    SVAL(" 280readT  new ", bmeT);
+                                    SVAL(" 811readT  new ", bmeT);
                               }
+                            #if (USE_MQTT > OFF)
+                                errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                soutMQTTerr(topBME280t.c_str(), errMQTT);
+                                    //SVAL(topBME280t, valBME280t);
+                              #endif
                           #endif
                       break;
                     case 3:
