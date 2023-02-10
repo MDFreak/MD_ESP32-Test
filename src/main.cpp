@@ -1769,14 +1769,19 @@
                         #if (USE_BME280_I2C > OFF)
                             //bme1.init();
                             //usleep(100);
-                            bmeTVal[0].doVal( bme1.readTemperature());
-                            bmeHVal[0].doVal( bme1.readHumidity());
-                            bmePVal[0].doVal(bme1.readPressure());
-                            bmeT[0] = bmeTVal[0].getVal();
-                            bmeH[0] = bmeHVal[0].getVal();
-                            bmeP[0] = bmePVal[0].getVal();
+                            bmeT[0] = bme1.readTemperature(); SVAL("orgreadT ", bmeT[0]);
+                            #if ()
+                            bmeT[0] = bmeTVal[0].doVal( bme1.readTemperature());
                               SVAL("280readT ", bmeT[0]);
+
+                            bmeH[0] = bme1.readHumidity();
+                              SVAL("orgreadH ", bmeH[0]);
+                            bmeH[0] = bmeHVal[0].doVal( bme1.readHumidity());
                               SVAL("280readH ", bmeH[0]);
+
+                            bmeP[0] = bme1.readPressure();
+                              SVAL("orgreadP ", bmeP[0]);
+                            bmeP[0] = bmePVal[0].doVal(bme1.readPressure());
                               SVAL("280readP ", bmeP[0]);
                             // Ausgabe auf MQTT
                             #if (USE_MQTT > OFF)
