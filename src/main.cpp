@@ -10,8 +10,8 @@
     static uint64_t usTmp       = 0ul;
     static uint64_t usPerCycle  = 0ul;
     static uint32_t freeHeap    = 10000000;
-    static uint16_t tmpval16;
-    static uint32_t tmpval32;
+    static int16_t tmpval16;
+    static int32_t tmpval32;
       //static uint64_t anzMsCycles = 0;
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
@@ -1790,7 +1790,7 @@
                             // Ausgabe auf MQTT
                             #if (USE_MQTT > OFF)
                                 valBME280t[0] = bmeT[0];
-                                    SVAL(topBME2801t, valBME280t.c_str);
+                                    SVAL(topBME2801t, valBME280t[0].c_str);
                                 errMQTT = (int8_t) mqtt.publish(topBME2801t.c_str(), (uint8_t*) valBME280t[0].c_str(), valBME280t[0].length());
                                     soutMQTTerr(topBME2801t.c_str(), errMQTT);
                                 valBME280p[0] = tmpval16;
@@ -2425,19 +2425,19 @@
                           switch (i)
                             {
                               case 0:  // BME280 temperature
-                                  tmpval16 = bmeTVal[i].getVal();
+                                  tmpval16 = (int16_t) (bmeT[i]+ 0.5);
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("°  ");
                                 break;
                               case 1:  // BME280 air pressure
-                                  tmpval16 = bmePVal[i].getVal();
+                                  tmpval16 = (uint16_t) bmeP[i];
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("%  ");
                                 break;
                               case 2:   // BME280 humidity
-                                  tmpval16 = bmeHVal[i].getVal();
+                                  tmpval16 = (int16_t) bmeH[i];
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("mb");
