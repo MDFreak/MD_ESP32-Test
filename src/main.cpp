@@ -1084,18 +1084,25 @@
               if (ccsda)
                   {
                     #if (USE_BME280_I2C > OFF)
-                        bmeT = bme1.readTemperature();
-                        bmeH = bme1.readHumidity();
-                        ccs811.setEnvironmentalData(bmeT, bmeH);
+                        if (bme1 != NULL)
+                          {
+                            bmeT = bme1.readTemperature();
+                            bmeH = bme1.readHumidity();
+                            ccs811.setEnvironmentalData(bmeT, bmeH);
+                          }
                       #else
                           ccs811.setTempOffset((float) 25);
                       #endif
-                    ccs811.setTempOffset((float) bmeT);
                     STXT(" CCS811 gefunden");
-                    #if (BME280P_FILT > OFF)
-                    ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
-                    ccsEVal.begin(CCS811E_FILT, CCS811E_Drop);
-                    ccsVVal.begin(CCS811V_FILT, CCS811V_Drop);
+                    #if (CCS811T_FILT > OFF)
+                        ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
+                      #endif
+                    #if (CCS811E_FILT > OFF)
+                        ccsEVal.begin(CCS811E_FILT, CCS811E_Drop);
+                      #endif
+                    #if (CCS811V_FILT > OFF)
+                        ccsVVal.begin(CCS811V_FILT, CCS811V_Drop);
+                      #endif
                     #if (USE_MQTT > OFF)
                         topCCS811t = topDevice + topCCS811t;
                         errMQTT = (int8_t) mqtt.subscribe(topCCS811t.c_str());
@@ -1771,6 +1778,20 @@
                     case 2:
                         //SOUT(" c2");
                         #if (USE_CCS811_I2C > OFF)
+                            ccsT       = round(ccs811.calculateTemperature() * 10) / 10;
+                                ccs
+                                SVAL(" 280readT ", bmeT);
+                            #if (CCS811T_FILT > 0)
+                                bmeT = bmeTVal.doVal( bme1.readTemperature());
+                                  SVAL("280readT ", bmeT);
+                              #endif
+                            if (bmeT != bmeTold)
+                              {
+                                valBME280t = bmeT;
+                                outBME280t = TRUE;
+                                bmeTold = bmeT;
+                                    SVAL(" 280readT  new ", bmeT);
+                              }
                           #endif
                       break;
                     case 3:
