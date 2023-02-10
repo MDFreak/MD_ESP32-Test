@@ -521,18 +521,19 @@
         md_val<float> bmeTVal;
         md_val<float> bmePVal;
         md_val<float> bmeHVal;
-        float         bmeT;
-        float         bmeP;
-        float         bmeH;
-        float         bmeTold;
-        float         bmePold;
-        float         bmeHold;
-        static String valBME280t;
-        static String valBME280p;
-        static String valBME280h;
+        float         bmeT       = MD_F_MAX;
+        float         bmeP       = MD_F_MAX;
+        float         bmeH       = MD_F_MAX;
+        float         bmeTold    = MD_F_MAX;
+        float         bmePold    = MD_F_MAX;
+        float         bmeHold    = MD_F_MAX;
+        static String valBME280t = "";
+        static String valBME280p = "";
+        static String valBME280h = "";
         static int8_t outBME280t = OFF;
         static int8_t outBME280h = OFF;
         static int8_t outBME280p = OFF;
+        static int8_t bmeda      = FALSE;
         #if (USE_MQTT > OFF)
             static String topBME280t = MQTT_BME280T;
             static String topBME280p = MQTT_BME280P;
@@ -552,18 +553,19 @@
         //md_scale<float> ccsESkal;
         //md_scale<float> ccsTSkal;
         //md_scale<float> ccsVSkal;
-        float           ccsT;
-        float           ccsE;
-        float           ccsV;
-        float           cssTold;
-        float           ccsEold;
-        float           ccsVold;
+        float           ccsT       = MD_F_MAX;
+        float           ccsE       = MD_F_MAX;
+        float           ccsV       = MD_F_MAX;
+        float           ccsTold    = MD_F_MAX;
+        float           ccsEold    = MD_F_MAX;
+        float           ccsVold    = MD_F_MAX;
         static String   valCCS811t = "";
         static String   valCCS811e = "";
         static String   valCCS811v = "";
         static int8_t   outCCS811t = OFF;
         static int8_t   outCCS811h = OFF;
         static int8_t   outCCS811p = OFF;
+        static int8_t   ccsda      = FALSE;
         #if (USE_MQTT > OFF)
             static String topCCS811t   = MQTT_CCS811T;
             static String topCCS811e   = MQTT_CCS811E;
@@ -1046,7 +1048,6 @@
           #if (USE_BME280_I2C > OFF)
               dispStatus("init BME280");
               STXT(" init BME280 ...");
-              bool bmeda = false;
               bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
               if (bmeda)
                 {
@@ -1082,12 +1083,11 @@
           #if (USE_CCS811_I2C > OFF)
               dispStatus("init CCS811");
               STXT(" init CCS811 ...");
-              bool ccsda = false;
               ccsda = ccs811.begin(I2C_CCS811_AQ_5A, pbme1i2c);
               if (ccsda)
                   {
                     #if (USE_BME280_I2C > OFF)
-                        if (&bme1)
+                        if (bmeda)
                           {
                             bmeT = bme1.readTemperature();
                             bmeH = bme1.readHumidity();
@@ -1747,7 +1747,7 @@
                               #endif
                             if (bmeT != bmeTold)
                               {
-                                valCCS811t = bmeT;
+                                valBME280t = bmeT;
                                 outBME280t = TRUE;
                                 bmeTold = bmeT;
                                     SVAL(" 280readT  new ", bmeT);
@@ -1797,10 +1797,26 @@
                               {
                                 valCCS811t = bmeT;
                                 outCCS811t = TRUE;
-                                bmeTold = bmeT;
+                                ccsTold = ccsT;
                                     SVAL(" 811readT  new ", bmeT);
                               }
-                            #if (USE_MQTT > OFF)
+
+                            //ccsE       = round(ccs811.calculateTemperature() * 10) / 10;
+                            valCCS811e = ccsE;
+                                SVAL(" 811readE ", ccsE);
+                            #if (CCS811E_FILT > 0)
+                                ccsT = cssTVal.doVal( css811.readTemperature());
+                                  SVAL(" 811readT ", ccsT);
+                              #endif
+                            if (bmeT != bmeTold)
+                              {
+                                valCCS811t = bmeT;
+                                outCCS811t = TRUE;
+                                ccsTold = ccsT;
+                                    SVAL(" 811readT  new ", bmeT);
+                              }
+
+                            #if (USE_MQTT > 2)
                                 errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
                                 soutMQTTerr(topBME280t.c_str(), errMQTT);
                                     //SVAL(topBME280t, valBME280t);
