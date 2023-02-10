@@ -1071,7 +1071,7 @@
               bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
               if (bmeda)
                 {
-                  bme1.setSampling();
+                  bme1.setSampling(bme1.MODE_FORCED);
                   STXT(" BME280(1) gefunden");
                   bmeTVal[0].begin(BME2801T_FILT, BME2801T_Drop);
                   bmePVal[0].begin(BME2801P_FILT, BME2801P_Drop);
@@ -1770,19 +1770,19 @@
                             //bme1.init();
                             //usleep(100);
                             bmeT[0] = bme1.readTemperature();
-                                SVAL("280readT ", bmeT[0]);
+                                //SVAL("280readT ", bmeT[0]);
                             #if (BME2801T_FILT > 0)
                                 bmeT[0] = bmeTVal[0].doVal( bme1.readTemperature());
                                   SVAL("280readT ", bmeT[0]);
                               #endif
                             bmeH[0] = bme1.readHumidity();
-                                SVAL("280readH ", bmeH[0]);
+                                //SVAL("280readH ", bmeH[0]);
                             #if (BME2801H_FILT > 0)
                                 bmeH[0] = bmeHVal[0].doVal( bme1.readHumidity());
                                   SVAL("280readH ", bmeH[0]);
                               #endif
                             bmeP[0] = bme1.readPressure() / 100;
-                                SVAL("280readP ", bmeP[0]);
+                                //SVAL("280readP ", bmeP[0]);
                             #if (BME2801P_FILT > 0)
                                 bmeP[0] = bmePVal[0].doVal(bme1.readPressure());
                                   SVAL("280readP ", bmeP[0]);
@@ -1790,17 +1790,17 @@
                             // Ausgabe auf MQTT
                             #if (USE_MQTT > OFF)
                                 valBME280t[0] = bmeT[0];
-                                    SVAL(topBME2801t, valBME280t[0].c_str);
+                                    //SVAL(topBME2801t, valBME280t[0]);
                                 errMQTT = (int8_t) mqtt.publish(topBME2801t.c_str(), (uint8_t*) valBME280t[0].c_str(), valBME280t[0].length());
                                     soutMQTTerr(topBME2801t.c_str(), errMQTT);
-                                valBME280p[0] = tmpval16;
-                                    //SVAL(topBME2801p, valBME280p);
+                                valBME280p[0] = bmeP[0];
+                                    //SVAL(topBME2801p, valBME280p[0]);
                                 errMQTT = (int8_t) mqtt.publish(topBME2801p.c_str(), (uint8_t*) valBME280p[0].c_str(), valBME280p[0].length());
-                                    //soutMQTTerr(" MQTT publish BME280p", errMQTT);
-                                valBME280h[0] = tmpval16;
-                                    //SVAL(topBME2801h, valBME280h[i]);
+                                    soutMQTTerr(" MQTT publish BME280p", errMQTT);
+                                valBME280h[0] = bmeH[0];
+                                    //SVAL(topBME2801h, valBME280h[0]);
                                 errMQTT = (int8_t) mqtt.publish(topBME2801h.c_str(), (uint8_t*) valBME280h[0].c_str(), valBME280h[0].length());
-                                    //soutMQTTerr(" MQTT publish BME280h", errMQTT);
+                                    soutMQTTerr(" MQTT publish BME280h", errMQTT);
                               #endif
                           #endif
                       break;
@@ -3668,14 +3668,12 @@
         #endif // USE_WEBSERVER
     // --- MQTT
       #if (USE_MQTT > OFF)
-          #ifdef X_RYL699
-              void soutMQTTerr(String text, int8_t errMQTT)
-                {
-                  errMQTT *= -1;
-                  //SVAL(text, cerrMQTT[errMQTT]);
-                }
-            #endif
-      #endif
+        void soutMQTTerr(String text, int8_t errMQTT)
+          {
+            if (errMQTT < 0)
+            SVAL(text, cerrMQTT[(-1) * errMQTT]);
+          }
+        #endif
   // --- error ESP -------------------------
     void logESP(const esp_err_t _err, const char *_msg, uint8_t nr, bool _stop)
       {
