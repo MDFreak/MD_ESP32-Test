@@ -1779,18 +1779,18 @@
                               SVAL("280readH ", bmeH[0]);
                               SVAL("280readP ", bmeP[0]);
                             // Ausgabe auf MQTT
-                            #if (MQTT > OFF)
-                                valBME280t[i] = tmpval16;
+                            #if (USE_MQTT > OFF)
+                                valBME280t[0] = tmpval16;
                                     //SVAL(topBME280t, valBME280t);
-                                errMQTT = (int8_t) mqtt.publish(topBME2801t.c_str(), (uint8_t*) valBME280t[i].c_str(), valBME280t[i].length());
+                                errMQTT = (int8_t) mqtt.publish(topBME2801t.c_str(), (uint8_t*) valBME280t[0].c_str(), valBME280t[0].length());
                                     //soutMQTTerr(" MQTT publish BME280t", errMQTT);
-                                valBME280p[i] = tmpval16;
+                                valBME280p[0] = tmpval16;
                                     //SVAL(topBME280p, valBME280p);
-                                errMQTT = (int8_t) mqtt.publish(topBME2801p.c_str(), (uint8_t*) valBME280p[i].c_str(), valBME280p[i].length());
+                                errMQTT = (int8_t) mqtt.publish(topBME2801p.c_str(), (uint8_t*) valBME280p[0].c_str(), valBME280p[0].length());
                                     //soutMQTTerr(" MQTT publish BME280p", errMQTT);
-                                valBME280h[i] = tmpval16;
+                                valBME280h[0] = tmpval16;
                                     //SVAL(topBME2801h, valBME280h[i]);
-                                errMQTT = (int8_t) mqtt.publish(topBME2801h.c_str(), (uint8_t*) valBME280h[i].c_str(), valBME280h[i].length());
+                                errMQTT = (int8_t) mqtt.publish(topBME2801h.c_str(), (uint8_t*) valBME280h[0].c_str(), valBME280h[0].length());
                                     //soutMQTTerr(" MQTT publish BME280h", errMQTT);
                               #endif
                           #endif
