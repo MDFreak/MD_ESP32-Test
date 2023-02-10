@@ -972,72 +972,58 @@
         // start MQTT
           #if (USE_MQTT > OFF)
               STXT("Connecting to MQTT...");
-              #ifdef MARVIN_ROGER
-                  //mqttClient.onConnect(onMqttConnect);
-                  //mqttClient.onDisconnect(onMqttDisconnect);
-                  //mqttClient.onSubscribe(onMqttSubscribe);
-                  //mqttClient.onUnsubscribe(onMqttUnsubscribe);
-                  //mqttClient.onMessage(onMqttMessage);
-                  //mqttClient.onPublish(onMqttPublish);
-                  //mqttClient.setServer(MQTT_HOST, MQTT_PORT);
-                  //mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, mqttID,
-                                                    //reinterpret_cast<TimerCallbackFunction_t>(connectToMqtt));
-                  //mqttClient.connect();
-                #endif
-              #ifdef X_RYL699
-                  errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
-                      soutMQTTerr(" MQTT connect", errMQTT);
-                  #if (USE_RGBLED_PWM > OFF)
-                      topRGBBright = topDevice + topRGBBright;
-                      errMQTT = (int8_t) mqtt.subscribe(topRGBBright.c_str());
-                          soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
+              errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
+                  soutMQTTerr(" MQTT connect", errMQTT);
+              #if (USE_RGBLED_PWM > OFF)
+                  topRGBBright = topDevice + topRGBBright;
+                  errMQTT = (int8_t) mqtt.subscribe(topRGBBright.c_str());
+                      soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
 
-                      topRGBCol = topDevice + topRGBCol;
-                      errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
-                          soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
-                    #endif
-                  #if (USE_MQ3_ALK_ANA > OFF)
-                      topMQ3alk = topDevice + topMQ3alk;
-                      errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
-                          soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
-                    #endif
-                  #if (USE_PHOTO_SENS_ANA > OFF)
-                      topLicht1 = topDevice + topLicht1;
-                      errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
-                          soutMQTTerr(" MQTT subscribe Licht1", errMQTT);
-                    #endif
-                  #if (USE_POTI_ANA > OFF)
-                      topPoti1 = topDevice + topPoti1;
-                      errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
-                          soutMQTTerr(" MQTT subscribe poti1", errMQTT);
-                    #endif
-                  #if (USE_VCC50_ANA > OFF)
-                      topVCC50 = topDevice + topVCC50;
-                      errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
-                          soutMQTTerr(" MQTT subscribe vcc50", errMQTT);
-                    #endif
-                  #if (USE_VCC33_ANA > OFF)
-                      topVCC33 = topDevice + topVCC33;
-                      errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
-                          soutMQTTerr(" MQTT subscribe vcc33", errMQTT);
-                    #endif
-                  #if (USE_ACS712_ANA > OFF)
-                      topi7121 = topDevice + topi7121;
-                      errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
-                          soutMQTTerr(" MQTT subscribe topi712[0]", errMQTT);
-                      #if (USE_ACS712_ANA > 1)
-                          topi7122 = topDevice + topi7122;
-                          errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
-                              soutMQTTerr(" MQTT subscribe topi7122", errMQTT);
-                          #if (USE_ACS712_ANA > 2)
-                              topi7123 = topDevice + topi7123;
-                              errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
-                                  soutMQTTerr(" MQTT subscribe topi7123", errMQTT);
-                              #if (USE_ACS712_ANA > 3)
-                                  topi7124 = topDevice + topi7124;
-                                  errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
-                                      soutMQTTerr(" MQTT subscribe topi7124", errMQTT);
-                                #endif
+                  topRGBCol = topDevice + topRGBCol;
+                  errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
+                      soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
+                #endif
+              #if (USE_MQ3_ALK_ANA > OFF)
+                  topMQ3alk = topDevice + topMQ3alk;
+                  errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
+                      soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
+                #endif
+              #if (USE_PHOTO_SENS_ANA > OFF)
+                  topLicht1 = topDevice + topLicht1;
+                  errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
+                      soutMQTTerr(" MQTT subscribe Licht1", errMQTT);
+                #endif
+              #if (USE_POTI_ANA > OFF)
+                  topPoti1 = topDevice + topPoti1;
+                  errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
+                      soutMQTTerr(" MQTT subscribe poti1", errMQTT);
+                #endif
+              #if (USE_VCC50_ANA > OFF)
+                  topVCC50 = topDevice + topVCC50;
+                  errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
+                      soutMQTTerr(" MQTT subscribe vcc50", errMQTT);
+                #endif
+              #if (USE_VCC33_ANA > OFF)
+                  topVCC33 = topDevice + topVCC33;
+                  errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
+                      soutMQTTerr(" MQTT subscribe vcc33", errMQTT);
+                #endif
+              #if (USE_ACS712_ANA > OFF)
+                  topi7121 = topDevice + topi7121;
+                  errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
+                      soutMQTTerr(" MQTT subscribe topi712[0]", errMQTT);
+                  #if (USE_ACS712_ANA > 1)
+                      topi7122 = topDevice + topi7122;
+                      errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
+                          soutMQTTerr(" MQTT subscribe topi7122", errMQTT);
+                      #if (USE_ACS712_ANA > 2)
+                          topi7123 = topDevice + topi7123;
+                          errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
+                              soutMQTTerr(" MQTT subscribe topi7123", errMQTT);
+                          #if (USE_ACS712_ANA > 3)
+                              topi7124 = topDevice + topi7124;
+                              errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
+                                  soutMQTTerr(" MQTT subscribe topi7124", errMQTT);
                             #endif
                         #endif
                     #endif
@@ -1063,9 +1049,15 @@
                 {
                   bme1.setSampling(bme1.MODE_FORCED);
                   STXT(" BME280(1) gefunden");
-                  bmeTVal.begin(BME280T_FILT, BME280T_Drop);
-                  bmePVal.begin(BME280P_FILT, BME280P_Drop);
-                  bmeHVal.begin(BME280H_FILT, BME280H_Drop);
+                  #if (BME280T_FILT > OFF)
+                      bmeTVal.begin(BME280T_FILT, BME280T_Drop);
+                    #endif
+                  #if (BME280P_FILT > OFF)
+                      bmePVal.begin(BME280P_FILT, BME280P_Drop);
+                    #endif
+                  #if (BME280H_FILT > OFF)
+                      bmeHVal.begin(BME280H_FILT, BME280H_Drop);
+                    #endif
                   #if (USE_MQTT > OFF)
                       topBME280t = topDevice + topBME280t;
                       errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
@@ -1092,13 +1084,15 @@
               if (ccsda)
                   {
                     #if (USE_BME280_I2C > OFF)
-                        bmeT = ((int16_t)  ( bme1.readTemperature() + 0.5));
-                        ccs811.setTempOffset((float) bmeT);
-                    #else
-                        ccs811.setTempOffset((float) 25);
+                        bmeT = bme1.readTemperature();
+                        bmeH = bme1.readHumidity();
+                        ccs811.setEnvironmentalData(bmeT, bmeH);
+                      #else
+                          ccs811.setTempOffset((float) 25);
                       #endif
                     ccs811.setTempOffset((float) bmeT);
                     STXT(" CCS811 gefunden");
+                    #if (BME280P_FILT > OFF)
                     ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
                     ccsEVal.begin(CCS811E_FILT, CCS811E_Drop);
                     ccsVVal.begin(CCS811V_FILT, CCS811V_Drop);
@@ -1751,7 +1745,7 @@
                                 bmeH = bmeHVal[0].doVal( bme1.readHumidity());
                                   SVAL("280readH ", bmeH);
                               #endif
-                            bmeP       = round(bme1.readPressure() / 100 + 0.5);
+                            bmeP       = round((bme1.readPressure() / 100) + 0.5);
                             valBME280p = bmeP;
                                 SVAL("280readP ", bmeP);
                             #if (BME280P_FILT > 0)
@@ -1763,11 +1757,11 @@
                                 errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
                                 soutMQTTerr(topBME280t.c_str(), errMQTT);
                                     SVAL(topBME280t, valBME280t);
-                                valBME280p[0] = bmeP;
+                                valBME280p = bmeP;
                                     SVAL(topBME280p, valBME280p);
                                 errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
                                 soutMQTTerr(topBME280p.c_str(), errMQTT);
-                                valBME280h[0] = bmeH;
+                                valBME280h = bmeH;
                                     SVAL(topBME280h, valBME280h);
                                 errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
                                 soutMQTTerr(topBME280h.c_str(), errMQTT);
