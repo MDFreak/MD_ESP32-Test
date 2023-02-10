@@ -513,40 +513,30 @@
       #endif
     #if (USE_BME280_I2C > OFF)
         static Adafruit_BME280  bme1;
-        #if (BME2801_I2C == I2C1)
+        #if (BME280_I2C == I2C1)
             TwoWire* pbme1i2c = &i2c1;
           #else
             TwoWire* pbme1i2c = &i2c2;
           #endif
-        md_val<float> bmeTVal[USE_BME280_I2C];
-        md_val<float> bmePVal[USE_BME280_I2C];
-        md_val<float> bmeHVal[USE_BME280_I2C];
-        float         bmeT[USE_BME280_I2C];
-        float         bmeP[USE_BME280_I2C];
-        float         bmeH[USE_BME280_I2C];
-        float         bmeTold[USE_BME280_I2C];
-        float         bmePold[USE_BME280_I2C];
-        float         bmeHold[USE_BME280_I2C];
-        #if (USE_BME280_I2C > 1)
-            Adafruit_BME280  bme2;
-            #if (BME2802_I2C == I2C1)
-                TwoWire* pbme2i2c = &i2c1;
-              #else
-                TwoWire* pbme2i2c = &i2c2;
-              #endif
-          #endif
+        md_val<float> bmeTVal;
+        md_val<float> bmePVal;
+        md_val<float> bmeHVal;
+        float         bmeT;
+        float         bmeP;
+        float         bmeH;
+        float         bmeTold;
+        float         bmePold;
+        float         bmeHold;
+        static String valBME280t;
+        static String valBME280p;
+        static String valBME280h;
+        static int8_t outBME280t = OFF;
+        static int8_t outBME280h = OFF;
+        static int8_t outBME280p = OFF;
         #if (USE_MQTT > OFF)
-            static String valBME280t[USE_BME280_I2C];
-            static String valBME280p[USE_BME280_I2C];
-            static String valBME280h[USE_BME280_I2C];
-            static String topBME2801t = MQTT_BME2801T;
-            static String topBME2801p = MQTT_BME2801P;
-            static String topBME2801h = MQTT_BME2801H;
-            #if (USE_BME280_I2C > 1)
-                static String topBME2802t = MQTT_BME2802T;
-                static String topBME2802p = MQTT_BME2802P;
-                static String topBME2802h = MQTT_BME2802H;
-              #endif
+            static String topBME280t = MQTT_BME280T;
+            static String topBME280p = MQTT_BME280P;
+            static String topBME280h = MQTT_BME280H;
           #endif
       #endif
     #if (USE_CCS811_I2C > OFF)
@@ -1065,7 +1055,7 @@
             #endif
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
-              dispStatus("init BME2801");
+              dispStatus("init BME280");
               STXT(" init BME280 ...");
               bool bmeda = false;
               bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
@@ -1073,47 +1063,30 @@
                 {
                   bme1.setSampling(bme1.MODE_FORCED);
                   STXT(" BME280(1) gefunden");
-                  bmeTVal[0].begin(BME2801T_FILT, BME2801T_Drop);
-                  bmePVal[0].begin(BME2801P_FILT, BME2801P_Drop);
-                  bmeHVal[0].begin(BME2801H_FILT, BME2801H_Drop);
+                  bmeTVal[0].begin(BME280T_FILT, BME280T_Drop);
+                  bmePVal[0].begin(BME280P_FILT, BME280P_Drop);
+                  bmeHVal[0].begin(BME280H_FILT, BME280H_Drop);
                   #if (USE_BME280_I2C > OFF)
-                      bmeTVal[1].begin(BME2801T_FILT, BME2801T_Drop);
-                      bmePVal[1].begin(BME2801P_FILT, BME2801P_Drop);
-                      bmeHVal[1].begin(BME2801H_FILT, BME2801H_Drop);
+                      bmeTVal[1].begin(BME280T_FILT, BME280T_Drop);
+                      bmePVal[1].begin(BME280P_FILT, BME280P_Drop);
+                      bmeHVal[1].begin(BME280H_FILT, BME280H_Drop);
                     #endif
                   #if (USE_MQTT > OFF)
-                      topBME2801t = topDevice + topBME2801t;
-                      errMQTT = (int8_t) mqtt.subscribe(topBME2801t.c_str());
-                          soutMQTTerr(" MQTT subscribe BME2801t", errMQTT);
-                      topBME2801p = topDevice + topBME2801p;
-                      errMQTT = (int8_t) mqtt.subscribe(topBME2801p.c_str());
-                          soutMQTTerr(" MQTT subscribe BME2801p", errMQTT);
-                      topBME2801h = topDevice + topBME2801h;
-                      errMQTT = (int8_t) mqtt.subscribe(topBME2801h.c_str());
-                          soutMQTTerr(" MQTT subscribe BME2801h", errMQTT);
+                      topBME280t = topDevice + topBME280t;
+                      errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
+                          soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
+                      topBME280p = topDevice + topBME280p;
+                      errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
+                          soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
+                      topBME280h = topDevice + topBME280h;
+                      errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
+                          soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
                     #endif
                 }
                 else
                 {
                   STXT(" BME280(1) nicht gefunden");
                 }
-              #if (USE_BME280_I2C > 1)
-                  dispStatus("init BME280(2)");
-                  bmeda = false;
-                  bmeda = bme2.begin(I2C_BME280, pbme2i2c);
-                  if (bmeda)
-                      {
-                        bme2.setSampling(bme2.MODE_SLEEP);
-                          STXT(" BME280(2) gefunden");
-                        bme2T.begin(BME2802T_FILT, BME2802T_Drop, FILT_NU);
-                        bmeP.begin(BME2802P_FILT, BME2802P_Drop, FILT_NU);
-                        bmeH.begin(BME2802H_FILT, BME2802H_Drop, FILT_NU);
-                      }
-                    else
-                      {
-                        STXT(" BME280(1) nicht gefunden");
-                      }
-                #endif
             #endif
         // temp. air quality sensor CCS811
           #if (USE_CCS811_I2C > OFF)
@@ -1124,12 +1097,12 @@
               if (ccsda)
                   {
                     #if (USE_BME280_I2C > OFF)
-                        bmeT[0] = ((int16_t)  ( bme1.readTemperature() + 0.5));
-                        ccs811.setTempOffset((float) bmeT[0]);
+                        bmeT = ((int16_t)  ( bme1.readTemperature() + 0.5));
+                        ccs811.setTempOffset((float) bmeT);
                     #else
                         ccs811.setTempOffset((float) 25);
                       #endif
-                    ccs811.setTempOffset((float) bmeT[0]);
+                    ccs811.setTempOffset((float) bmeT);
                     STXT(" CCS811 gefunden");
                     ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
                     ccsEVal.begin(CCS811E_FILT, CCS811E_Drop);
@@ -1769,38 +1742,39 @@
                         #if (USE_BME280_I2C > OFF)
                             //bme1.init();
                             //usleep(100);
-                            bmeT[0] = bme1.readTemperature();
-                                //SVAL("280readT ", bmeT[0]);
-                            #if (BME2801T_FILT > 0)
-                                bmeT[0] = bmeTVal[0].doVal( bme1.readTemperature());
-                                  SVAL("280readT ", bmeT[0]);
+                            bmeT       = bme1.readTemperature();
+                            valBME280t = bmeT;
+                                //SVAL("280readT ", bmeT);
+                            #if (BME280T_FILT > 0)
+                                bmeT = bmeTVal[0].doVal( bme1.readTemperature());
+                                  SVAL("280readT ", bmeT);
                               #endif
-                            bmeH[0] = bme1.readHumidity();
-                                //SVAL("280readH ", bmeH[0]);
-                            #if (BME2801H_FILT > 0)
-                                bmeH[0] = bmeHVal[0].doVal( bme1.readHumidity());
-                                  SVAL("280readH ", bmeH[0]);
+                            bmeH = ((float) ((int16_t) (bme1.readHumidity() * 10))) + 0.5 /;
+                                //SVAL("280readH ", bmeH);
+                            #if (BME280H_FILT > 0)
+                                bmeH = bmeHVal[0].doVal( bme1.readHumidity());
+                                  SVAL("280readH ", bmeH);
                               #endif
-                            bmeP[0] = bme1.readPressure() / 100;
-                                //SVAL("280readP ", bmeP[0]);
-                            #if (BME2801P_FILT > 0)
-                                bmeP[0] = bmePVal[0].doVal(bme1.readPressure());
-                                  SVAL("280readP ", bmeP[0]);
+                            bmeP = bme1.readPressure() / 100;
+                                //SVAL("280readP ", bmeP);
+                            #if (BME280P_FILT > 0)
+                                bmeP = bmePVal[0].doVal(bme1.readPressure());
+                                  SVAL("280readP ", bmeP);
                               #endif
                             // Ausgabe auf MQTT
                             #if (USE_MQTT > OFF)
-                                valBME280t[0] = bmeT[0];
-                                    //SVAL(topBME2801t, valBME280t[0]);
-                                errMQTT = (int8_t) mqtt.publish(topBME2801t.c_str(), (uint8_t*) valBME280t[0].c_str(), valBME280t[0].length());
-                                    soutMQTTerr(topBME2801t.c_str(), errMQTT);
-                                valBME280p[0] = bmeP[0];
-                                    //SVAL(topBME2801p, valBME280p[0]);
-                                errMQTT = (int8_t) mqtt.publish(topBME2801p.c_str(), (uint8_t*) valBME280p[0].c_str(), valBME280p[0].length());
-                                    soutMQTTerr(" MQTT publish BME280p", errMQTT);
-                                valBME280h[0] = bmeH[0];
-                                    //SVAL(topBME2801h, valBME280h[0]);
-                                errMQTT = (int8_t) mqtt.publish(topBME2801h.c_str(), (uint8_t*) valBME280h[0].c_str(), valBME280h[0].length());
-                                    soutMQTTerr(" MQTT publish BME280h", errMQTT);
+                                errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                soutMQTTerr(topBME280t.c_str(), errMQTT);
+                                    //SVAL(topBME280t, valBME280t);
+                                    //SVAL(topBME280t, valBME280t);
+                                valBME280p[0] = bmeP;
+                                    //SVAL(topBME280p, valBME280p);
+                                errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
+                                soutMQTTerr(" MQTT publish BME280p", errMQTT);
+                                valBME280h[0] = bmeH;
+                                    //SVAL(topBME280h, valBME280h);
+                                errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
+                                soutMQTTerr(" MQTT publish BME280h", errMQTT);
                               #endif
                           #endif
                       break;
@@ -2425,7 +2399,7 @@
                           switch (i)
                             {
                               case 0:  // BME280 temperature
-                                  tmpval16 = (int16_t) (bmeT[i]+ 0.5);
+                                  tmpval16 = (int16_t) (bmeT+ 0.5);
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("°  ");

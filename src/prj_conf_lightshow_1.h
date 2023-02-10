@@ -63,10 +63,7 @@
               #endif
           #endif
         #if (USE_BME280_I2C > OFF )
-            #define BME2801_I2C         I2C1
-            #if ( USE_BME280_I2C > 1 )
-                #define BME2802_I2C     I2C2
-              #endif
+            #define BME280_I2C         I2C1
           #endif
 
         #if (USE_ADC1115_I2C > OFF)
@@ -441,22 +438,13 @@
         #endif
 
       #if (USE_BME280_I2C > OFF)
-          #define BME2801_I2C      I2C1
-          #define BME2801T_FILT    0
-          #define BME2801T_Drop    0
-          #define BME2801P_FILT    0
-          #define BME2801P_Drop    0
-          #define BME2801H_FILT    0
-          #define BME2801H_Drop    0
-          #if (USE_BME280_I2C > 1)
-              #define BME2802_I2C      I2C2
-              #define BME2802T_FILT    0
-              #define BME2802T_Drop    0
-              #define BME2802P_FILT    0
-              #define BME2802P_Drop    0
-              #define BME2802H_FILT    0
-              #define BME2802H_Drop    0
-            #endif
+          #define BME280_I2C      I2C1
+          #define BME280T_FILT    0
+          #define BME280T_Drop    0
+          #define BME280P_FILT    0
+          #define BME280P_Drop    0
+          #define BME280H_FILT    0
+          #define BME280H_Drop    0
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif

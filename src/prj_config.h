@@ -558,29 +558,16 @@
           #endif
 
         #if ( USE_BME280_I2C > OFF )
-            #define I2C_ADDR_BME2801        I2C_BME280
-            #define I2C_BME2801_USE_I2C1
-            #if defined( I2C_BME2801_USE_I2C1 )
-              #define I2C_BME2801         I2C1
-              #define I2C_SCL_BME2801     PIN_I2C1_SCL
-              #define I2C_SDA_BME2801     PIN_I2C1_SDA
+            #define I2C_ADDR_BME280        I2C_BME280
+            #define I2C_BME280_USE_I2C1
+            #if defined( I2C_BME280_USE_I2C1 )
+              #define I2C_BME280         I2C1
+              #define I2C_SCL_BME280     PIN_I2C1_SCL
+              #define I2C_SDA_BME280     PIN_I2C1_SDA
             #else
-                #define I2C_BME2801       I2C2
-                #define I2C_SCL_BME2801   PIN_I2C2_SCL
-                #define I2C_SDA_BME2801   PIN_I2C2_SDA
-              #endif
-            #if (( USE_I2C > 1 ) && ( USE_BME280_I2C > 1 ))
-                #define I2C_ADDR_BME2802      I2C_BME280
-                #define I2C_BME2802_USE_I2C2
-                #if defined( I2C_BME2802_USE_I2C1 )
-                  #define I2C_BME2802       I2C1
-                  #define I2C_SCL_BME2802   I2C1_SCL
-                  #define I2C_SDA_BME2802   I2C1_SDA
-                #else
-                    #define I2C_BME2802     I2C2
-                    #define I2C_SCL_BME2802 I2C2_SCL
-                    #define I2C_SDA_BME2802 I2C2_SDA
-                  #endif
+                #define I2C_BME280       I2C2
+                #define I2C_SCL_BME280   PIN_I2C2_SCL
+                #define I2C_SDA_BME280   PIN_I2C2_SDA
               #endif
           #endif
 
