@@ -1769,9 +1769,9 @@
                         #if (USE_BME280_I2C > OFF)
                             //bme1.init();
                             //usleep(100);
-                            bmeTVal[0].doVal((int16_t)  ( bme1.readTemperature()));
-                            bmeHVal[0].doVal((uint16_t) ( bme1.readHumidity()));
-                            bmePVal[0].doVal((uint16_t) (bme1.readPressure()));
+                            bmeTVal[0].doVal( bme1.readTemperature());
+                            bmeHVal[0].doVal( bme1.readHumidity());
+                            bmePVal[0].doVal(bme1.readPressure());
                             bmeT[0] = bmeTVal[0].getVal();
                             bmeH[0] = bmeHVal[0].getVal();
                             bmeP[0] = bmePVal[0].getVal();
