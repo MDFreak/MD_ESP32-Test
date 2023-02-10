@@ -2227,7 +2227,7 @@
                                   colToHexStr(ctmp, line2812[0]->col24());
                                   outStr.concat(ctmp);    // RGB-LED col24
                                   pmdServ->updateAll(outStr);
-                                  STXT(outStr);
+                                  //STXT(outStr);
                                 #endif
                               #if (USE_WS2812_MATRIX_OUT > OFF)
                                   outStr = "SVC3";
