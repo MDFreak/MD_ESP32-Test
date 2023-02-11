@@ -1091,7 +1091,7 @@
                           {
                             bmeT = bme1.readTemperature();
                             bmeH = bme1.readHumidity();
-                            ccs811.setEnvironmentalData(bmeT, bmeH);
+                            //ccs811.setEnvironmentalData(bmeT, bmeH);
                           }
                       #else
                           ccs811.setTempOffset((float) 25);
@@ -1760,6 +1760,14 @@
                                 bmeH = bmeHVal[0].doVal( bme1.readHumidity());
                                   SVAL(" 280readH ", bmeH);
                               #endif
+                            if (bmeH != bmeHold)
+                              {
+                                valBME280h = bmeH;
+                                outBME280h = TRUE;
+                                bmeHold = bmeH;
+                                    SVAL(" 280readH  new ", bmeH);
+                              }
+
                             bmeP       = round((bme1.readPressure() / 100) + 0.5);
                             valBME280p = bmeP;
                                 //SVAL(" 280readP ", bmeP);
@@ -1767,6 +1775,14 @@
                                 bmeP = bmePVal[0].doVal(bme1.readPressure());
                                   SVAL(" 280readP ", bmeP);
                               #endif
+                            if (bmeP != bmePold)
+                              {
+                                valBME280p = bmeH;
+                                outBME280p = TRUE;
+                                bmePold = bmeP;
+                                    SVAL(" 280readP  new ", bmeP);
+                              }
+
                             // Ausgabe auf MQTT
                             #if (USE_MQTT > OFF)
                                 errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
@@ -1786,41 +1802,45 @@
                     case 2:
                         //SOUT(" c2");
                         #if (USE_CCS811_I2C > OFF)
-                            ccsT       = round(ccs811.calculateTemperature() * 10) / 10;
-                            valCCS811t = bmeT;
-                                SVAL(" 811readT ", ccsT);
-                            #if (CCS811T_FILT > 0)
-                                ccsT = cssTVal.doVal( css811.readTemperature());
-                                  SVAL(" 811readT ", ccsT);
-                              #endif
-                            if (bmeT != bmeTold)
+                            if (ccs811.available())
                               {
+                                ccs811.readData();
+                                ccsT       = round(ccs811.calculateTemperature() * 10) / 10;
                                 valCCS811t = bmeT;
-                                outCCS811t = TRUE;
-                                ccsTold = ccsT;
-                                    SVAL(" 811readT  new ", bmeT);
-                              }
+                                    SVAL(" 811readT ", ccsT);
+                                #if (CCS811T_FILT > 0)
+                                    ccsT = cssTVal.doVal( css811.readTemperature());
+                                      SVAL(" 811readT ", ccsT);
+                                  #endif
+                                if (bmeT != bmeTold)
+                                  {
+                                    valCCS811t = bmeT;
+                                    outCCS811t = TRUE;
+                                    ccsTold = ccsT;
+                                        SVAL(" 811readT  new ", bmeT);
+                                  }
 
-                            //ccsE       = round(ccs811.calculateTemperature() * 10) / 10;
-                            valCCS811e = ccsE;
-                                SVAL(" 811readE ", ccsE);
-                            #if (CCS811E_FILT > 0)
-                                ccsT = cssTVal.doVal( css811.readTemperature());
-                                  SVAL(" 811readT ", ccsT);
-                              #endif
-                            if (bmeT != bmeTold)
-                              {
-                                valCCS811t = bmeT;
-                                outCCS811t = TRUE;
-                                ccsTold = ccsT;
-                                    SVAL(" 811readT  new ", bmeT);
-                              }
+                                ccsE       = ccs811.geteCO2();
+                                valCCS811e = ccsE;
+                                    SVAL(" 811readE ", ccsE);
+                                #if (CCS811E_FILT > 0)
+                                    ccsT = cssTVal.doVal( css811.readTemperature());
+                                      SVAL(" 811readT ", ccsT);
+                                  #endif
+                                if (bmeT != bmeTold)
+                                  {
+                                    valCCS811t = bmeT;
+                                    outCCS811t = TRUE;
+                                    ccsTold = ccsT;
+                                        SVAL(" 811readT  new ", bmeT);
+                                  }
 
-                            #if (USE_MQTT > 2)
-                                errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
-                                soutMQTTerr(topBME280t.c_str(), errMQTT);
-                                    //SVAL(topBME280t, valBME280t);
-                              #endif
+                                #if (USE_MQTT > 2)
+                                    errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                    soutMQTTerr(topBME280t.c_str(), errMQTT);
+                                        //SVAL(topBME280t, valBME280t);
+                                  #endif
+                              }
                           #endif
                       break;
                     case 3:
