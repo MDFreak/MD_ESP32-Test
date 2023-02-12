@@ -470,42 +470,33 @@
         uint8_t   webOn  = OFF;
       #endif // USE_WEBSERVER
     #if (USE_MQTT > OFF)
-        #ifdef MARVIN_ROGER
-            AsyncMqttClient  mqttClient;
-            TimerHandle_t    mqttReconnectTimer;
-            char tmpMQTT[40];
-            char tmpOut[40];
-            void* mqttID = NULL;
-          #endif
-        #ifdef X_RYL699
-            const char cerrMQTT[10][20]  =
+        const char cerrMQTT[10][20]  =
+          {
+            "success",          "UnknownError",
+            "TimedOut",         "AlreadyConnected",
+            "BadParameter",     "BadProperties",
+            "NetworkError",     "NotConnected",
+            "TranscientPacket", "WaitingForResult"
+          };
+        const  String mqttID       = MQTT_DEVICE;
+        const  String topDevice    = MQTT_TOPDEV;
+        static char   cMQTT[20]    = "";
+        static String tmpMQTT      = "";
+        static int8_t errMQTT      = 0;
+        struct MessageReceiver : public Network::Client::MessageReceived
+          {
+            void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic,
+                                 const Network::Client::MQTTv5::DynamicBinDataView & payload,
+                                 const uint16 packetIdentifier,
+                                 const Network::Client::MQTTv5::PropertiesView & properties)
               {
-                "success",          "UnknownError",
-                "TimedOut",         "AlreadyConnected",
-                "BadParameter",     "BadProperties",
-                "NetworkError",     "NotConnected",
-                "TranscientPacket", "WaitingForResult"
-              };
-            const  String mqttID       = MQTT_DEVICE;
-            const  String topDevice    = MQTT_TOPDEV;
-            static char   cMQTT[20]    = "";
-            static String tmpMQTT      = "";
-            static int8_t errMQTT      = 0;
-            struct MessageReceiver : public Network::Client::MessageReceived
-              {
-                void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic,
-                                     const Network::Client::MQTTv5::DynamicBinDataView & payload,
-                                     const uint16 packetIdentifier,
-                                     const Network::Client::MQTTv5::PropertiesView & properties)
-                  {
-                    fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
-                    fprintf(stdout, "  Topic: %.*s\n", topic.length, topic.data);
-                    fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
-                  }
-              };
-            MessageReceiver msgHdl;
-            Network::Client::MQTTv5 mqtt(mqttID.c_str(), &msgHdl);
-          #endif
+                fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
+                fprintf(stdout, "  Topic: %.*s\n", topic.length, topic.data);
+                fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
+              }
+          };
+        MessageReceiver msgHdl;
+        Network::Client::MQTTv5 mqtt(mqttID.c_str(), &msgHdl);
       #endif
   // ------ sensors ----------------------
     #if (USE_ADC1115_I2C > OFF)
