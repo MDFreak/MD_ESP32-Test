@@ -1087,15 +1087,6 @@
               ccsda = ccs811.begin(I2C_CCS811_AQ_5A, pbme1i2c);
               if (ccsda)
                   {
-                    #if (USE_BME280_I2C > OFF)
-                        if (bmeda)
-                          {
-                            bmeT = bme1.readTemperature();
-                            ccs811.setTempOffset(bmeT + TEMP_ABS_NULL);
-                          }
-                      #else
-                          ccs811.setTempOffset((float) 25);
-                      #endif
                     STXT(" CCS811 gefunden");
                     #if (CCS811T_FILT > OFF)
                         ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
@@ -1750,7 +1741,12 @@
                                 valBME280t = bmeT;
                                 pubBME280t = TRUE;
                                 bmeTold = bmeT;
-                                    SVAL(" 280readT  new ", bmeT);
+                                        SVAL(" 280readT  new ", bmeT);
+                                #if (USE_MQTT > OFF)
+                                    errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                    soutMQTTerr(topBME280t.c_str(), errMQTT);
+                                        SVAL(topBME280t, valBME280t);
+                                  #endif
                               }
 
                             bmeH       = round(bme1.readHumidity() * 10) / 10;
@@ -1787,6 +1783,7 @@
                             #if (USE_MQTT > OFF)
                                 errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
                                 soutMQTTerr(topBME280t.c_str(), errMQTT);
+                                    SVAL(" 280readT  new ", bmeT);
                                     //SVAL(topBME280t, valBME280t);
                                 valBME280p = bmeP;
                                 errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
