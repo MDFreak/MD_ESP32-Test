@@ -1809,6 +1809,45 @@
                     case 3:
                         //SOUT(" c3");
                         #if (USE_INA3221_I2C > OFF)
+                            if (ccs811.available())
+                              {
+                                if (ccs811.readData());  // CSS811 internal read data
+                                // CO2 value
+                                  ccsC = ccs811.geteCO2();
+                                  #if (CCS811C_FILT > OFF)
+                                      ccsC = ccsCVal.doVal(ccsC);
+                                    #endif
+                                  if (ccsC != ccsCold)
+                                    {
+                                      valCCS811c = ccsC;
+                                      pubCCS811c = TRUE;
+                                      ccsCold    = ccsC;
+                                          SVAL(" 811readC  new ", ccsC);
+                                      #if (USE_MQTT > OFF)
+                                          errMQTT = (int8_t) mqtt.publish(topCCS811c.c_str(), (uint8_t*) valCCS811c.c_str(), valCCS811c.length());
+                                          soutMQTTerr(topCCS811c.c_str(), errMQTT);
+                                              SVAL(topCCS811c.c_str(), valCCS811c);
+                                        #endif
+                                    }
+                                  else { pubCCS811c = FALSE; }
+                                // TVOC value
+                                  ccsT = ccs811.getTVOC();
+                                  #if (CCS811T_FILT > 0)
+                                      ccsT = ccsTVal.doVal(ccsT);
+                                    #endif
+                                  if (ccsT != ccsTold)
+                                    {
+                                      valCCS811t = ccsT;
+                                      pubCCS811t = TRUE;
+                                      ccsTold    = ccsT;
+                                          SVAL(" 811readT  new ", ccsT);
+                                      #if (USE_MQTT > OFF)
+                                          errMQTT = (int8_t) mqtt.publish(topCCS811t.c_str(), (uint8_t*) valCCS811t.c_str(), valCCS811t.length());
+                                          soutMQTTerr(topCCS811t.c_str(), errMQTT);
+                                              SVAL(topCCS811t.c_str(), valCCS811t);
+                                        #endif
+                                    }
+                              }
                           #endif
                       break;
                     case 4: // USE_DS18B20_1W_IO
