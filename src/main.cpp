@@ -1096,6 +1096,7 @@
                       #else
                           ccs811.setTempOffset((float) 25);
                       #endif
+                    while ()
                     STXT(" CCS811 gefunden");
                     #if (CCS811T_FILT > OFF)
                         ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
@@ -1804,42 +1805,43 @@
                         #if (USE_CCS811_I2C > OFF)
                             if (ccs811.available())
                               {
-                                ccs811.readData();
-                                ccsT       = round(ccs811.calculateTemperature() * 10) / 10;
-                                valCCS811t = bmeT;
-                                    SVAL(" 811readT ", ccsT);
-                                #if (CCS811T_FILT > 0)
-                                    ccsT = cssTVal.doVal( css811.readTemperature());
-                                      SVAL(" 811readT ", ccsT);
-                                  #endif
-                                if (bmeT != bmeTold)
-                                  {
+                                if ()
+                                    ccs811.readData();
+                                    ccsT       = round(ccs811.calculateTemperature() * 10) / 10;
                                     valCCS811t = bmeT;
-                                    outCCS811t = TRUE;
-                                    ccsTold = ccsT;
-                                        SVAL(" 811readT  new ", bmeT);
-                                  }
+                                        SVAL(" 811readT ", ccsT);
+                                    #if (CCS811T_FILT > 0)
+                                        ccsT = cssTVal.doVal( css811.readTemperature());
+                                          SVAL(" 811readT ", ccsT);
+                                      #endif
+                                    if (bmeT != bmeTold)
+                                      {
+                                        valCCS811t = bmeT;
+                                        outCCS811t = TRUE;
+                                        ccsTold = ccsT;
+                                            SVAL(" 811readT  new ", bmeT);
+                                      }
 
-                                ccsE       = ccs811.geteCO2();
-                                valCCS811e = ccsE;
-                                    SVAL(" 811readE ", ccsE);
-                                #if (CCS811E_FILT > 0)
-                                    ccsT = cssTVal.doVal( css811.readTemperature());
-                                      SVAL(" 811readT ", ccsT);
-                                  #endif
-                                if (bmeT != bmeTold)
-                                  {
-                                    valCCS811t = bmeT;
-                                    outCCS811t = TRUE;
-                                    ccsTold = ccsT;
-                                        SVAL(" 811readT  new ", bmeT);
-                                  }
+                                    ccsE       = ccs811.geteCO2();
+                                    valCCS811e = ccsE;
+                                        SVAL(" 811readE ", ccsE);
+                                    #if (CCS811E_FILT > 0)
+                                        ccsT = cssTVal.doVal( css811.readTemperature());
+                                          SVAL(" 811readT ", ccsT);
+                                      #endif
+                                    if (bmeT != bmeTold)
+                                      {
+                                        valCCS811t = bmeT;
+                                        outCCS811t = TRUE;
+                                        ccsTold = ccsT;
+                                            SVAL(" 811readT  new ", bmeT);
+                                      }
 
-                                #if (USE_MQTT > 2)
-                                    errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
-                                    soutMQTTerr(topBME280t.c_str(), errMQTT);
-                                        //SVAL(topBME280t, valBME280t);
-                                  #endif
+                                    #if (USE_MQTT > 2)
+                                        errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                        soutMQTTerr(topBME280t.c_str(), errMQTT);
+                                            //SVAL(topBME280t, valBME280t);
+                                      #endif
                               }
                           #endif
                       break;
