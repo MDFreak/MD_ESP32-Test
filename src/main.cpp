@@ -1779,13 +1779,12 @@
                         #if (USE_CCS811_I2C > OFF)
                             if (ccs811.available())
                               {
-                                if (ccs811.readData() >  );
+                                if (ccs811.readData());  // CSS811 internal read data
                                 // CO2 value
-                                  ccsC       = ccs811.geteCO2();
+                                  ccsC = ccs811.geteCO2();
                                   #if (CCS811C_FILT > OFF)
                                       ccsC = cssCVal.doVal(ccsC);
                                     #endif
-                                  valCCS811c = ccsC;
                                   if (ccsC != ccsCold)
                                     {
                                       valCCS811c = ccsC;
@@ -1802,9 +1801,8 @@
                                 // TVOC value
                                   ccsT       = ccs811.getTVOC();
                                   #if (CCS811T_FILT > 0)
-                                      ccsT = cssVVal.doVal( css811.readTemperature());
+                                      ccsT = cssVVal.doVal( cssT);
                                     #endif
-                                  valCCS811t = ccsT;
                                   if (ccsT != ccsTold)
                                     {
                                       valCCS811t = ccsT;
@@ -1812,7 +1810,7 @@
                                       ccsTold    = ccsT;
                                           SVAL(" 811readT  new ", ccsT);
                                       #if (USE_MQTT > OFF)
-                                          errMQTT = (int8_t) mqtt.publish(topCCS811t.c_str(), (uint8_t*) valCCS811t.c_str(), CCS811t.length());
+                                          errMQTT = (int8_t) mqtt.publish(topCCS811t.c_str(), (uint8_t*) valCCS811t.c_str(), valCCS811t.length());
                                           soutMQTTerr(topCCS811t.c_str(), errMQTT);
                                               SVAL(topCCS811t, valCCS811t);
                                         #endif
