@@ -1803,7 +1803,7 @@
                         //SOUT(" c3");
                         #if (USE_INA3221_I2C > OFF)
                             // U supply
-                              inaU[0][0] = ina32211.getBusVoltage_raw(2);
+                              inaU[0][0] = ina32211.getBusVoltage_V(3);
                               #if (INA3221I1_FILT > OFF)
                                   inaU[0][0] = ccsCVal.doVal(inaU[0][0]);
                                 #endif
@@ -1823,8 +1823,7 @@
                                 }
                               else { pubINA3221u[0][0] = FALSE; }
                             // I supply
-                              inaI[0][0] = ina32211.getCurrent_mA(0);
-                              inaI[0][0] = ina32211.getShuntVoltage_raw(2);
+                              inaI[0][0] = ina32211.getCurrent_mA(3);
                               if (inaI[0][0] != inaIold[0][0])
                                 {
                                   valINA3221i[0][0] = inaI[0][0];
@@ -1841,7 +1840,7 @@
                                 }
                               else { pubINA3221i[0][0] = FALSE; }
                             // U 5V supply
-                              inaU[0][1] = ina32211.getBusVoltage_V(1);
+                              inaU[0][1] = ina32211.getBusVoltage_V(2);
                               #if (INA3221I1_FILT > OFF)
                                   inaU[0][1] = ccsCVal.doVal(inaU[0][1]);
                                 #endif
@@ -1861,7 +1860,7 @@
                                 }
                               else { pubINA3221u[0][1] = FALSE; }
                             // I 5V supply
-                              inaI[0][1] = ina32211.getCurrent_mA(1);
+                              inaI[0][1] = ina32211.getCurrent_mA(2);
                               if (inaI[0][1] != inaIold[0][1])
                                 {
                                   valINA3221i[0][1] = inaI[0][1];
@@ -1878,7 +1877,7 @@
                                 }
                               else { pubINA3221i[0][1] = FALSE; }
                             // U 3.3V supply
-                              inaU[0][2] = ina32211.getBusVoltage_V(2);
+                              inaU[0][2] = ina32211.getBusVoltage_V(0);
                               #if (INA3221I1_FILT > OFF)
                                   inaU[0][2] = ccsCVal.doVal(inaU[0][2]);
                                 #endif
@@ -1898,7 +1897,7 @@
                                 }
                               else { pubINA3221u[0][2] = FALSE; }
                             // I 3.3V supply
-                              inaI[0][2] = ina32211.getCurrent_mA(2);
+                              inaI[0][2] = ina32211.getCurrent_mA(0);
                               if (inaI[0][2] != inaIold[0][2])
                                 {
                                   valINA3221i[0][2] = inaI[0][2];
