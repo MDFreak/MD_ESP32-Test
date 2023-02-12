@@ -530,9 +530,9 @@
         static String valBME280t = "";
         static String valBME280p = "";
         static String valBME280h = "";
-        static int8_t outBME280t = OFF;
-        static int8_t outBME280h = OFF;
-        static int8_t outBME280p = OFF;
+        static int8_t pubBME280t = OFF;
+        static int8_t pubBME280h = OFF;
+        static int8_t pubBME280p = OFF;
         static int8_t bmeda      = FALSE;
         #if (USE_MQTT > OFF)
             static String topBME280t = MQTT_BME280T;
@@ -564,8 +564,8 @@
         static String   valCCS811e = "";
         static String   valCCS811v = "";
         static int8_t   pubCCS811t = OFF;
-        static int8_t   outCCS811h = OFF;
-        static int8_t   outCCS811p = OFF;
+        static int8_t   pubCCS811e = OFF;
+        static int8_t   pubCCS811v = OFF;
         static int8_t   ccsda      = FALSE;
         #if (USE_MQTT > OFF)
             static String topCCS811t   = MQTT_CCS811T;
@@ -1091,8 +1091,7 @@
                         if (bmeda)
                           {
                             bmeT = bme1.readTemperature();
-                            bmeH = bme1.readHumidity();
-                            //ccs811.setEnvironmentalData(bmeT, bmeH);
+                            ccs811.setTempOffset(bmeT + TEMP_ABS_NULL);
                           }
                       #else
                           ccs811.setTempOffset((float) 25);
@@ -1749,7 +1748,7 @@
                             if (bmeT != bmeTold)
                               {
                                 valBME280t = bmeT;
-                                outBME280t = TRUE;
+                                pubBME280t = TRUE;
                                 bmeTold = bmeT;
                                     SVAL(" 280readT  new ", bmeT);
                               }
@@ -1764,7 +1763,7 @@
                             if (bmeH != bmeHold)
                               {
                                 valBME280h = bmeH;
-                                outBME280h = TRUE;
+                                pubBME280h = TRUE;
                                 bmeHold = bmeH;
                                     SVAL(" 280readH  new ", bmeH);
                               }
@@ -1779,7 +1778,7 @@
                             if (bmeP != bmePold)
                               {
                                 valBME280p = bmeH;
-                                outBME280p = TRUE;
+                                pubBME280p = TRUE;
                                 bmePold = bmeP;
                                     SVAL(" 280readP  new ", bmeP);
                               }
@@ -1806,7 +1805,7 @@
                             if (ccs811.available())
                               {
                                 ccs811.readData();
-                                ccsT       = round(ccs811.calculateTemperature() * 10) / 10;
+                                ccsT       = (float) ccs811.calculateTemperature();
                                 valCCS811t = bmeT;
                                     SVAL(" 811readT ", ccsT);
                                 #if (CCS811T_FILT > 0)
@@ -1818,21 +1817,34 @@
                                     valCCS811t = bmeT;
                                     pubCCS811t = TRUE; // set Flag for publishing
                                     ccsTold = ccsT;
-                                        SVAL(" 811readT  new ", bmeT);
+                                        SVAL(" 811readT  new ", ccsT);
                                   }
                                 ccsE       = ccs811.geteCO2();
                                 valCCS811e = ccsE;
-                                    SVAL(" 811readE ", ccsE);
+                                    //SVAL(" 811readE ", ccsE);
                                 #if (CCS811E_FILT > 0)
                                     ccsT = cssTVal.doVal( css811.readTemperature());
                                       SVAL(" 811readT ", ccsT);
                                   #endif
-                                if (bmeT != bmeTold)
+                                if (ccsE != ccsEold)
                                   {
-                                    valCCS811t = bmeT;
-                                    pubCCS811t = TRUE;
-                                    ccsTold = ccsT;
-                                        SVAL(" 811readT  new ", bmeT);
+                                    valCCS811e = ccsE;
+                                    pubCCS811e = TRUE;
+                                    ccsEold    = ccsE;
+                                        SVAL(" 811readE  new ", ccsE);
+                                  }
+                                valCCS811v = ccsV;
+                                    SVAL(" 811readV ", ccsV);
+                                #if (CCS811V_FILT > 0)
+                                    ccsT = cssVVal.doVal( css811.readTemperature());
+                                      SVAL(" 811readV ", ccsT);
+                                  #endif
+                                if (ccsV != ccsVold)
+                                  {
+                                    valCCS811v = ccsV;
+                                    pubCCS811v = TRUE;
+                                    ccsVold    = ccsV;
+                                        SVAL(" 811readV  new ", ccsV);
                                   }
                                 #if (USE_MQTT > 2)
                                     errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
