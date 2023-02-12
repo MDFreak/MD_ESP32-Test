@@ -546,13 +546,13 @@
           #define INA3221U2_DROP            0  // [0 - 26000 mV]
           #define INA3221U3_FILT            0  // voltage in3+
           #define INA3221U3_DROP            0  // [0 - 26000 mV]
-          #if (USE_INA3221_I2C > 1)
+          #if (USE_INA3221_I2C > OFF) // 1)
               #define INA32212_I2C              I2C1
-              #define INA32211_ADDR             I2C_INA3221_42
+              #define INA32212_ADDR             I2C_INA3221_42
             #endif
-            #if (USE_INA3221_I2C > 1)
-                #define INA32212_I2C              I2C1
-                #define INA32211_ADDR             I2C_INA3221_43
+            #if (USE_INA3221_I2C > OFF) // 2)
+                #define INA32213_I2C              I2C1
+                #define INA32213_ADDR             I2C_INA3221_43
               #endif
           #if (USE_MQTT > OFF)
               #define MQTT_INA32211I1         "ina32211i1"
