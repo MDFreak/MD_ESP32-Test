@@ -558,7 +558,7 @@
           #endif
       #endif
     #if (USE_INA3221_I2C > OFF)
-        SDL_Arduino_INA3221 ina32211(INA32211_ADDR, 0.1f);
+        SDL_Arduino_INA3221 ina32211(INA32211_ADDR); // def 0.1 ohm
         #if (INA32211_I2C == I2C1)
             TwoWire* ina1i2c = &i2c1;
           #else
@@ -1803,7 +1803,7 @@
                         //SOUT(" c3");
                         #if (USE_INA3221_I2C > OFF)
                             // U supply
-                              inaU[0][0] = ina32211.getBusVoltage_V(0);
+                              inaU[0][0] = ina32211.getBusVoltage_raw(2);
                               #if (INA3221I1_FILT > OFF)
                                   inaU[0][0] = ccsCVal.doVal(inaU[0][0]);
                                 #endif
@@ -1824,6 +1824,7 @@
                               else { pubINA3221u[0][0] = FALSE; }
                             // I supply
                               inaI[0][0] = ina32211.getCurrent_mA(0);
+                              inaI[0][0] = ina32211.getShuntVoltage_raw(2);
                               if (inaI[0][0] != inaIold[0][0])
                                 {
                                   valINA3221i[0][0] = inaI[0][0];
