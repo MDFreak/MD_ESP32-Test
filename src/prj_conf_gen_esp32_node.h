@@ -527,8 +527,8 @@
           #define CCS811V_Drop              0  // [400 - 29206 ppm]
           #if (USE_MQTT > OFF)
               #define MQTT_CCS811T         "ccs811t"
-              #define MQTT_CCS811E         "ccs811e"
-              #define MQTT_CCS811V         "ccs811v"
+              #define MQTT_CCS811C         "ccs811e"
+              #define MQTT_CCS811T         "ccs811v"
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
