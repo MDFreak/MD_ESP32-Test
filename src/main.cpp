@@ -572,9 +572,11 @@
         float            inaU   [USE_INA3221_I2C][3];
         float            inaIold[USE_INA3221_I2C][3];
         float            inaUold[USE_INA3221_I2C][3];
+        static String    valINA3221i[USE_INA3221_I2C][3];
+        static String    valINA3221u[USE_INA3221_I2C][3];
+        static int8_t    pubINA3221i[USE_INA3221_I2C][3];
+        static int8_t    pubINA3221u[USE_INA3221_I2C][3];
         #if (USE_MQTT > OFF)
-            static String valINA3221i[USE_INA3221_I2C][3];
-            static String valINA3221u[USE_INA3221_I2C][3];
             static String topINA32211i[3] = { MQTT_INA32211I1, MQTT_INA32211I2, MQTT_INA32211I3 };
             static String topINA32211u[3] = { MQTT_INA32211U1, MQTT_INA32211U2, MQTT_INA32211U3 };
           #endif
@@ -1108,8 +1110,8 @@
             #endif
         // temp. current sensor INA3221
           #if (USE_INA3221_I2C > OFF)
-              dispStatus("init INA3221");
-              STXT(" init INA3221 ...");
+              dispStatus("init INA32211");
+              STXT(" init INA32211 ...");
               ina32211.begin();
               inaIVal[0][0].begin(INA3221I1_FILT, INA3221I1_DROP);
               inaIVal[0][1].begin(INA3221I2_FILT, INA3221I2_DROP);
@@ -1117,6 +1119,11 @@
               inaUVal[0][0].begin(INA3221U1_FILT, INA3221U1_DROP);
               inaUVal[0][1].begin(INA3221U2_FILT, INA3221U2_DROP);
               inaUVal[0][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+              for (uint8_t i = 0, i < 3 , i++ )
+                {
+                  pubINA3221i[0][i] = OFF;
+                  pubINA3221u[0][i] = OFF;
+                }
               #if (USE_MQTT > OFF)
                   topINA32211i[0] = topDevice + topINA32211i[0];
                   errMQTT = (int8_t) mqtt.subscribe(topINA32211i[0].c_str());
@@ -1139,9 +1146,9 @@
                   errMQTT = (int8_t) mqtt.subscribe(topINA32211u[2].c_str());
                       soutMQTTerr(" MQTT subscribe topINA32211u[2]", errMQTT);
                 #endif
-              #if (USE_INA3221_I2C > OFF)//1)
-                  dispStatus("init INA3221");
-                  STXT(" init INA3221 ...");
+              #if (USE_INA3221_I2C > 1)
+                  dispStatus("init INA32212");
+                  STXT(" init INA32212 ...");
                   ina32212.begin();
                   inaIVal[1][0].begin(INA3221I1_FILT, INA3221I1_DROP);
                   inaIVal[1][1].begin(INA3221I2_FILT, INA3221I2_DROP);
@@ -1149,6 +1156,11 @@
                   inaUVal[1][0].begin(INA3221U1_FILT, INA3221U1_DROP);
                   inaUVal[1][1].begin(INA3221U2_FILT, INA3221U2_DROP);
                   inaUVal[1][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+                  for (uint8_t i = 0, i < 3 , i++ )
+                    {
+                      pubINA3221i[1][i] = OFF;
+                      pubINA3221u[1][i] = OFF;
+                    }
                   #if (USE_MQTT > OFF)
                       topINA32212i[0] = topDevice + topINA32212i[0];
                       errMQTT = (int8_t) mqtt.subscribe(topINA32212i[0].c_str());
@@ -1169,106 +1181,44 @@
                           soutMQTTerr(" MQTT subscribe topINA32212i[2]", errMQTT);
                       topINA32212u[2] = topDevice + topINA32212u[2];
                       errMQTT = (int8_t) mqtt.subscribe(topINA32212u[2].c_str());
-                          soutMQTTerr(" MQTT subscribe topINA32211u[2]", errMQTT);
+                          soutMQTTerr(" MQTT subscribe topINA32212u[2]", errMQTT);
                     #endif
-                  #if (USE_INA3221_I2C > OFF)//2)
-                      dispStatus("init INA3221");
-                      STXT(" init INA3221 ...");
-                      ina32213.begin();
+                  #if (USE_INA3221_I2C > 2)
+                      dispStatus("init INA32213");
+                      STXT(" init INA32213 ...");
+                      ina32212.begin();
                       inaIVal[2][0].begin(INA3221I1_FILT, INA3221I1_DROP);
                       inaIVal[2][1].begin(INA3221I2_FILT, INA3221I2_DROP);
                       inaIVal[2][2].begin(INA3221I3_FILT, INA3221I3_DROP);
                       inaUVal[2][0].begin(INA3221U1_FILT, INA3221U1_DROP);
                       inaUVal[2][1].begin(INA3221U2_FILT, INA3221U2_DROP);
                       inaUVal[2][2].begin(INA3221U3_FILT, INA3221U3_DROP);
-                        #endif
-                    #endif
-                #endif
-              #if (USE_MQTT > OFF)
-                  // Kanal 1
-                  valINA3221i[0][0] = topDevice + valINA3221i[0][0];
-                  errMQTT = (int8_t) mqtt.subscribe(valINA3221i[0][0].c_str());
-                      soutMQTTerr(" MQTT subscribe valINA32211i[0]", errMQTT);
-                  valINA3221i[0][1] = topDevice + valINA3221i[0][1];
-                  errMQTT = (int8_t) mqtt.subscribe(valINA3221i[0][1].c_str());
-                      soutMQTTerr(" MQTT subscribe valINA32211i[1]", errMQTT);
-                  valINA3221i[0][2] = topDevice + valINA3221i[0][2];
-                  errMQTT = (int8_t) mqtt.subscribe(valINA3221i[0][2].c_str());
-                      soutMQTTerr(" MQTT subscribe valINA32211i[2]", errMQTT);
+                      for (uint8_t i = 0, i < 3 , i++ )
+                        {
+                          pubINA3221i[2][i] = OFF;
+                          pubINA3221u[2][i] = OFF;
+                        }
+                      #if (USE_MQTT > OFF)
+                          topINA32213i[0] = topDevice + topINA32213i[0];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213i[0].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213i[0]", errMQTT);
+                          topINA32213u[0] = topDevice + topINA32212u[0];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213u[0].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213u[0]", errMQTT);
 
-                  valINA3221u[0][0] = topDevice + valINA3221u[0][0];
-                  errMQTT = (int8_t) mqtt.subscribe(valINA3221u[0][0].c_str());
-                      soutMQTTerr(" MQTT subscribe valINA32211u[0]", errMQTT);
-                  valINA3221u[0][1] = topDevice + valINA3221u[0][1];
-                  errMQTT = (int8_t) mqtt.subscribe(valINA3221u[0][1].c_str());
-                      soutMQTTerr(" MQTT subscribe valINA32211u[1]", errMQTT);
-                  valINA3221u[0][2] = topDevice + valINA3221u[0][2];
-                  errMQTT = (int8_t) mqtt.subscribe(valINA3221u[0][2].c_str());
-                      soutMQTTerr(" MQTT subscribe valINA32211u[2]", errMQTT);
-                  #if (USE_INA3221_I2C > OFF)//1)
-                      // Kanal 1
-                      valINA3221i[1][0] = topDevice +   valINA3221i[1][0];
-                      errMQTT = (int8_t) mqtt.subscribe(valINA3221i[1][0].c_str());
-                          soutMQTTerr(" MQTT subscribe  valINA32213i[0]", errMQTT);
-                      valINA3221i[1][1] = topDevice +  valINA3221i[1][1];
-                      errMQTT = (int8_t) mqtt.subscribe(valINA3221i[1][1].c_str());
-                          soutMQTTerr(" MQTT subscribe valINA32213i[1]", errMQTT);
-                      valINA3221i[1][2] = topDevice +  valINA3221i[1][2];
-                      errMQTT = (int8_t) mqtt.subscribe(valINA3221i[1][2].c_str());
-                          soutMQTTerr(" MQTT subscribe valINA32213i[2]", errMQTT);
+                          topINA32213i[1] = topDevice + topINA32213i[1];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213i[1].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213i[1]", errMQTT);
+                          topINA32213u[1] = topDevice + topINA32213u[1];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213u[1].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213u[1]", errMQTT);
 
-                      valINA3221u[1][0] = topDevice + valINA3221u[1][0];
-                      errMQTT = (int8_t) mqtt.subscribe(valINA3221u[1][0].c_str());
-                          soutMQTTerr(" MQTT subscribe valINA32213u[0]", errMQTT);
-                      valINA3221u[1][1] = topDevice + valINA3221u[1][1];
-                      errMQTT = (int8_t) mqtt.subscribe(valINA3221u[1][1].c_str());
-                          soutMQTTerr(" MQTT subscribe valINA32213u[1]", errMQTT);
-                      valINA3221u[1][2] = topDevice + valINA3221u[1][2];
-                      errMQTT = (int8_t) mqtt.subscribe(valINA3221u[1][2].c_str());
-                          soutMQTTerr(" MQTT subscribe valINA32213u[2]", errMQTT);
-                      #if (USE_INA3221_I2C > OFF)//2)
-                          // Kanal 1
-                          valINA3221I[2][0] = topDevice + valINA3221I[2][0];
-                          errMQTT = (int8_t) mqtt.subscribe(valINA3221I[2][0].c_str());
-                              soutMQTTerr(" MQTT subscribe valINA32213I[0]", errMQTT);
-                          valINA3221I[2][1] = topDevice + valINA3221I[2][1];
-                          errMQTT = (int8_t) mqtt.subscribe(valINA3221I[2][1].c_str());
-                              soutMQTTerr(" MQTT subscribe valINA32213I[1]", errMQTT);
-                          valINA3221I[2][2] = topDevice + valINA3221I[2][2];
-                          errMQTT = (int8_t) mqtt.subscribe(valINA3221I[2][2].c_str());
-                              soutMQTTerr(" MQTT subscribe valINA32213I[2]", errMQTT);
-
-                          valINA3221U[2][0] = topDevice + valINA3221U[2][0];
-                          errMQTT = (int8_t) mqtt.subscribe(valINA3221U[2][0].c_str());
-                              soutMQTTerr(" MQTT subscribe valINA32213U[0]", errMQTT);
-                          valINA3221U[2][1] = topDevice + valINA3221U[2][1];
-                          errMQTT = (int8_t) mqtt.subscribe(valINA3221U[2][1].c_str());
-                              soutMQTTerr(" MQTT subscribe valINA32213U[1]", errMQTT);
-                          valINA3221U[2][2] = topDevice + valINA3221U[2][2];
-                          errMQTT = (int8_t) mqtt.subscribe(valINA3221U[2][2].c_str());
-                              soutMQTTerr(" MQTT subscribe valINA32213U[2]", errMQTT);
-                          #if (USE_INA3221_I2C > 3)
-                              // Kanal 1
-                              valINA3221I[3][0] = topDevice + valINA3221I[3][0];
-                              errMQTT = (int8_t) mqtt.subscribe(valINA3221I[3][0].c_str());
-                                  soutMQTTerr(" MQTT subscribe valINA32214I[0]", errMQTT);
-                              valINA3221I[3][1] = topDevice + valINA3221I[3][1];
-                              errMQTT = (int8_t) mqtt.subscribe(valINA3221I[3][1].c_str());
-                                  soutMQTTerr(" MQTT subscribe valINA32214I[1]", errMQTT);
-                              valINA3221I[3][2] = topDevice + valINA3221I[3][2];
-                              errMQTT = (int8_t) mqtt.subscribe(valINA3221I[3][2].c_str());
-                                  soutMQTTerr(" MQTT subscribe valINA32214I[2]", errMQTT);
-
-                              valINA3221U[3][0] = topDevice + valINA3221U[3][0];
-                              errMQTT = (int8_t) mqtt.subscribe(valINA3221U[3][0].c_str());
-                                  soutMQTTerr(" MQTT subscribe valINA32214U[0]", errMQTT);
-                              valINA3221U[3][1] = topDevice + valINA3221U[3][1];
-                              errMQTT = (int8_t) mqtt.subscribe(valINA3221U[3][1].c_str());
-                                  soutMQTTerr(" MQTT subscribe valINA32214U[1]", errMQTT);
-                              valINA3221U[3][2] = topDevice + valINA3221U[3][2];
-                              errMQTT = (int8_t) mqtt.subscribe(valINA3221U[3][2].c_str());
-                                  soutMQTTerr(" MQTT subscribe valINA32214U[2]", errMQTT);
-                            #endif
+                          topINA32213i[2] = topDevice + topINA32213i[2];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213i[2].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213i[2]", errMQTT);
+                          topINA32213u[2] = topDevice + topINA32213u[2];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213u[2].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213u[2]", errMQTT);
                         #endif
                     #endif
                 #endif
@@ -1852,45 +1802,41 @@
                     case 3:
                         //SOUT(" c3");
                         #if (USE_INA3221_I2C > OFF)
-                            if (ccs811.available())
-                              {
-                                if (ccs811.readData());  // CSS811 internal read data
-                                // CO2 value
-                                  ccsC = ccs811.geteCO2();
-                                  #if (CCS811C_FILT > OFF)
-                                      ccsC = ccsCVal.doVal(ccsC);
+                            // U supply
+                              inaU[0][0] = ina32211.getBusVoltage_V(0);
+                              #if (INA3221I1_FILT > OFF)
+                                  inaU[0][0] = ccsCVal.doVal(inaU[0][0]);
+                                #endif
+                              if (inaU[0][0] != inaUold[0][0])
+                                {
+                                  valINA3221i[0][0] = inaU[0][0];
+                                  pubINA3221i[0][0] = TRUE;
+                                  inaIold[0][0]     = inaU[0][0];
+                                      SVAL(" U supply  new ", inaU[0][0]);
+                                  #if (USE_MQTT > OFF)
+                                      errMQTT = (int8_t) mqtt.publish(topCCS811c.c_str(), (uint8_t*) valCCS811c.c_str(), valCCS811c.length());
+                                      soutMQTTerr(topCCS811c.c_str(), errMQTT);
+                                          SVAL(topCCS811c.c_str(), valCCS811c);
                                     #endif
-                                  if (ccsC != ccsCold)
-                                    {
-                                      valCCS811c = ccsC;
-                                      pubCCS811c = TRUE;
-                                      ccsCold    = ccsC;
-                                          SVAL(" 811readC  new ", ccsC);
-                                      #if (USE_MQTT > OFF)
-                                          errMQTT = (int8_t) mqtt.publish(topCCS811c.c_str(), (uint8_t*) valCCS811c.c_str(), valCCS811c.length());
-                                          soutMQTTerr(topCCS811c.c_str(), errMQTT);
-                                              SVAL(topCCS811c.c_str(), valCCS811c);
-                                        #endif
-                                    }
-                                  else { pubCCS811c = FALSE; }
-                                // TVOC value
-                                  ccsT = ccs811.getTVOC();
-                                  #if (CCS811T_FILT > 0)
-                                      ccsT = ccsTVal.doVal(ccsT);
+                                }
+                              else { pubCCS811c = FALSE; }
+                            // I supply
+                              ccsT = ccs811.getTVOC();
+                              #if (CCS811T_FILT > 0)
+                                  ccsT = ccsTVal.doVal(ccsT);
+                                #endif
+                              if (ccsT != ccsTold)
+                                {
+                                  valCCS811t = ccsT;
+                                  pubCCS811t = TRUE;
+                                  ccsTold    = ccsT;
+                                      SVAL(" 811readT  new ", ccsT);
+                                  #if (USE_MQTT > OFF)
+                                      errMQTT = (int8_t) mqtt.publish(topCCS811t.c_str(), (uint8_t*) valCCS811t.c_str(), valCCS811t.length());
+                                      soutMQTTerr(topCCS811t.c_str(), errMQTT);
+                                          SVAL(topCCS811t.c_str(), valCCS811t);
                                     #endif
-                                  if (ccsT != ccsTold)
-                                    {
-                                      valCCS811t = ccsT;
-                                      pubCCS811t = TRUE;
-                                      ccsTold    = ccsT;
-                                          SVAL(" 811readT  new ", ccsT);
-                                      #if (USE_MQTT > OFF)
-                                          errMQTT = (int8_t) mqtt.publish(topCCS811t.c_str(), (uint8_t*) valCCS811t.c_str(), valCCS811t.length());
-                                          soutMQTTerr(topCCS811t.c_str(), errMQTT);
-                                              SVAL(topCCS811t.c_str(), valCCS811t);
-                                        #endif
-                                    }
-                              }
+                                }
                           #endif
                       break;
                     case 4: // USE_DS18B20_1W_IO
