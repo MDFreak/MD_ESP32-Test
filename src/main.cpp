@@ -1087,10 +1087,7 @@
                             soutMQTTerr(" MQTT subscribe CCS811t", errMQTT);
                         topCCS811c = topDevice + topCCS811c;
                         errMQTT = (int8_t) mqtt.subscribe(topCCS811c.c_str());
-                            soutMQTTerr(" MQTT subscribe CCS811e", errMQTT);
-                        topCCS811t = topDevice + topCCS811t;
-                        errMQTT = (int8_t) mqtt.subscribe(topCCS811t.c_str());
-                            soutMQTTerr(" MQTT subscribe CCS811v", errMQTT);
+                            soutMQTTerr(" MQTT subscribe CCS811c", errMQTT);
                       #endif
                     ccs811T.startT();
                     //while(!ccs811.available() && !ccs811T.TOut()); // wait until init
@@ -1774,7 +1771,7 @@
                                 // CO2 value
                                   ccsC = ccs811.geteCO2();
                                   #if (CCS811C_FILT > OFF)
-                                      ccsC = cssCVal.doVal(ccsC);
+                                      ccsC = ccsCVal.doVal(ccsC);
                                     #endif
                                   if (ccsC != ccsCold)
                                     {
@@ -1785,14 +1782,14 @@
                                       #if (USE_MQTT > OFF)
                                           errMQTT = (int8_t) mqtt.publish(topCCS811c.c_str(), (uint8_t*) valCCS811c.c_str(), valCCS811c.length());
                                           soutMQTTerr(topCCS811c.c_str(), errMQTT);
-                                              SVAL(topCCS811c, valCCS811c);
+                                              SVAL(topCCS811c.c_str(), valCCS811c);
                                         #endif
                                     }
                                   else { pubCCS811c = FALSE; }
                                 // TVOC value
-                                  ccsT       = ccs811.getTVOC();
+                                  ccsT = ccs811.getTVOC();
                                   #if (CCS811T_FILT > 0)
-                                      ccsT = cssVVal.doVal( cssT);
+                                      ccsT = ccsTVal.doVal(ccsT);
                                     #endif
                                   if (ccsT != ccsTold)
                                     {
@@ -1803,7 +1800,7 @@
                                       #if (USE_MQTT > OFF)
                                           errMQTT = (int8_t) mqtt.publish(topCCS811t.c_str(), (uint8_t*) valCCS811t.c_str(), valCCS811t.length());
                                           soutMQTTerr(topCCS811t.c_str(), errMQTT);
-                                              SVAL(topCCS811t, valCCS811t);
+                                              SVAL(topCCS811t.c_str(), valCCS811t);
                                         #endif
                                     }
                               }
