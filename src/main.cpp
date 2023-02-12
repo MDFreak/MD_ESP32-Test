@@ -558,16 +558,16 @@
           #endif
       #endif
     #if (USE_INA3221_I2C > OFF)
-        SDL_Arduino_INA3221  ina32211(INA32211_ADDR);
+        SDL_Arduino_INA3221 ina32211(INA32211_ADDR);
         #if (INA32211_I2C == I2C1)
             TwoWire* ina1i2c = &i2c1;
           #else
             TwoWire* ina1i2c = &i2c2;
           #endif
         md_val<int16_t>    inaIVal[USE_INA3221_I2C][3];
-        md_scale<int16_t>  inaISkal[USE_INA3221_I2C][3];
+        //md_scale<int16_t>  inaISkal[USE_INA3221_I2C][3];
         md_val<uint16_t>   inaUVal[USE_INA3221_I2C][3];
-        md_scale<int16_t>  inaUSkal[USE_INA3221_I2C][3];
+        //md_scale<int16_t>  inaUSkal[USE_INA3221_I2C][3];
         int16_t            inaI[USE_INA3221_I2C][3];
         int16_t            inaU[USE_INA3221_I2C][3];
         int16_t            inaIold[USE_INA3221_I2C][3];
@@ -1075,11 +1075,8 @@
                     #if (CCS811T_FILT > OFF)
                         ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
                       #endif
-                    #if (CCS811E_FILT > OFF)
-                        ccsCVal.begin(CCS811E_FILT, CCS811E_Drop);
-                      #endif
-                    #if (CCS811V_FILT > OFF)
-                        ccsTVal.begin(CCS811V_FILT, CCS811V_Drop);
+                    #if (CCS811C_FILT > OFF)
+                        ccsCVal.begin(CCS811C_FILT, CCS811C_Drop);
                       #endif
                     #if (USE_MQTT > OFF)
                         topCCS811t = topDevice + topCCS811t;
@@ -1108,6 +1105,14 @@
               inaUVal[0][0].begin(INA3221U1_FILT, INA3221U1_DROP);
               inaUVal[0][1].begin(INA3221U2_FILT, INA3221U2_DROP);
               inaUVal[0][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+              #if (USE_MQTT > OFF)
+                  topCCS811t = topDevice + topCCS811t;
+                  errMQTT = (int8_t) mqtt.subscribe(topCCS811t.c_str());
+                      soutMQTTerr(" MQTT subscribe CCS811t", errMQTT);
+                  topCCS811c = topDevice + topCCS811c;
+                  errMQTT = (int8_t) mqtt.subscribe(topCCS811c.c_str());
+                      soutMQTTerr(" MQTT subscribe CCS811c", errMQTT);
+                #endif
               #if (USE_INA3221_I2C > 1)
                   dispStatus("init INA3221");
                   STXT(" init INA3221 ...");
