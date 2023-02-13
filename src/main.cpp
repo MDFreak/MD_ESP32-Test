@@ -570,8 +570,10 @@
         //md_scale<float>  inaUSkal[USE_INA3221_I2C][3];
         float            inaI   [USE_INA3221_I2C][3];
         float            inaU   [USE_INA3221_I2C][3];
+        float            inaP   [USE_INA3221_I2C][3];
         float            inaIold[USE_INA3221_I2C][3];
         float            inaUold[USE_INA3221_I2C][3];
+        float            inaPold[USE_INA3221_I2C][3];
         static String    valINA3221i[USE_INA3221_I2C][3];
         static String    valINA3221u[USE_INA3221_I2C][3];
         static String    valINA3221p[USE_INA3221_I2C][3];
@@ -1851,23 +1853,26 @@
                                     #endif
                                 }
                               else { pubINA3221u[0][0] = FALSE; }
-                            // I 3.3V
-                              inaI[0][0] = ina32211.getCurrent_mA(1);
-                              if (inaI[0][0] != inaIold[0][0])
-                                {
-                                  valINA3221i[0][0] = inaI[0][0];
-                                  pubINA3221i[0][0] = TRUE;
-                                  inaIold[0][0]     = inaI[0][0];
-                                      SVAL(" I 3.3 new ", inaI[0][0]);
-                                  #if (USE_MQTT > OFF)
-                                      errMQTT = (int8_t) mqtt.publish(topINA32211i[0].c_str(),
-                                                                      (uint8_t*) valINA3221i[0][0].c_str(),
-                                                                      valINA3221i[0][0].length());
-                                      soutMQTTerr(topINA32211i[0].c_str(), errMQTT);
-                                          SVAL(topINA32211i[0].c_str(), valINA3221i[0][0]);
-                                    #endif
-                                }
-                              else { pubINA3221i[0][0] = FALSE; }
+                            // I 3.3V not used
+                              #ifdef NOTUSED
+                                inaI[0][0] = ina32211.getCurrent_mA(1);
+                                if (inaI[0][0] != inaIold[0][0])
+                                  {
+                                    valINA3221i[0][0] = inaI[0][0];
+                                    pubINA3221i[0][0] = TRUE;
+                                    inaIold[0][0]     = inaI[0][0];
+                                        SVAL(" I 3.3 new ", inaI[0][0]);
+                                    #if (USE_MQTT > OFF)
+                                        errMQTT = (int8_t) mqtt.publish(topINA32211i[0].c_str(),
+                                                                        (uint8_t*) valINA3221i[0][0].c_str(),
+                                                                        valINA3221i[0][0].length());
+                                        soutMQTTerr(topINA32211i[0].c_str(), errMQTT);
+                                            SVAL(topINA32211i[0].c_str(), valINA3221i[0][0]);
+                                      #endif
+                                  }
+                                else { pubINA3221i[0][0] = FALSE; }
+                                #endif
+                            // P 3.3V not used
                             // U 5V supply
                               inaU[0][1] = ina32211.getBusVoltage_V(2);
                               #if (INA3221I1_FILT > OFF)
@@ -1905,6 +1910,23 @@
                                     #endif
                                 }
                               else { pubINA3221i[0][1] = FALSE; }
+                            // P 5V supply
+                              inaP[0][1] = (inaU[0][1] * inaI[0][1]) / 1000;
+                              if (inaP[0][1] != inaPold[0][1])
+                                {
+                                  valINA3221p[0][1] = inaP[0][1];
+                                  pubINA3221p[0][1] = TRUE;
+                                  inaPold[0][1]     = inaP[0][1];
+                                      SVAL(" P 5.0  new ", inaI[0][1]);
+                                  #if (USE_MQTT > OFF)
+                                      errMQTT = (int8_t) mqtt.publish(topINA32211p[1].c_str(),
+                                                                      (uint8_t*) valINA3221p[0][1].c_str(),
+                                                                      valINA3221p[0][1].length());
+                                      soutMQTTerr(topINA32211p[1].c_str(), errMQTT);
+                                          SVAL(topINA32211p[1].c_str(), valINA3221p[0][1]);
+                                    #endif
+                                }
+                              else { pubINA3221p[0][1] = FALSE; }
                             // U main supply 12V/19V supply
                               inaU[0][2] = ina32211.getBusVoltage_V(3);
                               #if (INA3221I1_FILT > OFF)
@@ -1942,6 +1964,23 @@
                                     #endif
                                 }
                               else { pubINA3221i[0][2] = FALSE; }
+                            // P main supply
+                              inaP[0][2] = (inaU[0][2] * inaI[0][2]) / 1000;
+                              if (inaP[0][2] != inaPold[0][2])
+                                {
+                                  valINA3221p[0][2] = inaP[0][2];
+                                  pubINA3221p[0][2] = TRUE;
+                                  inaPold[0][2]     = inaP[0][2];
+                                      SVAL(" P supply  new ", inaI[0][2]);
+                                  #if (USE_MQTT > OFF)
+                                      errMQTT = (int8_t) mqtt.publish(topINA32211p[2].c_str(),
+                                                                      (uint8_t*) valINA3221p[0][2].c_str(),
+                                                                      valINA3221p[0][2].length());
+                                      soutMQTTerr(topINA32211p[2].c_str(), errMQTT);
+                                          SVAL(topINA32211p[2].c_str(), valINA3221p[0][2]);
+                                    #endif
+                                }
+                              else { pubINA3221p[0][2] = FALSE; }
                           #endif
                       break;
                     case 4: // USE_DS18B20_1W_IO
