@@ -1929,7 +1929,7 @@
                               else { pubINA3221p[0][1] = FALSE; }
                             // U main supply 12V/19V supply
                               inaU[0][2] = ina32211.getBusVoltage_V(3);
-                              #if (INA3221I1_FILT > OFF)
+                              #if (INA3221U3_FILT > OFF)
                                   inaU[0][2] = ccsCVal.doVal(inaU[0][2]);
                                 #endif
                               //if (inaU[0][2] != inaUold[0][2])
@@ -1949,6 +1949,9 @@
                               //else { pubINA3221u[0][2] = FALSE; }
                             // I main supply 12V/19V supply
                               inaI[0][2] = -ina32211.getCurrent_mA(3);
+                              #if (INA3221I3_FILT > OFF)
+                                  inaI[0][2] = ccsCVal.doVal(inaI[0][2]);
+                                #endif
                               //if (inaI[0][2] != inaIold[0][2])
                                 //{
                                   valINA3221i[0][2] = inaI[0][2];

@@ -538,13 +538,13 @@
           #define INA3221I1_DROP            0  // [-5000 - +5000 mA]
           #define INA3221I2_FILT            5  // current in2
           #define INA3221I2_DROP            0  // [-5000 - +5000 mA]
-          #define INA3221I3_FILT            5  // current in3
+          #define INA3221I3_FILT            0  // current in3
           #define INA3221I3_DROP            0  // [-5000 - +5000 mA]
           #define INA3221U1_FILT            5  // voltage in1+
           #define INA3221U1_DROP            0  // [0 - 26000 mV]
           #define INA3221U2_FILT            5  // voltage in2+
           #define INA3221U2_DROP            0  // [0 - 26000 mV]
-          #define INA3221U3_FILT            5  // voltage in3+
+          #define INA3221U3_FILT            0  // voltage in3+
           #define INA3221U3_DROP            0  // [0 - 26000 mV]
           #if (USE_INA3221_I2C > OFF) // 1)
               #define INA32212_I2C              I2C1
