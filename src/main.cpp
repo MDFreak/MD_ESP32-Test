@@ -1113,7 +1113,7 @@
               dispStatus("init INA32211");
 
               STX(" init INA32211 ID ");
-              STLN((ina32211.getManufID()));
+              SOUTHEXLN((ina32211.getManufID()));
               ina32211.begin();
               inaIVal[0][0].begin(INA3221I1_FILT, INA3221I1_DROP);
               inaIVal[0][1].begin(INA3221I2_FILT, INA3221I2_DROP);
