@@ -1883,13 +1883,13 @@
                                   valINA3221u[0][1] = inaU[0][1];
                                   pubINA3221u[0][1] = TRUE;
                                   inaIold[0][1]     = inaU[0][1];
-                                      SVAL(" U 5.0 new ", inaU[0][1]);
+                                      //SVAL(" U 5.0 new ", inaU[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211u[1].c_str(),
                                                                       (uint8_t*) valINA3221u[0][1].c_str(),
                                                                       valINA3221u[0][1].length());
                                       soutMQTTerr(topINA32211u[1].c_str(), errMQTT);
-                                          SVAL(topINA32211u[1].c_str(), valINA3221u[0][1]);
+                                          //SVAL(topINA32211u[1].c_str(), valINA3221u[0][1]);
                                     #endif
                                 }
                               else { pubINA3221u[0][1] = FALSE; }
@@ -1900,13 +1900,13 @@
                                   valINA3221i[0][1] = inaI[0][1];
                                   pubINA3221i[0][1] = TRUE;
                                   inaIold[0][1]     = inaI[0][1];
-                                      SVAL(" I 5.0  new ", inaI[0][1]);
+                                      //SVAL(" I 5.0  new ", inaI[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211i[1].c_str(),
                                                                       (uint8_t*) valINA3221i[0][1].c_str(),
                                                                       valINA3221i[0][1].length());
                                       soutMQTTerr(topINA32211i[1].c_str(), errMQTT);
-                                          SVAL(topINA32211i[1].c_str(), valINA3221i[0][1]);
+                                          //SVAL(topINA32211i[1].c_str(), valINA3221i[0][1]);
                                     #endif
                                 }
                               else { pubINA3221i[0][1] = FALSE; }
@@ -1917,13 +1917,13 @@
                                   valINA3221p[0][1] = inaP[0][1];
                                   pubINA3221p[0][1] = TRUE;
                                   inaPold[0][1]     = inaP[0][1];
-                                      SVAL(" P 5.0  new ", inaI[0][1]);
+                                      //SVAL(" P 5.0  new ", inaI[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211p[1].c_str(),
                                                                       (uint8_t*) valINA3221p[0][1].c_str(),
                                                                       valINA3221p[0][1].length());
                                       soutMQTTerr(topINA32211p[1].c_str(), errMQTT);
-                                          SVAL(topINA32211p[1].c_str(), valINA3221p[0][1]);
+                                          //SVAL(topINA32211p[1].c_str(), valINA3221p[0][1]);
                                     #endif
                                 }
                               else { pubINA3221p[0][1] = FALSE; }
@@ -2055,12 +2055,12 @@
                         #if (USE_VCC50_ANA > OFF)
                             #if (VCC50_ADC > OFF)
                               #endif
-                            #if (VCC50_1115 > 10)  //OFF)
+                            #if (VCC50_1115 > OFF)
                                 ads[VCC50_1115_CHAN].setGain(VCC_1115_ATT);
-                                ads[VCC50_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC50_1115_CHAN], /*continuous=*/false);
+                                //ads[VCC50_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC50_1115_CHAN], /*continuous=*/false);
                                 //usleep(1200); // Wait 1200us for the conversion to complete
-                                while (!ads[VCC50_1115_CHAN].conversionComplete());
-                                vcc50 = ads[VCC50_1115_CHAN].getLastConversionResults();   // Read the conversion results
+                                //while (!ads[VCC50_1115_CHAN].conversionComplete());
+                                //vcc50 = ads[VCC50_1115_CHAN].getLastConversionResults();   // Read the conversion results
                                 //vcc50Val.doVal(vcc50);
                               #endif
                           #endif

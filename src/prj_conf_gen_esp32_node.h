@@ -519,10 +519,10 @@
         #endif
       #if (USE_CCS811_I2C > OFF)
           #define CCS811_I2C                I2C1
-          #define CCS811C_FILT              9  // eCO2 value in air
-          #define CCS811C_Drop              1  // [0 - 32768 ppm]
-          #define CCS811T_FILT              9  // TVOC value carbon value in air
-          #define CCS811T_Drop              1  // [400 - 29206 ppm]
+          #define CCS811C_FILT              0  // eCO2 value in air
+          #define CCS811C_Drop              0  // [0 - 32768 ppm]
+          #define CCS811T_FILT              0  // TVOC value carbon value in air
+          #define CCS811T_Drop              0  // [400 - 29206 ppm]
           #if (USE_MQTT > OFF)
               #define MQTT_CCS811T         "ccs811t"
               #define MQTT_CCS811C         "ccs811c"
