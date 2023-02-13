@@ -1843,13 +1843,13 @@
                                   valINA3221u[0][0] = inaU[0][0];
                                   pubINA3221u[0][0] = TRUE;
                                   inaIold[0][0]     = inaU[0][0];
-                                      SVAL(" U 3.3 new ", inaU[0][0]);
+                                      //SVAL(" U 3.3 new ", inaU[0][0]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211u[0].c_str(),
                                                                       (uint8_t*) valINA3221u[0][0].c_str(),
                                                                       valINA3221u[0][0].length());
                                       soutMQTTerr(topINA32211u[0].c_str(), errMQTT);
-                                          SVAL(topINA32211u[0].c_str(), valINA3221u[0][0]);
+                                          //SVAL(topINA32211u[0].c_str(), valINA3221u[0][0]);
                                     #endif
                                 }
                               else { pubINA3221u[0][0] = FALSE; }
@@ -1900,13 +1900,13 @@
                                   valINA3221i[0][1] = inaI[0][1];
                                   pubINA3221i[0][1] = TRUE;
                                   inaIold[0][1]     = inaI[0][1];
-                                      SVAL(" I 5.0  new ", inaI[0][1]);
+                                      //SVAL(" I 5.0  new ", inaI[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211i[1].c_str(),
                                                                       (uint8_t*) valINA3221i[0][1].c_str(),
                                                                       valINA3221i[0][1].length());
                                       soutMQTTerr(topINA32211i[1].c_str(), errMQTT);
-                                          SVAL(topINA32211i[1].c_str(), valINA3221i[0][1]);
+                                          //SVAL(topINA32211i[1].c_str(), valINA3221i[0][1]);
                                     #endif
                                 }
                               else { pubINA3221i[0][1] = FALSE; }
@@ -1917,13 +1917,13 @@
                                   valINA3221p[0][1] = inaP[0][1];
                                   pubINA3221p[0][1] = TRUE;
                                   inaPold[0][1]     = inaP[0][1];
-                                      SVAL(" P 5.0  new ", inaI[0][1]);
+                                      //SVAL(" P 5.0  new ", inaI[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211p[1].c_str(),
                                                                       (uint8_t*) valINA3221p[0][1].c_str(),
                                                                       valINA3221p[0][1].length());
                                       soutMQTTerr(topINA32211p[1].c_str(), errMQTT);
-                                          SVAL(topINA32211p[1].c_str(), valINA3221p[0][1]);
+                                          //SVAL(topINA32211p[1].c_str(), valINA3221p[0][1]);
                                     #endif
                                 }
                               else { pubINA3221p[0][1] = FALSE; }
@@ -1932,8 +1932,8 @@
                               #if (INA3221I1_FILT > OFF)
                                   inaU[0][2] = ccsCVal.doVal(inaU[0][2]);
                                 #endif
-                              if (inaU[0][2] != inaUold[0][2])
-                                {
+                              //if (inaU[0][2] != inaUold[0][2])
+                                //{
                                   valINA3221u[0][2] = inaU[0][2];
                                   pubINA3221u[0][2] = TRUE;
                                   inaIold[0][2]     = inaU[0][2];
@@ -1945,12 +1945,12 @@
                                       soutMQTTerr(topINA32211u[2].c_str(), errMQTT);
                                           SVAL(topINA32211u[2].c_str(), valINA3221u[0][2]);
                                     #endif
-                                }
-                              else { pubINA3221u[0][2] = FALSE; }
+                                //}
+                              //else { pubINA3221u[0][2] = FALSE; }
                             // I main supply 12V/19V supply
                               inaI[0][2] = -ina32211.getCurrent_mA(3);
-                              if (inaI[0][2] != inaIold[0][2])
-                                {
+                              //if (inaI[0][2] != inaIold[0][2])
+                                //{
                                   valINA3221i[0][2] = inaI[0][2];
                                   pubINA3221i[0][2] = TRUE;
                                   inaIold[0][2]     = inaI[0][2];
@@ -1962,16 +1962,16 @@
                                       soutMQTTerr(topINA32211i[2].c_str(), errMQTT);
                                           SVAL(topINA32211i[2].c_str(), valINA3221i[0][2]);
                                     #endif
-                                }
-                              else { pubINA3221i[0][2] = FALSE; }
+                                //}
+                              //else { pubINA3221i[0][2] = FALSE; }
                             // P main supply
                               inaP[0][2] = (inaU[0][2] * inaI[0][2]) / 1000;
-                              if (inaP[0][2] != inaPold[0][2])
-                                {
+                              //if (inaP[0][2] != inaPold[0][2])
+                                //{
                                   valINA3221p[0][2] = inaP[0][2];
                                   pubINA3221p[0][2] = TRUE;
                                   inaPold[0][2]     = inaP[0][2];
-                                      SVAL(" P supply  new ", inaI[0][2]);
+                                      SVAL(" P supply  new ", inaP[0][2]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211p[2].c_str(),
                                                                       (uint8_t*) valINA3221p[0][2].c_str(),
@@ -1979,8 +1979,8 @@
                                       soutMQTTerr(topINA32211p[2].c_str(), errMQTT);
                                           SVAL(topINA32211p[2].c_str(), valINA3221p[0][2]);
                                     #endif
-                                }
-                              else { pubINA3221p[0][2] = FALSE; }
+                                //}
+                              //else { pubINA3221p[0][2] = FALSE; }
                           #endif
                       break;
                     case 4: // USE_DS18B20_1W_IO
