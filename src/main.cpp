@@ -580,7 +580,7 @@
             static String topINA32211i[3] = { MQTT_INA32211I1, MQTT_INA32211I2, MQTT_INA32211I3 };
             static String topINA32211u[3] = { MQTT_INA32211U1, MQTT_INA32211U2, MQTT_INA32211U3 };
           #endif
-        #if (USE_INA3221_I2C > OFF)//1)
+        #if (USE_INA3221_I2C > 1)
             SDL_Arduino_INA3221 ina32212(INA32212_ADDR, 0.1f);
             #if (INA32212_I2C == I2C1)
                 TwoWire* ina2i2c = &i2c1;
@@ -591,7 +591,7 @@
                 static String topINA32212i[3] = { MQTT_INA32212I1, MQTT_INA32212I2, MQTT_INA32212I3 };
                 static String topINA32212u[3] = { MQTT_INA32212U1, MQTT_INA32212U2, MQTT_INA32212U3 };
               #endif
-            #if (USE_INA3221_I2C > OFF)//2)
+            #if (USE_INA3221_I2C > 2)
                 SDL_Arduino_INA3221 ina32213(INA32213_ADDR, 0.1f);
                 #if (INA32213_I2C == I2C1)
                     TwoWire* ina3i2c = &i2c1;
@@ -1819,7 +1819,7 @@
                     case 3: // INA3221_I2C 3x U+I measures
                         //SOUT(" c3");
                         #if (USE_INA3221_I2C > OFF)
-                            // U supply
+                            // U 3.3V supply
                               inaU[0][0] = ina32211.getBusVoltage_V(1);
                               #if (INA3221I1_FILT > OFF)
                                   inaU[0][0] = ccsCVal.doVal(inaU[0][0]);
@@ -1839,7 +1839,7 @@
                                     #endif
                                 }
                               else { pubINA3221u[0][0] = FALSE; }
-                            // I supply
+                            // I 3.3V
                               inaI[0][0] = ina32211.getCurrent_mA(1);
                               if (inaI[0][0] != inaIold[0][0])
                                 {
@@ -1877,7 +1877,7 @@
                                 }
                               else { pubINA3221u[0][1] = FALSE; }
                             // I 5V supply
-                              inaI[0][1] = ina32211.getCurrent_mA(2);
+                              inaI[0][1] = -ina32211.getCurrent_mA(2);
                               if (inaI[0][1] != inaIold[0][1])
                                 {
                                   valINA3221i[0][1] = inaI[0][1];
@@ -1914,7 +1914,7 @@
                                 }
                               else { pubINA3221u[0][2] = FALSE; }
                             // I main supply 12V/19V supply
-                              inaI[0][2] = ina32211.getCurrent_mA(3);
+                              inaI[0][2] = -ina32211.getCurrent_mA(3);
                               if (inaI[0][2] != inaIold[0][2])
                                 {
                                   valINA3221i[0][2] = inaI[0][2];
