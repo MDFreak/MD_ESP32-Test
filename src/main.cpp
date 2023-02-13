@@ -574,11 +574,14 @@
         float            inaUold[USE_INA3221_I2C][3];
         static String    valINA3221i[USE_INA3221_I2C][3];
         static String    valINA3221u[USE_INA3221_I2C][3];
+        static String    valINA3221p[USE_INA3221_I2C][3];
         static int8_t    pubINA3221i[USE_INA3221_I2C][3];
         static int8_t    pubINA3221u[USE_INA3221_I2C][3];
+        static int8_t    pubINA3221p[USE_INA3221_I2C][3];
         #if (USE_MQTT > OFF)
             static String topINA32211i[3] = { MQTT_INA32211I1, MQTT_INA32211I2, MQTT_INA32211I3 };
             static String topINA32211u[3] = { MQTT_INA32211U1, MQTT_INA32211U2, MQTT_INA32211U3 };
+            static String topINA32211p[3] = { MQTT_INA32211P1, MQTT_INA32211P2, MQTT_INA32211P3 };
           #endif
         #if (USE_INA3221_I2C > 1)
             SDL_Arduino_INA3221 ina32212(INA32212_ADDR, 0.1f);
@@ -1132,6 +1135,9 @@
                     topINA32211u[0] = topDevice + topINA32211u[0];
                     errMQTT = (int8_t) mqtt.subscribe(topINA32211u[0].c_str());
                         soutMQTTerr(" MQTT subscribe topINA32211u[0]", errMQTT);
+                    topINA32211p[0] = topDevice + topINA32211p[0];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211p[0].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211p[0]", errMQTT);
                   #endif
               // channel 2
                 #if (INA3221U2_FILT > OFF)
@@ -1147,6 +1153,9 @@
                     topINA32211u[1] = topDevice + topINA32211u[1];
                     errMQTT = (int8_t) mqtt.subscribe(topINA32211u[1].c_str());
                         soutMQTTerr(" MQTT subscribe topINA32211u[1]", errMQTT);
+                    topINA32211p[1] = topDevice + topINA32211p[1];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211p[1].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211p[1]", errMQTT);
                   #endif
               // channel 3
                 #if (INA3221U3_FILT > OFF)
@@ -1162,6 +1171,9 @@
                     topINA32211u[2] = topDevice + topINA32211u[2];
                     errMQTT = (int8_t) mqtt.subscribe(topINA32211u[2].c_str());
                         soutMQTTerr(" MQTT subscribe topINA32211u[2]", errMQTT);
+                    topINA32211p[2] = topDevice + topINA32211p[2];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211p[2].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211p[2]", errMQTT);
                   #endif
               #if (USE_INA3221_I2C > 1)
                   dispStatus("init INA32212");

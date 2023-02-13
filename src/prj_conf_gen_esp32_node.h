@@ -555,24 +555,44 @@
                 #define INA32213_ADDR             I2C_INA3221_43
               #endif
           #if (USE_MQTT > OFF)
-              #define MQTT_INA32211I1         "ina32211i1"
-              #define MQTT_INA32211I2         "ina32211i2"
-              #define MQTT_INA32211I3         "ina32211i3"
               #define MQTT_INA32211U1         "ina32211u1"
+              #define MQTT_INA32211I1         "ina32211i1"
+              #define MQTT_INA32211P1         "ina32211p1"
+
               #define MQTT_INA32211U2         "ina32211u2"
+              #define MQTT_INA32211I2         "ina32211i2"
+              #define MQTT_INA32211P2         "ina32211p2"
+
               #define MQTT_INA32211U3         "ina32211u3"
-              #define MQTT_INA32212I1         "ina32212i1"
-              #define MQTT_INA32212I2         "ina32212i2"
-              #define MQTT_INA32212I3         "ina32212i3"
-              #define MQTT_INA32212U1         "ina32212u1"
-              #define MQTT_INA32212U2         "ina32212u2"
-              #define MQTT_INA32212U3         "ina32212u3"
-              #define MQTT_INA32213I1         "ina32213i1"
-              #define MQTT_INA32213I2         "ina32213i2"
-              #define MQTT_INA32213I3         "ina32213i3"
-              #define MQTT_INA32213U1         "ina32213u1"
-              #define MQTT_INA32213U2         "ina32213u2"
-              #define MQTT_INA32213U3         "ina32213u3"
+              #define MQTT_INA32211I3         "ina32211i3"
+              #define MQTT_INA32211P3         "ina32211p3"
+              #if (USE_MQTT > 1)
+                  #define MQTT_INA32212U1         "ina32212u1"
+                  #define MQTT_INA32212I1         "ina32212i1"
+                  #define MQTT_INA32212P1         "ina32212p1"
+
+                  #define MQTT_INA32212U2         "ina32212u2"
+                  #define MQTT_INA32212I2         "ina32212i2"
+                  #define MQTT_INA32212P2         "ina32212p2"
+
+                  #define MQTT_INA32212U3         "ina32212u3"
+                  #define MQTT_INA32212I3         "ina32212i3"
+                  #define MQTT_INA32212P3         "ina32212p3"
+
+                  #if (USE_MQTT > 1)
+                      #define MQTT_INA32213U1         "ina32213u1"
+                      #define MQTT_INA32213I1         "ina32213i1"
+                      #define MQTT_INA32213P1         "ina32213p1"
+
+                      #define MQTT_INA32213U2         "ina32213u2"
+                      #define MQTT_INA32213I2         "ina32213i2"
+                      #define MQTT_INA32213P2         "ina32213p2"
+
+                      #define MQTT_INA32213U3         "ina32213u3"
+                      #define MQTT_INA32213I3         "ina32213i3"
+                      #define MQTT_INA32213P3         "ina32213p3"
+                    #endif
+                #endif
             #endif
         #endif
       #if (USE_BME280_I2C > OFF)
