@@ -1,0 +1,144 @@
+
+Skip to content
+All gists
+Back to GitHub
+@MDFreak
+@haeshh
+haeshh/ads1115_alert.ino Secret
+Created June 1, 2021 16:38 • Report abuse
+
+0
+
+    0
+
+Code
+Revisions 1
+ADS1115 Analog-Digital-Konverter (ADC): Testprogramme für ESP32 (siehe https://unsinnsbasis.de/ads1115/)
+ads1115_alert.ino
+/* ADS1115
+ *  - Test der Funktionsweise des ALRT-Pins bei
+ *    Nutzung der Komparator-Funktion
+ *
+ * 2021-05-30 Heiko (unsinnsbasis.de)
+ */
+
+#define ALERT_PIN 5  // GPIO-Pin für digitale Eingabe
+
+#include <Adafruit_ADS1X15.h> // bindet Wire.h für I2C mit ein
+Adafruit_ADS1115 ads;
+#define ADS_I2C_ADDR 0x48
+const float multiplier = 0.1875F;  // ADS1115-Multiplikator bei 2/3 Verstärkung
+
+void setup() {
+  Serial.begin(115200);
+  delay(500);
+  Serial.println("ADS1115 Alert-Test");
+
+  ads.begin(ADS_I2C_ADDR, &Wire);
+  // Verstärkung 2/3 (GAIN_TWOTHIRDS ist Standard)
+  ads.setGain(GAIN_TWOTHIRDS);
+
+  pinMode(ALERT_PIN, INPUT);
+  Serial.printf("Setup: ALERT ist %d\n", digitalRead(ALERT_PIN));
+  delay(100);
+  // Komparator starten an Kanal 0 bei 2 Volt;
+  // Schwellenwert = 2000 / 0,1875
+  ads.startComparator_SingleEnded(0, (int)(2000/multiplier));
+  Serial.printf("Setup nach Start: ALERT ist %d\n", digitalRead(ALERT_PIN));
+}
+
+void loop() {
+  int adc0;      // Messwert an Kanal 0 des ADS1115
+  int alert;
+  float ads_mv;  // Messwert in Millivolt umgerechnet
+
+  alert = digitalRead(ALERT_PIN);
+  // ALRT deaktivieren (zurücksetzen) durch Auslesen des letzten Wertes
+  adc0 = ads.getLastConversionResults();
+  ads_mv = ads.computeVolts(adc0) * 1000;  // in Millivolt umrechnen
+
+  Serial.printf("Spannung: %4.2f mV; ALRT: %d\n", ads_mv, alert);
+
+  delay(500);
+}
+
+
+esp32_analog_ads1115.ino
+/* Abfrage von analogen Werten am ESP32
+ *  - per GPIO-Pin
+ *  - am ADS1115 mit Weitergabe per I2C
+ *
+ * 2021-05-28 Heiko (unsinnsbasis.de)
+ */
+
+#define A_PIN 4  // GPIO-Pin für analoge Eingabe
+
+#include <Adafruit_ADS1X15.h> // bindet Wire.h für I2C mit ein
+Adafruit_ADS1115 ads;
+#define ADS_I2C_ADDR 0x48
+const float multiplier = 0.125F; // ADS1115-Multiplikator bei einf. Verstärkung
+
+void setup() {
+  Serial.begin(115200);
+  delay(500);
+  Serial.println("Analog-Test ESP32");
+
+  ads.begin(ADS_I2C_ADDR, &Wire);
+  // Werte 1-fach verstärken (ESP32 liefert  max. 3,3V)
+  ads.setGain(GAIN_ONE);
+}
+
+void loop() {
+  int A_Value;         // Messwert per GPIO
+  int adc0;            // Messwert an Kanal 0 des ADS1115
+  float A_mv, ads_mv;  // Messwert in Millivolt umgerechnet
+
+  A_Value = analogRead(A_PIN);  // 0...4095
+  Serial.printf("Rohwert: %d", A_Value);
+
+  // Wert in Millivolt umrechnen
+  A_mv = A_Value * 3300.0 / 4095.0;
+  Serial.printf("; %4.2f mV", A_mv);
+
+  // Messung per ADS1115
+  // - Kanal 0 messen (single-ended)
+  // adc0 = ads.readADC_SingleEnded(0);
+  // ads_mv = ads.computeVolts(adc0) * 1000;
+  // oder
+  // - differenzielle Messung an Kanal 0/1
+  adc0 = ads.readADC_Differential_0_1();
+  ads_mv = adc0 * multiplier;
+  Serial.printf("; I2C: %4.2f mV\n", ads_mv);
+  
+  delay(200);
+}
+@MDFreak
+Add heading text
+Add bold text, <Ctrl+b>
+Add italic text, <Ctrl+i>
+Add a quote, <Ctrl+Shift+.>
+Add code, <Ctrl+e>
+Add a link, <Ctrl+k>
+Add a bulleted list, <Ctrl+Shift+8>
+Add a numbered list, <Ctrl+Shift+7>
+Add a task list, <Ctrl+Shift+l>
+Directly mention a user or team
+Reference an issue or pull request
+Attach files by dragging & dropping, selecting or pasting them.
+Styling with Markdown is supported
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+
+    Terms
+    Privacy
+    Security
+    Status
+    Docs
+    Contact GitHub
+    Pricing
+    API
+    Training
+    Blog
+    About
+
