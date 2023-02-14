@@ -1,5 +1,6 @@
 {
   "files.associations": {
+    "MLTable": "yaml",
     "string": "cpp",
     "cstring": "cpp",
     "typeinfo": "cpp",
@@ -19,6 +20,8 @@
     "chrono": "cpp",
     "random": "cpp",
     "limits": "cpp",
-    "functional": "cpp"
+    "functional": "cpp",
+    "atomic": "cpp",
+    "memory_resource": "cpp"
   }
 }
