@@ -1775,14 +1775,14 @@
                                 #endif
                               if (bmeP != bmePold)
                                 {
-                                  valBME280p = bmeH;
+                                  valBME280p = bmeP;
                                   pubBME280p = TRUE;
                                   bmePold = bmeP;
                                       SVAL(" 280readP  new ", bmeP);
                                   #if (USE_MQTT > OFF)
-                                      errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
-                                      soutMQTTerr(topBME280h.c_str(), errMQTT);
-                                          //SVAL(topBME280h, valBME280h);
+                                      errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
+                                      soutMQTTerr(topBME280p.c_str(), errMQTT);
+                                          //SVAL(topBME280p, valBME280p);
                                     #endif
                                 }
                           #endif
