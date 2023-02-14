@@ -78,7 +78,7 @@
         #include <driver\adc.h>
       #endif
     #if (DEV_ADC_ADS1115 > OFF)
-        #include <Adafruit_ADS1X15.h>
+        #include <md_ADS1115.hpp>
         #ifndef IRAM_ATTR
             #define IRAM_ATTR
           #endif
