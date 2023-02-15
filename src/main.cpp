@@ -3341,6 +3341,7 @@
       #if (USE_ADC1115_I2C > OFF)
           static void initADS1115()
             {
+              SOUTHEXLN((uint32_t) &ads);
               STXT(" init ADS1115_1 chan 0");
               ads.initChan(0, ADS00_RATE, ADS00_GAIN, ADS00_MUX);
               #if (ADS0_ANZ_CHAN > 1)
