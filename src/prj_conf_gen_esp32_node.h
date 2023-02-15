@@ -767,7 +767,8 @@
                   //#define VCC_1115_DEV    0
                   #define VCC50_1115_CHAN   2    //
                   #define VCC50_1115_ATT    GAIN_ONE
-                  #define VCC50_1115_MUX
+                  #define VCC50_1115_RATE   RATE_ADS1115_128SPS
+                  #define VCC50_1115_MUX    ADS1X15_MUX_SINGLE
                   #define VCC50_SCAL        ON
                   #define VCC50_OFFRAW      0
                   #define VCC50_GAIN        2
@@ -784,6 +785,8 @@
                   //#define VCC_1115_DEV      0
                   #define VCC33_1115_CHAN   0    //
                   #define VCC33_1115_ATT    GAIN_ONE
+                  #define VCC33_1115_RATE   RATE_ADS1115_128SPS
+                  #define VCC33_1115_MUX    ADS1X15_MUX_SINGLE
                   #define VCC33_SCAL        OFF
                   #define VCC33_OFFRAW      0
                   #define VCC33_GAIN        1

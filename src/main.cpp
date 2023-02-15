@@ -653,7 +653,7 @@
         #if (USE_MQTT > OFF)
             static String valLicht[USE_PHOTO_SENS_ANA];
             static String topLicht1 = MQTT_PHOTO1;
-            #if (USE_MQTT > OFF)
+            #if (USE_MQTT > 1)
                 static String topLicht2 = MQTT_PHOTO2;
               #endif
           #endif
@@ -1324,7 +1324,7 @@
           #if (USE_VCC50_ANA > OFF)
               STXT(" init vcc measure ... ");
               vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
-              vcc50Scal.setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
+              vcc50Scal.setScale(VCC50_OFFRAW, VCC50_GAIN, VCC50_OFFREAL);
               #if (USE_MQTT > OFF)
                   topVCC50 = topDevice + topVCC50;
                   errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
@@ -1335,7 +1335,7 @@
           #if (USE_VCC33_ANA > OFF)
               STXT(" init vcc measure ... ");
               vcc33Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
-              vcc33Scal.setScale(VCC_OFFRAW, VCC_GAIN, VCC_OFFREAL);
+              vcc33Scal.setScale(VCC33_OFFRAW, VCC33_GAIN, VCC33_OFFREAL);
               #if (USE_MQTT > OFF)
                   topVCC33 = topDevice + topVCC33;
                   errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
