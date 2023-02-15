@@ -1,5 +1,6 @@
 #include <main.h>
 #include <prj_config.h>
+#include <md_ADS1115.hpp>
 
 // ----------------------------------------------------------------
 // --- declarations
@@ -500,7 +501,7 @@
       #endif
   // ------ sensors ----------------------
     #if (USE_ADC1115_I2C > OFF)
-        static Adafruit_ADS1115 ads[USE_ADC1115_I2C];
+        static md_ADS1115 ads[USE_ADC1115_I2C];
       #endif
     #if (USE_BME280_I2C > OFF)
         static Adafruit_BME280  bme1;
