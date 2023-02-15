@@ -649,30 +649,6 @@
                   )
         */
 
-      #if (USE_ADC1115_I2C > OFF)
-          #define ADS0_I2C         I2C1
-          #define ADS0_ADDR        I2C_ADS1115_48
-          #define ADS0_DATARATE    RATE_ADS1115_860SPS
-          #define ADS0_ANZ_CHAN    4
-          #if (USE_ADC1115_I2C > 1)
-              #define ADS1_I2C         I2C1
-              #define ADS1_ADDR        I2C_ADS1115_49
-              #define ADS1_DATARATE    RATE_ADS1115_860SPS
-              #define ADS1_ANZ_CHAN    4
-              #if (USE_ADC1115_I2C > 2)
-                  #define ADS2_I2C         I2C1
-                  #define ADS2_ADDR        I2C_ADS1115_4A
-                  #define ADS2_DATARATE    RATE_ADS1115_860SPS
-                  #define ADS2_ANZ_CHAN    4
-                  #if (USE_ADC1115_I2C > 3)
-                      #define ADS3_I2C         I2C1
-                      #define ADS3_ADDR        I2C_ADS1115_4B
-                      #define ADS3_DATARATE    RATE_ADS1115_860SPS
-                      #define ADS3_ANZ_CHAN    4
-                    #endif
-                #endif
-            #endif
-        #endif
       #if (USE_MQ135_GAS_ANA > OFF)
           #define MQ135_GAS_ADC             ON
           #define MQ135_GAS_1115            OFF
@@ -785,11 +761,11 @@
                   #define VCC50_SCAL_OFFREAL  0
                 #endif
               #if (VCC50_1115 > OFF)
-                  //#define VCC_1115_DEV    0
+                  #define VCC_1115_UNIT     0
                   #define VCC50_1115_CHAN   2    //
-                  #define VCC50_1115_ATT    GAIN_ONE
-                  #define VCC50_1115_RATE   RATE_ADS1115_128SPS
-                  #define VCC50_1115_MUX    ADS1X15_MUX_SINGLE
+                  #define ADS02_GAIN        GAIN_ONE
+                  #define ADS02_RATE        RATE_ADS1115_128SPS
+                  #define ADS02_MUX         ADS1X15_MUX_SINGLE
                   #define VCC50_SCAL        ON
                   #define VCC50_OFFRAW      0
                   #define VCC50_GAIN        2
@@ -803,11 +779,11 @@
               #define VCC33_ADC         OFF
               #define VCC33_1115        ON
               #if (VCC33_1115 > OFF)
-                  //#define VCC_1115_DEV      0
+                  #define VCC33_1115_UNIT   0
                   #define VCC33_1115_CHAN   0    //
-                  #define VCC33_1115_ATT    GAIN_ONE
-                  #define VCC33_1115_RATE   RATE_ADS1115_128SPS
-                  #define VCC33_1115_MUX    ADS1X15_MUX_SINGLE
+                  #define ADS00_GAIN        GAIN_ONE
+                  #define ADS00_RATE        RATE_ADS1115_128SPS
+                  #define ADS00_MUX         ADS1X15_MUX_SINGLE
                   #define VCC33_SCAL        OFF
                   #define VCC33_OFFRAW      0
                   #define VCC33_GAIN        1
@@ -834,11 +810,16 @@
           #define POTI1_1115              ON
           #if (POTI1_1115 > OFF)
               #define POTI1_1115_DEV      0
-              #define POTI1_1115_CHAN     0
-              #define POTI1_1115_ATT      GAIN_TWO
+              #define POTI1_1115_CHAN     3
+              #define ADS03_GAIN          GAIN_ONE
+              #define ADS03_RATE          RATE_ADS1115_128SPS
+              #define ADS03_MUX           ADS1X15_MUX_SINGLE
               #define POTI1_OFFRAW        0
               #define POTI1_GAIN          1
               #define POTI1_OFFREAL       0
+            #endif
+          #if (USE_MQTT > OFF)
+              #define MQTT_POTI1          "poti1"
             #endif
           #if (USE_POTI_ANA > 1)
               #define POTI2_FILT          7
@@ -856,10 +837,9 @@
                   #define POTI2_1115_CHAN 0
                   #define POTI2_1115_ATT  GAIN_TWOTHIRDS
                 #endif
-            #endif
-          #if (USE_MQTT > OFF)
-              #define MQTT_POTI1          "poti1"
-              #define MQTT_POTI2          "poti2"
+              #if (USE_MQTT > OFF)
+                  #define MQTT_POTI2          "poti2"
+                #endif
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
@@ -872,8 +852,8 @@
               sensitivity: type 20A -> 100mV/A ->   500 - 4500 mV
               sensitivity: type 30A ->  66mV/A ->   520 - 4480 mV
             */
-          #define I712_FILT               9
-          #define I712_DROP               2
+          #define I712_FILT               0
+          #define I712_DROP               0
           #define I712_1_IMAX             5000 // mA
           #define I712_1_ADC              OFF // not recommended, low resolution
           #if (I712_1_ADC > OFF)
@@ -882,24 +862,33 @@
           #define I712_1_1115             ON
           #if (I712_1_1115 > OFF)
               #define I712_1_1115_DEV     0
-              #define I712_1_1115_CHAN    2
+              #define I712_1_1115_CHAN    1
               #if   (I712_1_IMAX ==  5000)
-                  #define I712_1_1115_ATT       GAIN_ONE
+                  #define ADS01_GAIN            GAIN_ONE
+                  #define ADS01_RATE            RATE_ADS1115_128SPS
+                  #define ADS01_MUX             ADS1X15_MUX_SINGLE
                   #define I712_1_SCAL_OFFRAW    0
                   #define I712_1_SCAL_GAIN      1
                   #define I712_1_SCAL_OFFREAL   0
                 #endif
               #if (I712_1_IMAX == 20000)
-                  #define I712_1_1115_ATT      GAIN_TWOTHIRDS
+                  #define ADS01_GAIN            GAIN_ONE
+                  #define ADS01_RATE            RATE_ADS1115_128SPS
+                  #define ADS01_MUX             ADS1X15_MUX_SINGLE
                   #define I712_1_SCAL_OFFRAW    0
                   #define I712_1_SCAL_GAIN      1
                   #define I712_1_SCAL_OFFRAW    0
                 #endif
               #if (I712_1_IMAX == 30000)
-                  #define I712_1_1115_ATT      GAIN_TWOTHIRDS
+                  #define ADS01_GAIN            GAIN_ONE
+                  #define ADS01_RATE            RATE_ADS1115_128SPS
+                  #define ADS01_MUX             ADS1X15_MUX_SINGLE
                   #define I712_1_SCAL_OFFRAW    0
                   #define I712_1_SCAL_GAIN      1
                   #define I712_1_SCAL_OFFRAW    0
+                #endif
+              #if (USE_MQTT > OFF)
+                  #define MQTT_I712_1         "acs7121"
                 #endif
             #endif
           #if (USE_ACS712_ANA > 1)
@@ -930,14 +919,34 @@
                       #define I712_2_SCAL_GAIN      1
                       #define I712_2_SCAL_OFFRAW    0
                     #endif
+                  #if (USE_MQTT > OFF)
+                      #define MQTT_I712_1         "acs7121"
+                      #define MQTT_I712_2         "acs7122"
+                    #endif
                 #endif
 
             #endif
-          #if (USE_MQTT > OFF)
-              #define MQTT_I712_1         "acs7121"
-              #define MQTT_I712_2         "acs7122"
-              #define MQTT_I712_3         "acs7123"
-              #define MQTT_I712_4         "acs7124"
+        #endif
+      #if (USE_ADC1115_I2C > OFF)
+          #define ADS0_I2C         I2C1
+          #define ADS0_ADDR        I2C_ADS1115_48
+          #define ADS0_ANZ_CHAN    4
+          #if (USE_ADC1115_I2C > OFF)
+              #define ADS1_I2C         I2C1
+              #define ADS1_ADDR        I2C_ADS1115_49
+              #define ADS1_ANZ_CHAN    4
+              #if (USE_ADC1115_I2C > 2)
+                  #define ADS2_I2C         I2C1
+                  #define ADS2_ADDR        I2C_ADS1115_4A
+                  #define ADS2_SAMPRATE    RATE_ADS1115_860SPS
+                  #define ADS2_ANZ_CHAN    4
+                  #if (USE_ADC1115_I2C > 3)
+                      #define ADS3_I2C         I2C1
+                      #define ADS3_ADDR        I2C_ADS1115_4B
+                      #define ADS3_SAMPRATE    RATE_ADS1115_860SPS
+                      #define ADS3_ANZ_CHAN    4
+                    #endif
+                #endif
             #endif
         #endif
       //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
