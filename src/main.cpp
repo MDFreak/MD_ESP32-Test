@@ -3342,21 +3342,21 @@
           static void initADS1115()
             {
               STXT(" init ADS1115_1 chan 1");
-              ads[0].init(0, ADS00_RATE, ADS00_GAIN, ADS00_MUX);
+              ads.initChan(0, ADS00_RATE, ADS00_GAIN, ADS00_MUX);
               #if (ADS0_ANZ_CHAN > 1)
                   STXT(" init ADS1115_1 chan 2");
-                  ads[0].init(0, ADS01_RATE, ADS01_GAIN, ADS01_MUX);
+                  ads.initChan(0, ADS01_RATE, ADS01_GAIN, ADS01_MUX);
                   #if (ADS0_ANZ_CHAN > 2)
                       STXT(" init ADS1115_2 chan 2");
-                      ads[0].init(0, ADS02_RATE, ADS02_GAIN, ADS02_MUX);
+                      ads.initChan(0, ADS02_RATE, ADS02_GAIN, ADS02_MUX);
                       #if (ADS0_ANZ_CHAN > 3)
                           STXT(" init ADS1115_1 chan 2");
-                          ads[0].init(0, ADS03_RATE, ADS03_GAIN, ADS03_MUX);
+                          ads.initChan(0, ADS03_RATE, ADS03_GAIN, ADS03_MUX);
                         #endif
                       #endif
                 #endif
               STXT(" start ADS1115_1 ... ");
-              if (ads[0].begin(ADS0_ADDR, pads0i2c))
+              if (ads.begin(ADS0_ADDR, pads0i2c))
                 {
                   STXT("   ADS1115_1 ok ");
                 }
