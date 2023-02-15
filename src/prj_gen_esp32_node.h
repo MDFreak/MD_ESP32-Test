@@ -67,7 +67,7 @@
       #define USE_BME280_I2C        1   // [0, 1, ....] limited by I2C channels/addr
       #define USE_TYPE_K_SPI        OFF // [0, 1, ....] limited by Pins
       #define USE_MQ135_GAS_ANA     OFF // [0, 1, ....] limited by analog inputs
-      #define USE_MQ3_ALK_ANA       1   // ADC or ADS1115
+      #define USE_MQ3_ALK_ANA       OFF // ADC or ADS1115
       #define USE_PHOTO_SENS_ANA    1   // ADC or ADS1115
       #define USE_INA3221_I2C       1
       #define USE_ACS712_ANA        1   // only ADS1115

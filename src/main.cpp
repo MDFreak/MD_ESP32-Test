@@ -1729,7 +1729,7 @@
                     //heapFree("+meascyc");
                     //STXT(" # MEASCYCLE ");
                 inputT.startT();
-                //SOUT("b1b ");
+                  //SOUT("b1b ");
                 switch(inpIdx)
                   {
                     case 1: // BME280_I2C
@@ -1803,11 +1803,11 @@
                                       valCCS811c = ccsC;
                                       pubCCS811c = TRUE;
                                       ccsCold    = ccsC;
-                                          SVAL(" 811readC  new ", ccsC);
+                                          //SVAL(" 811readC  new ", ccsC);
                                       #if (USE_MQTT > OFF)
                                           errMQTT = (int8_t) mqtt.publish(topCCS811c.c_str(), (uint8_t*) valCCS811c.c_str(), valCCS811c.length());
                                           soutMQTTerr(topCCS811c.c_str(), errMQTT);
-                                              SVAL(topCCS811c.c_str(), valCCS811c);
+                                              //SVAL(topCCS811c.c_str(), valCCS811c);
                                         #endif
                                     }
                                   else { pubCCS811c = FALSE; }
@@ -1821,11 +1821,11 @@
                                       valCCS811t = ccsT;
                                       pubCCS811t = TRUE;
                                       ccsTold    = ccsT;
-                                          SVAL(" 811readT  new ", ccsT);
+                                          //SVAL(" 811readT  new ", ccsT);
                                       #if (USE_MQTT > OFF)
                                           errMQTT = (int8_t) mqtt.publish(topCCS811t.c_str(), (uint8_t*) valCCS811t.c_str(), valCCS811t.length());
                                           soutMQTTerr(topCCS811t.c_str(), errMQTT);
-                                              SVAL(topCCS811t.c_str(), valCCS811t);
+                                              //SVAL(topCCS811t.c_str(), valCCS811t);
                                         #endif
                                     }
                               }
