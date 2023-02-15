@@ -510,9 +510,9 @@
           #else
             TwoWire* pbme1i2c = &i2c2;
           #endif
-        md_val<float> bmeTVal;
-        md_val<float> bmePVal;
-        md_val<float> bmeHVal;
+        //md_val<float> bmeTVal;
+        //md_val<float> bmePVal;
+        //md_val<float> bmeHVal;
         float         bmeT       = MD_F_MAX;
         float         bmeP       = MD_F_MAX;
         float         bmeH       = MD_F_MAX;
@@ -540,8 +540,8 @@
           #else
             TwoWire* pcssi2c = &i2c2;
           #endif
-        md_val<float>   ccsCVal;
-        md_val<float>   ccsTVal;
+        //md_val<float>   ccsCVal;
+        //md_val<float>   ccsTVal;
         //md_scale<float> ccsESkal;
         //md_scale<float> ccsVSkal;
         float           ccsC       = MD_F_MAX;
@@ -565,9 +565,9 @@
           #else
             TwoWire* ina1i2c = &i2c2;
           #endif
-        md_val<float>    inaIVal[USE_INA3221_I2C][3];
+        //md_val<float>    inaIVal[USE_INA3221_I2C][3];
         //md_scale<float>  inaISkal[USE_INA3221_I2C][3];
-        md_val<float>    inaUVal[USE_INA3221_I2C][3];
+        //md_val<float>    inaUVal[USE_INA3221_I2C][3];
         //md_scale<float>  inaUSkal[USE_INA3221_I2C][3];
         float            inaI   [USE_INA3221_I2C][3];
         float            inaU   [USE_INA3221_I2C][3];
@@ -614,7 +614,7 @@
     #if (USE_DS18B20_1W_IO > OFF)
         OneWire             ds1OneWire(DS1_ONEWIRE_PIN);
         DallasTemperature   ds1Sensors(&ds1OneWire);
-        md_val<uint16_t>    dsTempVal[USE_DS18B20_1W_IO];
+        //md_val<uint16_t>    dsTempVal[USE_DS18B20_1W_IO];
         md_scale<uint16_t>  dsTempSkal[USE_DS18B20_1W_IO];
         int16_t             dsTemp   [USE_DS18B20_1W_IO];
         int16_t             dsTempold[USE_DS18B20_1W_IO];
@@ -632,11 +632,11 @@
       #endif
     #if (USE_MQ135_GAS_ANA > OFF)
         //filterValue tholdGas(MQ135_ThresFilt,1);
-        md_val<double> gasVal;
+        //md_val<double> gasVal;
         //md_val<uint16_t> gasThres;
       #endif
     #if (USE_MQ3_ALK_ANA > OFF)
-        md_val<int16_t> alkVal;
+        //md_val<int16_t> alkVal;
         md_scale<int16_t> alkScal;
         uint16_t alk;
         uint16_t alkold;
@@ -646,7 +646,7 @@
           #endif
       #endif
     #if (USE_PHOTO_SENS_ANA > OFF)
-        md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
+        //md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
         md_scale<int16_t> photoScal[USE_PHOTO_SENS_ANA];
         int16_t           bright[USE_PHOTO_SENS_ANA];
         int16_t           brightOld[USE_PHOTO_SENS_ANA];
@@ -659,7 +659,7 @@
           #endif
       #endif
     #if (USE_POTI_ANA > OFF)
-        md_val<int16_t>   potiVal[USE_POTI_ANA];
+        //md_val<int16_t>   potiVal[USE_POTI_ANA];
         md_scale<int16_t> potiScal[USE_POTI_ANA];
         uint16_t          poti[USE_POTI_ANA];
         uint16_t          potiold[USE_POTI_ANA];
@@ -673,7 +673,7 @@
           #endif
       #endif
     #if (USE_VCC50_ANA > OFF)
-        md_val<int16_t>   vcc50Val;
+        //md_val<int16_t>   vcc50Val;
         md_scale<int16_t> vcc50Scal;
         int16_t          vcc50;
         int16_t          vcc50old;
@@ -683,7 +683,7 @@
           #endif
       #endif
     #if (USE_VCC33_ANA > OFF)
-        md_val<int16_t>   vcc33Val;
+        //md_val<int16_t>   vcc33Val;
         md_scale<int16_t> vcc33Scal;
         int16_t           vcc33;
         int16_t           vcc33old;
@@ -693,7 +693,7 @@
           #endif
       #endif
     #if (USE_ACS712_ANA > OFF)
-        md_val<int16_t>   i712Val[USE_ACS712_ANA];
+        //md_val<int16_t>   i712Val[USE_ACS712_ANA];
         md_scale<int16_t> i712Scal[USE_ACS712_ANA];
         //float i712[USE_ACS712_ANA];
         int16_t           i712[USE_ACS712_ANA];
@@ -1291,7 +1291,9 @@
         // photo sensor
           #if (USE_PHOTO_SENS_ANA > OFF)
               STXT(" init photo sensors ...");
-              photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
+              #if (PHOTO1_FILT > OFF)
+                  //photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
+                #endif
               photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
               #if (PHOTO1_ADC > OFF)
                   pinMode(PIN_PHOTO1_SENS, INPUT);
@@ -1301,7 +1303,6 @@
               #if (PHOTO1_1115 > OFF)
                 #endif
               #if (USE_MQTT > OFF)
-                  photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP);
                   topLicht1 = topDevice + topLicht1;
                   errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
                       soutMQTTerr(" MQTT subscribe Licht", errMQTT);
@@ -1311,7 +1312,9 @@
         // poti measure
           #if (USE_POTI_ANA > OFF)
               STXT(" init poti ... ");
-              potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
+              #if (POTI1_FILT > OFF)
+                  //potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
+                #endif
               potiScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
               #if (USE_MQTT)
                   topPoti1 = topDevice + topPoti1;
@@ -1323,7 +1326,9 @@
         // vcc measure
           #if (USE_VCC50_ANA > OFF)
               STXT(" init vcc measure ... ");
-              vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+              #if (VCC_FILT > OFF)
+                  vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+                #endif
               vcc50Scal.setScale(VCC50_OFFRAW, VCC50_GAIN, VCC50_OFFREAL);
               #if (USE_MQTT > OFF)
                   topVCC50 = topDevice + topVCC50;
@@ -1334,7 +1339,9 @@
             #endif
           #if (USE_VCC33_ANA > OFF)
               STXT(" init vcc measure ... ");
-              vcc33Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+              #if (VCC_FILT > OFF)
+                  vcc33Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+                #endif
               vcc33Scal.setScale(VCC33_OFFRAW, VCC33_GAIN, VCC33_OFFREAL);
               #if (USE_MQTT > OFF)
                   topVCC33 = topDevice + topVCC33;
@@ -1346,7 +1353,9 @@
         // ACS712 current measurement
           #if (USE_ACS712_ANA > OFF)
               STXT("init current sensors ... ");
-              i712Val[0].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
+              #if (I712_FILT > OFF)
+                  //i712Val[0].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
+                #endif
               i712Scal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
               #if (USE_MQTT > OFF)
                   topi7121 = topDevice + topi7121;
@@ -2029,7 +2038,7 @@
                         //SOUT(" c7");
                         #if (USE_PHOTO_SENS_ANA > OFF)
                             #if (PHOTO1_ADC > OFF)
-                                photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
+                                //photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
                               #endif
                             #if (PHOTO1_1115 > OFF)
                               #endif
@@ -2046,7 +2055,7 @@
                                 usleep(1200); // Wait for the conversion to complete
                                 //while (!ads[0].conversionComplete());
                                 //poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                                potiVal[0].doVal(poti[0]);
+                                //potiVal[0].doVal(poti[0]);
                                 //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
                               #endif
                           #endif
@@ -2092,7 +2101,7 @@
                                 usleep(1200); // Wait for the conversion to complete
                                 //while (!ads[0].conversionComplete());
                                 //i712[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                                i712Val[0].doVal(i712[0]);
+                                //i712Val[0].doVal(i712[0]);
                                 // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
                               #endif
                           #endif
@@ -2562,12 +2571,12 @@
                 case 6:  // light sensor
                   #if (USE_PHOTO_SENS_ANA > OFF)
                       outStr = "          ";
-                      outStr.concat(photoVal[0].getVal());
+                      //outStr.concat(photoVal[0].getVal());
                       outStr.concat("  ");
                       dispText(outStr, 12, 4, outStr.length());
                           //STXT(outStr);
                       #if (USE_WEBSERVER > OFF)
-                          tmpval16 = photoVal[0].getVal();
+                          //tmpval16 = photoVal[0].getVal();
                           tmpStr = "SVA";
                           tmpStr.concat("3");
                           tmpStr.concat(tmpval16);
