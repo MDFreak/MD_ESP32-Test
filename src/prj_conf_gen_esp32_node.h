@@ -651,18 +651,22 @@
 
       #if (USE_ADC1115_I2C > OFF)
           #define ADS0_I2C         I2C1
+          #define ADS0_ADDR        I2C_ADS1115_48
           #define ADS0_DATARATE    RATE_ADS1115_860SPS
           #define ADS0_ANZ_CHAN    4
           #if (USE_ADC1115_I2C > 1)
               #define ADS1_I2C         I2C1
+              #define ADS1_ADDR        I2C_ADS1115_49
               #define ADS1_DATARATE    RATE_ADS1115_860SPS
               #define ADS1_ANZ_CHAN    4
               #if (USE_ADC1115_I2C > 2)
                   #define ADS2_I2C         I2C1
+                  #define ADS2_ADDR        I2C_ADS1115_4A
                   #define ADS2_DATARATE    RATE_ADS1115_860SPS
                   #define ADS2_ANZ_CHAN    4
                   #if (USE_ADC1115_I2C > 3)
                       #define ADS3_I2C         I2C1
+                      #define ADS3_ADDR        I2C_ADS1115_4B
                       #define ADS3_DATARATE    RATE_ADS1115_860SPS
                       #define ADS3_ANZ_CHAN    4
                     #endif

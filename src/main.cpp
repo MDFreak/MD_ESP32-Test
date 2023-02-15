@@ -1042,12 +1042,7 @@
       // --- sensors
         // ADC ADS1115
           #if (USE_ADC1115_I2C > OFF)
-              #if (ADC1_I2C == I2C1)
-                  //ads[0].begin(ADC1115_1_ADDR, &i2c1);
-                  //ads[0].setDataRate(ADS0_DATARATE);
-                #else
-                  //ads[0].begin(ADS15_1_ADDR, &i2c1);
-                #endif
+              init_adc1115();
             #endif
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
@@ -3336,21 +3331,16 @@
             }
         #endif
 
+  // --- sensors -------------------------
+    // --- 4x analog input ADS1115
       #if (USE_ADC1115_I2C > OFF)
-          static int8_t init1115_chan(uint8_t unit, uint8_t chan)
+          static void initADS1115()
             {
-               if (unit >= USE_ADC1115_I2C) { return MD_ERR; }
-               switch (unit)
-                {
-                  case 0:
-                    if (chan >= ADS0_ANZ_CHAN) { return MD_ERR; }
-                    md_ads.init()
+              ads[0].init(0, ADS0_ )
 
-                }
             }
         #endif
 
-  // --- sensors -------------------------
     // --- DS18B20
       String getDS18D20Str()
         {
