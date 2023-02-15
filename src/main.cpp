@@ -501,8 +501,8 @@
       #endif
   // ------ sensors ----------------------
     #if (USE_ADC1115_I2C > OFF)
-        static md_ADS1115 ads[USE_ADC1115_I2C];
-        #if (ADS0_I2C == I2C1)
+        static md_ADS1115 ads;
+        #if (ADS_I2C == I2C1)
             TwoWire* pads0i2c = &i2c1;
           #else
             TwoWire* pads0i2c = &i2c2;
