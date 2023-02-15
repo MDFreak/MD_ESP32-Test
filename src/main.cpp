@@ -502,6 +502,11 @@
   // ------ sensors ----------------------
     #if (USE_ADC1115_I2C > OFF)
         static md_ADS1115 ads[USE_ADC1115_I2C];
+        #if (ADS0_I2C == I2C1)
+            TwoWire* pads0i2c = &i2c1;
+          #else
+            TwoWire* pads0i2c = &i2c2;
+          #endif
       #endif
     #if (USE_BME280_I2C > OFF)
         static Adafruit_BME280  bme1;
@@ -1042,7 +1047,7 @@
       // --- sensors
         // ADC ADS1115
           #if (USE_ADC1115_I2C > OFF)
-              init_adc1115();
+              initADS1115();
             #endif
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
@@ -3336,8 +3341,29 @@
       #if (USE_ADC1115_I2C > OFF)
           static void initADS1115()
             {
-              ads[0].init(0, ADS0_ )
-
+              STXT(" init ADS1115_1 chan 1");
+              ads[0].init(0, ADS00_RATE, ADS00_GAIN, ADS00_MUX);
+              #if (ADS0_ANZ_CHAN > 1)
+                  STXT(" init ADS1115_1 chan 2");
+                  ads[0].init(0, ADS01_RATE, ADS01_GAIN, ADS01_MUX);
+                  #if (ADS0_ANZ_CHAN > 2)
+                      STXT(" init ADS1115_2 chan 2");
+                      ads[0].init(0, ADS02_RATE, ADS02_GAIN, ADS02_MUX);
+                      #if (ADS0_ANZ_CHAN > 3)
+                          STXT(" init ADS1115_1 chan 2");
+                          ads[0].init(0, ADS03_RATE, ADS03_GAIN, ADS03_MUX);
+                        #endif
+                      #endif
+                #endif
+              STXT(" start ADS1115_1 ... ");
+              if (ads[0].begin(ADS0_ADDR, pads0i2c))
+                {
+                  STXT("   ADS1115_1 ok ");
+                }
+                else
+                {
+                  STXT("   could not start ADS1115_1 ");
+                }
             }
         #endif
 
