@@ -723,6 +723,9 @@
                 #define PHOTO1_SCAL_GAIN    1
                 #define PHOTO1_SCAL_OFFREAL 0
               #endif
+          #if (USE_MQTT > OFF)
+              #define MQTT_PHOTO1           "licht1"
+            #endif
           #if (USE_PHOTO_SENS_ANA > 1)
               #define PHOTO2_FILT           7
               #define PHOTO2_DROP           0
@@ -739,44 +742,56 @@
                   #define PHOTO2_1115_DEV  0
                   #define PHOTO2_1115_CHAN 0
                 #endif
-            #endif
-          #if (USE_MQTT > OFF)
-              #define MQTT_PHOTO1           "licht1"
-              #define MQTT_PHOTO2           "licht2"
+              #if (USE_MQTT > OFF)
+                  #define MQTT_PHOTO2           "licht2"
+                #endif
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
             #endif
         #endif
       #if (USE_VCC_ANA > OFF)
-          #define VCC_FILT                5
+          #define VCC_FILT                0
           #define VCC_DROP                1
           #if (USE_VCC50_ANA > OFF)
               #define VCC50_ADC           OFF
               #define VCC50_1115          ON
-              #define VCC50_1115_CHAN     2    //
+              #if (VCC50_ADC > OFF)
+                  #define VCC50_ADC_ATT       ADC_ATTEN_DB_11
+                  #define VCC50_SCAL          OFF
+                  #define VCC50_SCAL_OFFRAW   0
+                  #define VCC50_SCAL_GAIN     1
+                  #define VCC50_SCAL_OFFREAL  0
+                #endif
+              #if (VCC50_1115 > OFF)
+                  //#define VCC_1115_DEV    0
+                  #define VCC50_1115_CHAN   2    //
+                  #define VCC50_1115_ATT    GAIN_ONE
+                  #define VCC50_1115_MUX
+                  #define VCC50_SCAL        ON
+                  #define VCC50_OFFRAW      0
+                  #define VCC50_GAIN        2
+                  #define VCC50_OFFREAL     0
+                #endif
+              #if (USE_MQTT > OFF)
+                  #define MQTT_VCC50        "vcc50"
+                #endif
             #endif
           #if (USE_VCC33_ANA > OFF)
-              #define VCC33_ADC           OFF
-              #define VCC33_1115          ON
-              #define VCC33_1115_CHAN     0    //
-            #endif
-          #if ((VCC50_ADC + VCC33_ADC) > OFF)
-              #define VCC_ADC_ATT         ADC_ATTEN_DB_11
-              #define VCC_SCAL_OFFRAW     0
-              #define VCC_SCAL_GAIN       1
-              #define VCC_SCAL_OFFREAL    0
-            #endif
-          #if ((VCC50_1115 + VCC33_1115) > OFF)
-              #define VCC_1115_DEV      0
-              #define VCC_1115_ATT      GAIN_TWOTHIRDS
-              #define VCC_OFFRAW        0
-              #define VCC_GAIN          1
-              #define VCC_OFFREAL       0
-            #endif
-          #if (USE_MQTT > OFF)
-              #define MQTT_VCC50          "vcc50"
-              #define MQTT_VCC33          "vcc33"
+              #define VCC33_ADC         OFF
+              #define VCC33_1115        ON
+              #if (VCC33_1115 > OFF)
+                  //#define VCC_1115_DEV      0
+                  #define VCC33_1115_CHAN   0    //
+                  #define VCC33_1115_ATT    GAIN_ONE
+                  #define VCC33_SCAL        OFF
+                  #define VCC33_OFFRAW      0
+                  #define VCC33_GAIN        1
+                  #define VCC33_OFFREAL     0
+                #endif
+              #if (USE_MQTT > OFF)
+                  #define MQTT_VCC33          "vcc33"
+                #endif
             #endif
           #ifndef USE_INPUT_CYCLE
               #define USE_INPUT_CYCLE
