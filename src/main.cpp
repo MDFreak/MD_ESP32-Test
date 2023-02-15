@@ -1043,10 +1043,10 @@
         // ADC ADS1115
           #if (USE_ADC1115_I2C > OFF)
               #if (ADC1115_1_I2C == I2C1)
-                  ads[0].begin(ADC1115_1_ADDR, &i2c1);
-                  ads[0].setDataRate(ADS0_DATARATE);
+                  //ads[0].begin(ADC1115_1_ADDR, &i2c1);
+                  //ads[0].setDataRate(ADS0_DATARATE);
                 #else
-                  ads[0].begin(ADC1115_1_ADDR, &i2c1);
+                  //ads[0].begin(ADC1115_1_ADDR, &i2c1);
                 #endif
             #endif
         // BME280 temperature, pessure, humidity
@@ -2014,12 +2014,12 @@
                             #if (MQ3_ALK_ADC > OFF)
                               #endif
                             #if (MQ3_ALK_1115 > OFF)
-                                ads[0].setGain(MQ3_1115_ATT);
+                                //ads[0].setGain(MQ3_1115_ATT);
                                 //ads[0].setDataRate(RATE_ADS1115_860SPS);
-                                ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
+                                //ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
-                                while (!ads[0].conversionComplete());
-                                alk = ads[0].getLastConversionResults();   // Read the conversion results
+                                //while (!ads[0].conversionComplete());
+                                //alk = ads[0].getLastConversionResults();   // Read the conversion results
                                 alkVal.doVal(alk);   // Read the conversion results
                                 //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
                               #endif
@@ -2041,11 +2041,11 @@
                             #if (POTI1_ADC > OFF)
                               #endif
                             #if (POTI1_1115 > OFF)
-                                ads[0].setGain(POTI1_1115_ATT);
-                                ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHAN], /*continuous=*/false);
+                                //ads[0].setGain(POTI1_1115_ATT);
+                                //ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHAN], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
-                                while (!ads[0].conversionComplete());
-                                poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                                //while (!ads[0].conversionComplete());
+                                //poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
                                 potiVal[0].doVal(poti[0]);
                                 //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
                               #endif
@@ -2057,7 +2057,7 @@
                             #if (VCC50_ADC > OFF)
                               #endif
                             #if (VCC50_1115 > OFF)
-                                ads[VCC50_1115_CHAN].setGain(VCC_1115_ATT);
+                                //ads[VCC50_1115_CHAN].setGain(VCC_1115_ATT);
                                 //ads[VCC50_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC50_1115_CHAN], /*continuous=*/false);
                                 //usleep(1200); // Wait 1200us for the conversion to complete
                                 //while (!ads[VCC50_1115_CHAN].conversionComplete());
@@ -2087,11 +2087,11 @@
                             #if (I712_1_ADC > OFF)
                               #endif
                             #if (I712_1_1115 > OFF)
-                                ads[0].setGain(I712_1_1115_ATT);
-                                ads[0].startADCReading(MUX_BY_CHANNEL[I712_1_1115_CHAN], /*continuous=*/false);
+                                //ads[0].setGain(I712_1_1115_ATT);
+                                //ads[0].startADCReading(MUX_BY_CHANNEL[I712_1_1115_CHAN], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
-                                while (!ads[0].conversionComplete());
-                                i712[0] = ads[0].getLastConversionResults();   // Read the conversion results
+                                //while (!ads[0].conversionComplete());
+                                //i712[0] = ads[0].getLastConversionResults();   // Read the conversion results
                                 i712Val[0].doVal(i712[0]);
                                 // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
                               #endif
