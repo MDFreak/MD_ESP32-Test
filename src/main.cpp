@@ -501,7 +501,7 @@
       #endif
   // ------ sensors ----------------------
     #if (USE_ADC1115_I2C > OFF)
-        static md_ADS1115 ads(0);
+        static md_ADS1115 ads;
         #if (ADS_I2C == I2C1)
             TwoWire* pads0i2c = &i2c1;
           #else
@@ -3341,6 +3341,8 @@
       #if (USE_ADC1115_I2C > OFF)
           static void initADS1115()
             {
+              STXT(" init ADS1115_1");
+              ads.init(0);
               SOUTHEXLN((uint32_t) &ads);
               STXT(" init ADS1115_1 chan 0");
               ads.initChan(0, ADS00_RATE, ADS00_GAIN, ADS00_MUX);
