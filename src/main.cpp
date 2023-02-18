@@ -3392,20 +3392,19 @@
                         #endif
                       #endif
                 #endif
-
               #if (USE_ADC1115_I2C > 1) // 1
                   STXT(" init ADS1115_2");
                   ads[1].init(1);       // init unit 2
                       //SOUTHEXLN((uint32_t) &ads);
                   STXT(" init ADS1115_2 chan 0");
                   ads[1].initChan(0, ADS20_RATE, ADS20_GAIN, ADS20_MUX);
-                  #if (ADS0_ANZ_CHAN > 1)
+                  #if (ADS2_ANZ_CHAN > 1)
                       STXT(" init ADS1115_2 chan 1");
                       ads[1].initChan(1, ADS21_RATE, ADS21_GAIN, ADS21_MUX);
-                      #if (ADS0_ANZ_CHAN > 2)
+                      #if (ADS2_ANZ_CHAN > 2)
                           STXT(" init ADS2115_2 chan 2");
                           ads[1].initChan(2, ADS22_RATE, ADS22_GAIN, ADS22_MUX);
-                          #if (ADS0_ANZ_CHAN > 3)
+                          #if (ADS2_ANZ_CHAN > 3)
                               STXT(" init ADS1115_2 chan 3");
                               ads[1].initChan(3, ADS23_RATE, ADS23_GAIN, ADS23_MUX);
                             #endif
@@ -3413,15 +3412,10 @@
                     #endif
                   STXT(" start ADS1115_2 ... ");
                   if (ads[1].begin(ADS2_ADDR, pads0i2c))
-                    {
-                      STXT(" ADS1115_2 started ");
-                    }
+                    { STXT(" ADS1115_2 started "); }
                     else
-                    {
-                      STXT(" could not start ADS1115_2 ");
-                    }
+                    { STXT(" could not start ADS1115_2 "); }
                   #if (USE_ADC1115_I2C > 2) // 2
-
                       STXT(" init ADS1115_3");
                       ads[2].init(2);       // init unit 3
                           //SOUTHEXLN((uint32_t) &ads);
