@@ -55,7 +55,7 @@
     #if (USE_ESPHALL > OFF)
         int32_t valHall = 0;
       #endif
-// --- system cycles ---------------
+  // --- system cycles ---------------
     #ifdef USE_INPUT_CYCLE
         static msTimer inputT           = msTimer(INPUT_CYCLE_MS);
         static uint8_t inpIdx   = 0;
@@ -700,20 +700,30 @@
     #if (USE_ACS712_ANA > OFF)
         //md_val<int16_t>   i712Val[USE_ACS712_ANA];
         md_scale<int16_t> i712Scal[USE_ACS712_ANA];
-        //float i712[USE_ACS712_ANA];
-        int16_t           i712[USE_ACS712_ANA];
+        float*  pi712[USE_ACS712_ANA];
+        #if (USE_ACS712_ANA > 1)
+            float*  pi712[USE_ACS712_ANA];
+            #if (USE_ACS712_ANA > 2)
+                float*  pi712[USE_ACS712_ANA];
+                #if (USE_ACS712_ANA > 3)
+                    float*  pi712[USE_ACS712_ANA];
+                  #endif
+              #endif
+          #endif
+        int16_t i712[USE_ACS712_ANA];
+        int16_t i712old[USE_ACS712_ANA];
         #if (USE_MQTT > OFF)
+            static String vali712[USE_ACS712_ANA];
             static String topi7121 = MQTT_I712_1;
-            #if (USE_MQTT > 1)
+            #if (USE_ACS712_ANA > 1)
                 static String topi7122 = MQTT_I712_2;
-                #if (USE_MQTT > 2)
+                #if (USE_ACS712_ANA > 2)
                     static String topi7123 = MQTT_I712_3;
-                    #if (USE_MQTT > 3)
+                    #if (USE_ACS712_ANA > 3)
                         static String topi7124 = MQTT_I712_4;
                       #endif
                   #endif
               #endif
-            static String vali712[USE_ACS712_ANA];
           #endif
       #endif
     #if (USE_TYPE_K_SPI > 0)
@@ -741,7 +751,7 @@
       #endif
     #if (USE_MCPWM > OFF)
       #endif
-// ------ memories
+  // ------ memories
     #if (USE_FLASH_MEM > OFF)
         #include <SPIFFS.h>
       #endif
