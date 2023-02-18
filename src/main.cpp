@@ -1621,7 +1621,9 @@
                 //heapFree("webserv -readmsg");
           #endif
       // --- trigger measurement ---
-        #if (USE_ADS)
+        #if (USE_ADC1115_I2C > OFF)
+            md_ADS1115_run();
+          #endif
       // --- direct input ---
         #if (USE_TOUCHSCREEN > OFF)
           //touch.runTouch(outBuf);
