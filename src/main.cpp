@@ -501,7 +501,7 @@
       #endif
   // ------ sensors ----------------------
     #if (USE_ADC1115_I2C > OFF)
-        static md_ADS1115 ads;
+        static md_ADS1115 ads[USE_ADC1115_I2C];
         #if (ADS_I2C == I2C1)
             TwoWire* pads0i2c = &i2c1;
           #else
@@ -3352,31 +3352,96 @@
           static void initADS1115()
             {
               STXT(" init ADS1115_1");
-              ads.init(0);
-              SOUTHEXLN((uint32_t) &ads);
+              ads[0].init(0);       // init unit 0
+                  //SOUTHEXLN((uint32_t) &ads);
               STXT(" init ADS1115_1 chan 0");
-              ads.initChan(0, ADS00_RATE, ADS00_GAIN, ADS00_MUX);
+              ads[0].initChan(0, ADS00_RATE, ADS00_GAIN, ADS00_MUX);
               #if (ADS0_ANZ_CHAN > 1)
                   STXT(" init ADS1115_1 chan 1");
-                  ads.initChan(1, ADS01_RATE, ADS01_GAIN, ADS01_MUX);
+                  ads[0].initChan(1, ADS01_RATE, ADS01_GAIN, ADS01_MUX);
                   #if (ADS0_ANZ_CHAN > 2)
-                      STXT(" init ADS1115_2 chan 2");
-                      ads.initChan(2, ADS02_RATE, ADS02_GAIN, ADS02_MUX);
+                      STXT(" init ADS1115_1 chan 2");
+                      ads[0].initChan(2, ADS02_RATE, ADS02_GAIN, ADS02_MUX);
                       #if (ADS0_ANZ_CHAN > 3)
                           STXT(" init ADS1115_1 chan 3");
-                          ads.initChan(3, ADS03_RATE, ADS03_GAIN, ADS03_MUX);
+                          ads[0].initChan(3, ADS03_RATE, ADS03_GAIN, ADS03_MUX);
                         #endif
                       #endif
                 #endif
               STXT(" start ADS1115_1 ... ");
-              if (ads.begin(ADS0_ADDR, pads0i2c))
+              if (ads[0].begin(ADS0_ADDR, pads0i2c))
                 {
-                  STXT("   ADS1115_1 ok ");
+                  STXT(" ADS1115_1 started ");
                 }
                 else
                 {
-                  STXT("   could not start ADS1115_1 ");
+                  STXT(" could not start ADS1115_1 ");
                 }
+              #if (USE_ADC1115_I2C > 0) // 1
+
+                  STXT(" init ADS1115_2");
+                  ads[1].init(1);       // init unit 0
+                      //SOUTHEXLN((uint32_t) &ads);
+                  STXT(" init ADS1115_2 chan 0");
+                  ads[1].initChan(0, ADS10_RATE, ADS10_GAIN, ADS10_MUX);
+                  #if (ADS0_ANZ_CHAN > 1)
+                      STXT(" init ADS1115_1 chan 1");
+                      ads[0].initChan(1, ADS01_RATE, ADS01_GAIN, ADS01_MUX);
+                      #if (ADS0_ANZ_CHAN > 2)
+                          STXT(" init ADS1115_1 chan 2");
+                          ads[0].initChan(2, ADS02_RATE, ADS02_GAIN, ADS02_MUX);
+                          #if (ADS0_ANZ_CHAN > 3)
+                              STXT(" init ADS1115_1 chan 3");
+                              ads[0].initChan(3, ADS03_RATE, ADS03_GAIN, ADS03_MUX);
+                            #endif
+                          #endif
+                    #endif
+                  STXT(" start ADS1115_1 ... ");
+                  if (ads[0].begin(ADS0_ADDR, pads0i2c))
+                    {
+                      STXT(" ADS1115_1 started ");
+                    }
+                    else
+                    {
+                      STXT(" could not start ADS1115_1 ");
+                    }
+
+                  #if (USE_ADC1115_I2C > 2) // 2
+
+                      #if (USE_ADC1115_I2C > 3) // 3
+
+              STXT(" init ADS1115_1");
+              ads[0].init(0);       // init unit 0
+                  //SOUTHEXLN((uint32_t) &ads);
+              STXT(" init ADS1115_1 chan 0");
+              ads[0].initChan(0, ADS00_RATE, ADS00_GAIN, ADS00_MUX);
+              #if (ADS0_ANZ_CHAN > 1)
+                  STXT(" init ADS1115_1 chan 1");
+                  ads[0].initChan(1, ADS01_RATE, ADS01_GAIN, ADS01_MUX);
+                  #if (ADS0_ANZ_CHAN > 2)
+                      STXT(" init ADS1115_1 chan 2");
+                      ads[0].initChan(2, ADS02_RATE, ADS02_GAIN, ADS02_MUX);
+                      #if (ADS0_ANZ_CHAN > 3)
+                          STXT(" init ADS1115_1 chan 3");
+                          ads[0].initChan(3, ADS03_RATE, ADS03_GAIN, ADS03_MUX);
+                        #endif
+                      #endif
+                #endif
+              STXT(" start ADS1115_1 ... ");
+              if (ads[0].begin(ADS0_ADDR, pads0i2c))
+                {
+                  STXT(" ADS1115_1 started ");
+                }
+                else
+                {
+                  STXT(" could not start ADS1115_1 ");
+                }
+
+                        #endif
+
+                    #endif
+
+                #endif
             }
         #endif
 

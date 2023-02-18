@@ -72,13 +72,20 @@
             #ifndef USE_INPUT_CYCLE
                 #define USE_INPUT_CYCLE
               #endif
-            #define ADC1115_1_CHANS      4
-            #define ADC1115_1_I2C        I2C1
+            #define ADC1115_I2C          I2C1
             #define ADC1115_1_ADDR       I2C_ADS1115_48
+            #define ADC1115_1_CHANS      4
             #if (USE_ADC1115_I2C > 1)
+                #define ADC1115_2_ADDR   I2C_ADS1115_49
                 #define ADC1115_2_CHANs  4
-                #define ADC1115_1_I2C    I2C1
-                #define ADC1115_1_ADDR   I2C_ADS1115_49
+                #if (USE_ADC1115_I2C > 2)
+                    #define ADC1115_3_ADDR   I2C_ADS1115_4A
+                    #define ADC1115_3_CHANs  4
+                    #if (USE_ADC1115_I2C > 3)
+                        #define ADC1115_4_ADDR   I2C_ADS1115_4B
+                        #define ADC1115_4_CHANs  4
+                      #endif
+                  #endif
               #endif
           #endif
     // --- network
