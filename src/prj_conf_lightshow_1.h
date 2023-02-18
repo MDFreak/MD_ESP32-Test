@@ -493,7 +493,7 @@
           #define MQ3_ALK_ADC           OFF
           #define MQ3_ALK_1115          ON
           #if (MQ3_ALK_1115 > OFF)
-              #define MQ3_1115_DEV      0
+              #define MQ3_1115_UNIT      0
               #define MQ3_1115_CHAN     3
               #define MQ3_1115_ATT      GAIN_TWOTHIRDS
               #define MQ3_OFFRAW        0
@@ -529,7 +529,7 @@
               #endif
           #define PHOTO1_1115               OFF
             #if (PHOTO1_1115 > OFF)
-                #define PHOTO1_1115_DEV     0
+                #define PHOTO1_1115_UNIT     0
                 #define PHOTO1_1115_CHAN    0
                 #define PHOTO1_1115_ATT     GAIN_ONE
                 #define PHOTO1_SCAL_OFFRAW  0
@@ -549,7 +549,7 @@
               #define PHOTO2_1115          OFF
                 #if (PHOTO2_1115 > OFF)
                     #define PHOTO2_1115_ATT  GAIN_ONE
-                    #define PHOTO2_1115_DEV  0
+                    #define PHOTO2_1115_UNIT  0
                     #define PHOTO2_1115_CHAN 0
                   #endif
             #endif
@@ -570,7 +570,7 @@
               #endif
           #define VCC_1115              ON
             #if (VCC_1115 > OFF)
-                #define VCC_1115_DEV      0
+                #define VCC_1115_UNIT      0
                 #define VCC_1115_CHAN     2
                 #define VCC_1115_ATT      GAIN_TWOTHIRDS
                 #define VCC_OFFRAW        0
@@ -593,7 +593,7 @@
               #endif
           #define POTI1_1115              ON
             #if (POTI1_1115 > OFF)
-                #define POTI1_1115_DEV    0
+                #define POTI1_1115_UNIT    0
                 #define POTI1_1115_CHAN   0
                 #define POTI1_1115_ATT    GAIN_TWO
                 #define POTI1_OFFRAW      0
@@ -612,7 +612,7 @@
                 #endif
               #define POTI2_1115            OFF
                 #if (POTI2_1115 > OFF)
-                    #define POTI2_1115_DEV  0
+                    #define POTI2_1115_UNIT  0
                     #define POTI2_1115_CHAN 0
                     #define POTI2_1115_ATT  GAIN_TWOTHIRDS
                   #endif
@@ -637,7 +637,7 @@
               #endif
           #define I712_1_1115             ON
           #if (I712_1_1115 > OFF)
-              #define I712_1_1115_DEV     0
+              #define I712_1_1115_UNIT     0
               #define I712_1_1115_CHAN    2
               #if   (I712_1_IMAX ==  5000)
                   #define I712_1_1115_ATT       GAIN_ONE

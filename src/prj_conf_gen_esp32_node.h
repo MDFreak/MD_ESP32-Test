@@ -670,7 +670,7 @@
           #define MQ3_ALK_ADC               OFF
           #define MQ3_ALK_1115              ON
           #if (MQ3_ALK_1115 > OFF)
-              #define MQ3_1115_DEV          0
+              #define MQ3_1115_UNIT          0
               #define MQ3_1115_CHAN         3
               #define MQ3_1115_ATT          GAIN_TWOTHIRDS
               #define MQ3_OFFRAW            0
@@ -713,7 +713,7 @@
             #endif
           #define PHOTO1_1115               OFF
             #if (PHOTO1_1115 > OFF)
-                #define PHOTO1_1115_DEV     0
+                #define PHOTO1_1115_UNIT     0
                 #define PHOTO1_1115_CHAN    0
                 #define PHOTO1_1115_ATT     GAIN_ONE
                 #define PHOTO1_SCAL_OFFRAW  0
@@ -736,7 +736,7 @@
               #define PHOTO2_1115           OFF
               #if (PHOTO2_1115 > OFF)
                   #define PHOTO2_1115_ATT  GAIN_ONE
-                  #define PHOTO2_1115_DEV  0
+                  #define PHOTO2_1115_UNIT  0
                   #define PHOTO2_1115_CHAN 0
                 #endif
               #if (USE_MQTT > OFF)
@@ -809,7 +809,7 @@
             #endif
           #define POTI1_1115              ON
           #if (POTI1_1115 > OFF)
-              #define POTI1_1115_DEV      0
+              #define POTI1_1115_UNIT      0
               #define POTI1_1115_CHAN     3
               #define ADS03_GAIN          GAIN_ONE
               #define ADS03_RATE          RATE_ADS1115_128SPS
@@ -833,7 +833,7 @@
                 #endif
               #define POTI2_1115            OFF
               #if (POTI2_1115 > OFF)
-                  #define POTI2_1115_DEV  0
+                  #define POTI2_1115_UNIT  0
                   #define POTI2_1115_CHAN 0
                   #define POTI2_1115_ATT  GAIN_TWOTHIRDS
                 #endif
@@ -861,7 +861,7 @@
             #endif
           #define I712_1_1115             ON
           #if (I712_1_1115 > OFF)
-              #define I712_1_1115_DEV     0
+              #define I712_1_1115_UNIT    0
               #define I712_1_1115_CHAN    1
               #if   (I712_1_IMAX ==  5000)
                   #define ADS01_GAIN            GAIN_ONE
@@ -899,7 +899,7 @@
                   #define I712_2_ADC_ATT   ADC_ATTEN_DB_11
                 #endif
               #if (I712_2_1115 > OFF)
-                  #define I712_2_1115_DEV     0
+                  #define I712_2_1115_UNIT     0
                   #define I712_2_1115_CHAN    2
                   #if  (I712_2_IMAX ==  5000)
                       #define I712_2_1115_ATT       GAIN_ONE
