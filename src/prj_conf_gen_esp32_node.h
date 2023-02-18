@@ -770,9 +770,9 @@
               #if (VCC50_1115 > OFF)
                   #define VCC_1115_UNIT     0
                   #define VCC50_1115_CHAN   2    //
-                  #define ADS02_GAIN        GAIN_ONE
-                  #define ADS02_RATE        RATE_ADS1115_128SPS
-                  #define ADS02_MUX         ADS1X15_MUX_SINGLE
+                  #define ADS13_GAIN        GAIN_ONE
+                  #define ADS13_RATE        RATE_ADS1115_128SPS
+                  #define ADS13_MUX         ADS1X15_MUX_SINGLE
                   #define VCC50_SCAL        ON
                   #define VCC50_OFFRAW      0
                   #define VCC50_GAIN        2
@@ -788,9 +788,9 @@
               #if (VCC33_1115 > OFF)
                   #define VCC33_1115_UNIT   0
                   #define VCC33_1115_CHAN   0    //
-                  #define ADS00_GAIN        GAIN_ONE
-                  #define ADS00_RATE        RATE_ADS1115_128SPS
-                  #define ADS00_MUX         ADS1X15_MUX_SINGLE
+                  #define ADS11_GAIN        GAIN_ONE
+                  #define ADS11_RATE        RATE_ADS1115_128SPS
+                  #define ADS11_MUX         ADS1X15_MUX_SINGLE
                   #define VCC33_SCAL        OFF
                   #define VCC33_OFFRAW      0
                   #define VCC33_GAIN        1

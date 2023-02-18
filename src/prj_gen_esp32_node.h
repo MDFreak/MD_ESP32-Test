@@ -22,9 +22,11 @@
       #define DEV_HSPI              OFF
       #define DEV_PWM_OUTPUT        ON
       #define DEV_ADC_INT           1
-      #define DEV_ADC_ADS1115       1
-      #define DEV_ADC_ADS1115_1     4
-      #define DEV_ADC_ADS1115_2     OFF
+      //#define DEV_ADC_ADS1115       1
+      //#define DEV_ADC_ADS1115_1     4
+      //#define DEV_ADC_ADS1115_2     OFF
+      //#define DEV_ADC_ADS1115_3     OFF
+      //#define DEV_ADC_ADS1115_4     OFF
     // --- user output components
       #define USE_WS2812_PWR_IN_SW  OFF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // some time matrix and line not allowed
       // --- displays
