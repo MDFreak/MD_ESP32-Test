@@ -948,8 +948,8 @@
                   #define ADS2_SAMPRATE    RATE_ADS1115_860SPS
                   #define ADS2_ANZ_CHAN    4
                   #if (USE_ADC1115_I2C > 3)
-                      //#define ADS3_I2C         I2C1
-                      #define ADS3_ADDR        I2C_ADS1115_4B
+                      //#define ADS4_I2C         I2C1
+                      #define ADS4_ADDR        I2C_ADS1115_4B
                       #define ADS3_SAMPRATE    RATE_ADS1115_860SPS
                       #define ADS3_ANZ_CHAN    4
                     #endif

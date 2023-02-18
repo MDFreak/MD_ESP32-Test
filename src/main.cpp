@@ -3392,15 +3392,7 @@
                         #endif
                       #endif
                 #endif
-              STXT(" start ADS1115_1 ... ");
-              if (ads[0].begin(ADS0_ADDR, pads0i2c))
-                {
-                  STXT(" ADS1115_1 started ");
-                }
-                else
-                {
-                  STXT(" could not start ADS1115_1 ");
-                }
+
               #if (USE_ADC1115_I2C > 1) // 1
                   STXT(" init ADS1115_2");
                   ads[1].init(1);       // init unit 2
@@ -3434,21 +3426,21 @@
                       ads[2].init(2);       // init unit 3
                           //SOUTHEXLN((uint32_t) &ads);
                       STXT(" init ADS1115_3 chan 0");
-                      ads[2].initChan(0, ADS30_RATE, ADS30_GAIN, ADS30_MUX);
-                      #if (ADS3_ANZ_CHAN > 1)
+                      ads[2].initChan(0, ADS40_RATE, ADS40_GAIN, ADS40_MUX);
+                      #if (ADS4_ANZ_CHAN > 1)
                           STXT(" init ADS1115_3 chan 1");
-                          ads[2].initChan(1, ADS31_RATE, ADS31_GAIN, ADS31_MUX);
-                          #if (ADS3_ANZ_CHAN > 2)
+                          ads[2].initChan(1, ADS41_RATE, ADS41_GAIN, ADS41_MUX);
+                          #if (ADS4_ANZ_CHAN > 2)
                               STXT(" init ADS1115_1 chan 2");
-                              ads[2].initChan(2, ADS32_RATE, ADS32_GAIN, ADS32_MUX);
-                              #if (ADS3_ANZ_CHAN > 3)
+                              ads[2].initChan(2, ADS42_RATE, ADS42_GAIN, ADS42_MUX);
+                              #if (ADS4_ANZ_CHAN > 3)
                                   STXT(" init ADS1115_3 chan 3");
-                                  ads[2].initChan(3, ADS33_RATE, ADS33_GAIN, ADS33_MUX);
+                                  ads[2].initChan(3, ADS43_RATE, ADS43_GAIN, ADS43_MUX);
                                 #endif
                               #endif
                         #endif
                       STXT(" start ADS1115_3 ... ");
-                      if (ads[2].begin(ADS3_ADDR, pads0i2c))
+                      if (ads[2].begin(ADS4_ADDR, pads0i2c))
                         {
                           STXT(" ADS1115_3 started ");
                         }
@@ -3483,6 +3475,33 @@
                             {
                               STXT(" could not start ADS1115_4 ");
                             }
+                        #endif
+                    #endif
+                #endif
+            }
+
+          static void startADS1115()
+            {
+              STXT(" start ADS1115_1 ... ");
+              if (ads[0].begin(ADS1_ADDR, pads0i2c))
+                { STXT(" ADS1115_1 started "); }
+                else
+                { STXT(" could not start ADS1115_1 "); }
+              #if (USE_ADC1115_I2C > 1) // 1
+                  if (ads[1].begin(ADS2_ADDR, pads0i2c))
+                    { STXT(" ADS1115_2 started "); }
+                    else
+                    { STXT(" could not start ADS1115_2 "); }
+                  #if (USE_ADC1115_I2C > 2) // 2
+                      if (ads[2].begin(ADS4_ADDR, pads0i2c))
+                        { STXT(" ADS1115_3 started "); }
+                        else
+                        { STXT(" could not start ADS1115_3 "); }
+                      #if (USE_ADC1115_I2C > 3) // 3
+                          if (ads[3].begin(ADS4_ADDR, pads0i2c))
+                            { STXT(" ADS1115_4 started "); }
+                            else
+                            { STXT(" could not start ADS1115_4 "); }
                         #endif
                     #endif
                 #endif
