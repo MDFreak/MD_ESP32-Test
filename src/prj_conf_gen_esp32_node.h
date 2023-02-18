@@ -818,9 +818,9 @@
           #if (POTI1_1115 > OFF)
               #define POTI1_1115_UNIT      0
               #define POTI1_1115_CHAN     3
-              #define ADS03_GAIN          GAIN_ONE
-              #define ADS03_RATE          RATE_ADS1115_128SPS
-              #define ADS03_MUX           ADS1X15_MUX_SINGLE
+              #define ADS14_GAIN          GAIN_ONE
+              #define ADS14_RATE          RATE_ADS1115_128SPS
+              #define ADS14_MUX           ADS1X15_MUX_SINGLE
               #define POTI1_OFFRAW        0
               #define POTI1_GAIN          1
               #define POTI1_OFFREAL       0
@@ -871,25 +871,25 @@
               #define I712_1_1115_UNIT    0
               #define I712_1_1115_CHAN    1
               #if   (I712_1_IMAX ==  5000)
-                  #define ADS01_GAIN            GAIN_ONE
-                  #define ADS01_RATE            RATE_ADS1115_128SPS
-                  #define ADS01_MUX             ADS1X15_MUX_SINGLE
+                  #define ADS12_GAIN            GAIN_ONE
+                  #define ADS12_RATE            RATE_ADS1115_128SPS
+                  #define ADS12_MUX             ADS1X15_MUX_SINGLE
                   #define I712_1_SCAL_OFFRAW    0
                   #define I712_1_SCAL_GAIN      1
                   #define I712_1_SCAL_OFFREAL   0
                 #endif
               #if (I712_1_IMAX == 20000)
-                  #define ADS01_GAIN            GAIN_ONE
-                  #define ADS01_RATE            RATE_ADS1115_128SPS
-                  #define ADS01_MUX             ADS1X15_MUX_SINGLE
+                  #define ADS12_GAIN            GAIN_ONE
+                  #define ADS12_RATE            RATE_ADS1115_128SPS
+                  #define ADS12_MUX             ADS1X15_MUX_SINGLE
                   #define I712_1_SCAL_OFFRAW    0
                   #define I712_1_SCAL_GAIN      1
                   #define I712_1_SCAL_OFFRAW    0
                 #endif
               #if (I712_1_IMAX == 30000)
-                  #define ADS01_GAIN            GAIN_ONE
-                  #define ADS01_RATE            RATE_ADS1115_128SPS
-                  #define ADS01_MUX             ADS1X15_MUX_SINGLE
+                  #define ADS12_GAIN            GAIN_ONE
+                  #define ADS12_RATE            RATE_ADS1115_128SPS
+                  #define ADS12_MUX             ADS1X15_MUX_SINGLE
                   #define I712_1_SCAL_OFFRAW    0
                   #define I712_1_SCAL_GAIN      1
                   #define I712_1_SCAL_OFFRAW    0
@@ -936,21 +936,16 @@
         #endif
       #if (USE_ADC1115_I2C > OFF)
           #define ADS_I2C          I2C1
-          #define ADS0_ADDR        I2C_ADS1115_48
-          #define ADS0_ANZ_CHAN    4
-          #if (USE_ADC1115_I2C > OFF)
-              //#define ADS1_I2C         I2C1
+          #define ADS1_ADDR        I2C_ADS1115_48
+          #define ADS1_ANZ_CHAN    4
+          #if (USE_ADC1115_I2C > 1)
               #define ADS2_ADDR        I2C_ADS1115_49
               #define ADS2_ANZ_CHAN    4
               #if (USE_ADC1115_I2C > 2)
-                  //#define ADS3_I2C         I2C1
                   #define ADS3_ADDR        I2C_ADS1115_4A
-                  #define ADS3_SAMPRATE    RATE_ADS1115_860SPS
                   #define ADS3_ANZ_CHAN    4
                   #if (USE_ADC1115_I2C > 3)
-                      //#define ADS4_I2C         I2C1
                       #define ADS4_ADDR        I2C_ADS1115_4B
-                      #define ADS4_SAMPRATE    RATE_ADS1115_860SPS
                       #define ADS4_ANZ_CHAN    4
                     #endif
                 #endif
