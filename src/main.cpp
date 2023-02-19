@@ -1058,6 +1058,7 @@
         // ADC ADS1115
           #if (USE_ADC1115_I2C > OFF)
               initADS1115();
+              startADS1115();
             #endif
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
@@ -3375,137 +3376,145 @@
       #if (USE_ADC1115_I2C > OFF)
           static void initADS1115()
             {
-              /* unit 1 - channel 1 is always configured and always measured
-                 in case ADS11_MUX is not defined (this is allowed)
-                 - channel 1 unit 0
-                   - is initialized to
-                     - fastest mode and
-                     - smallest attenuation
-                   - is always activ measured
-               */
-              STXT(" init ADS1115_1");
-              ads[0].init(0);       // init unit 1
-                  //SOUTHEXLN((uint32_t) &ads);
-              #ifdef ADS11_MUX
-                  STXT(" init ADS1115_1 chan 0");
-                  ads[0].initChan(0, ADS11_RATE, ADS11_GAIN, ADS11_MUX);
-                #else
-                  STXT(" auto init ADS1115_1 chan 0");
-                  ads[0].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS11_MUX);
-                #endif
-              #if (ADS1_ANZ_CHAN > 1)
-                  STXT(" init ADS1115_1 chan 1");
-                  ads[0].initChan(1, ADS12_RATE, ADS12_GAIN, ADS12_MUX);
-                  #if (ADS1_ANZ_CHAN > 2)
+              // init unit 1
+                STXT(" init ADS1115_1");
+                ads[0].init(0);       // init unit 1
+                // init channels
+                  /* unit 1 - channel 1 is always configured and always measured
+                     in case ADS11_MUX is not defined (this is allowed)
+                     - channel 1 unit 0
+                       - is initialized to
+                         - fastest mode and
+                         - smallest attenuation
+                       - is always activ measured
+                   */
+                  #ifdef ADS11_MUX
+                      STXT(" init ADS1115_1 chan 1");
+                      ads[0].initChan(0, ADS11_RATE, ADS11_GAIN, ADS11_MUX);
+                    #else
+                      STXT(" auto init ADS1115_1 chan 1");
+                      ads[0].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS1X15_REG_CONFIG_MUX_SINGLE_0);
+                    #endif
+                  #ifdef ADS12_MUX
                       STXT(" init ADS1115_1 chan 2");
+                      ads[0].initChan(1, ADS12_RATE, ADS12_GAIN, ADS12_MUX);
+                    #endif
+                  #ifdef ADS13_MUX
+                      STXT(" init ADS1115_1 chan 3");
                       ads[0].initChan(2, ADS13_RATE, ADS13_GAIN, ADS13_MUX);
-                      #if (ADS1_ANZ_CHAN > 3)
-                          STXT(" init ADS1115_1 chan 3");
-                          ads[0].initChan(3, ADS14_RATE, ADS14_GAIN, ADS14_MUX);
-                        #endif
-                      #endif
-                #endif
-              #if (USE_ADC1115_I2C > 1) // 1
-                  STXT(" init ADS1115_2");
-                  ads[1].init(1);       // init unit 2
-                      //SOUTHEXLN((uint32_t) &ads);
-                  STXT(" init ADS1115_2 chan 0");
-                  ads[1].initChan(0, ADS20_RATE, ADS20_GAIN, ADS20_MUX);
-                  #if (ADS2_ANZ_CHAN > 1)
-                      STXT(" init ADS1115_2 chan 1");
-                      ads[1].initChan(1, ADS21_RATE, ADS21_GAIN, ADS21_MUX);
-                      #if (ADS2_ANZ_CHAN > 2)
-                          STXT(" init ADS2115_2 chan 2");
-                          ads[1].initChan(2, ADS22_RATE, ADS22_GAIN, ADS22_MUX);
-                          #if (ADS2_ANZ_CHAN > 3)
-                              STXT(" init ADS1115_2 chan 3");
-                              ads[1].initChan(3, ADS23_RATE, ADS23_GAIN, ADS23_MUX);
-                            #endif
-                          #endif
                     #endif
-                  STXT(" start ADS1115_2 ... ");
-                  if (ads[1].begin(ADS2_ADDR, pads0i2c))
-                    { STXT(" ADS1115_2 started "); }
-                    else
-                    { STXT(" could not start ADS1115_2 "); }
-                  #if (USE_ADC1115_I2C > 2) // 2
-                      STXT(" init ADS1115_3");
-                      ads[2].init(2);       // init unit 3
-                          //SOUTHEXLN((uint32_t) &ads);
-                      STXT(" init ADS1115_3 chan 0");
-                      ads[2].initChan(0, ADS40_RATE, ADS40_GAIN, ADS40_MUX);
-                      #if (ADS4_ANZ_CHAN > 1)
-                          STXT(" init ADS1115_3 chan 1");
-                          ads[2].initChan(1, ADS41_RATE, ADS41_GAIN, ADS41_MUX);
-                          #if (ADS4_ANZ_CHAN > 2)
+                  #ifdef ADS14_MUX
+                      STXT(" init ADS1115_1 chan 4");
+                      ads[0].initChan(3, ADS13_RATE, ADS13_GAIN, ADS13_MUX);
+                    #endif
+                // init unit 2
+                #if (USE_ADC1115_I2C > 1) // 1
+                    STXT(" init ADS1115_2");
+                    ads[1].init(1);       // init unit 2
+                    // init channels
+                      #ifdef ADS21_MUX
+                          STXT(" init ADS1115_2 chan 1");
+                          ads[1].initChan(0, ADS21_RATE, ADS21_GAIN, ADS21_MUX);
+                        #else
+                          STXT(" auto init ADS1115_2 chan 1");
+                          ads[1].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS1X15_REG_CONFIG_MUX_SINGLE_0);
+                        #endif
+                      #ifdef ADS22_MUX
+                          STXT(" init ADS1115_2 chan 2");
+                          ads[1].initChan(1, ADS22_RATE, ADS22_GAIN, ADS12_MUX);
+                        #endif
+                      #ifdef ADS23_MUX
+                          STXT(" init ADS1115_2 chan 3");
+                          ads[1].initChan(2, ADS23_RATE, ADS23_GAIN, ADS13_MUX);
+                        #endif
+                      #ifdef ADS24_MUX
+                          STXT(" init ADS1115_2 chan 4");
+                          ads[1].initChan(3, ADS24_RATE, ADS24_GAIN, ADS14_MUX);
+                        #endif
+                    // init unit 3
+                    #if (USE_ADC1115_I2C > 2) // 2
+                        STXT(" init ADS1115_3");
+                        ads[2].init(2);       // init unit 3
+                        // init channels
+                          #ifdef ADS31_MUX
+                              STXT(" init ADS1115_3 chan 1");
+                              ads[2].initChan(0, ADS31_RATE, ADS31_GAIN, ADS31_MUX);
+                            #else
+                              STXT(" auto init ADS1115_3 chan 1");
+                              ads[2].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS1X15_REG_CONFIG_MUX_SINGLE_0);
+                            #endif
+                          #ifdef ADS32_MUX
                               STXT(" init ADS1115_3 chan 2");
-                              ads[2].initChan(2, ADS42_RATE, ADS42_GAIN, ADS42_MUX);
-                              #if (ADS4_ANZ_CHAN > 3)
-                                  STXT(" init ADS1115_3 chan 3");
-                                  ads[2].initChan(3, ADS43_RATE, ADS43_GAIN, ADS43_MUX);
-                                #endif
-                              #endif
-                        #endif
-                      STXT(" start ADS1115_3 ... ");
-                      if (ads[2].begin(ADS3_ADDR, pads0i2c))
-                        {
-                          STXT(" ADS1115_3 started ");
-                        }
-                        else
-                        {
-                          STXT(" could not start ADS1115_3 ");
-                        }
-                      #if (USE_ADC1115_I2C > 3) // 3
-                          STXT(" init ADS1115_4");
-                          ads[3].init(3);       // init unit 3
-                              //SOUTHEXLN((uint32_t) &ads);
-                          STXT(" init ADS1115_4 chan 0");
-                          ads[3].initChan(0, ADS40_RATE, ADS40_GAIN, ADS40_MUX);
-                          #if (ADS4_ANZ_CHAN > 1)
-                              STXT(" init ADS1115_4 chan 1");
-                              ads[3].initChan(1, ADS41_RATE, ADS41_GAIN, ADS41_MUX);
-                              #if (ADS4_ANZ_CHAN > 2)
-                                  STXT(" init ADS1115_4 chan 2");
-                                  ads[3].initChan(2, ADS42_RATE, ADS42_GAIN, ADS42_MUX);
-                                  #if (ADS4_ANZ_CHAN > 3)
-                                      STXT(" init ADS1115_4 chan 3");
-                                      ads[3].initChan(3, ADS43_RATE, ADS43_GAIN, ADS43_MUX);
-                                    #endif
-                                  #endif
+                              ads[2].initChan(1, ADS32_RATE, ADS32_GAIN, ADS32_MUX);
                             #endif
-                          STXT(" start ADS1115_4 ... ");
-                          if (ads[3].begin(ADS4_ADDR, pads0i2c))
-                            {
-                              STXT(" ADS1115_4 started ");
-                            }
-                            else
-                            {
-                              STXT(" could not start ADS1115_4 ");
-                            }
-                        #endif
-                    #endif
-                #endif
+                          #ifdef ADS33_MUX
+                              STXT(" init ADS1115_3 chan 3");
+                              ads[2].initChan(2, ADS33_RATE, ADS33_GAIN, ADS33_MUX);
+                            #endif
+                          #ifdef ADS34_MUX
+                              STXT(" init ADS1115_3 chan 4");
+                              ads[2].initChan(3, ADS34_RATE, ADS34_GAIN, ADS34_MUX);
+                            #endif
+                        // init unit 4
+                        #if (USE_ADC1115_I2C > 3) // 3
+                            STXT(" init ADS1115_4 chan 1");
+                            // init channels
+                              #ifdef ADS41_MUX
+                                  STXT(" init ADS1115_4 chan 1");
+                                  ads[3].initChan(0, ADS41_RATE, ADS41_GAIN, ADS41_MUX);
+                                #else
+                                  STXT(" auto init ADS1115_4 chan 1");
+                                  ads[3].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS1X15_REG_CONFIG_MUX_SINGLE_0);
+                                #endif
+                              #ifdef ADS42_MUX
+                                  STXT(" init ADS1115_4 chan 2");
+                                  ads[3].initChan(1, ADS42_RATE, ADS42_GAIN, ADS42_MUX);
+                                #endif
+                              #ifdef ADS43_MUX
+                                  STXT(" init ADS1115_4 chan 3");
+                                  ads[3].initChan(2, ADS43_RATE, ADS43_GAIN, ADS43_MUX);
+                                #endif
+                              #ifdef ADS44_MUX
+                                  STXT(" init ADS1115_4 chan 4");
+                                  ads[3].initChan(3, ADS44_RATE, ADS44_GAIN, ADS44_MUX);
+                                #endif
+                          #endif
+                      #endif
+                  #endif
             }
 
           static void startADS1115()
             {
+              uint8_t _addr = ADS1_ADDR;
               STXT(" start ADS1115_1 ... ");
               if (ads[0].begin(ADS1_ADDR, pads0i2c))
                 { STXT(" ADS1115_1 started "); }
                 else
                 { STXT(" could not start ADS1115_1 "); }
               #if (USE_ADC1115_I2C > 1) // 1
-                  if (ads[1].begin(ADS3_ADDR, pads0i2c))
+                  _addr = ADS1_ADDR;
+                  #ifdef ADS2_ADDR
+                      _addr = ADS2_ADDR;
+                    #endif
+                  if (ads[1].begin(_addr, pads0i2c))
                     { STXT(" ADS1115_2 started "); }
                     else
                     { STXT(" could not start ADS1115_2 "); }
                   #if (USE_ADC1115_I2C > 2) // 2
-                      if (ads[2].begin(ADS4_ADDR, pads0i2c))
+                      _addr = ADS1_ADDR;
+                      #ifdef ADS3_ADDR
+                          _addr = ADS3_ADDR;
+                        #endif
+                      if (ads[2].begin(_addr, pads0i2c))
                         { STXT(" ADS1115_3 started "); }
                         else
                         { STXT(" could not start ADS1115_3 "); }
                       #if (USE_ADC1115_I2C > 3) // 3
-                          if (ads[3].begin(ADS4_ADDR, pads0i2c))
+                          _addr = ADS1_ADDR;
+                          #ifdef ADS4_ADDR
+                              _addr = ADS4_ADDR;
+                            #endif
+                          if (ads[3].begin(_addr, pads0i2c))
                             { STXT(" ADS1115_4 started "); }
                             else
                             { STXT(" could not start ADS1115_4 "); }

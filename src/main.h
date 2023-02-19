@@ -279,6 +279,7 @@
         // --- ADS1115
           #if (USE_ADC1115_I2C > OFF)
               static void initADS1115();
+              static void startADS1115();
             #endif
         // --- DS18B20
           #if (USE_DS18B20_1W_IO > OFF)
