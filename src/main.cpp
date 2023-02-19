@@ -3415,7 +3415,7 @@
                       #ifdef ADS21_MUX
                           STXT(" init ADS1115_2 chan 1");
                           ads[1].initChan(0, ADS21_RATE, ADS21_GAIN, ADS21_MUX);
-                        #else
+                      #else
                           STXT(" auto init ADS1115_2 chan 1");
                           ads[1].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS1X15_REG_CONFIG_MUX_SINGLE_0);
                         #endif
@@ -3439,7 +3439,7 @@
                           #ifdef ADS31_MUX
                               STXT(" init ADS1115_3 chan 1");
                               ads[2].initChan(0, ADS31_RATE, ADS31_GAIN, ADS31_MUX);
-                            #else
+                          #else
                               STXT(" auto init ADS1115_3 chan 1");
                               ads[2].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS1X15_REG_CONFIG_MUX_SINGLE_0);
                             #endif
@@ -3462,7 +3462,7 @@
                               #ifdef ADS41_MUX
                                   STXT(" init ADS1115_4 chan 1");
                                   ads[3].initChan(0, ADS41_RATE, ADS41_GAIN, ADS41_MUX);
-                                #else
+                              #else
                                   STXT(" auto init ADS1115_4 chan 1");
                                   ads[3].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS1X15_REG_CONFIG_MUX_SINGLE_0);
                                 #endif
