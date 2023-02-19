@@ -68,6 +68,7 @@
         #if (USE_BME280_I2C > OFF )
             #define BME280_I2C         I2C1
           #endif
+#ifdef UNUSED
         #if (USE_ADC1115_I2C > OFF)
             #ifndef USE_INPUT_CYCLE
                 #define USE_INPUT_CYCLE
@@ -76,18 +77,19 @@
             #define ADC1115_1_ADDR       I2C_ADS1115_48
             #define ADC1115_1_CHANS      4
             #if (USE_ADC1115_I2C > 1)
-                #define ADC1115_2_ADDR   I2C_ADS1115_49
+                #define ADC1115_2_ADDR   I2C_ADS1115_48 //I2C_ADS1115_49
                 #define ADC1115_2_CHANs  4
                 #if (USE_ADC1115_I2C > 2)
-                    #define ADC1115_3_ADDR   I2C_ADS1115_4A
+                    #define ADC1115_3_ADDR   I2C_ADS1115_48 //I2C_ADS1115_4A
                     #define ADC1115_3_CHANs  4
                     #if (USE_ADC1115_I2C > 3)
-                        #define ADC1115_4_ADDR   I2C_ADS1115_4B
+                        #define ADC1115_4_ADDR   I2C_ADS1115_48 //I2C_ADS1115_4B
                         #define ADC1115_4_CHANs  4
                       #endif
                   #endif
               #endif
           #endif
+#endif
     // --- network
       // --- WIFI
         #if (USE_WIFI > OFF)
@@ -934,18 +936,19 @@
 
             #endif
         #endif
+
       #if (USE_ADC1115_I2C > OFF)
           #define ADS_I2C          I2C1
           #define ADS1_ADDR        I2C_ADS1115_48
           #define ADS1_ANZ_CHAN    4
           #if (USE_ADC1115_I2C > 1)
-              #define ADS2_ADDR        I2C_ADS1115_49
+              #define ADS2_ADDR        I2C_ADS1115_48 //I2C_ADS1115_49
               #define ADS2_ANZ_CHAN    4
               #if (USE_ADC1115_I2C > 2)
-                  #define ADS3_ADDR        I2C_ADS1115_4A
+                  #define ADS3_ADDR        I2C_ADS1115_48 //I2C_ADS1115_4A
                   #define ADS3_ANZ_CHAN    4
                   #if (USE_ADC1115_I2C > 3)
-                      #define ADS4_ADDR        I2C_ADS1115_4B
+                      #define ADS4_ADDR        I2C_ADS1115_48 //I2C_ADS1115_4B
                       #define ADS4_ANZ_CHAN    4
                     #endif
                 #endif
