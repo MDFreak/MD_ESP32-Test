@@ -3375,11 +3375,24 @@
       #if (USE_ADC1115_I2C > OFF)
           static void initADS1115()
             {
+              /* unit 1 - channel 1 is always configured and always measured
+                 in case ADS11_MUX is not defined (this is allowed)
+                 - channel 1 unit 0
+                   - is initialized to
+                     - fastest mode and
+                     - smallest attenuation
+                   - is always activ measured
+               */
               STXT(" init ADS1115_1");
               ads[0].init(0);       // init unit 1
                   //SOUTHEXLN((uint32_t) &ads);
-              STXT(" init ADS1115_1 chan 0");
-              ads[0].initChan(0, ADS11_RATE, ADS11_GAIN, ADS11_MUX);
+              #ifdef ADS11_MUX
+                  STXT(" init ADS1115_1 chan 0");
+                  ads[0].initChan(0, ADS11_RATE, ADS11_GAIN, ADS11_MUX);
+                #else
+                  STXT(" auto init ADS1115_1 chan 0");
+                  ads[0].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS11_MUX);
+                #endif
               #if (ADS1_ANZ_CHAN > 1)
                   STXT(" init ADS1115_1 chan 1");
                   ads[0].initChan(1, ADS12_RATE, ADS12_GAIN, ADS12_MUX);
