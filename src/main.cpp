@@ -3457,6 +3457,7 @@
                             #endif
                         // init unit 4
                         #if (USE_ADC1115_I2C > 3) // 3
+                             ads[3].init(3);       // init unit 3
                             STXT(" init ADS1115_4 chan 1");
                             // init channels
                               #ifdef ADS41_MUX
