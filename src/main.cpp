@@ -1275,13 +1275,15 @@
                   ds2Sensors.begin();
                 #endif
                   #if (USE_DS18B20_1W_IO > OFF)
-                      topDS18B201 = topDevice + topDS18B201;
-                      errMQTT = (int8_t) mqtt.subscribe(topDS18B201.c_str());
-                          soutMQTTerr(" MQTT subscribe DS18B201 ", errMQTT);
-                      #if (USE_DS18B20_1W_IO > 1)
-                          topDS18B202 = topDevice + topDS18B202;
-                          errMQTT = (int8_t) mqtt.subscribe(topDS18B202.c_str());
-                              soutMQTTerr(" MQTT subscribe DS18B202 ", errMQTT);
+                      #if (USE_MQTT > OFF)
+                          topDS18B201 = topDevice + topDS18B201;
+                          errMQTT = (int8_t) mqtt.subscribe(topDS18B201.c_str());
+                              soutMQTTerr(" MQTT subscribe DS18B201 ", errMQTT);
+                          #if (USE_DS18B20_1W_IO > 1)
+                              topDS18B202 = topDevice + topDS18B202;
+                              errMQTT = (int8_t) mqtt.subscribe(topDS18B202.c_str());
+                                  soutMQTTerr(" MQTT subscribe DS18B202 ", errMQTT);
+                            #endif
                         #endif
                     #endif
               dispStatus(DS18Str);
@@ -2201,7 +2203,9 @@
                       break;
                     case 17:
                         //SOUT(" c17");
-                        mqtt.eventLoop();
+                        #if (USE_MqTT > OFF)
+                            mqtt.eventLoop();
+                          #endif
                         //SOUT(" c17a");
                       break;
                     default:
