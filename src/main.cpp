@@ -2103,11 +2103,7 @@
                             #if (VCC50_ADC > OFF)
                               #endif
                             #if (VCC50_1115 > OFF)
-                                //ads[VCC50_1115_CHAN].setGain(VCC_1115_ATT);
-                                //ads[VCC50_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC50_1115_CHAN], /*continuous=*/false);
-                                //usleep(1200); // Wait 1200us for the conversion to complete
-                                //while (!ads[VCC50_1115_CHAN].conversionComplete());
-                                //vcc50 = ads[VCC50_1115_CHAN].getLastConversionResults();   // Read the conversion results
+                                vcc50 = ads[VCC50_1115_CHAN].;   // Read the conversion results
                                 //vcc50Val.doVal(vcc50);
                               #endif
                           #endif
