@@ -508,7 +508,7 @@
             TwoWire* pads0i2c = &i2c2;
           #endif
       #endif
-    #if (USE_BME280_I2C > OFF)
+    #if (USE_BME280_I2C > OFF) // 1
         static Adafruit_BME280  bme1;
         #if (BME280_I2C == I2C1)
             TwoWire* pbme1i2c = &i2c1;
@@ -537,7 +537,7 @@
             static String topBME280h = MQTT_BME280H;
           #endif
       #endif
-    #if (USE_CCS811_I2C > OFF)
+    #if (USE_CCS811_I2C > OFF) // 2
         msTimer ccs811T = msTimer(1200);
         Adafruit_CCS811  ccs811;
         #if (CCS811_I2C == I2C1)
@@ -563,7 +563,7 @@
             static String topCCS811t = MQTT_CCS811T;
           #endif
       #endif
-    #if (USE_INA3221_I2C > OFF)
+    #if (USE_INA3221_I2C > OFF) // 3
         SDL_Arduino_INA3221 ina32211(INA32211_ADDR); // def 0.1 ohm
         #if (INA32211_I2C == I2C1)
             TwoWire* ina1i2c = &i2c1;
@@ -616,7 +616,7 @@
               #endif
           #endif
       #endif
-    #if (USE_DS18B20_1W_IO > OFF)
+    #if (USE_DS18B20_1W_IO > OFF) // 4
         OneWire             ds1OneWire(DS1_ONEWIRE_PIN);
         DallasTemperature   ds1Sensors(&ds1OneWire);
         //md_val<uint16_t>    dsTempVal[USE_DS18B20_1W_IO];
@@ -635,12 +635,12 @@
               #endif
           #endif
       #endif
-    #if (USE_MQ135_GAS_ANA > OFF)
+    #if (USE_MQ135_GAS_ANA > OFF) // 5
         //filterValue tholdGas(MQ135_ThresFilt,1);
         //md_val<double> gasVal;
         //md_val<uint16_t> gasThres;
       #endif
-    #if (USE_MQ3_ALK_ANA > OFF)
+    #if (USE_MQ3_ALK_ANA > OFF) // 6
         //md_val<int16_t> alkVal;
         md_scale<int16_t> alkScal;
         uint16_t alk;
@@ -650,7 +650,7 @@
             static String valMQ3alk;
           #endif
       #endif
-    #if (USE_PHOTO_SENS_ANA > OFF)
+    #if (USE_PHOTO_SENS_ANA > OFF) // 7
         //md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
         md_scale<int16_t> photoScal[USE_PHOTO_SENS_ANA];
         int16_t           bright[USE_PHOTO_SENS_ANA];
@@ -663,7 +663,7 @@
               #endif
           #endif
       #endif
-    #if (USE_POTI_ANA > OFF)
+    #if (USE_POTI_ANA > OFF) // 8
         //md_val<int16_t>   potiVal[USE_POTI_ANA];
         md_scale<int16_t> potiScal[USE_POTI_ANA];
         uint16_t          poti[USE_POTI_ANA];
@@ -677,7 +677,7 @@
               #endif
           #endif
       #endif
-    #if (USE_VCC50_ANA > OFF)
+    #if (USE_VCC50_ANA > OFF) // 9
         //md_val<int16_t>   vcc50Val;
         //md_scale<int16_t> vcc50Scal;
         int16_t           vcc50;
@@ -690,7 +690,7 @@
             static String topVCC50     = MQTT_VCC50;
           #endif
       #endif
-    #if (USE_VCC33_ANA > OFF)
+    #if (USE_VCC33_ANA > OFF) // 10
         //md_val<int16_t>   vcc33Val;
         //md_scale<int16_t> vcc33Scal;
         int16_t           vcc33;
@@ -703,7 +703,7 @@
             static String topVCC33     = MQTT_VCC33;
           #endif
       #endif
-    #if (USE_ACS712_ANA > OFF)
+    #if (USE_ACS712_ANA > OFF) // 11
         //md_val<int16_t>   i712Val[USE_ACS712_ANA];
         md_scale<int16_t> i712Scal[USE_ACS712_ANA];
         float*  pi712[USE_ACS712_ANA];
@@ -732,7 +732,7 @@
               #endif
           #endif
       #endif
-    #if (USE_TYPE_K_SPI > 0)
+    #if (USE_TYPE_K_SPI > 0) // 12
         //SPIClass* tkSPI = new SPIClass();
         //md_31855_ktype TypeK1(TYPEK1_CS_PIN, tkSPI);
         md_31855_ktype TypeK1(TYPEK1_CS_PIN, TYPEK_CLK_PIN, TYPEK_DATA_PIN);
@@ -749,13 +749,15 @@
             int16_t     tk2ValRef;
           #endif
       #endif
-    #if (USE_CNT_INP > OFF)
+    #if (USE_CNT_INP > OFF) // 13
       #endif
-    #if (USE_DIG_INP > OFF)
+    #if (USE_DIG_INP > OFF) // 14
       #endif
-    #if (USE_ESPHALL > OFF)
+    #if (USE_ESPHALL > OFF) // 15
       #endif
-    #if (USE_MCPWM > OFF)
+    #if (USE_MCPWM > OFF) // 16
+      #endif
+    #if (USE_MQTT > 0) // 17
       #endif
   // ------ memories
     #if (USE_FLASH_MEM > OFF)
@@ -1348,7 +1350,7 @@
               #if (VCC_FILT > OFF)
                   vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
                 #endif
-              vcc50Scal.setScale(VCC50_OFFRAW, VCC50_GAIN, VCC50_OFFREAL);
+              vcc50fScal.setScale(VCC50_OFFRAW, VCC50_GAIN, VCC50_OFFREAL);
               #if (USE_MQTT > OFF)
                   topVCC50 = topDevice + topVCC50;
                   errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
@@ -1361,7 +1363,7 @@
               #if (VCC_FILT > OFF)
                   vcc33Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
                 #endif
-              vcc33Scal.setScale(VCC33_OFFRAW, VCC33_GAIN, VCC33_OFFREAL);
+              vcc33fScal.setScale(VCC33_OFFRAW, VCC33_GAIN, VCC33_OFFREAL);
               #if (USE_MQTT > OFF)
                   topVCC33 = topDevice + topVCC33;
                   errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
@@ -2039,7 +2041,7 @@
                               else { pubINA3221p[0][2] = FALSE; }
                           #endif
                       break;
-                    case 4: // USE_DS18B20_1W_IO
+                    case 4: // DS18B20_1W
                         //SOUT(" c4");
                         #if (USE_DS18B20_1W_IO > OFF)
                             outStr = "";
@@ -2047,7 +2049,7 @@
                             dispText(outStr ,  0, 1, outStr.length());
                           #endif
                       break;
-                    case 5:
+                    case 5: // MQ135_GAS_ANA
                         //SOUT(" c5");
                         #if (USE_MQ135_GAS_ANA > OFF)
                             #if (MQ135_GAS_ADC > OFF)
@@ -2060,7 +2062,7 @@
                               #endif
                           #endif
                       break;
-                    case 6:
+                    case 6: // MQ3_ALK_ANA
                         //SOUT(" c6");
                         #if (USE_MQ3_ALK_ANA > OFF)
                             #if (MQ3_ALK_ADC > OFF)
@@ -2077,7 +2079,7 @@
                               #endif
                           #endif
                       break;
-                    case 7:
+                    case 7: // PHOTO_SENS_ANA
                         //SOUT(" c7");
                         #if (USE_PHOTO_SENS_ANA > OFF)
                             #if (PHOTO1_ADC > OFF)
@@ -2087,7 +2089,7 @@
                               #endif
                           #endif
                       break;
-                    case 8:
+                    case 8: // POTI_ANA
                         //SOUT(" c8");
                         #if (USE_POTI_ANA > OFF)
                             #if (POTI1_ADC > OFF)
@@ -2111,6 +2113,7 @@
                             #if (VCC50_1115 > OFF)
                                 vcc50  = ads[VCC_1115_UNIT].getResult(VCC50_1115_CHAN);
                                 vcc50f = ads[VCC_1115_UNIT].getVolts(VCC50_1115_CHAN);
+                                vcc50f = vcc50fScal.scale(vcc50f);
                                 //vcc50Val.doVal(vcc50);
                               #endif
                           #endif
@@ -2123,10 +2126,11 @@
                             #if (VCC33_1115 > OFF)
                                 vcc33  = ads[VCC_1115_UNIT].getResult(VCC33_1115_CHAN);
                                 vcc33f = ads[VCC_1115_UNIT].getVolts(VCC33_1115_CHAN);
+                                vcc33f = vcc33fScal.scale(vcc33f);
                                 //vcc33Val.doVal(vcc33);
                               #endif
                           #endif
-                    case 11:
+                    case 11: // ACS712_ANA
                         //SOUT(" c11");
                         #if (USE_ACS712_ANA > OFF)
                             #if (I712_1_ADC > OFF)
@@ -2142,7 +2146,7 @@
                               #endif
                           #endif
                       break;
-                    case 12:
+                    case 12: // TYPE_K_SPI
                         //SOUT(" c12");
                         #if (USE_TYPE_K_SPI > OFF)
                             int8_t  tkerr = (int8_t) ISOK;
@@ -2174,7 +2178,7 @@
                               #endif
                           #endif
                       break;
-                    case 13:
+                    case 13: // CNT_INP
                         //SOUT(" c13");
                         #if (USE_CNT_INP > OFF)
                             #ifdef USE_PW
@@ -2182,27 +2186,27 @@
                               #endif
                           #endif
                       break;
-                    case 14:
+                    case 14: // DIG_INP
                         //SOUT(" c14");
                         #if (USE_DIG_INP > OFF)
                             getDIGIn();
                           #endif
                       break;
-                    case 15:
+                    case 15: // ESPHALL
                         //SOUT(" c15");
                         #if (USE_ESPHALL > OFF)
                             valHall = hallRead();
                           #endif
                       break;
-                    case 16:
+                    case 16: // MCPWM
                         //SOUT(" c16");
                         #if (USE_MCPWM > OFF)
                             getCNTIn();
                           #endif
                       break;
-                    case 17:
+                    case 17: // MQTT
                         //SOUT(" c17");
-                        #if (USE_MqTT > OFF)
+                        #if (USE_MQTT > OFF)
                             mqtt.eventLoop();
                           #endif
                         //SOUT(" c17a");
@@ -2299,7 +2303,58 @@
                 outpT.startT();
                 switch(outpIdx)
                   {
-                    case 1:
+                    case 1: // BME280_I2C
+                      outpIdx++;
+                      //break;
+                    case 2: // CCS811_I2C
+                      outpIdx++;
+                      //break;
+                    case 3: // INA3221_I2C 3x U+I measures
+                      outpIdx++;
+                      //break;
+                    case 4: // DS18B20_1W
+                      outpIdx++;
+                      //break;
+                    case 5: // MQ135_GAS_ANA
+                      outpIdx++;
+                      //break;
+                    case 6: // MQ3_ALK_ANA
+                      outpIdx++;
+                      //break;
+                    case 7: // PHOTO_SENS_ANA
+                      outpIdx++;
+                      //break;
+                    case 8: // POTI_ANA
+                      outpIdx++;
+                      //break;
+                    case 9: // USE_VCC50_ANA
+                      outpIdx++;
+                      //break;
+                    case 10: // USE_VCC33_ANA
+                      outpIdx++;
+                      //break;
+                    case 11: // ACS712_ANA
+                      outpIdx++;
+                      //break;
+                    case 12: // TYPE_K_SPI
+                      outpIdx++;
+                      //break;
+                    case 13: // CNT_INP
+                      outpIdx++;
+                      //break;
+                    case 14: // DIG_INP
+                      outpIdx++;
+                      //break;
+                    case 15: // ESPHALL
+                      outpIdx++;
+                      //break;
+                    case 16: // MCPWM
+                      outpIdx++;
+                      //break;
+                    case 17:
+                      outpIdx++;
+                      //break;
+                    case 18: // RGBLED_PWM
                       #if (USE_RGBLED_PWM > OFF)
                           if (rgbledT.TOut())
                             {
@@ -2386,7 +2441,7 @@
                             }
                         #endif
                       break;
-                    case 2:
+                    case 19: // FAN_PWM
                       #if (USE_FAN_PWM > OFF)
                           if (fanT.TOut())
                             {
@@ -2420,7 +2475,7 @@
                             }
                         #endif
                       break;
-                    case 3:
+                    case 20: // WEBSERVER
                       #if (USE_WEBSERVER > OFF)
                           if (newClient)
                             {
