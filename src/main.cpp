@@ -3392,24 +3392,24 @@
                          - smallest attenuation
                        - is always activ measured
                    */
-                  #ifdef ADS11_MUX
+                  #if (ADS11_MUX == ADS1X15_MUX_SINGLE)
                       STXT(" init ADS1115_1 chan 1");
-                      ads[0].initChan(0, ADS11_RATE, ADS11_GAIN, ADS11_MUX);
+                      ads[0].initChan(0, ADS11_RATE, ADS11_GAIN, ADS1X15_REG_CONFIG_MUX_SINGLE_0);
                     #else
                       STXT(" auto init ADS1115_1 chan 1");
                       ads[0].initChan(0, RATE_ADS1115_860SPS, GAIN_TWOTHIRDS, ADS1X15_REG_CONFIG_MUX_SINGLE_0);
                     #endif
-                  #ifdef ADS12_MUX
+                  #if (ADS12_MUX == ADS1X15_MUX_SINGLE)
                       STXT(" init ADS1115_1 chan 2");
-                      ads[0].initChan(1, ADS12_RATE, ADS12_GAIN, ADS12_MUX);
+                      ads[0].initChan(1, ADS12_RATE, ADS12_GAIN, ADS1X15_REG_CONFIG_MUX_SINGLE_1);
                     #endif
-                  #ifdef ADS13_MUX
+                  #if (ADS13_MUX == ADS1X15_MUX_SINGLE)
                       STXT(" init ADS1115_1 chan 3");
-                      ads[0].initChan(2, ADS13_RATE, ADS13_GAIN, ADS13_MUX);
+                      ads[0].initChan(2, ADS13_RATE, ADS13_GAIN, ADS1X15_REG_CONFIG_MUX_SINGLE_2);
                     #endif
-                  #ifdef ADS14_MUX
+                  #if (ADS14_MUX == ADS1X15_MUX_SINGLE)
                       STXT(" init ADS1115_1 chan 4");
-                      ads[0].initChan(3, ADS13_RATE, ADS13_GAIN, ADS13_MUX);
+                      ads[0].initChan(3, ADS13_RATE, ADS13_GAIN, ADS1X15_REG_CONFIG_MUX_SINGLE_3);
                     #endif
                 // init unit 2
                 #if (USE_ADC1115_I2C > 1) // 1
