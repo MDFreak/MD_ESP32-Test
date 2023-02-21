@@ -620,9 +620,9 @@
         OneWire             ds1OneWire(DS1_ONEWIRE_PIN);
         DallasTemperature   ds1Sensors(&ds1OneWire);
         //md_val<uint16_t>    dsTempVal[USE_DS18B20_1W_IO];
-        md_scale<uint16_t>  dsTempSkal[USE_DS18B20_1W_IO];
-        int16_t             dsTemp   [USE_DS18B20_1W_IO];
-        int16_t             dsTempold[USE_DS18B20_1W_IO];
+        md_scale            dsTempSkal[USE_DS18B20_1W_IO];
+        float               dsTemp   [USE_DS18B20_1W_IO];
+        float               dsTempold[USE_DS18B20_1W_IO];
         #if (USE_DS18B20_1W_IO > 1)
             OneWire           ds2OneWire(DS2_ONEWIRE_PIN);
             DallasTemperature ds2Sensors(&ds2OneWire);
@@ -651,10 +651,10 @@
           #endif
       #endif
     #if (USE_PHOTO_SENS_ANA > OFF) // 7
-        //md_val<int16_t>   photoVal[USE_PHOTO_SENS_ANA];
-        md_scale<int16_t> photoScal[USE_PHOTO_SENS_ANA];
-        int16_t           bright[USE_PHOTO_SENS_ANA];
-        int16_t           brightOld[USE_PHOTO_SENS_ANA];
+        //md_val   photoVal[USE_PHOTO_SENS_ANA];
+        md_scale   photoScal[USE_PHOTO_SENS_ANA];
+        float      bright[USE_PHOTO_SENS_ANA];
+        float      brightOld[USE_PHOTO_SENS_ANA];
         #if (USE_MQTT > OFF)
             static String valLicht[USE_PHOTO_SENS_ANA];
             static String topLicht1 = MQTT_PHOTO1;
@@ -665,7 +665,7 @@
       #endif
     #if (USE_POTI_ANA > OFF) // 8
         //md_val<int16_t>   potiVal[USE_POTI_ANA];
-        md_scale<int16_t> potiScal[USE_POTI_ANA];
+        md_scale          potiScal[USE_POTI_ANA];
         uint16_t          poti[USE_POTI_ANA];
         uint16_t          potiold[USE_POTI_ANA];
         #if (USE_MQTT > OFF)
@@ -681,10 +681,10 @@
         //md_val<int16_t>   vcc50Val;
         //md_scale<int16_t> vcc50Scal;
         int16_t           vcc50;
-        int16_t           vcc50old;
+        //int16_t           vcc50old;
         float             vcc50f;
         float             vcc50fold;
-        md_scale<float>   vcc50fScal;
+        md_scale          vcc50fScal;
         #if (USE_MQTT > OFF)
             static String valVCC50;
             static String topVCC50     = MQTT_VCC50;
@@ -694,10 +694,10 @@
         //md_val<int16_t>   vcc33Val;
         //md_scale<int16_t> vcc33Scal;
         int16_t           vcc33;
-        int16_t           vcc33old;
+        //int16_t           vcc33old;
         float             vcc33f;
         float             vcc33fold;
-        md_scale<float>   vcc33fScal;
+        md_scale          vcc33fScal;
         #if (USE_MQTT > OFF)
             static String valVCC33;
             static String topVCC33     = MQTT_VCC33;
@@ -705,8 +705,8 @@
       #endif
     #if (USE_ACS712_ANA > OFF) // 11
         //md_val<int16_t>   i712Val[USE_ACS712_ANA];
-        md_scale<int16_t> i712Scal[USE_ACS712_ANA];
-        float*  pi712[USE_ACS712_ANA];
+        md_scale  i712Scal[USE_ACS712_ANA];
+        float*    pi712[USE_ACS712_ANA];
         #if (USE_ACS712_ANA > 1)
             float*  pi712[USE_ACS712_ANA];
             #if (USE_ACS712_ANA > 2)
@@ -716,8 +716,8 @@
                   #endif
               #endif
           #endif
-        int16_t i712[USE_ACS712_ANA];
-        int16_t i712old[USE_ACS712_ANA];
+        float i712[USE_ACS712_ANA];
+        float i712old[USE_ACS712_ANA];
         #if (USE_MQTT > OFF)
             static String vali712[USE_ACS712_ANA];
             static String topi7121 = MQTT_I712_1;
@@ -2710,17 +2710,18 @@
                     break;
                 case 9:  // voltage 5V
                     #if (USE_VCC_ANA > OFF)
-                        tmpval16 = vcc50;
+                        //tmpval16 = vcc50;
                         outStr = "  V ";
-                        outStr.concat(tmpval16);
+                        //outStr.concat(tmpval16);
+                        outStr.concat(vcc50f);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
-                              //STXT(outStr);
+                              STXT(outStr);
                         #if (USE_MQTT > OFF)
                           #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
-                        tmpval16 = i712[0];
+                        //tmpval16 = i712[0];
                         #if (USE_MQTT > OFF)
                             //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, I712_1_MQTT);
                           #endif
@@ -2729,7 +2730,7 @@
                         //outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 15, 2, outStr.length());
-                              //STXT(outStr);
+                              STXT(outStr);
                         #if (USE_MQTT > OFF)
                             valVCC50 = tmpval16;
                                 //SVAL(topVCC50, valVCC50);
