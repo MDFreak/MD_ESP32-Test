@@ -679,9 +679,12 @@
       #endif
     #if (USE_VCC50_ANA > OFF)
         //md_val<int16_t>   vcc50Val;
-        md_scale<int16_t> vcc50Scal;
-        int16_t          vcc50;
-        int16_t          vcc50old;
+        //md_scale<int16_t> vcc50Scal;
+        int16_t           vcc50;
+        int16_t           vcc50old;
+        float             vcc50f;
+        float             vcc50fold;
+        md_scale<float>   vcc50fScal;
         #if (USE_MQTT > OFF)
             static String valVCC50;
             static String topVCC50     = MQTT_VCC50;
@@ -689,9 +692,12 @@
       #endif
     #if (USE_VCC33_ANA > OFF)
         //md_val<int16_t>   vcc33Val;
-        md_scale<int16_t> vcc33Scal;
+        //md_scale<int16_t> vcc33Scal;
         int16_t           vcc33;
         int16_t           vcc33old;
+        float             vcc33f;
+        float             vcc33fold;
+        md_scale<float>   vcc33fScal;
         #if (USE_MQTT > OFF)
             static String valVCC33;
             static String topVCC33     = MQTT_VCC33;
@@ -2103,24 +2109,21 @@
                             #if (VCC50_ADC > OFF)
                               #endif
                             #if (VCC50_1115 > OFF)
-                                vcc50 = ads[VCC50_1115_CHAN].;   // Read the conversion results
+                                vcc50  = ads[VCC_1115_UNIT].getResult(VCC50_1115_CHAN);
+                                vcc50f = ads[VCC_1115_UNIT].getVolts(VCC50_1115_CHAN);
                                 //vcc50Val.doVal(vcc50);
                               #endif
                           #endif
                       break;
                     case 10: // USE_VCC33_ANA
                         //SOUT(" c10");
-                        #if (USE_VCC33_ANA > 10) //OFF)
+                        #if (USE_VCC33_ANA > OFF)
                             #if (VCC33_ADC > OFF)
                               #endif
                             #if (VCC33_1115 > OFF)
-                                ads[VCC33_1115_CHAN].setGain(VCC_1115_ATT);
-                                ads[VCC33_1115_CHAN].startADCReading(MUX_BY_CHANNEL[VCC33_1115_CHAN], /*continuous=*/false);
-                                usleep(1200); // Wait for the conversion to complete
-                                while (!ads[VCC33_1115_CHAN].conversionComplete());
-                                vcc33 = ads[VCC33_1115_CHAN].getLastConversionResults();   // Read the conversion results
-                                vcc33Val.doVal(vcc33);
-                                //vcc[VCC33_IDX] = (uint16_t) (1000 * ads[VCC33_IDX].computeVolts(vccVal[VCC33_IDX].doVal(ads[VCC33_IDX].readADC_SingleEnded(VCC_1115_CHAN))));
+                                vcc33  = ads[VCC_1115_UNIT].getResult(VCC33_1115_CHAN);
+                                vcc33f = ads[VCC_1115_UNIT].getVolts(VCC33_1115_CHAN);
+                                //vcc33Val.doVal(vcc33);
                               #endif
                           #endif
                     case 11:
