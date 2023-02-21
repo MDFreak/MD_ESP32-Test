@@ -76,13 +76,13 @@
       #define USE_POTI_ANA          1   // ADC or ADS1115
       #define USE_VCC50_ANA         1   // ADC or ADS1115
       #define USE_VCC33_ANA         1   // ADC or ADS1115
-      #define USE_ADC1115_I2C       4   // ADC 4 channels 16Bit
+      #define USE_ADC1115_I2C       1   // ADC 4 channels 16Bit
     // --- network  components
-      #define USE_WIFI              ON  // ON
-      #define USE_NTP_SERVER        ON  // ON
+      #define USE_WIFI              OFF  // ON
+      #define USE_NTP_SERVER        OFF  // ON
       #define USE_LOCAL_IP          ON  // ON
-      #define USE_WEBSERVER         ON  // ON
-      #define USE_MQTT              ON
+      #define USE_WEBSERVER         OFF  // ON
+      #define USE_MQTT              OFF
     // --- memory components
       #define USE_FLASH_MEM         ON
       #define USE_FRAM_I2C          1   // 1   // [0, 1, ...] limited by I2C channel/addr
