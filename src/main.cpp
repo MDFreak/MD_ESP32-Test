@@ -2351,7 +2351,7 @@
                     case 16: // MCPWM
                       outpIdx++;
                       //break;
-                    case 17:
+                    case 17: // MQTT
                       outpIdx++;
                       //break;
                     case 18: // RGBLED_PWM
@@ -2589,108 +2589,7 @@
                     //heapFree("+dispIdx");
               switch (dispIdx)
                 {
-                case 1:  // system output
-                    usTmp      = micros();
-                    usPerCycle = (usTmp - usLast) / anzUsCycles;
-                    usLast      = usTmp;
-                      //SOUT(usLast); SOUT(" "); SOUT(micros()); SOUT(" "); SOUTLN(usPerCycle);
-                      //outStr = "          ";
-                      //dispText(outStr ,  22, 4, outStr.length());
-                      //outStr = "";
-                      //outStr.concat((unsigned long) usPerCycle);
-                      //outStr.concat("us    ");
-                      //dispText(outStr ,  22, 4, outStr.length());
-                      //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
-                    anzUsCycles = 0ul;
-                  break;
-                case 2:  // webserver nu
-                    #if (USE_WIFI > OFF)
-                        outStr = WiFi.localIP().toString();
-                    #else
-                        outStr = "IP Offline";
-                      #endif
-                    dispText(outStr ,  0, 4, outStr.length());
-                  break;
-                case 3:  // k-type sensor
-                  #if (USE_TYPE_K_SPI > OFF)
-                      outStr = "";
-                      outStr = "TK1 ";
-                      outStr.concat(tk1Val);
-                      outStr.concat("°");
-                      //dispText(outStr ,  0, 1, outStr.length());
-                      #if (USE_TYPE_K_SPI > 1)
-                          //outStr = "";
-                          outStr.concat(" TK2 ");
-                          outStr.concat(tk2Val);
-                          outStr.concat("° ");
-                        #endif
-                      dispText(outStr ,  0, 2, outStr.length());
-                      outStr.concat(" (");
-                      outStr.concat(tk1ValRef);
-                      #if (USE_TYPE_K > 1)
-                          outStr.concat("° / ");
-                          outStr.concat(tk2ValRef);
-                        #endif
-                      outStr.concat("°)");
-                              STXT(outStr);
-                    #endif
-                  break;
-                case 4:  // gas sensor MQ135
-                  #if (USE_MQ135_GAS_ANA > OFF)
-                      //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
-                      outStr = "CO2 ";
-                      outStr.concat(gasValue);
-                      outStr.concat("  ");
-                      dispText(outStr, 17, 3, outStr.length());
-                            //STXT(outStr);
-                    #endif
-                  break;
-                case 5:  // gas sensor MQ3 alcohol
-                  #if (USE_MQ3_ALK_ANA > OFF)
-                      tmpval16 = alk;
-                      outStr = "  a ";
-                      outStr.concat(alk);
-                      outStr.concat("  ");
-                      dispText(outStr, 1, 1, outStr.length());
-                          //STXT(outStr);
-                      #if (USE_MQTT > OFF)
-                          valMQ3alk = tmpval16;
-                              //SVAL(topMQ3alk, valMQ3alk);
-                          errMQTT = (int8_t) mqtt.publish(topMQ3alk.c_str(), (uint8_t*) valMQ3alk.c_str(), valMQ3alk.length());
-                              //soutMQTTerr(" MQTT publish MQ3alk", errMQTT);
-                        #endif
-                    #endif
-                  break;
-                case 6:  // light sensor
-                  #if (USE_PHOTO_SENS_ANA > OFF)
-                      outStr = "          ";
-                      //outStr.concat(photoVal[0].getVal());
-                      outStr.concat("  ");
-                      dispText(outStr, 12, 4, outStr.length());
-                          //STXT(outStr);
-                      #if (USE_WEBSERVER > OFF)
-                          //tmpval16 = photoVal[0].getVal();
-                          tmpStr = "SVA";
-                          tmpStr.concat("3");
-                          tmpStr.concat(tmpval16);
-                          pmdServ->updateAll(tmpStr);
-                        #endif
-                      #if (USE_MQTT > OFF)
-                          valLicht[0] = tmpval16;
-                              //SVAL(topLicht1, valLicht[0]);
-                          errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valLicht[0].c_str(), valLicht[0].length());
-                              //soutMQTTerr(" MQTT publish Licht1", errMQTT);
-                        #endif
-                    #endif
-                  break;
-                case 7:  // temp sensor
-                  #if (USE_DS18B20_1W_IO > OFF)
-                    outStr = "";
-                    outStr = getDS18D20Str();
-                    dispText(outStr ,  0, 4, outStr.length());
-                    #endif
-                  break;
-                case 8:  // BME 280 temp, humidity, pressure
+                case 1:  // BME 280 temp, humidity, pressure
                   #if ( USE_BME280_I2C > OFF )
                       outStr = "";
                       for (uint8_t i = 0; i < 3 ; i++)
@@ -2729,6 +2628,86 @@
                               //STXT(outStr);
                     #endif
                 	break;
+                case 2: // CCS811_I2C
+                  dispIdx++;
+                  //break;
+                case 3:  // INA3221_I2C 3x U+I measures
+                  dispIdx++;
+                  //break;
+                case 4:  // temp sensor
+                  #if (USE_DS18B20_1W_IO > OFF)
+                    outStr = "";
+                    outStr = getDS18D20Str();
+                    dispText(outStr ,  0, 4, outStr.length());
+                    #endif
+                  break;
+                case 5:  // gas sensor MQ135
+                  #if (USE_MQ135_GAS_ANA > OFF)
+                      //_tmp = showTrafficLight(gasValue, gasThres); // -> rel to defined break point
+                      outStr = "CO2 ";
+                      outStr.concat(gasValue);
+                      outStr.concat("  ");
+                      dispText(outStr, 17, 3, outStr.length());
+                            //STXT(outStr);
+                    #endif
+                  break;
+                case 6:  // gas sensor MQ3 alcohol
+                  #if (USE_MQ3_ALK_ANA > OFF)
+                      tmpval16 = alk;
+                      outStr = "  a ";
+                      outStr.concat(alk);
+                      outStr.concat("  ");
+                      dispText(outStr, 1, 1, outStr.length());
+                          //STXT(outStr);
+                      #if (USE_MQTT > OFF)
+                          valMQ3alk = tmpval16;
+                              //SVAL(topMQ3alk, valMQ3alk);
+                          errMQTT = (int8_t) mqtt.publish(topMQ3alk.c_str(), (uint8_t*) valMQ3alk.c_str(), valMQ3alk.length());
+                              //soutMQTTerr(" MQTT publish MQ3alk", errMQTT);
+                        #endif
+                    #endif
+                  break;
+                case 7:  // light sensor
+                  #if (USE_PHOTO_SENS_ANA > OFF)
+                      outStr = "          ";
+                      //outStr.concat(photoVal[0].getVal());
+                      outStr.concat("  ");
+                      dispText(outStr, 12, 4, outStr.length());
+                          //STXT(outStr);
+                      #if (USE_WEBSERVER > OFF)
+                          //tmpval16 = photoVal[0].getVal();
+                          tmpStr = "SVA";
+                          tmpStr.concat("3");
+                          tmpStr.concat(tmpval16);
+                          pmdServ->updateAll(tmpStr);
+                        #endif
+                      #if (USE_MQTT > OFF)
+                          valLicht[0] = tmpval16;
+                              //SVAL(topLicht1, valLicht[0]);
+                          errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valLicht[0].c_str(), valLicht[0].length());
+                              //soutMQTTerr(" MQTT publish Licht1", errMQTT);
+                        #endif
+                    #endif
+                  break;
+                case 8:  // poti,
+                    #if (USE_POTI_ANA > OFF)
+                        tmpval16 = potiScal[0].scale((float) poti[0]);
+                        #if (USE_MQTT > OFF)
+                            //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
+                          #endif
+                        outStr = "  P ";
+                        outStr.concat(tmpval16);
+                        outStr.concat("  ");
+                        dispText(outStr, 15, 1, outStr.length());
+                              //STXT(outStr);
+                        #if (USE_MQTT > OFF)
+                            valPoti[0] = tmpval16;
+                                //SVAL(topPoti1, valPoti[0]);
+                            errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(), (uint8_t*) valPoti[0].c_str(), valPoti[0].length());
+                                //soutMQTTerr(" MQTT publish Poti1", errMQTT);
+                          #endif
+                      #endif
+                    break;
                 case 9:  // voltage 5V
                     #if (USE_VCC_ANA > OFF)
                         tmpval16 = vcc50;
@@ -2759,78 +2738,54 @@
                           #endif
                       #endif
                    	break;
-                case 10:  // voltage 5V
+                case 10: // voltage 3.3V
                     #if (USE_VCC_ANA > OFF)
                       #endif
-                case 11:  // poti,
-                    #if (USE_POTI_ANA > OFF)
-                        tmpval16 = potiScal[0].scale((float) poti[0]);
-                        #if (USE_MQTT > OFF)
-                            //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
-                          #endif
-                        outStr = "  P ";
-                        outStr.concat(tmpval16);
-                        outStr.concat("  ");
-                        dispText(outStr, 15, 1, outStr.length());
-                              //STXT(outStr);
-                        #if (USE_MQTT > OFF)
-                            valPoti[0] = tmpval16;
-                                //SVAL(topPoti1, valPoti[0]);
-                            errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(), (uint8_t*) valPoti[0].c_str(), valPoti[0].length());
-                                //soutMQTTerr(" MQTT publish Poti1", errMQTT);
-                          #endif
-                      #endif
-                    break;
-                case 12:  // digital inputs
-                    #if (USE_ESPHALL > OFF)
-                        int32_t valHall = 0;
-                      #endif
-                    #if (USE_DIG_INP > OFF)
+                    dispIdx++;
+                  //break;
+                case 11: // ACS712_ANA
+                    dispIdx++;
+                  //break;
+                case 12: // k-type sensor
+                  #if (USE_TYPE_K_SPI > OFF)
                       outStr = "";
-                      for (uint8_t i = 0 ; i < USE_GEN_SW_INP; i++)
-                        {
-                          //S2VAL(" SWD", i, valInpDig[i]);
-                          tmpStr = "SWD";
-                          tmpStr.concat(i);
-                          tmpStr.concat(valInpDig[i]);
-                          outStr.concat(valInpDig[i]);
-                          outStr.concat(" ");
-                          // send to websocket
-                          #if (USE_WEBSERVER > OFF)
-                              pmdServ->updateAll(tmpStr);
-                            #endif
-                          #if (USE_MQTT > OFF)
-                            #endif
-                        }
-                      dispText(outStr , 17, 3, outStr.length());
-                            //STXT(outStr);
-                    #endif
-                  #if (USE_CTRL_POTI)
-                      //SVAL("POT ", inpValADC[INP_POTI_CTRL]);
+                      outStr = "TK1 ";
+                      outStr.concat(tk1Val);
+                      outStr.concat("°");
+                      //dispText(outStr ,  0, 1, outStr.length());
+                      #if (USE_TYPE_K_SPI > 1)
+                          //outStr = "";
+                          outStr.concat(" TK2 ");
+                          outStr.concat(tk2Val);
+                          outStr.concat("° ");
+                        #endif
+                      dispText(outStr ,  0, 2, outStr.length());
+                      outStr.concat(" (");
+                      outStr.concat(tk1ValRef);
+                      #if (USE_TYPE_K > 1)
+                          outStr.concat("° / ");
+                          outStr.concat(tk2ValRef);
+                        #endif
+                      outStr.concat("°)");
+                              STXT(outStr);
                     #endif
                   break;
-                case 13:  // WS2812 lines
-                  #if ((USE_WS2812_MATRIX_OUT > OFF) || (USE_WS2812_LINE_OUT > OFF))
-                      outStr = "              ";
-                      dispText(outStr ,  0, 0, outStr.length());
-                      //outStr = "LED ";
-                      outStr = "";
-                          //outStr += (String) ws2812_Mcnt; outStr += " ";
-                      ws2812_Mv = millis() - ws2812_Malt; // dispT.getTout();
-                      ws2812_Malt = millis();
-                      if (ws2812_Mcnt > 0)
-                        {
-                          ws2812_Mv = ws2812_Mv / ws2812_Mcnt;
-                          ws2812_Mcnt = 0;
-                        }
-                      outStr += (String) ws2812_Mv;
-                      outStr += ("ms");
-                            //SOUT((uint32_t) millis()); SOUT(" ");
-                                //SOUT(outStr); SOUT(" ");
-                      dispText(outStr ,  0, 0, outStr.length());
+                case 13: // counter values
+                  #if (USE_PWM_INP > OFF)
+                        outStr = "              ";
+                        dispText(outStr ,  0, 1, outStr.length());
+                        outStr = "pwm ";
+                        for (uint8_t i = 0; i < USE_PWM_INP ; i++ )
+                          {
+                            outStr += " ";
+                            outStr += (String) pwmInVal[i].lowVal;
+                            outStr += " ";
+                            outStr += (String) pwmInVal[i].highVal;
+                                  //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
+                          }
+                        //STXT(outStr);
+                        //dispText(outStr ,  0, 1, outStr.length());
                     #endif
-                  break;
-                case 14:  // counter values
                   #if (USE_CNT_INP > OFF)
                         outStr = "              ";
                         dispText(outStr ,  0, 2, outStr.length());
@@ -2859,24 +2814,44 @@
                         #endif
                     #endif
                   break;
-                case 15: // pwm counter values
-                  #if (USE_PWM_INP > OFF)
-                        outStr = "              ";
-                        dispText(outStr ,  0, 1, outStr.length());
-                        outStr = "pwm ";
-                        for (uint8_t i = 0; i < USE_PWM_INP ; i++ )
-                          {
-                            outStr += " ";
-                            outStr += (String) pwmInVal[i].lowVal;
-                            outStr += " ";
-                            outStr += (String) pwmInVal[i].highVal;
-                                  //SOUT("/"); SOUT(cntErg[i].pulsCnt); SOUT(" "); SOUT("/"); SOUT(cntErg[i].usCnt); SOUT(" ");
-                          }
-                        //STXT(outStr);
-                        //dispText(outStr ,  0, 1, outStr.length());
+                case 14: // digital inputs
+                    #if (USE_ESPHALL > OFF)
+                        int32_t valHall = 0;
+                      #endif
+                    #if (USE_DIG_INP > OFF)
+                      outStr = "";
+                      for (uint8_t i = 0 ; i < USE_GEN_SW_INP; i++)
+                        {
+                          //S2VAL(" SWD", i, valInpDig[i]);
+                          tmpStr = "SWD";
+                          tmpStr.concat(i);
+                          tmpStr.concat(valInpDig[i]);
+                          outStr.concat(valInpDig[i]);
+                          outStr.concat(" ");
+                          // send to websocket
+                          #if (USE_WEBSERVER > OFF)
+                              pmdServ->updateAll(tmpStr);
+                            #endif
+                          #if (USE_MQTT > OFF)
+                            #endif
+                        }
+                      dispText(outStr , 17, 3, outStr.length());
+                            //STXT(outStr);
+                    #endif
+                  #if (USE_CTRL_POTI)
+                      //SVAL("POT ", inpValADC[INP_POTI_CTRL]);
                     #endif
                   break;
-                case 16: // RGB-LED
+                case 15: // ESPHALL
+                    dispIdx++;
+                  //break;
+                case 16: // MCPWM
+                    dispIdx++;
+                  //break;
+                case 17: // MQTT
+                    outpIdx++;
+                  //break;
+                case 18: // RGB-LED
                     #if (USE_MQTT > OFF)
                         valRGBBright = (RGBLED[0]->bright());    // RGB-LED col24
                             //SVAL(topRGBBright, valRGBBright);
@@ -2889,8 +2864,52 @@
                             //soutMQTTerr(" MQTT publish RGBCol", errMQTT);
                       #endif
                   break;
-                default:
-                  dispIdx = 0;
+                case 19: // FAN_PWM
+                    outpIdx++;
+                  //break;
+                case 20: // webserver nu
+                    #if (USE_WIFI > OFF)
+                        outStr = WiFi.localIP().toString();
+                    #else
+                        outStr = "IP Offline";
+                      #endif
+                    dispText(outStr ,  0, 4, outStr.length());
+                  break;
+                case 21: // WS2812 lines
+                    #if ((USE_WS2812_MATRIX_OUT > OFF) || (USE_WS2812_LINE_OUT > OFF))
+                        outStr = "              ";
+                        dispText(outStr ,  0, 0, outStr.length());
+                        //outStr = "LED ";
+                        outStr = "";
+                            //outStr += (String) ws2812_Mcnt; outStr += " ";
+                        ws2812_Mv = millis() - ws2812_Malt; // dispT.getTout();
+                        ws2812_Malt = millis();
+                        if (ws2812_Mcnt > 0)
+                          {
+                            ws2812_Mv = ws2812_Mv / ws2812_Mcnt;
+                            ws2812_Mcnt = 0;
+                          }
+                        outStr += (String) ws2812_Mv;
+                        outStr += ("ms");
+                              //SOUT((uint32_t) millis()); SOUT(" ");
+                                  //SOUT(outStr); SOUT(" ");
+                        dispText(outStr ,  0, 0, outStr.length());
+                      #endif
+                  break;
+                default: // system
+                    usTmp      = micros();
+                    usPerCycle = (usTmp - usLast) / anzUsCycles;
+                    usLast      = usTmp;
+                      //SOUT(usLast); SOUT(" "); SOUT(micros()); SOUT(" "); SOUTLN(usPerCycle);
+                      //outStr = "          ";
+                      //dispText(outStr ,  22, 4, outStr.length());
+                      //outStr = "";
+                      //outStr.concat((unsigned long) usPerCycle);
+                      //outStr.concat("us    ");
+                      //dispText(outStr ,  22, 4, outStr.length());
+                      //SOUTLN(); SOUT(usLast); SOUT(" ms/cyc "); SOUT((uint32_t) usPerCycle); SOUT(" ");
+                    anzUsCycles = 0ul;
+                    dispIdx = 0;
                   break;
                 }
               dispT.startT();
