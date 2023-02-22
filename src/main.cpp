@@ -11,7 +11,6 @@
     static uint64_t usTmp       = 0ul;
     static uint64_t usPerCycle  = 0ul;
     static uint32_t freeHeap    = 10000000;
-    static uint32_t prj_runMode = MD_NORMAL;
     static int32_t  tmpval32;
     static int16_t  tmpval16;
       //static uint64_t anzMsCycles = 0;
@@ -3573,7 +3572,6 @@
             {
               // init unit 1
                 STXT(" init ADS1115_1");
-                prj_runMode |= ADS1_RUNMODE;
                 ads[0].init(0, ADS1_RUNMODE);       // init unit 1
                 // init channels
                   /* unit 1 - channel 1 is always configured and always measured
@@ -3683,12 +3681,12 @@
           static void startADS1115()
             {
               uint8_t _addr = ADS1_ADDR;
-              S2HEXVAL(" start ADS1115_1 ... prj ADS1", prj_runMode, ADS1_RUNMODE);
+              SVAL(" start ADS1115_1 ... prj ADS1", ADS1_RUNMODE);
               if (ads[0].begin(ADS1_ADDR, pads0i2c))
                 { STXT(" ADS1115_1 started "); }
                 else
                 {
-                  if( (prj_runMode & ADS1_RUNMODE) == MD_NORMAL)
+                  if(ADS1_RUNMODE == MD_NORM)
                     { STXT(" could not start ADS1115_1 "); }
                     else
                     { STXT(" simulation start ADS1115_1 "); }
