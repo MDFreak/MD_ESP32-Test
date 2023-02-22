@@ -11,14 +11,15 @@
     static uint64_t usTmp       = 0ul;
     static uint64_t usPerCycle  = 0ul;
     static uint32_t freeHeap    = 10000000;
-    static int16_t  tmpval16;
+    static uint32_t prj_runMode = MD_NORMAL;
     static int32_t  tmpval32;
+    static int16_t  tmpval16;
       //static uint64_t anzMsCycles = 0;
 	    //static uint64_t msLast = 0;
   	  //static uint64_t msPerCycle = 0;
 
 	    //static uint32_t anzMsCycles = 0;
-	    //static uint64_t msLast      = 0;
+	    //static uint64_t 	    //static uint64_t msLast      = 0;msLast      = 0;
     static char     cmsg[MSG_MAXLEN+1] = "";
     static String   tmpStr;
     static uint8_t  firstrun = true;
@@ -3579,7 +3580,12 @@
               if (ads[0].begin(ADS1_ADDR, pads0i2c))
                 { STXT(" ADS1115_1 started "); }
                 else
-                { STXT(" could not start ADS1115_1 "); }
+                {
+                  if( (prj_runmode & MD_SIM_ADS1115) == MD_NORMAL)
+                    { STXT(" could not start ADS1115_1 "); }
+                    else
+                    { STXT(" simulation start ADS1115_1 "); }
+                }
               #if (USE_ADC1115_I2C > 1) // 1
                   _addr = ADS1_ADDR;
                   #ifdef ADS2_ADDR
