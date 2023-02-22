@@ -1176,6 +1176,7 @@
             #endif
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
+              initBME280();
               dispStatus("init BME280");
               STXT(" init BME280 ...");
               bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
