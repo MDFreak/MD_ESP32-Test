@@ -11,7 +11,7 @@
     static uint64_t usTmp       = 0ul;
     static uint64_t usPerCycle  = 0ul;
     static uint32_t freeHeap    = 10000000;
-    static MD_RUN_t prj_runMode = MD_NORMAL;
+    static uint32_t prj_runMode = MD_NORMAL;
     static int32_t  tmpval32;
     static int16_t  tmpval16;
       //static uint64_t anzMsCycles = 0;
@@ -3573,6 +3573,7 @@
             {
               // init unit 1
                 STXT(" init ADS1115_1");
+                prj_runMode |= ADS1_RUNMODE;
                 ads[0].init(0, ADS1_RUNMODE);       // init unit 1
                 // init channels
                   /* unit 1 - channel 1 is always configured and always measured
