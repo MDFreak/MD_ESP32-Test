@@ -839,7 +839,7 @@
                 ledcAttachPin(PIN_RGB_RED,   PWM_RGB_RED);
                 ledcWrite(PWM_RGB_RED, 255);
                 STXT(" LED rot");
-                usleep(300000);
+                usleep(50000);
                 ledcWrite(PWM_RGB_RED, 0);
               // RGB green
                 pinMode(PIN_RGB_GREEN, OUTPUT);
@@ -847,7 +847,7 @@
                 ledcAttachPin(PIN_RGB_GREEN, PWM_RGB_GREEN);
                 ledcWrite(PWM_RGB_GREEN, 255);
                 STXT(" LED gruen");
-                usleep(500000);
+                usleep(50000);
                 ledcWrite(PWM_RGB_GREEN, 0);
               // RGB blue
                 pinMode(PIN_RGB_BLUE, OUTPUT);
@@ -855,7 +855,7 @@
                 ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
                 ledcWrite(PWM_RGB_BLUE, 255);
                 STXT(" LED blau");
-                usleep(500000);
+                usleep(50000);
                 ledcWrite(PWM_RGB_BLUE, 0);
             #endif
           startDisp();
@@ -2316,7 +2316,7 @@
                     case 3: // INA3221_I2C 3x U+I measures
                       outpIdx++;
                       //break;
-                    case 4: // DS18B20_1W
+                    case 4: // DS18B20_1W temperature
                       outpIdx++;
                       //break;
                     case 5: // MQ135_GAS_ANA
@@ -2331,10 +2331,10 @@
                     case 8: // POTI_ANA
                       outpIdx++;
                       //break;
-                    case 9: // USE_VCC50_ANA
+                    case 9: // VCC50_ANA
                       outpIdx++;
                       //break;
-                    case 10: // USE_VCC33_ANA
+                    case 10: // VCC33_ANA
                       outpIdx++;
                       //break;
                     case 11: // ACS712_ANA
@@ -2355,10 +2355,7 @@
                     case 16: // MCPWM
                       outpIdx++;
                       //break;
-                    case 17: // MQTT
-                      outpIdx++;
-                      //break;
-                    case 18: // RGBLED_PWM
+                    case 17: // RGBLED_PWM
                       #if (USE_RGBLED_PWM > OFF)
                           if (rgbledT.TOut())
                             {
@@ -2445,7 +2442,7 @@
                             }
                         #endif
                       break;
-                    case 19: // FAN_PWM
+                    case 18: // FAN_PWM
                       #if (USE_FAN_PWM > OFF)
                           if (fanT.TOut())
                             {
@@ -2479,7 +2476,7 @@
                             }
                         #endif
                       break;
-                    case 20: // WEBSERVER
+                    case 19: // WEBSERVER
                       #if (USE_WEBSERVER > OFF)
                           if (newClient)
                             {
@@ -3469,7 +3466,7 @@
             {
               // init unit 1
                 STXT(" init ADS1115_1");
-                ads[0].init(0);       // init unit 1
+                ads[0].init(0, );       // init unit 1
                 // init channels
                   /* unit 1 - channel 1 is always configured and always measured
                      in case ADS11_MUX is not defined (this is allowed)
