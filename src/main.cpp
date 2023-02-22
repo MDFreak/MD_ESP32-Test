@@ -11,7 +11,7 @@
     static uint64_t usTmp       = 0ul;
     static uint64_t usPerCycle  = 0ul;
     static uint32_t freeHeap    = 10000000;
-    static uint32_t prj_runMode = MD_NORMAL;
+    static MD_RUN_t prj_runMode = MD_NORMAL;
     static int32_t  tmpval32;
     static int16_t  tmpval16;
       //static uint64_t anzMsCycles = 0;
@@ -817,6 +817,112 @@
               #if (PIN_BOARD_LED > NC)
                   pinMode(PIN_BOARD_LED, OUTPUT);
                   digitalWrite(PIN_BOARD_LED, sysLED);
+                #endif
+            #endif
+      // --- network
+        // start WIFI
+          #if (USE_WIFI > OFF)
+              uint8_t rep = WIFI_ANZ_LOGIN;
+              while(rep > 0)
+                {
+                  iret = startWIFI(true);
+                  if (iret == MD_OK)
+                      {
+                        dispStatus("WIFI connected",true);
+                        break;
+                      }
+                    else
+                      {
+                        #if (WIFI_IS_DUTY > OFF)
+                            dispStatus("WIFI error -> halted", true);
+                        #else
+                            rep--;
+                            if (rep > 0)
+                              { dispStatus("WIFI error ..."); }
+                            else
+                              { dispStatus("WIFI not connected"); }
+                          #endif
+                      }
+                  usleep(50000);
+                }
+            #endif // USE_WIFI
+        // start Webserer
+          #if (USE_WEBSERVER > OFF)
+              {
+                servT.startT();
+                #if (TEST_SOCKET_SERVER > OFF)
+                    //socket.onEvent(onEvent);
+                    //serv.addHandler(&socket);
+
+                    //serv.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+                    //  {
+                    //    request->send_P(200, "text/html", index_html, NULL);
+                    //  });
+
+                    // serv.begin();
+                #else
+                    startWebServer();
+                  #endif
+              }
+            #endif
+        // start MQTT
+          #if (USE_MQTT > OFF)
+              STXT("Connecting to MQTT...");
+              errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
+                  soutMQTTerr(" MQTT connect", errMQTT);
+              #if (USE_RGBLED_PWM > OFF)
+                  topRGBBright = topDevice + topRGBBright;
+                  errMQTT = (int8_t) mqtt.subscribe(topRGBBright.c_str());
+                      soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
+
+                  topRGBCol = topDevice + topRGBCol;
+                  errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
+                      soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
+                #endif
+              #if (USE_MQ3_ALK_ANA > OFF)
+                  topMQ3alk = topDevice + topMQ3alk;
+                  errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
+                      soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
+                #endif
+              #if (USE_PHOTO_SENS_ANA > OFF)
+                  topLicht1 = topDevice + topLicht1;
+                  errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
+                      soutMQTTerr(" MQTT subscribe Licht1", errMQTT);
+                #endif
+              #if (USE_POTI_ANA > OFF)
+                  topPoti1 = topDevice + topPoti1;
+                  errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
+                      soutMQTTerr(" MQTT subscribe poti1", errMQTT);
+                #endif
+              #if (USE_VCC50_ANA > OFF)
+                  topVCC50 = topDevice + topVCC50;
+                  errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
+                      soutMQTTerr(" MQTT subscribe vcc50", errMQTT);
+                #endif
+              #if (USE_VCC33_ANA > OFF)
+                  topVCC33 = topDevice + topVCC33;
+                  errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
+                      soutMQTTerr(" MQTT subscribe vcc33", errMQTT);
+                #endif
+              #if (USE_ACS712_ANA > OFF)
+                  topi7121 = topDevice + topi7121;
+                  errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
+                      soutMQTTerr(" MQTT subscribe topi712[0]", errMQTT);
+                  #if (USE_ACS712_ANA > 1)
+                      topi7122 = topDevice + topi7122;
+                      errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
+                          soutMQTTerr(" MQTT subscribe topi7122", errMQTT);
+                      #if (USE_ACS712_ANA > 2)
+                          topi7123 = topDevice + topi7123;
+                          errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
+                              soutMQTTerr(" MQTT subscribe topi7123", errMQTT);
+                          #if (USE_ACS712_ANA > 3)
+                              topi7124 = topDevice + topi7124;
+                              errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
+                                  soutMQTTerr(" MQTT subscribe topi7124", errMQTT);
+                            #endif
+                        #endif
+                    #endif
                 #endif
             #endif
       // --- user output
@@ -2630,7 +2736,7 @@
                               //STXT(outStr);
                     #endif
                 	break;
-                case 2: // CCS811_I2C
+                case 2:  // CCS811_I2C
                   dispIdx++;
                   //break;
                 case 3:  // INA3221_I2C 3x U+I measures
@@ -3467,7 +3573,7 @@
             {
               // init unit 1
                 STXT(" init ADS1115_1");
-                ads[0].init(0, );       // init unit 1
+                ads[0].init(0, ADS1_RUNMODE);       // init unit 1
                 // init channels
                   /* unit 1 - channel 1 is always configured and always measured
                      in case ADS11_MUX is not defined (this is allowed)
@@ -3576,12 +3682,12 @@
           static void startADS1115()
             {
               uint8_t _addr = ADS1_ADDR;
-              STXT(" start ADS1115_1 ... ");
+              S2HEXVAL(" start ADS1115_1 ... prj ADS1", prj_runMode, ADS1_RUNMODE);
               if (ads[0].begin(ADS1_ADDR, pads0i2c))
                 { STXT(" ADS1115_1 started "); }
                 else
                 {
-                  if( (prj_runmode & MD_SIM_ADS1115) == MD_NORMAL)
+                  if( (prj_runMode & ADS1_RUNMODE) == MD_NORMAL)
                     { STXT(" could not start ADS1115_1 "); }
                     else
                     { STXT(" simulation start ADS1115_1 "); }
