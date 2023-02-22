@@ -2113,9 +2113,9 @@
                             #if (VCC50_1115 > OFF)
                                 vcc50  = ads[VCC_1115_UNIT].getResult(VCC50_1115_CHAN);
                                 vcc50f = ads[VCC_1115_UNIT].getVolts(VCC50_1115_CHAN);
-                                S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIT, VCC50_1115_CHAN, vcc50f );
+                                //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIT, VCC50_1115_CHAN, vcc50f );
                                 vcc50f = vcc50fScal.scale(vcc50f);
-                                S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIT, VCC50_1115_CHAN, vcc50f );
+                                //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIT, VCC50_1115_CHAN, vcc50f );
                                 //vcc50Val.doVal(vcc50);
                               #endif
                           #endif
@@ -2128,9 +2128,9 @@
                             #if (VCC33_1115 > OFF)
                                 vcc33  = ads[VCC_1115_UNIT].getResult(VCC33_1115_CHAN);
                                 vcc33f = ads[VCC_1115_UNIT].getVolts(VCC33_1115_CHAN);
-                                S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIT, VCC33_1115_CHAN, vcc33f );
+                                //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIT, VCC33_1115_CHAN, vcc33f );
                                 vcc33f = vcc33fScal.scale(vcc33f);
-                                S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIT, VCC33_1115_CHAN, vcc33f );
+                                //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIT, VCC33_1115_CHAN, vcc33f );
                                 //vcc33Val.doVal(vcc33);
                               #endif
                           #endif
@@ -2745,9 +2745,18 @@
                    	break;
                 case 10: // voltage 3.3V
                     #if (USE_VCC_ANA > OFF)
+                        //tmpval16 = vcc50;
+                        outStr = "  V ";
+                        //outStr.concat(tmpval16);
+                        outStr.concat(vcc33f);
+                        outStr.concat("  ");
+                        dispText(outStr, 1, 2, outStr.length());
+                              STXT(outStr);
+                        #if (USE_MQTT > OFF)
+                          #endif
                       #endif
-                    dispIdx++;
-                  //break;
+                    //dispIdx++;
+                  break;
                 case 11: // ACS712_ANA
                     dispIdx++;
                   //break;
