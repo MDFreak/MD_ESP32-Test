@@ -824,6 +824,7 @@
               uint8_t rep = WIFI_ANZ_LOGIN;
               while(rep > 0)
                 {
+                  STXT(" setup   Start WiFi ");
                   iret = startWIFI(true);
                   if (iret == MD_OK)
                       {
@@ -3836,6 +3837,7 @@
       uint8_t startWIFI(bool startup)
         {
           bool ret = MD_ERR;
+              STXT(" startWIFI   Start WiFi ");
           #if (USE_WIFI > OFF)
               dispStatus("  start WIFI");
                   //heapFree(" before generating ipList ");
