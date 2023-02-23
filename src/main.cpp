@@ -500,14 +500,6 @@
         Network::Client::MQTTv5 mqtt(mqttID.c_str(), &msgHdl);
       #endif
   // ------ sensors ----------------------
-    #if (USE_ADC1115_I2C > OFF)
-        static md_ADS1115 ads[USE_ADC1115_I2C];
-        #if (ADS_I2C == I2C1)
-            TwoWire* pads0i2c = &i2c1;
-          #else
-            TwoWire* pads0i2c = &i2c2;
-          #endif
-      #endif
     #if (USE_BME280_I2C > OFF) // 1
         static Adafruit_BME280  bme1;
         #if (BME280_I2C == I2C1)
@@ -535,6 +527,14 @@
             static String topBME280t = MQTT_BME280T;
             static String topBME280p = MQTT_BME280P;
             static String topBME280h = MQTT_BME280H;
+          #endif
+      #endif
+    #if (USE_ADC1115_I2C > OFF)
+        static md_ADS1115 ads[USE_ADC1115_I2C];
+        #if (ADS_I2C == I2C1)
+            TwoWire* pads0i2c = &i2c1;
+          #else
+            TwoWire* pads0i2c = &i2c2;
           #endif
       #endif
     #if (USE_CCS811_I2C > OFF) // 2
@@ -1065,7 +1065,8 @@
       // --- network
         // start WIFI
           #if (USE_WIFI > OFF)
-              uint8_t rep = WIFI_ANZ_LOGIN;
+              //uint8_t rep = WIFI_ANZ_LOGIN;
+              rep = WIFI_ANZ_LOGIN;
               while(rep > 0)
                 {
                   iret = startWIFI(true);
