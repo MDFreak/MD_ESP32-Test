@@ -1065,6 +1065,7 @@
             #endif
       // --- network
         // start WIFI
+#ifdef UNUSED
           #if (USE_WIFI > OFF)
               //uint8_t rep = WIFI_ANZ_LOGIN;
               rep = WIFI_ANZ_LOGIN;
@@ -1170,6 +1171,7 @@
                     #endif
                 #endif
             #endif
+#endif
       // --- sensors
         // ADC ADS1115
           #if (USE_ADC1115_I2C > OFF)
