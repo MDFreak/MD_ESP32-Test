@@ -3724,6 +3724,44 @@
                 #endif
             }
         #endif
+    // --- BME280
+      #if (USE_BME280_I2C > OFF)
+          static void initBME280()
+            {
+              dispStatus("init BME280");
+              STXT(" init BME280 ...");
+              bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
+              if (bmeda)
+                {
+                  bme1.setSampling(bme1.MODE_FORCED);
+                  STXT(" BME280(1) gefunden");
+                  #if (BME280T_FILT > OFF)
+                      bmeTVal.begin(BME280T_FILT, BME280T_Drop);
+                    #endif
+                  #if (BME280P_FILT > OFF)
+                      bmePVal.begin(BME280P_FILT, BME280P_Drop);
+                    #endif
+                  #if (BME280H_FILT > OFF)
+                      bmeHVal.begin(BME280H_FILT, BME280H_Drop);
+                    #endif
+                }
+                else
+                {
+                  STXT(" BME280(1) nicht gefunden");
+                }
+              #if (USE_MQTT > OFF)
+                  topBME280t = topDevice + topBME280t;
+                  errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
+                      soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
+                  topBME280p = topDevice + topBME280p;
+                  errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
+                      soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
+                  topBME280h = topDevice + topBME280h;
+                  errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
+                      soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
+                #endif
+            }
+        #endif
 
     // --- DS18B20
       String getDS18D20Str()
@@ -3755,7 +3793,7 @@
             #endif
           return outS;
         }
-    // --- BME280
+
     // --- T-element type K
     // --- photo sensor
   // --- memory --------------------------

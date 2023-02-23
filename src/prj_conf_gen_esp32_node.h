@@ -610,6 +610,8 @@
       #if (USE_BME280_I2C > OFF)
           #define BME280_I2C               I2C1
           #define BME280_ADDR              I2C_BME280_76
+          //#define BME280_RUNMODE           MD_NORM
+          #define BME280_RUNMODE           MD_SIM
           #define BME280T_FILT             0
           #define BME280T_Drop             0
           #define BME280P_FILT             0
