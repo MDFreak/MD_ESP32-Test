@@ -884,7 +884,7 @@
                               { dispStatus("WIFI not connected"); }
                           #endif
                       }
-                  usleep(50000);
+                  //usleep(50000);
                 }
             #endif // USE_WIFI
         // start Webserer
@@ -908,63 +908,8 @@
             #endif
         // start MQTT
           #if (USE_MQTT > OFF)
-              STXT("Connecting to MQTT...");
-              errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
-                  soutMQTTerr(" MQTT connect", errMQTT);
-              #if (USE_RGBLED_PWM > OFF)
-                  topRGBBright = topDevice + topRGBBright;
-                  errMQTT = (int8_t) mqtt.subscribe(topRGBBright.c_str());
-                      soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
+              startMQTT();
 
-                  topRGBCol = topDevice + topRGBCol;
-                  errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
-                      soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
-                #endif
-              #if (USE_MQ3_ALK_ANA > OFF)
-                  topMQ3alk = topDevice + topMQ3alk;
-                  errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
-                      soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
-                #endif
-              #if (USE_PHOTO_SENS_ANA > OFF)
-                  topLicht1 = topDevice + topLicht1;
-                  errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
-                      soutMQTTerr(" MQTT subscribe Licht1", errMQTT);
-                #endif
-              #if (USE_POTI_ANA > OFF)
-                  topPoti1 = topDevice + topPoti1;
-                  errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
-                      soutMQTTerr(" MQTT subscribe poti1", errMQTT);
-                #endif
-              #if (USE_VCC50_ANA > OFF)
-                  topVCC50 = topDevice + topVCC50;
-                  errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
-                      soutMQTTerr(" MQTT subscribe vcc50", errMQTT);
-                #endif
-              #if (USE_VCC33_ANA > OFF)
-                  topVCC33 = topDevice + topVCC33;
-                  errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
-                      soutMQTTerr(" MQTT subscribe vcc33", errMQTT);
-                #endif
-              #if (USE_ACS712_ANA > OFF)
-                  topi7121 = topDevice + topi7121;
-                  errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
-                      soutMQTTerr(" MQTT subscribe topi712[0]", errMQTT);
-                  #if (USE_ACS712_ANA > 1)
-                      topi7122 = topDevice + topi7122;
-                      errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
-                          soutMQTTerr(" MQTT subscribe topi7122", errMQTT);
-                      #if (USE_ACS712_ANA > 2)
-                          topi7123 = topDevice + topi7123;
-                          errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
-                              soutMQTTerr(" MQTT subscribe topi7123", errMQTT);
-                          #if (USE_ACS712_ANA > 3)
-                              topi7124 = topDevice + topi7124;
-                              errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
-                                  soutMQTTerr(" MQTT subscribe topi7124", errMQTT);
-                            #endif
-                        #endif
-                    #endif
-                #endif
             #endif
       // --- user output
         // WS2812 LEDs
@@ -4166,6 +4111,66 @@
         #endif // USE_WEBSERVER
     // --- MQTT
       #if (USE_MQTT > OFF)
+        void startMQTT()
+          {
+            STXT("Connecting to MQTT...");
+            errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
+                soutMQTTerr(" MQTT connect", errMQTT);
+            #if (USE_RGBLED_PWM > OFF)
+                topRGBBright = topDevice + topRGBBright;
+                errMQTT = (int8_t) mqtt.subscribe(topRGBBright.c_str());
+                    soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
+
+                topRGBCol = topDevice + topRGBCol;
+                errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
+                    soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
+              #endif
+            #if (USE_MQ3_ALK_ANA > OFF)
+                topMQ3alk = topDevice + topMQ3alk;
+                errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
+                    soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
+              #endif
+            #if (USE_PHOTO_SENS_ANA > OFF)
+                topLicht1 = topDevice + topLicht1;
+                errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
+                    soutMQTTerr(" MQTT subscribe Licht1", errMQTT);
+              #endif
+            #if (USE_POTI_ANA > OFF)
+                topPoti1 = topDevice + topPoti1;
+                errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
+                    soutMQTTerr(" MQTT subscribe poti1", errMQTT);
+              #endif
+            #if (USE_VCC50_ANA > OFF)
+                topVCC50 = topDevice + topVCC50;
+                errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
+                    soutMQTTerr(" MQTT subscribe vcc50", errMQTT);
+              #endif
+            #if (USE_VCC33_ANA > OFF)
+                topVCC33 = topDevice + topVCC33;
+                errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
+                    soutMQTTerr(" MQTT subscribe vcc33", errMQTT);
+              #endif
+            #if (USE_ACS712_ANA > OFF)
+                topi7121 = topDevice + topi7121;
+                errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
+                    soutMQTTerr(" MQTT subscribe topi712[0]", errMQTT);
+                #if (USE_ACS712_ANA > 1)
+                    topi7122 = topDevice + topi7122;
+                    errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
+                        soutMQTTerr(" MQTT subscribe topi7122", errMQTT);
+                    #if (USE_ACS712_ANA > 2)
+                        topi7123 = topDevice + topi7123;
+                        errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
+                            soutMQTTerr(" MQTT subscribe topi7123", errMQTT);
+                        #if (USE_ACS712_ANA > 3)
+                            topi7124 = topDevice + topi7124;
+                            errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
+                                soutMQTTerr(" MQTT subscribe topi7124", errMQTT);
+                          #endif
+                      #endif
+                  #endif
+              #endif
+          }
         void soutMQTTerr(String text, int8_t errMQTT)
           {
             if (errMQTT < 0)
