@@ -941,8 +941,8 @@
 
       #if (USE_ADC1115_I2C > OFF)
           #define ADS_I2C          I2C1
-          //#define ADS1_RUNMODE     MD_NORM
-          #define ADS1_RUNMODE     MD_SIM
+          #define ADS1_RUNMODE     MD_NORM
+          //#define ADS1_RUNMODE     MD_SIM
           #define ADS1_ADDR        I2C_ADS1115_48
           #define ADS1_ANZ_CHAN    4
           #if (USE_ADC1115_I2C > 1)
