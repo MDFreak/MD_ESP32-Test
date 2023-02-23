@@ -276,10 +276,18 @@
               void getCNTIn();
             #endif
       // --- sensors
+        // --- BME280
+          #if (USE_BME280_I2C > OFF)
+              static void initBME280();
+            #endif
         // --- ADS1115
           #if (USE_ADC1115_I2C > OFF)
               static void initADS1115();
               static void startADS1115();
+            #endif
+        // --- CCS811
+          #if (USE_CCS811_I2C > OFF)
+              void initCCS811();
             #endif
         // --- DS18B20
           #if (USE_DS18B20_1W_IO > OFF)

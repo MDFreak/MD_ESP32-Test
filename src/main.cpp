@@ -1177,41 +1177,11 @@
         // BME280 temperature, pessure, humidity
           #if (USE_BME280_I2C > OFF)
               initBME280();
-              dispStatus("init BME280");
-              STXT(" init BME280 ...");
-              bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
-              if (bmeda)
-                {
-                  bme1.setSampling(bme1.MODE_FORCED);
-                  STXT(" BME280(1) gefunden");
-                  #if (BME280T_FILT > OFF)
-                      bmeTVal.begin(BME280T_FILT, BME280T_Drop);
-                    #endif
-                  #if (BME280P_FILT > OFF)
-                      bmePVal.begin(BME280P_FILT, BME280P_Drop);
-                    #endif
-                  #if (BME280H_FILT > OFF)
-                      bmeHVal.begin(BME280H_FILT, BME280H_Drop);
-                    #endif
-                  #if (USE_MQTT > OFF)
-                      topBME280t = topDevice + topBME280t;
-                      errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
-                          soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
-                      topBME280p = topDevice + topBME280p;
-                      errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
-                          soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
-                      topBME280h = topDevice + topBME280h;
-                      errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
-                          soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
-                    #endif
-                }
-                else
-                {
-                  STXT(" BME280(1) nicht gefunden");
-                }
             #endif
         // temp. air quality sensor CCS811
           #if (USE_CCS811_I2C > OFF)
+              initCCS811();
+#ifdef UNDEF
               dispStatus("init CCS811");
               STXT(" init CCS811 ...");
               ccsda = ccs811.begin(I2C_CCS811_AQ_5A, pbme1i2c);
@@ -1239,6 +1209,7 @@
                   {
                     STXT(" CCS811 nicht gefunden");
                   }
+#endif
             #endif
         // temp. current sensor INA3221
           #if (USE_INA3221_I2C > OFF)
@@ -3567,6 +3538,44 @@
         #endif
 
   // --- sensors -------------------------
+    // --- BME280
+      #if (USE_BME280_I2C > OFF)
+          static void initBME280()
+            {
+              dispStatus("init BME280");
+              STXT(" init BME280 ...");
+              bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
+              if (bmeda)
+                {
+                  bme1.setSampling(bme1.MODE_FORCED);
+                  STXT(" BME280(1) gefunden");
+                  #if (BME280T_FILT > OFF)
+                      bmeTVal.begin(BME280T_FILT, BME280T_Drop);
+                    #endif
+                  #if (BME280P_FILT > OFF)
+                      bmePVal.begin(BME280P_FILT, BME280P_Drop);
+                    #endif
+                  #if (BME280H_FILT > OFF)
+                      bmeHVal.begin(BME280H_FILT, BME280H_Drop);
+                    #endif
+                }
+                else
+                {
+                  STXT(" BME280(1) nicht gefunden");
+                }
+              #if (USE_MQTT > OFF)
+                  topBME280t = topDevice + topBME280t;
+                  errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
+                      soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
+                  topBME280p = topDevice + topBME280p;
+                  errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
+                      soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
+                  topBME280h = topDevice + topBME280h;
+                  errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
+                      soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
+                #endif
+            }
+        #endif
     // --- 4x analog input ADS1115
       #if (USE_ADC1115_I2C > OFF)
           static void initADS1115()
@@ -3678,7 +3687,6 @@
                       #endif
                   #endif
             }
-
           static void startADS1115()
             {
               uint8_t _addr = ADS1_ADDR;
@@ -3724,45 +3732,39 @@
                 #endif
             }
         #endif
-    // --- BME280
-      #if (USE_BME280_I2C > OFF)
-          static void initBME280()
+    // --- CCS811
+      #if (USE_CCS811_I2C > OFF)
+          void initCCS811()
             {
-              dispStatus("init BME280");
-              STXT(" init BME280 ...");
-              bmeda = bme1.begin(I2C_BME280_76, pbme1i2c);
-              if (bmeda)
-                {
-                  bme1.setSampling(bme1.MODE_FORCED);
-                  STXT(" BME280(1) gefunden");
-                  #if (BME280T_FILT > OFF)
-                      bmeTVal.begin(BME280T_FILT, BME280T_Drop);
-                    #endif
-                  #if (BME280P_FILT > OFF)
-                      bmePVal.begin(BME280P_FILT, BME280P_Drop);
-                    #endif
-                  #if (BME280H_FILT > OFF)
-                      bmeHVal.begin(BME280H_FILT, BME280H_Drop);
-                    #endif
-                }
+              dispStatus("init CCS811");
+              STXT(" init CCS811 ...");
+              ccsda = ccs811.begin(I2C_CCS811_AQ_5A, pbme1i2c);
+              if (ccsda)
+                  {
+                    STXT(" CCS811 gefunden");
+                    #if (CCS811T_FILT > OFF)
+                        ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
+                      #endif
+                    #if (CCS811C_FILT > OFF)
+                        ccsCVal.begin(CCS811C_FILT, CCS811C_Drop);
+                      #endif
+                    #if (USE_MQTT > OFF)
+                        topCCS811t = topDevice + topCCS811t;
+                        errMQTT = (int8_t) mqtt.subscribe(topCCS811t.c_str());
+                            soutMQTTerr(" MQTT subscribe CCS811t", errMQTT);
+                        topCCS811c = topDevice + topCCS811c;
+                        errMQTT = (int8_t) mqtt.subscribe(topCCS811c.c_str());
+                            soutMQTTerr(" MQTT subscribe CCS811c", errMQTT);
+                      #endif
+                    ccs811T.startT();
+                    //while(!ccs811.available() && !ccs811T.TOut()); // wait until init
+                  }
                 else
-                {
-                  STXT(" BME280(1) nicht gefunden");
-                }
-              #if (USE_MQTT > OFF)
-                  topBME280t = topDevice + topBME280t;
-                  errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
-                      soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
-                  topBME280p = topDevice + topBME280p;
-                  errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
-                      soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
-                  topBME280h = topDevice + topBME280h;
-                  errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
-                      soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
-                #endif
+                  {
+                    STXT(" CCS811 nicht gefunden");
+                  }
             }
         #endif
-
     // --- DS18B20
       String getDS18D20Str()
         {
@@ -3793,7 +3795,6 @@
             #endif
           return outS;
         }
-
     // --- T-element type K
     // --- photo sensor
   // --- memory --------------------------
