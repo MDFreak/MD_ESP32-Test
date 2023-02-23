@@ -818,13 +818,54 @@
                   digitalWrite(PIN_BOARD_LED, sysLED);
                 #endif
             #endif
+        // start display - output to user
+          #if (USE_TRAFFIC_COL16_OUT > 0)
+              pinMode(PIN_TL_GREEN, OUTPUT);
+              pinMode(PIN_TL_YELLOW, OUTPUT);
+              pinMode(PIN_TL_RED, OUTPUT);
+              digitalWrite(PIN_TL_GREEN, ON);
+              digitalWrite(PIN_TL_RED, ON);
+              digitalWrite(PIN_TL_YELLOW, ON);
+              usleep(500000);
+              digitalWrite(PIN_TL_GREEN, OFF);
+              digitalWrite(PIN_TL_RED, OFF);
+              digitalWrite(PIN_TL_YELLOW, OFF);
+            #endif
+          #if (USE_RGBLED_PWM > 0)
+              // RGB red
+                pinMode(PIN_RGB_RED, OUTPUT);
+                ledcSetup(PWM_RGB_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcAttachPin(PIN_RGB_RED,   PWM_RGB_RED);
+                ledcWrite(PWM_RGB_RED, 255);
+                STXT(" LED rot");
+                usleep(50000);
+                ledcWrite(PWM_RGB_RED, 0);
+              // RGB green
+                pinMode(PIN_RGB_GREEN, OUTPUT);
+                ledcSetup(PWM_RGB_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcAttachPin(PIN_RGB_GREEN, PWM_RGB_GREEN);
+                ledcWrite(PWM_RGB_GREEN, 255);
+                STXT(" LED gruen");
+                usleep(50000);
+                ledcWrite(PWM_RGB_GREEN, 0);
+              // RGB blue
+                pinMode(PIN_RGB_BLUE, OUTPUT);
+                ledcSetup(PWM_RGB_BLUE,   PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
+                ledcWrite(PWM_RGB_BLUE, 255);
+                STXT(" LED blau");
+                usleep(50000);
+                ledcWrite(PWM_RGB_BLUE, 0);
+            #endif
+          startDisp();
+          dispStatus("setup start ...", true);
       // --- network
         // start WIFI
           #if (USE_WIFI > OFF)
               uint8_t rep = WIFI_ANZ_LOGIN;
               while(rep > 0)
                 {
-                  STXT(" setup   Start WiFi ");
+                      //STXT(" setup   Start WiFi ");
                   iret = startWIFI(true);
                   if (iret == MD_OK)
                       {
@@ -926,47 +967,6 @@
                 #endif
             #endif
       // --- user output
-        // start display - output to user
-          #if (USE_TRAFFIC_COL16_OUT > 0)
-              pinMode(PIN_TL_GREEN, OUTPUT);
-              pinMode(PIN_TL_YELLOW, OUTPUT);
-              pinMode(PIN_TL_RED, OUTPUT);
-              digitalWrite(PIN_TL_GREEN, ON);
-              digitalWrite(PIN_TL_RED, ON);
-              digitalWrite(PIN_TL_YELLOW, ON);
-              usleep(500000);
-              digitalWrite(PIN_TL_GREEN, OFF);
-              digitalWrite(PIN_TL_RED, OFF);
-              digitalWrite(PIN_TL_YELLOW, OFF);
-            #endif
-          #if (USE_RGBLED_PWM > 0)
-              // RGB red
-                pinMode(PIN_RGB_RED, OUTPUT);
-                ledcSetup(PWM_RGB_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcAttachPin(PIN_RGB_RED,   PWM_RGB_RED);
-                ledcWrite(PWM_RGB_RED, 255);
-                STXT(" LED rot");
-                usleep(50000);
-                ledcWrite(PWM_RGB_RED, 0);
-              // RGB green
-                pinMode(PIN_RGB_GREEN, OUTPUT);
-                ledcSetup(PWM_RGB_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcAttachPin(PIN_RGB_GREEN, PWM_RGB_GREEN);
-                ledcWrite(PWM_RGB_GREEN, 255);
-                STXT(" LED gruen");
-                usleep(50000);
-                ledcWrite(PWM_RGB_GREEN, 0);
-              // RGB blue
-                pinMode(PIN_RGB_BLUE, OUTPUT);
-                ledcSetup(PWM_RGB_BLUE,   PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
-                ledcWrite(PWM_RGB_BLUE, 255);
-                STXT(" LED blau");
-                usleep(50000);
-                ledcWrite(PWM_RGB_BLUE, 0);
-            #endif
-          startDisp();
-          dispStatus("setup start ...", true);
         // WS2812 LEDs
           #if (USE_WS2812_MATRIX_OUT > OFF)
               STXT("start WS2812 matrix ...");
@@ -3837,7 +3837,7 @@
       uint8_t startWIFI(bool startup)
         {
           bool ret = MD_ERR;
-              STXT(" startWIFI   Start WiFi ");
+              //SVAL(" startWIFI   Start WiFi ", startup);
           #if (USE_WIFI > OFF)
               dispStatus("  start WIFI");
                   //heapFree(" before generating ipList ");
