@@ -376,7 +376,7 @@
             #define PCNT1_THRESH0_VAL   3
             #define PCNT1_EVT_0         PCNT_EVT_THRES_0
             //#define PCNT1_EVT_1         PCNT_EVT_THRES_1
-            #define PCNT1_UNIT          0
+            #define PCNT1_UNIDX          0
             #define PCNT1_CHAN          0
             #define PCNT1_ID            0
             #if (USE_CNT_INP > 1)
@@ -388,7 +388,7 @@
                 //#define PCNT2_THRESH1_VAL   2
                 #define PCNT2_THRESH0_VAL   400
                 #define PCNT2_EVT_0         PCNT_EVT_THRES_0
-                #define PCNT2_UNIT          1
+                #define PCNT2_UNIDX          1
                 #define PCNT2_CHAN          0
                 #define PCNT2_ID            1
               #endif
@@ -493,7 +493,7 @@
           #define MQ3_ALK_ADC           OFF
           #define MQ3_ALK_1115          ON
           #if (MQ3_ALK_1115 > OFF)
-              #define MQ3_1115_UNIT      0
+              #define MQ3_1115_UNIDX      0
               #define MQ3_1115_CHAN     3
               #define MQ3_1115_ATT      GAIN_TWOTHIRDS
               #define MQ3_OFFRAW        0
@@ -529,7 +529,7 @@
               #endif
           #define PHOTO1_1115               OFF
             #if (PHOTO1_1115 > OFF)
-                #define PHOTO1_1115_UNIT     0
+                #define PHOTO1_1115_UNIDX     0
                 #define PHOTO1_1115_CHAN    0
                 #define PHOTO1_1115_ATT     GAIN_ONE
                 #define PHOTO1_SCAL_OFFRAW  0
@@ -549,7 +549,7 @@
               #define PHOTO2_1115          OFF
                 #if (PHOTO2_1115 > OFF)
                     #define PHOTO2_1115_ATT  GAIN_ONE
-                    #define PHOTO2_1115_UNIT  0
+                    #define PHOTO2_1115_UNIDX  0
                     #define PHOTO2_1115_CHAN 0
                   #endif
             #endif
@@ -570,7 +570,7 @@
               #endif
           #define VCC_1115              ON
             #if (VCC_1115 > OFF)
-                #define VCC_1115_UNIT      0
+                #define VCC_1115_UNIDX      0
                 #define VCC_1115_CHAN     2
                 #define VCC_1115_ATT      GAIN_TWOTHIRDS
                 #define VCC_OFFRAW        0
@@ -593,7 +593,7 @@
               #endif
           #define POTI1_1115              ON
             #if (POTI1_1115 > OFF)
-                #define POTI1_1115_UNIT    0
+                #define POTI1_1115_UNIDX    0
                 #define POTI1_1115_CHAN   0
                 #define POTI1_1115_ATT    GAIN_TWO
                 #define POTI1_OFFRAW      0
@@ -612,7 +612,7 @@
                 #endif
               #define POTI2_1115            OFF
                 #if (POTI2_1115 > OFF)
-                    #define POTI2_1115_UNIT  0
+                    #define POTI2_1115_UNIDX  0
                     #define POTI2_1115_CHAN 0
                     #define POTI2_1115_ATT  GAIN_TWOTHIRDS
                   #endif
@@ -637,7 +637,7 @@
               #endif
           #define I712_1_1115             ON
           #if (I712_1_1115 > OFF)
-              #define I712_1_1115_UNIT     0
+              #define I712_1_1115_UNIDX     0
               #define I712_1_1115_CHAN    2
               #if   (I712_1_IMAX ==  5000)
                   #define I712_1_1115_ATT       GAIN_ONE
@@ -949,30 +949,30 @@
 
         // --- counter channels  0..7
           #if (USE_CNT_INP > OFF)
-              #define USE_CNT_UNIT       PCNT_UNIT_0
+              #define USE_CNT_UNIDX       PCNT_UNIDX_0
               #if (USE_GEN_CNT_INP > OFF)
-                  #define CNT_UNIT_GEN0  PCNT_UNIT_0
+                  #define CNT_UNIDX_GEN0  PCNT_UNIDX_0
                   #define CNT_CH_GEN0    (PCNT_CHANNEL_0)
-                  #undef  USE_CNT_UNIT
-                  #define USE_CNT_UNIT   (CNT_UNIT_GEN0 + 1)
+                  #undef  USE_CNT_UNIDX
+                  #define USE_CNT_UNIDX   (CNT_UNIDX_GEN0 + 1)
                 #endif
               #if (USE_GEN_CNT_INP > 1)
-                  #define CNT_UNIT_GEN1  PCNT_UNIT_1
+                  #define CNT_UNIDX_GEN1  PCNT_UNIDX_1
                   #define CNT_CH_GEN1    (PCNT_CHANNEL_0)
-                  #undef  USE_CNT_UNIT
-                  #define USE_CNT_UNIT   (CNT_UNIT_GEN1 + 1)
+                  #undef  USE_CNT_UNIDX
+                  #define USE_CNT_UNIDX   (CNT_UNIDX_GEN1 + 1)
                 #endif
               #if (USE_GEN_CNT_INP > 2)
-                  #define CNT_UNIT_GEN2  PCNT_UNIT_2
+                  #define CNT_UNIDX_GEN2  PCNT_UNIDX_2
                   #define CNT_CH_GEN2    (PCNT_CHANNEL_0)
-                  #undef  USE_CNT_UNIT
-                  #define USE_CNT_UNIT   (CNT_UNIT_GEN2 + 1)
+                  #undef  USE_CNT_UNIDX
+                  #define USE_CNT_UNIDX   (CNT_UNIDX_GEN2 + 1)
                 #endif
               #if (USE_GEN_CNT_INP > 3)
-                  #define CNT_UNIT_GEN3  PCNT_UNIT_3
+                  #define CNT_UNIDX_GEN3  PCNT_UNIDX_3
                   #define CNT_CH_GEN3    (PCNT_CHANNEL_0)
-                  #undef  USE_CNT_UNIT
-                  #define USE_CNT_UNIT   (CNT_UNIT_GEN3 + 1)
+                  #undef  USE_CNT_UNIDX
+                  #define USE_CNT_UNIDX   (CNT_UNIDX_GEN3 + 1)
                 #endif
             #endif
 

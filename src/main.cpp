@@ -102,8 +102,8 @@
               PCNT_COUNT_INC,        // PCNT negative edge count mode
               PCNT_H_LIM_VAL,        // Maximum counter value
               PCNT_L_LIM_VAL,        // Minimum counter value
-              (pcnt_unit_t)    PCNT1_UNIT,  // PCNT unit number
-              (pcnt_channel_t) PCNT1_CHAN  // the PCNT channel
+              (pcnt_unit_t)    PCNT1_UNIDX,  // PCNT unit number
+              (pcnt_channel_t) PCNT1_CHIDX  // the PCNT channel
             },
             #if (USE_CNT_INP > 1)
                 {
@@ -115,8 +115,8 @@
                   PCNT_COUNT_INC,     // PCNT negative edge count mode
                   PCNT_H_LIM_VAL,     // Maximum counter value
                   PCNT_L_LIM_VAL,     // Minimum counter value
-                  (pcnt_unit_t)    PCNT2_UNIT, // PCNT unit number
-                  (pcnt_channel_t) PCNT2_CHAN  // the PCNT channel
+                  (pcnt_unit_t)    PCNT2_UNIDX, // PCNT unit number
+                  (pcnt_channel_t) PCNT2_CHIDX  // the PCNT channel
                 },
               #endif
             #if (USE_CNT_INP > 2)
@@ -129,8 +129,8 @@
                   PCNT2_NEG_MODE,    // PCNT negative edge count mode
                   PCNT2_H_NUM,       // Maximum counter value
                   PCNT2_L_NUM,       // Minimum counter value
-                  (pcnt_unit_t)    PCNT2_UNIT,  // PCNT unit number
-                  (pcnt_channel_t) PCNT2_CHAN   // the PCNT channel
+                  (pcnt_unit_t)    PCNT2_UNIDX,  // PCNT unit number
+                  (pcnt_channel_t) PCNT2_CHIDX   // the PCNT channel
                 },
               #endif
             #if (USE_CNT_INP > 3)
@@ -143,8 +143,8 @@
                   PCNT3_NEG_MODE,    // PCNT negative edge count mode
                   PCNT3_H_NUM,       // Maximum counter value
                   PCNT3_L_NUM,       // Minimum counter value
-                  (pcnt_unit_t)    PCNT3_UNIT,  // PCNT unit number
-                  (pcnt_channel_t) PCNT3_CHAN   // the PCNT channel
+                  (pcnt_unit_t)    PCNT3_UNIDX,  // PCNT unit number
+                  (pcnt_channel_t) PCNT3_CHIDX   // the PCNT channel
                 },
               #endif
           };
@@ -186,12 +186,12 @@
           {
             BaseType_t port_status;
             pcnt_evt_t event;
-            port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT0_UNIT, &(event.pulsCnt));
-            event.usCnt = micros() - oldUs[PCNT0_UNIT];
-            //event.count = isrCnt[PCNT0_UNIT];
-            pcnt_res = xQueueSendToBackFromISR(pcnt_evt_queue[PCNT0_UNIT], &event, &port_status);
-            oldUs[PCNT0_UNIT] = micros();
-            port_status = pcnt_counter_clear((pcnt_unit_t) PCNT0_UNIT);
+            port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT0_UNIDX, &(event.pulsCnt));
+            event.usCnt = micros() - oldUs[PCNT0_UNIDX];
+            //event.count = isrCnt[PCNT0_UNIDX];
+            pcnt_res = xQueueSendToBackFromISR(pcnt_evt_queue[PCNT0_UNIDX], &event, &port_status);
+            oldUs[PCNT0_UNIDX] = micros();
+            port_status = pcnt_counter_clear((pcnt_unit_t) PCNT0_UNIDX);
           }
 
         #if (USE_CNT_INP > 1)
@@ -199,12 +199,12 @@
               {
                 BaseType_t port_status;
                 pcnt_evt_t event;
-                port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT1_UNIT, &(event.pulsCnt));
-                event.usCnt = micros() - oldUs[PCNT1_UNIT];
-                //event.count = isrCnt[PCNT1_UNIT];
-                pcnt_res = xQueueSendToBackFromISR(pcnt_evt_queue[PCNT1_UNIT], &event, &port_status);
-                oldUs[PCNT1_UNIT] = micros();
-                port_status = pcnt_counter_clear((pcnt_unit_t) PCNT1_UNIT);
+                port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT1_UNIDX, &(event.pulsCnt));
+                event.usCnt = micros() - oldUs[PCNT1_UNIDX];
+                //event.count = isrCnt[PCNT1_UNIDX];
+                pcnt_res = xQueueSendToBackFromISR(pcnt_evt_queue[PCNT1_UNIDX], &event, &port_status);
+                oldUs[PCNT1_UNIDX] = micros();
+                port_status = pcnt_counter_clear((pcnt_unit_t) PCNT1_UNIDX);
               }
           #endif
         #if (USE_CNT_INP > 2)
@@ -212,12 +212,12 @@
               {
                 BaseType_t port_status = pdFALSE;
                 pcnt_evt_t event;
-                port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT2_UNIT, &(event.pulsCnt));
+                port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT2_UNIDX, &(event.pulsCnt));
                 event.usCnt  = micros();
-                //event.intCnt = intCnt[PCNT2_UNIT];
-                xQueueSendFromISR(pcnt_evt_queue[PCNT2_UNIT], &event, &port_status);
-                //xQueueOverwriteFromISR(pcnt_evt_queue[PCNT2_UNIT], &event, &port_status);
-                port_status = pcnt_counter_clear((pcnt_unit_t) PCNT2_UNIT);
+                //event.intCnt = intCnt[PCNT2_UNIDX];
+                xQueueSendFromISR(pcnt_evt_queue[PCNT2_UNIDX], &event, &port_status);
+                //xQueueOverwriteFromISR(pcnt_evt_queue[PCNT2_UNIDX], &event, &port_status);
+                port_status = pcnt_counter_clear((pcnt_unit_t) PCNT2_UNIDX);
                 //intCnt[0] = 0;
               }
           #endif
@@ -226,12 +226,12 @@
               {
                 BaseType_t port_status = pdFALSE;
                 pcnt_evt_t event;
-                port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT3_UNIT, &(event.pulsCnt));
+                port_status = pcnt_get_counter_value((pcnt_unit_t) PCNT3_UNIDX, &(event.pulsCnt));
                 event.usCnt  = micros();
-                //event.intCnt = intCnt[PCNT3_UNIT];
-                xQueueSendFromISR(pcnt_evt_queue[PCNT3_UNIT], &event, &port_status);
-                //xQueueOverwriteFromISR(pcnt_evt_queue[PCNT3_UNIT], &event, &port_status);
-                port_status = pcnt_counter_clear((pcnt_unit_t) PCNT3_UNIT);
+                //event.intCnt = intCnt[PCNT3_UNIDX];
+                xQueueSendFromISR(pcnt_evt_queue[PCNT3_UNIDX], &event, &port_status);
+                //xQueueOverwriteFromISR(pcnt_evt_queue[PCNT3_UNIDX], &event, &port_status);
+                port_status = pcnt_counter_clear((pcnt_unit_t) PCNT3_UNIDX);
                 //intCnt[0] = 0;
               }
           #endif
@@ -909,7 +909,6 @@
         // start MQTT
           #if (USE_MQTT > OFF)
               startMQTT();
-
             #endif
       // --- user output
         // WS2812 LEDs
@@ -1003,10 +1002,10 @@
             #endif
         // start dutycycle (pwm) inputs
           #if (USE_PWM_INP > OFF)
-              //mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, GPIO_OUT);
-              mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM_CAP_0, PIN_PWM_INP_1); // MAGIC LINE to define WHICH GPIO
+              //mcpwm_gpio_init(MCPWM_UNIDX_0, MCPWM0A, GPIO_OUT);
+              mcpwm_gpio_init(MCPWM_UNIDX_0, MCPWM_CAP_0, PIN_PWM_INP_1); // MAGIC LINE to define WHICH GPIO
               // gpio_pulldown_en(GPIO_CAP0_IN); //Enable pull down on CAP0 signal
-              mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 1);
+              mcpwm_capture_enable(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 1);
             #endif
       // --- sensors
         // ADC ADS1115
@@ -1021,176 +1020,10 @@
         // temp. air quality sensor CCS811
           #if (USE_CCS811_I2C > OFF)
               initCCS811();
-#ifdef UNDEF
-              dispStatus("init CCS811");
-              STXT(" init CCS811 ...");
-              ccsda = ccs811.begin(I2C_CCS811_AQ_5A, pbme1i2c);
-              if (ccsda)
-                  {
-                    STXT(" CCS811 gefunden");
-                    #if (CCS811T_FILT > OFF)
-                        ccsTVal.begin(CCS811T_FILT, CCS811T_Drop);
-                      #endif
-                    #if (CCS811C_FILT > OFF)
-                        ccsCVal.begin(CCS811C_FILT, CCS811C_Drop);
-                      #endif
-                    #if (USE_MQTT > OFF)
-                        topCCS811t = topDevice + topCCS811t;
-                        errMQTT = (int8_t) mqtt.subscribe(topCCS811t.c_str());
-                            soutMQTTerr(" MQTT subscribe CCS811t", errMQTT);
-                        topCCS811c = topDevice + topCCS811c;
-                        errMQTT = (int8_t) mqtt.subscribe(topCCS811c.c_str());
-                            soutMQTTerr(" MQTT subscribe CCS811c", errMQTT);
-                      #endif
-                    ccs811T.startT();
-                    //while(!ccs811.available() && !ccs811T.TOut()); // wait until init
-                  }
-                else
-                  {
-                    STXT(" CCS811 nicht gefunden");
-                  }
-#endif
             #endif
         // temp. current sensor INA3221
           #if (USE_INA3221_I2C > OFF)
-              dispStatus("init INA32211");
-              STX(" init INA32211 ID "); SOUTHEXLN((ina32211.getManufID()));
-              ina32211.begin();
-              for (uint8_t i = 0; i < 3 ; i++ )
-                {
-                  pubINA3221i[0][i] = OFF;
-                  pubINA3221u[0][i] = OFF;
-                }
-              // channel 1
-                #if (INA3221U1_FILT > OFF)
-                    inaUVal[0][0].begin(INA3221U1_FILT, INA3221U1_DROP);
-                  #endif
-                #if (INA3221I1_FILT > OFF)
-                    inaIVal[0][0].begin(INA3221I1_FILT, INA3221I1_DROP);
-                  #endif
-                #if (USE_MQTT > OFF)
-                    topINA32211i[0] = topDevice + topINA32211i[0];
-                    errMQTT = (int8_t) mqtt.subscribe(topINA32211i[0].c_str());
-                        soutMQTTerr(" MQTT subscribe topINA32211i[0]", errMQTT);
-                    topINA32211u[0] = topDevice + topINA32211u[0];
-                    errMQTT = (int8_t) mqtt.subscribe(topINA32211u[0].c_str());
-                        soutMQTTerr(" MQTT subscribe topINA32211u[0]", errMQTT);
-                    topINA32211p[0] = topDevice + topINA32211p[0];
-                    errMQTT = (int8_t) mqtt.subscribe(topINA32211p[0].c_str());
-                        soutMQTTerr(" MQTT subscribe topINA32211p[0]", errMQTT);
-                  #endif
-              // channel 2
-                #if (INA3221U2_FILT > OFF)
-                    inaUVal[0][1].begin(INA3221U2_FILT, INA3221U2_DROP);
-                  #endif
-                #if (INA3221I2_FILT > OFF)
-                    inaIVal[0][1].begin(INA3221I2_FILT, INA3221I2_DROP);
-                  #endif
-                #if (USE_MQTT > OFF)
-                    topINA32211i[1] = topDevice + topINA32211i[1];
-                    errMQTT = (int8_t) mqtt.subscribe(topINA32211i[1].c_str());
-                        soutMQTTerr(" MQTT subscribe topINA32211i[1]", errMQTT);
-                    topINA32211u[1] = topDevice + topINA32211u[1];
-                    errMQTT = (int8_t) mqtt.subscribe(topINA32211u[1].c_str());
-                        soutMQTTerr(" MQTT subscribe topINA32211u[1]", errMQTT);
-                    topINA32211p[1] = topDevice + topINA32211p[1];
-                    errMQTT = (int8_t) mqtt.subscribe(topINA32211p[1].c_str());
-                        soutMQTTerr(" MQTT subscribe topINA32211p[1]", errMQTT);
-                  #endif
-              // channel 3
-                #if (INA3221U3_FILT > OFF)
-                   inaUVal[0][2].begin(INA3221U3_FILT, INA3221U3_DROP);
-                  #endif
-                #if (INA3221I3_FILT > OFF)
-                    inaIVal[0][2].begin(INA3221I3_FILT, INA3221I3_DROP);
-                  #endif
-                #if (USE_MQTT > OFF)
-                    topINA32211i[2] = topDevice + topINA32211i[2];
-                    errMQTT = (int8_t) mqtt.subscribe(topINA32211i[2].c_str());
-                        soutMQTTerr(" MQTT subscribe topINA32211i[2]", errMQTT);
-                    topINA32211u[2] = topDevice + topINA32211u[2];
-                    errMQTT = (int8_t) mqtt.subscribe(topINA32211u[2].c_str());
-                        soutMQTTerr(" MQTT subscribe topINA32211u[2]", errMQTT);
-                    topINA32211p[2] = topDevice + topINA32211p[2];
-                    errMQTT = (int8_t) mqtt.subscribe(topINA32211p[2].c_str());
-                        soutMQTTerr(" MQTT subscribe topINA32211p[2]", errMQTT);
-                  #endif
-              #if (USE_INA3221_I2C > 1)
-                  dispStatus("init INA32212");
-                  STXT(" init INA32212 ...");
-                  ina32212.begin();
-                  inaIVal[1][0].begin(INA3221I1_FILT, INA3221I1_DROP);
-                  inaIVal[1][1].begin(INA3221I2_FILT, INA3221I2_DROP);
-                  inaIVal[1][2].begin(INA3221I3_FILT, INA3221I3_DROP);
-                  inaUVal[1][0].begin(INA3221U1_FILT, INA3221U1_DROP);
-                  inaUVal[1][1].begin(INA3221U2_FILT, INA3221U2_DROP);
-                  inaUVal[1][2].begin(INA3221U3_FILT, INA3221U3_DROP);
-                  for (uint8_t i = 0; i < 3 ; i++ )
-                    {
-                      pubINA3221i[1][i] = OFF;
-                      pubINA3221u[1][i] = OFF;
-                    }
-                  #if (USE_MQTT > OFF)
-                      topINA32212i[0] = topDevice + topINA32212i[0];
-                      errMQTT = (int8_t) mqtt.subscribe(topINA32212i[0].c_str());
-                          soutMQTTerr(" MQTT subscribe topINA32212i[0]", errMQTT);
-                      topINA32212u[0] = topDevice + topINA32212u[0];
-                      errMQTT = (int8_t) mqtt.subscribe(topINA32212u[0].c_str());
-                          soutMQTTerr(" MQTT subscribe topINA32212u[0]", errMQTT);
-
-                      topINA32212i[1] = topDevice + topINA32212i[1];
-                      errMQTT = (int8_t) mqtt.subscribe(topINA32212i[1].c_str());
-                          soutMQTTerr(" MQTT subscribe topINA32212i[1]", errMQTT);
-                      topINA32212u[1] = topDevice + topINA32212u[1];
-                      errMQTT = (int8_t) mqtt.subscribe(topINA32212u[1].c_str());
-                          soutMQTTerr(" MQTT subscribe topINA32212u[1]", errMQTT);
-
-                      topINA32212i[2] = topDevice + topINA32212i[2];
-                      errMQTT = (int8_t) mqtt.subscribe(topINA32212i[2].c_str());
-                          soutMQTTerr(" MQTT subscribe topINA32212i[2]", errMQTT);
-                      topINA32212u[2] = topDevice + topINA32212u[2];
-                      errMQTT = (int8_t) mqtt.subscribe(topINA32212u[2].c_str());
-                          soutMQTTerr(" MQTT subscribe topINA32212u[2]", errMQTT);
-                    #endif
-                  #if (USE_INA3221_I2C > 2)
-                      dispStatus("init INA32213");
-                      STXT(" init INA32213 ...");
-                      ina32212.begin();
-                      inaIVal[2][0].begin(INA3221I1_FILT, INA3221I1_DROP);
-                      inaIVal[2][1].begin(INA3221I2_FILT, INA3221I2_DROP);
-                      inaIVal[2][2].begin(INA3221I3_FILT, INA3221I3_DROP);
-                      inaUVal[2][0].begin(INA3221U1_FILT, INA3221U1_DROP);
-                      inaUVal[2][1].begin(INA3221U2_FILT, INA3221U2_DROP);
-                      inaUVal[2][2].begin(INA3221U3_FILT, INA3221U3_DROP);
-                      for (uint8_t i = 0; i < 3 ; i++ )
-                        {
-                          pubINA3221i[2][i] = OFF;
-                          pubINA3221u[2][i] = OFF;
-                        }
-                      #if (USE_MQTT > OFF)
-                          topINA32213i[0] = topDevice + topINA32213i[0];
-                          errMQTT = (int8_t) mqtt.subscribe(topINA32213i[0].c_str());
-                              soutMQTTerr(" MQTT subscribe topINA32213i[0]", errMQTT);
-                          topINA32213u[0] = topDevice + topINA32212u[0];
-                          errMQTT = (int8_t) mqtt.subscribe(topINA32213u[0].c_str());
-                              soutMQTTerr(" MQTT subscribe topINA32213u[0]", errMQTT);
-
-                          topINA32213i[1] = topDevice + topINA32213i[1];
-                          errMQTT = (int8_t) mqtt.subscribe(topINA32213i[1].c_str());
-                              soutMQTTerr(" MQTT subscribe topINA32213i[1]", errMQTT);
-                          topINA32213u[1] = topDevice + topINA32213u[1];
-                          errMQTT = (int8_t) mqtt.subscribe(topINA32213u[1].c_str());
-                              soutMQTTerr(" MQTT subscribe topINA32213u[1]", errMQTT);
-
-                          topINA32213i[2] = topDevice + topINA32213i[2];
-                          errMQTT = (int8_t) mqtt.subscribe(topINA32213i[2].c_str());
-                              soutMQTTerr(" MQTT subscribe topINA32213i[2]", errMQTT);
-                          topINA32213u[2] = topDevice + topINA32213u[2];
-                          errMQTT = (int8_t) mqtt.subscribe(topINA32213u[2].c_str());
-                              soutMQTTerr(" MQTT subscribe topINA32213u[2]", errMQTT);
-                        #endif
-                    #endif
-                #endif
+              initINA3221();
             #endif
         // temp. temperature sensor DS18B20
           #if (USE_DS18B20_1W_IO > OFF)
@@ -1476,9 +1309,9 @@
                       //attachInterrupt(digitalPinToInterrupt(PIN_PWM_FAN_1), &pcnt_intr_handler, FALLING);
 
               #ifdef USE_MCPWM
-                  mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM_CAP_0, PIN_CNT_FAN_1); // MAGIC LINE to define WHICH GPIO
+                  mcpwm_gpio_init(MCPWM_UNIDX_0, MCPWM_CAP_0, PIN_CNT_FAN_1); // MAGIC LINE to define WHICH GPIO
                   // gpio_pulldown_en(GPIO_CAP0_IN); //Enable pull down on CAP0 signal
-                  mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 0);
+                  mcpwm_capture_enable(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 0);
                 #endif
             #endif
       // --- finish setup
@@ -1578,31 +1411,31 @@
                     case 0:
                       lim  = PCNT0_UFLOW;
                       ev   = PCNT0_EVT_0;
-                      unit = PCNT0_UNIT;
-                      pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT0_UNIT], &cntErg[i], 0);
+                      unit = PCNT0_UNIDX;
+                      pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT0_UNIDX], &cntErg[i], 0);
                       break;
                     #if (USE_CNT_INP > 1)
                         case 1:
                           lim  = PCNT1_UFLOW;
                           ev   = PCNT1_EVT_0;
-                          unit = PCNT1_UNIT;
-                          pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT1_UNIT], &cntErg[i], 0);
+                          unit = PCNT1_UNIDX;
+                          pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT1_UNIDX], &cntErg[i], 0);
                           break;
                       #endif
                     #if (USE_CNT_INP > 2)
                         case 2:
                           lim  = PCNT2_UFLOW;
                           ev   = PCNT2_EVT_0;
-                          unit = PCNT2_UNIT;
-                          pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT2_UNIT], &tmpErg, 0);
+                          unit = PCNT2_UNIDX;
+                          pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT2_UNIDX], &tmpErg, 0);
                           break;
                       #endif
                     #if (USE_CNT_INP > 3)
                         case 3:
                           lim  = PCNT3_UFLOW;
                           ev   = PCNT3_EVT_0;
-                          unit = PCNT3_UNIT;
-                          pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT3_UNIT], &tmpErg, 0);
+                          unit = PCNT3_UNIDX;
+                          pcnt_res = xQueueReceive(pcnt_evt_queue[PCNT3_UNIDX], &tmpErg, 0);
                           break;
                       #endif
                     default:
@@ -1684,11 +1517,11 @@
                       //Serial.flush();
           #endif
         #if (USE_PWM_INP > OFF)
-            mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 1);
-            pwmInVal->lowVal = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0);
+            mcpwm_capture_enable(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 1);
+            pwmInVal->lowVal = mcpwm_capture_signal_get_value(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0);
 
-            mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_POS_EDGE, 1);
-            pwmInVal->highVal = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0);
+            mcpwm_capture_enable(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0, MCPWM_POS_EDGE, 1);
+            pwmInVal->highVal = mcpwm_capture_signal_get_value(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0);
           #endif
       // --- standard input cycle ---
         //SOUT(" 3");
@@ -1988,12 +1821,12 @@
                             #if (MQ3_ALK_1115 > OFF)
                                 //ads[0].setGain(MQ3_1115_ATT);
                                 //ads[0].setDataRate(RATE_ADS1115_860SPS);
-                                //ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHAN], /*continuous=*/false);
+                                //ads[0].startADCReading(MUX_BY_CHANNEL[MQ3_1115_CHIDX], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
                                 //while (!ads[0].conversionComplete());
                                 //alk = ads[0].getLastConversionResults();   // Read the conversion results
                                 alkVal.doVal(alk);   // Read the conversion results
-                                //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHAN))));
+                                //alk[0] = (uint16_t) (1000 * ads[0].computeVolts(alkVal[0].doVal(ads->readADC_SingleEnded(MQ3_1115_CHIDX))));
                               #endif
                           #endif
                       break;
@@ -2014,12 +1847,12 @@
                               #endif
                             #if (POTI1_1115 > OFF)
                                 //ads[0].setGain(POTI1_1115_ATT);
-                                //ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHAN], /*continuous=*/false);
+                                //ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHIDX], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
                                 //while (!ads[0].conversionComplete());
                                 //poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
                                 //potiVal[0].doVal(poti[0]);
-                                //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHAN))));
+                                //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHIDX))));
                               #endif
                           #endif
                       break;
@@ -2029,11 +1862,11 @@
                             #if (VCC50_ADC > OFF)
                               #endif
                             #if (VCC50_1115 > OFF)
-                                vcc50  = ads[VCC_1115_UNIT].getResult(VCC50_1115_CHAN);
-                                vcc50f = ads[VCC_1115_UNIT].getVolts(VCC50_1115_CHAN);
-                                //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIT, VCC50_1115_CHAN, vcc50f );
+                                vcc50  = ads[VCC_1115_UNIDX].getResult(VCC50_1115_CHIDX);
+                                vcc50f = ads[VCC_1115_UNIDX].getVolts(VCC50_1115_CHIDX);
+                                //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
                                 vcc50f = vcc50fScal.scale(vcc50f);
-                                //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIT, VCC50_1115_CHAN, vcc50f );
+                                //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
                                 //vcc50Val.doVal(vcc50);
                               #endif
                           #endif
@@ -2044,11 +1877,11 @@
                             #if (VCC33_ADC > OFF)
                               #endif
                             #if (VCC33_1115 > OFF)
-                                vcc33  = ads[VCC_1115_UNIT].getResult(VCC33_1115_CHAN);
-                                vcc33f = ads[VCC_1115_UNIT].getVolts(VCC33_1115_CHAN);
-                                //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIT, VCC33_1115_CHAN, vcc33f );
+                                vcc33  = ads[VCC_1115_UNIDX].getResult(VCC33_1115_CHIDX);
+                                vcc33f = ads[VCC_1115_UNIDX].getVolts(VCC33_1115_CHIDX);
+                                //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
                                 vcc33f = vcc33fScal.scale(vcc33f);
-                                //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIT, VCC33_1115_CHAN, vcc33f );
+                                //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
                                 //vcc33Val.doVal(vcc33);
                               #endif
                           #endif
@@ -2059,12 +1892,12 @@
                               #endif
                             #if (I712_1_1115 > OFF)
                                 //ads[0].setGain(I712_1_1115_ATT);
-                                //ads[0].startADCReading(MUX_BY_CHANNEL[I712_1_1115_CHAN], /*continuous=*/false);
+                                //ads[0].startADCReading(MUX_BY_CHANNEL[I712_1_1115_CHIDX], /*continuous=*/false);
                                 usleep(1200); // Wait for the conversion to complete
                                 //while (!ads[0].conversionComplete());
                                 //i712[0] = ads[0].getLastConversionResults();   // Read the conversion results
                                 //i712Val[0].doVal(i712[0]);
-                                // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHAN))));
+                                // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHIDX))));
                               #endif
                           #endif
                       break;
@@ -3238,7 +3071,7 @@
                   switch (i)
                     {
                       case 0:
-                        unit       = (pcnt_unit_t) PCNT0_UNIT;
+                        unit       = (pcnt_unit_t) PCNT0_UNIDX;
                         cntThresh[i]  = (uint16_t)    PCNT0_THRESH0_VAL;
                         cntFakt[i] = (float)    PCNT0_CNT_FAKT;
                         // Configure and enable the input filter
@@ -3256,7 +3089,7 @@
                         break;
                       #if (USE_CNT_INP > 1)
                           case 1:
-                            unit = (pcnt_unit_t) PCNT1_UNIT;
+                            unit = (pcnt_unit_t) PCNT1_UNIDX;
                             cntThresh[i] = (uint16_t) PCNT1_THRESH0_VAL;
                             // Configure and enable the input filter
                               pcnt_set_filter_value(unit, PCNT1_INP_FILT);
@@ -3268,7 +3101,7 @@
                         #endif
                       #if (USE_CNT_INP > 2)
                           case 2:
-                            unit = (pcnt_unit_t) PCNT2_UNIT;
+                            unit = (pcnt_unit_t) PCNT2_UNIDX;
                             // Configure and enable the input filter
                               pcnt_set_filter_value(unit, PCNT2_INP_FILT);
                               pcnt_filter_enable(unit);
@@ -3279,7 +3112,7 @@
                         #endif
                       #if (USE_CNT_INP > 3)
                           case 1:
-                            unit = (pcnt_unit_t) PCNT3_UNIT;
+                            unit = (pcnt_unit_t) PCNT3_UNIDX;
                             // Configure and enable the input filter
                               pcnt_set_filter_value(unit, PCNT3_INP_FILT);
                               pcnt_filter_enable(unit);
@@ -3333,11 +3166,11 @@
               static void getCNTIn()
                 {
                       // count LOW width
-                      mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 0);
-                      cntLowPulse[0] = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0) / 1000;
+                      mcpwm_capture_enable(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0, MCPWM_NEG_EDGE, 0);
+                      cntLowPulse[0] = mcpwm_capture_signal_get_value(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0) / 1000;
                       // count HIGH width
-                      mcpwm_capture_enable(MCPWM_UNIT_0, MCPWM_SELECT_CAP0, MCPWM_POS_EDGE, 0);
-                      cntHighPulse[0] = mcpwm_capture_signal_get_value(MCPWM_UNIT_0, MCPWM_SELECT_CAP0) /1000 ;
+                      mcpwm_capture_enable(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0, MCPWM_POS_EDGE, 0);
+                      cntHighPulse[0] = mcpwm_capture_signal_get_value(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0) /1000 ;
                 }
             #endif
         #endif
@@ -3603,6 +3436,151 @@
                   {
                     STXT(" CCS811 nicht gefunden");
                   }
+            }
+        #endif
+    // --- INA3221
+      #if (USE_INA3221_I2C > OFF)
+          void initINA3221()
+            {
+              dispStatus("init INA32211");
+              STX(" init INA32211 ID "); SOUTHEXLN((ina32211.getManufID()));
+              ina32211.begin();
+              for (uint8_t i = 0; i < 3 ; i++ )
+                {
+                  pubINA3221i[0][i] = OFF;
+                  pubINA3221u[0][i] = OFF;
+                }
+              // channel 1
+                #if (INA3221U1_FILT > OFF)
+                    inaUVal[0][0].begin(INA3221U1_FILT, INA3221U1_DROP);
+                  #endif
+                #if (INA3221I1_FILT > OFF)
+                    inaIVal[0][0].begin(INA3221I1_FILT, INA3221I1_DROP);
+                  #endif
+                #if (USE_MQTT > OFF)
+                    topINA32211i[0] = topDevice + topINA32211i[0];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211i[0].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211i[0]", errMQTT);
+                    topINA32211u[0] = topDevice + topINA32211u[0];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211u[0].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211u[0]", errMQTT);
+                    topINA32211p[0] = topDevice + topINA32211p[0];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211p[0].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211p[0]", errMQTT);
+                  #endif
+              // channel 2
+                #if (INA3221U2_FILT > OFF)
+                    inaUVal[0][1].begin(INA3221U2_FILT, INA3221U2_DROP);
+                  #endif
+                #if (INA3221I2_FILT > OFF)
+                    inaIVal[0][1].begin(INA3221I2_FILT, INA3221I2_DROP);
+                  #endif
+                #if (USE_MQTT > OFF)
+                    topINA32211i[1] = topDevice + topINA32211i[1];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211i[1].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211i[1]", errMQTT);
+                    topINA32211u[1] = topDevice + topINA32211u[1];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211u[1].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211u[1]", errMQTT);
+                    topINA32211p[1] = topDevice + topINA32211p[1];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211p[1].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211p[1]", errMQTT);
+                  #endif
+              // channel 3
+                #if (INA3221U3_FILT > OFF)
+                   inaUVal[0][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+                  #endif
+                #if (INA3221I3_FILT > OFF)
+                    inaIVal[0][2].begin(INA3221I3_FILT, INA3221I3_DROP);
+                  #endif
+                #if (USE_MQTT > OFF)
+                    topINA32211i[2] = topDevice + topINA32211i[2];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211i[2].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211i[2]", errMQTT);
+                    topINA32211u[2] = topDevice + topINA32211u[2];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211u[2].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211u[2]", errMQTT);
+                    topINA32211p[2] = topDevice + topINA32211p[2];
+                    errMQTT = (int8_t) mqtt.subscribe(topINA32211p[2].c_str());
+                        soutMQTTerr(" MQTT subscribe topINA32211p[2]", errMQTT);
+                  #endif
+              #if (USE_INA3221_I2C > 1)
+                  dispStatus("init INA32212");
+                  STXT(" init INA32212 ...");
+                  ina32212.begin();
+                  inaIVal[1][0].begin(INA3221I1_FILT, INA3221I1_DROP);
+                  inaIVal[1][1].begin(INA3221I2_FILT, INA3221I2_DROP);
+                  inaIVal[1][2].begin(INA3221I3_FILT, INA3221I3_DROP);
+                  inaUVal[1][0].begin(INA3221U1_FILT, INA3221U1_DROP);
+                  inaUVal[1][1].begin(INA3221U2_FILT, INA3221U2_DROP);
+                  inaUVal[1][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+                  for (uint8_t i = 0; i < 3 ; i++ )
+                    {
+                      pubINA3221i[1][i] = OFF;
+                      pubINA3221u[1][i] = OFF;
+                    }
+                  #if (USE_MQTT > OFF)
+                      topINA32212i[0] = topDevice + topINA32212i[0];
+                      errMQTT = (int8_t) mqtt.subscribe(topINA32212i[0].c_str());
+                          soutMQTTerr(" MQTT subscribe topINA32212i[0]", errMQTT);
+                      topINA32212u[0] = topDevice + topINA32212u[0];
+                      errMQTT = (int8_t) mqtt.subscribe(topINA32212u[0].c_str());
+                          soutMQTTerr(" MQTT subscribe topINA32212u[0]", errMQTT);
+
+                      topINA32212i[1] = topDevice + topINA32212i[1];
+                      errMQTT = (int8_t) mqtt.subscribe(topINA32212i[1].c_str());
+                          soutMQTTerr(" MQTT subscribe topINA32212i[1]", errMQTT);
+                      topINA32212u[1] = topDevice + topINA32212u[1];
+                      errMQTT = (int8_t) mqtt.subscribe(topINA32212u[1].c_str());
+                          soutMQTTerr(" MQTT subscribe topINA32212u[1]", errMQTT);
+
+                      topINA32212i[2] = topDevice + topINA32212i[2];
+                      errMQTT = (int8_t) mqtt.subscribe(topINA32212i[2].c_str());
+                          soutMQTTerr(" MQTT subscribe topINA32212i[2]", errMQTT);
+                      topINA32212u[2] = topDevice + topINA32212u[2];
+                      errMQTT = (int8_t) mqtt.subscribe(topINA32212u[2].c_str());
+                          soutMQTTerr(" MQTT subscribe topINA32212u[2]", errMQTT);
+                    #endif
+                  #if (USE_INA3221_I2C > 2)
+                      dispStatus("init INA32213");
+                      STXT(" init INA32213 ...");
+                      ina32212.begin();
+                      inaIVal[2][0].begin(INA3221I1_FILT, INA3221I1_DROP);
+                      inaIVal[2][1].begin(INA3221I2_FILT, INA3221I2_DROP);
+                      inaIVal[2][2].begin(INA3221I3_FILT, INA3221I3_DROP);
+                      inaUVal[2][0].begin(INA3221U1_FILT, INA3221U1_DROP);
+                      inaUVal[2][1].begin(INA3221U2_FILT, INA3221U2_DROP);
+                      inaUVal[2][2].begin(INA3221U3_FILT, INA3221U3_DROP);
+                      for (uint8_t i = 0; i < 3 ; i++ )
+                        {
+                          pubINA3221i[2][i] = OFF;
+                          pubINA3221u[2][i] = OFF;
+                        }
+                      #if (USE_MQTT > OFF)
+                          topINA32213i[0] = topDevice + topINA32213i[0];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213i[0].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213i[0]", errMQTT);
+                          topINA32213u[0] = topDevice + topINA32212u[0];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213u[0].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213u[0]", errMQTT);
+
+                          topINA32213i[1] = topDevice + topINA32213i[1];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213i[1].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213i[1]", errMQTT);
+                          topINA32213u[1] = topDevice + topINA32213u[1];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213u[1].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213u[1]", errMQTT);
+
+                          topINA32213i[2] = topDevice + topINA32213i[2];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213i[2].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213i[2]", errMQTT);
+                          topINA32213u[2] = topDevice + topINA32213u[2];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32213u[2].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32213u[2]", errMQTT);
+                        #endif
+                    #endif
+                #endif
+
             }
         #endif
     // --- DS18B20

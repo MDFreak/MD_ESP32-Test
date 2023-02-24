@@ -289,6 +289,9 @@
           #if (USE_CCS811_I2C > OFF)
               void initCCS811();
             #endif
+          #if (USE_INA3221_I2C > OFF)
+              void initINA3221();
+            #endif
         // --- DS18B20
           #if (USE_DS18B20_1W_IO > OFF)
               String getDS18D20Str();
