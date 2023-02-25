@@ -699,8 +699,9 @@
         float             vcc33f;
         float             vcc33fold;
         md_scale          vcc33fScal;
+        static String     valVCC33;
+        static uint8_t    pubVCC33;
         #if (USE_MQTT > OFF)
-            static String valVCC33;
             static String topVCC33     = MQTT_VCC33;
           #endif
       #endif
@@ -719,8 +720,9 @@
           #endif
         float i712[USE_ACS712_ANA];
         float i712old[USE_ACS712_ANA];
+        static String vali712[USE_ACS712_ANA];
+        static String pubi712[USE_ACS712_ANA];
         #if (USE_MQTT > OFF)
-            static String vali712[USE_ACS712_ANA];
             static String topi7121 = MQTT_I712_1;
             #if (USE_ACS712_ANA > 1)
                 static String topi7122 = MQTT_I712_2;
@@ -1890,7 +1892,14 @@
                                 vcc33  = ads[VCC_1115_UNIDX].getResult(VCC33_1115_CHIDX);
                                 vcc33f = ads[VCC_1115_UNIDX].getVolts(VCC33_1115_CHIDX);
                                     //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
-                                vcc33f = vcc33fScal.scale(vcc33f);
+                                //vcc33f = vcc33fScal.scale(vcc33f);
+                                if (vcc33f != vcc33fold)
+                                  {
+                                    valVCC33  = vcc33f;
+                                    pubVCC33  = TRUE;
+                                    vcc33fold = vcc33f;
+                                        SVAL(" VCC 3.3  new ", vcc33f);
+                                  }
                                     //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
                                     //vcc33Val.doVal(vcc33);
                               #endif
@@ -1901,13 +1910,19 @@
                             #if (I712_1_ADC > OFF)
                               #endif
                             #if (I712_1_1115 > OFF)
-                                //ads[0].setGain(I712_1_1115_ATT);
-                                //ads[0].startADCReading(MUX_BY_CHANNEL[I712_1_1115_CHIDX], /*continuous=*/false);
-                                usleep(1200); // Wait for the conversion to complete
-                                //while (!ads[0].conversionComplete());
-                                //i712[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                                //i712Val[0].doVal(i712[0]);
-                                // = (uint16_t) (1000 * ads[0].computeVolts(i712Val[0].doVal(ads->readADC_SingleEnded(I712_1_1115_CHIDX))));
+                                i712[0]  = ads[I712_1_1115_CHIDX].getResult(VCC33_1115_CHIDX);
+                                vcc33f = ads[I712_1_1115_CHIDX].getVolts(VCC33_1115_CHIDX);
+                                    //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
+                                //vcc33f = vcc33fScal.scale(vcc33f);
+                                if (vcc33f != vcc33fold)
+                                  {
+                                    valVCC33  = vcc33f;
+                                    pubVCC33  = TRUE;
+                                    vcc33fold = vcc33f;
+                                        SVAL(" VCC 3.3  new ", vcc33f);
+                                  }
+                                    //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
+                                    //vcc33Val.doVal(vcc33);
                               #endif
                           #endif
                       break;

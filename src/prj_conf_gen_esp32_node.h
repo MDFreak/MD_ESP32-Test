@@ -791,7 +791,7 @@
               #define VCC33_1115        ON
               #if (VCC33_1115 > OFF)
                   #define VCC33_1115_UNIDX   0
-                  #define VCC33_1115_CHIDX   0    //
+                  #define VCC33_1115_CHIDX   3    //
                   #define ADS11_GAIN        GAIN_TWOTHIRDS
                   #define ADS11_RATE        RATE_ADS1115_128SPS
                   #define ADS11_MUX         ADS1X15_MUX_SINGLE
@@ -820,8 +820,8 @@
             #endif
           #define POTI1_1115              ON
           #if (POTI1_1115 > OFF)
-              #define POTI1_1115_UNIDX      0
-              #define POTI1_1115_CHIDX     3
+              #define POTI1_1115_UNIDX    0
+              #define POTI1_1115_CHIDX    0
               #define ADS14_GAIN          GAIN_TWOTHIRDS
               #define ADS14_RATE          RATE_ADS1115_128SPS
               #define ADS14_MUX           ADS1X15_MUX_SINGLE
