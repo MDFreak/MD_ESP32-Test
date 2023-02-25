@@ -713,7 +713,7 @@
             #endif
         #endif
       #if (USE_PHOTO_SENS_ANA > OFF)
-          #define PHOTO1_FILT               5
+          #define PHOTO1_FILT               0
           #define PHOTO1_DROP               1
           #define PHOTO1_ADC                ON
           #if (PHOTO1_ADC > OFF)

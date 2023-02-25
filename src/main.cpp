@@ -1858,7 +1858,7 @@
                                 potif[0] = ads[POTI1_1115_UNIDX].getVolts(POTI1_1115_CHIDX);
                                     //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
                                 //potif[0] = potifScal[0].scale(potif[0]);
-                                if (vcc50f != vcc50fold)
+                                if (potif[0] != potifold[0])
                                   {
                                     valPoti[0]  = potif[0];
                                     pubPoti[0]  = TRUE;
