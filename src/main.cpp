@@ -574,12 +574,12 @@
         //md_scale<float>  inaISkal[USE_INA3221_I2C][3];
         //md_val<float>    inaUVal[USE_INA3221_I2C][3];
         //md_scale<float>  inaUSkal[USE_INA3221_I2C][3];
-        float            inaI   [USE_INA3221_I2C][3];
-        float            inaU   [USE_INA3221_I2C][3];
-        float            inaP   [USE_INA3221_I2C][3];
-        float            inaIold[USE_INA3221_I2C][3];
-        float            inaUold[USE_INA3221_I2C][3];
-        float            inaPold[USE_INA3221_I2C][3];
+        static float     inaI   [USE_INA3221_I2C][3];
+        static float     inaU   [USE_INA3221_I2C][3];
+        static float     inaP   [USE_INA3221_I2C][3];
+        static float     inaIold[USE_INA3221_I2C][3];
+        static float     inaUold[USE_INA3221_I2C][3];
+        static float     inaPold[USE_INA3221_I2C][3];
         static String    valINA3221i[USE_INA3221_I2C][3];
         static String    valINA3221u[USE_INA3221_I2C][3];
         static String    valINA3221p[USE_INA3221_I2C][3];
@@ -1644,14 +1644,14 @@
                               #if (INA3221I1_FILT > OFF)
                                   inaU[0][0] = ccsCVal.doVal(inaU[0][0]);
                                 #endif
-                              S2VAL(" incycle 3221 ina[0][0] inaUold[0][0] ", inaUold[0][0], inaU[0][0]);
+                              //S2VAL(" incycle 3221 ina[0][0] inaUold[0][0] ", inaUold[0][0], inaU[0][0]);
                               if (inaU[0][0] != inaUold[0][0])
                                 {
                                   valINA3221u[0][0] = inaU[0][0];
                                   pubINA3221u[0][0] = TRUE;
-                                  inaIold[0][0]     = inaU[0][0];
-                                      S2VAL(" incycle 3221 ina[0][0] inaUold[0][0] ", inaUold[0][0], inaU[0][0]);
-                                      SVAL(" U 3.3 new ", inaU[0][0]);
+                                  inaUold[0][0]     = inaU[0][0];
+                                      //S2VAL(" incycle 3221 ina[0][0] inaUold[0][0] ", inaUold[0][0], inaU[0][0]);
+                                      SVAL(" U 3.3    new ", inaU[0][0]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211u[0].c_str(),
                                                                       (uint8_t*) valINA3221u[0][0].c_str(),
@@ -1690,8 +1690,8 @@
                                 {
                                   valINA3221u[0][1] = inaU[0][1];
                                   pubINA3221u[0][1] = TRUE;
-                                  inaIold[0][1]     = inaU[0][1];
-                                      SVAL(" U 5.0 new ", inaU[0][1]);
+                                  inaUold[0][1]     = inaU[0][1];
+                                      SVAL(" U 5.0    new ", inaU[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211u[1].c_str(),
                                                                       (uint8_t*) valINA3221u[0][1].c_str(),
@@ -1708,7 +1708,7 @@
                                   valINA3221i[0][1] = inaI[0][1];
                                   pubINA3221i[0][1] = TRUE;
                                   inaIold[0][1]     = inaI[0][1];
-                                      SVAL(" I 5.0  new ", inaI[0][1]);
+                                      SVAL(" I 5.0    new ", inaI[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211i[1].c_str(),
                                                                       (uint8_t*) valINA3221i[0][1].c_str(),
@@ -1725,7 +1725,7 @@
                                   valINA3221p[0][1] = inaP[0][1];
                                   pubINA3221p[0][1] = TRUE;
                                   inaPold[0][1]     = inaP[0][1];
-                                      SVAL(" P 5.0  new ", inaI[0][1]);
+                                      SVAL(" P 5.0    new ", inaP[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211p[1].c_str(),
                                                                       (uint8_t*) valINA3221p[0][1].c_str(),
@@ -1744,7 +1744,7 @@
                                 {
                                   valINA3221u[0][2] = inaU[0][2];
                                   pubINA3221u[0][2] = TRUE;
-                                  inaIold[0][2]     = inaU[0][2];
+                                  inaUold[0][2]     = inaU[0][2];
                                       SVAL(" U supply new ", inaU[0][2]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211u[2].c_str(),
@@ -1782,7 +1782,7 @@
                                   valINA3221p[0][2] = inaP[0][2];
                                   pubINA3221p[0][2] = TRUE;
                                   inaPold[0][2]     = inaP[0][2];
-                                      SVAL(" P supply  new ", inaP[0][2]);
+                                      SVAL(" P supply new ", inaP[0][2]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211p[2].c_str(),
                                                                       (uint8_t*) valINA3221p[0][2].c_str(),
@@ -2470,7 +2470,7 @@
                         outStr.concat(vcc50f);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
-                              STXT(outStr);
+                              //STXT(outStr);
                         #if (USE_MQTT > OFF)
                           #endif
                       #endif
