@@ -1554,7 +1554,7 @@
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
                                       soutMQTTerr(topBME280t.c_str(), errMQTT);
-                                          SVAL(topBME280t, valBME280t);
+                                          //SVAL(topBME280t, valBME280t);
                                     #endif
                                 }
                             // BME280 humidity
@@ -1644,12 +1644,14 @@
                               #if (INA3221I1_FILT > OFF)
                                   inaU[0][0] = ccsCVal.doVal(inaU[0][0]);
                                 #endif
+                              S2VAL(" incycle 3221 ina[0][0] inaUold[0][0] ", inaUold[0][0], inaU[0][0]);
                               if (inaU[0][0] != inaUold[0][0])
                                 {
                                   valINA3221u[0][0] = inaU[0][0];
                                   pubINA3221u[0][0] = TRUE;
                                   inaIold[0][0]     = inaU[0][0];
-                                      //SVAL(" U 3.3 new ", inaU[0][0]);
+                                      S2VAL(" incycle 3221 ina[0][0] inaUold[0][0] ", inaUold[0][0], inaU[0][0]);
+                                      SVAL(" U 3.3 new ", inaU[0][0]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211u[0].c_str(),
                                                                       (uint8_t*) valINA3221u[0][0].c_str(),
@@ -1689,7 +1691,7 @@
                                   valINA3221u[0][1] = inaU[0][1];
                                   pubINA3221u[0][1] = TRUE;
                                   inaIold[0][1]     = inaU[0][1];
-                                      //SVAL(" U 5.0 new ", inaU[0][1]);
+                                      SVAL(" U 5.0 new ", inaU[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211u[1].c_str(),
                                                                       (uint8_t*) valINA3221u[0][1].c_str(),
@@ -1706,7 +1708,7 @@
                                   valINA3221i[0][1] = inaI[0][1];
                                   pubINA3221i[0][1] = TRUE;
                                   inaIold[0][1]     = inaI[0][1];
-                                      //SVAL(" I 5.0  new ", inaI[0][1]);
+                                      SVAL(" I 5.0  new ", inaI[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211i[1].c_str(),
                                                                       (uint8_t*) valINA3221i[0][1].c_str(),
@@ -1723,7 +1725,7 @@
                                   valINA3221p[0][1] = inaP[0][1];
                                   pubINA3221p[0][1] = TRUE;
                                   inaPold[0][1]     = inaP[0][1];
-                                      //SVAL(" P 5.0  new ", inaI[0][1]);
+                                      SVAL(" P 5.0  new ", inaI[0][1]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211p[1].c_str(),
                                                                       (uint8_t*) valINA3221p[0][1].c_str(),
@@ -1743,7 +1745,7 @@
                                   valINA3221u[0][2] = inaU[0][2];
                                   pubINA3221u[0][2] = TRUE;
                                   inaIold[0][2]     = inaU[0][2];
-                                      //SVAL(" U supply new ", inaU[0][2]);
+                                      SVAL(" U supply new ", inaU[0][2]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211u[2].c_str(),
                                                                       (uint8_t*) valINA3221u[0][2].c_str(),
@@ -1763,7 +1765,7 @@
                                   valINA3221i[0][2] = inaI[0][2];
                                   pubINA3221i[0][2] = TRUE;
                                   inaIold[0][2]     = inaI[0][2];
-                                      //SVAL(" I supply new ", inaI[0][2]);
+                                      SVAL(" I supply new ", inaI[0][2]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211i[2].c_str(),
                                                                       (uint8_t*) valINA3221i[0][2].c_str(),
@@ -1780,7 +1782,7 @@
                                   valINA3221p[0][2] = inaP[0][2];
                                   pubINA3221p[0][2] = TRUE;
                                   inaPold[0][2]     = inaP[0][2];
-                                      //SVAL(" P supply  new ", inaP[0][2]);
+                                      SVAL(" P supply  new ", inaP[0][2]);
                                   #if (USE_MQTT > OFF)
                                       errMQTT = (int8_t) mqtt.publish(topINA32211p[2].c_str(),
                                                                       (uint8_t*) valINA3221p[0][2].c_str(),
@@ -2482,7 +2484,7 @@
                         //outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 15, 2, outStr.length());
-                              STXT(outStr);
+                              //STXT(outStr);
                         #if (USE_MQTT > OFF)
                             valVCC50 = tmpval16;
                                 //SVAL(topVCC50, valVCC50);
@@ -2499,7 +2501,7 @@
                         outStr.concat(vcc33f);
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
-                              STXT(outStr);
+                              //STXT(outStr);
                         #if (USE_MQTT > OFF)
                           #endif
                       #endif
