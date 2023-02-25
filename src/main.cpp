@@ -685,9 +685,10 @@
         float             vcc50f;
         float             vcc50fold;
         md_scale          vcc50fScal;
+        static String     valVCC50;
+        static uint8_t    pubVCC50;
         #if (USE_MQTT > OFF)
-            static String valVCC50;
-            static String topVCC50     = MQTT_VCC50;
+            static String topVCC50 = MQTT_VCC50;
           #endif
       #endif
     #if (USE_VCC33_ANA > OFF) // 10
@@ -1866,10 +1867,17 @@
                             #if (VCC50_1115 > OFF)
                                 vcc50  = ads[VCC_1115_UNIDX].getResult(VCC50_1115_CHIDX);
                                 vcc50f = ads[VCC_1115_UNIDX].getVolts(VCC50_1115_CHIDX);
-                                //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
+                                    //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
                                 vcc50f = vcc50fScal.scale(vcc50f);
-                                //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
-                                //vcc50Val.doVal(vcc50);
+                                if (vcc50f != vcc50fold)
+                                  {
+                                    valVCC50  = vcc50f;
+                                    pubVCC50  = TRUE;
+                                    vcc50fold = vcc50f;
+                                        SVAL(" VCC 5.0  new ", vcc50f);
+                                  }
+                                    //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
+                                    //vcc50Val.doVal(vcc50);
                               #endif
                           #endif
                       break;
@@ -1881,10 +1889,10 @@
                             #if (VCC33_1115 > OFF)
                                 vcc33  = ads[VCC_1115_UNIDX].getResult(VCC33_1115_CHIDX);
                                 vcc33f = ads[VCC_1115_UNIDX].getVolts(VCC33_1115_CHIDX);
-                                //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
+                                    //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
                                 vcc33f = vcc33fScal.scale(vcc33f);
-                                //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
-                                //vcc33Val.doVal(vcc33);
+                                    //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
+                                    //vcc33Val.doVal(vcc33);
                               #endif
                           #endif
                     case 11: // ACS712_ANA
