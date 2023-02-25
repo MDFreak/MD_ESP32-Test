@@ -664,12 +664,14 @@
           #endif
       #endif
     #if (USE_POTI_ANA > OFF) // 8
-        //md_val<int16_t>   potiVal[USE_POTI_ANA];
-        md_scale          potiScal[USE_POTI_ANA];
-        uint16_t          poti[USE_POTI_ANA];
-        uint16_t          potiold[USE_POTI_ANA];
+        //md_val<int16_t> potiVal[USE_POTI_ANA];
+        static md_scale   potifScal[USE_POTI_ANA];
+        static uint16_t   poti[USE_POTI_ANA];
+        static float      potif[USE_POTI_ANA];
+        static float      potifold[USE_POTI_ANA];
+        static uint8_t    pubPoti[USE_POTI_ANA];
+        static String     valPoti[USE_POTI_ANA];
         #if (USE_MQTT > OFF)
-            static String valPoti[USE_POTI_ANA];
             static String topPoti1 = MQTT_POTI1;
             #if (USE_POTI_ANA > 1)
                 static String topPoti2      = MQTT_POTI2;
@@ -680,11 +682,11 @@
     #if (USE_VCC50_ANA > OFF) // 9
         //md_val<int16_t>   vcc50Val;
         //md_scale<int16_t> vcc50Scal;
-        int16_t           vcc50;
+        static int16_t    vcc50;
         //int16_t           vcc50old;
-        float             vcc50f;
-        float             vcc50fold;
-        md_scale          vcc50fScal;
+        static float      vcc50f;
+        static float      vcc50fold;
+        static md_scale   vcc50fScal;
         static String     valVCC50;
         static uint8_t    pubVCC50;
         #if (USE_MQTT > OFF)
@@ -694,11 +696,11 @@
     #if (USE_VCC33_ANA > OFF) // 10
         //md_val<int16_t>   vcc33Val;
         //md_scale<int16_t> vcc33Scal;
-        int16_t           vcc33;
+        static int16_t    vcc33;
         //int16_t           vcc33old;
-        float             vcc33f;
-        float             vcc33fold;
-        md_scale          vcc33fScal;
+        static float      vcc33f;
+        static float      vcc33fold;
+        static md_scale   vcc33fScal;
         static String     valVCC33;
         static uint8_t    pubVCC33;
         #if (USE_MQTT > OFF)
@@ -707,8 +709,8 @@
       #endif
     #if (USE_ACS712_ANA > OFF) // 11
         //md_val<int16_t>   i712Val[USE_ACS712_ANA];
-        md_scale  i712Scal[USE_ACS712_ANA];
-        float*    pi712[USE_ACS712_ANA];
+        static md_scale   i712Scal[USE_ACS712_ANA];
+        static float*     pi712[USE_ACS712_ANA];
         #if (USE_ACS712_ANA > 1)
             float*  pi712[USE_ACS712_ANA];
             #if (USE_ACS712_ANA > 2)
@@ -718,10 +720,11 @@
                   #endif
               #endif
           #endif
-        float i712[USE_ACS712_ANA];
-        float i712old[USE_ACS712_ANA];
-        static String vali712[USE_ACS712_ANA];
-        static String pubi712[USE_ACS712_ANA];
+        static int16_t    i712[USE_ACS712_ANA];
+        static float      i712f[USE_ACS712_ANA];
+        static float      i712fold[USE_ACS712_ANA];
+        static String     vali712[USE_ACS712_ANA];
+        static String     pubi712[USE_ACS712_ANA];
         #if (USE_MQTT > OFF)
             static String topi7121 = MQTT_I712_1;
             #if (USE_ACS712_ANA > 1)
@@ -1090,7 +1093,7 @@
               #if (POTI1_FILT > OFF)
                   //potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
                 #endif
-              potiScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
+              potifScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
               #if (USE_MQTT)
                   topPoti1 = topDevice + topPoti1;
                   errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
@@ -1851,13 +1854,24 @@
                             #if (POTI1_ADC > OFF)
                               #endif
                             #if (POTI1_1115 > OFF)
-                                //ads[0].setGain(POTI1_1115_ATT);
-                                //ads[0].startADCReading(MUX_BY_CHANNEL[POTI1_1115_CHIDX], /*continuous=*/false);
-                                usleep(1200); // Wait for the conversion to complete
-                                //while (!ads[0].conversionComplete());
-                                //poti[0] = ads[0].getLastConversionResults();   // Read the conversion results
-                                //potiVal[0].doVal(poti[0]);
-                                //poti[0] = (uint16_t) (1000 * ads[0].computeVolts(potiVal[0].doVal(ads->readADC_SingleEnded(POTI1_1115_CHIDX))));
+                                poti[0]  = ads[POTI1_1115_UNIDX].getResult(POTI1_1115_CHIDX);
+                                potif[0] = ads[POTI1_1115_UNIDX].getVolts(POTI1_1115_CHIDX);
+                                    //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
+                                //potif[0] = potifScal[0].scale(potif[0]);
+                                if (vcc50f != vcc50fold)
+                                  {
+                                    valPoti[0]  = potif[0];
+                                    pubPoti[0]  = TRUE;
+                                    potifold[0] = potif[0];
+                                        SVAL(" Poti U  new ", valPoti[0]);
+                                  }
+                                  #if (USE_MQTT > OFF)
+                                      errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(),
+                                                                      (uint8_t*) valPoti[0].c_str(),
+                                                                      valPoti[0].length());
+                                      soutMQTTerr(topPoti1.c_str(), errMQTT);
+                                          //SVAL(topINA32211u[1].c_str(), valINA3221u[0][1]);
+                                    #endif
                               #endif
                           #endif
                       break;
@@ -1911,17 +1925,15 @@
                               #endif
                             #if (I712_1_1115 > OFF)
                                 i712[0]  = ads[I712_1_1115_CHIDX].getResult(VCC33_1115_CHIDX);
-                                vcc33f = ads[I712_1_1115_CHIDX].getVolts(VCC33_1115_CHIDX);
-                                    //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
-                                //vcc33f = vcc33fScal.scale(vcc33f);
-                                if (vcc33f != vcc33fold)
+                                i712f[0] = ads[I712_1_1115_CHIDX].getVolts(VCC33_1115_CHIDX);
+                                if (i712f[0] != i712fold[0])
                                   {
-                                    valVCC33  = vcc33f;
-                                    pubVCC33  = TRUE;
-                                    vcc33fold = vcc33f;
-                                        SVAL(" VCC 3.3  new ", vcc33f);
+                                    vali712[0]  = i712f[0];
+                                    pubi712[0]  = TRUE;
+                                    i712fold[0] = i712f[0];
+                                        SVAL(" 712 Isup new ", i712f[0]);
                                   }
-                                    //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
+                                    //S3VAL(" ACS712 I supply new ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
                                     //vcc33Val.doVal(vcc33);
                               #endif
                           #endif
@@ -2468,7 +2480,7 @@
                   break;
                 case 8:  // poti,
                     #if (USE_POTI_ANA > OFF)
-                        tmpval16 = potiScal[0].scale((float) poti[0]);
+                        tmpval16 = potifScal[0].scale((float) poti[0]);
                         #if (USE_MQTT > OFF)
                             //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, POTI1_MQTT);
                           #endif
