@@ -718,8 +718,8 @@
             #define PHOTO1_ADC                ON
             #if (PHOTO1_ADC > OFF)
                 #define PHOTO1_ADC_ATT        ADC_ATTEN_DB_11
-                #define PHOTO1_SCAL_OFFRAW    0
-                #define PHOTO1_SCAL_GAIN      100/4095
+                #define PHOTO1_SCAL_OFFRAW    -1
+                #define PHOTO1_SCAL_GAIN      2
                 #define PHOTO1_SCAL_OFFREAL   0
               #endif
             #define PHOTO1_1115               OFF
