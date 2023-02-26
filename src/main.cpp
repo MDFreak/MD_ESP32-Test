@@ -1082,9 +1082,9 @@
               #if (PHOTO1_1115 > OFF)
                 #endif
               #if (USE_MQTT > OFF)
-                  topLicht1 = topDevice + topLicht1;
-                  errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
-                      soutMQTTerr(" MQTT subscribe Licht", errMQTT);
+                  topPhoto1 = topDevice + topPhoto1;
+                  errMQTT = (int8_t) mqtt.subscribe(topPhoto1.c_str());
+                      soutMQTTerr(" MQTT subscribe Photo1 ", errMQTT);
                 #endif
               STXT(" photo sensors  ready");
             #endif
@@ -1855,6 +1855,11 @@
                                     pubPhoto[0]  = TRUE;
                                     photofold[0] = photof[0];
                                         SVAL(" photo1  scal ", photof[0]);
+                                    #if (USE_MQTT > OFF)
+                                        errMQTT = (int8_t) mqtt.publish(topPhoto1.c_str(), (uint8_t*) valPhoto[0].c_str(), valPhoto[0].length());
+                                        soutMQTTerr(topPhoto1.c_str(), errMQTT);
+                                            //SVAL(topBME280p, valBME280p);
+                                      #endif
                                   }
                               #endif
                             #if (PHOTO1_1115 > OFF)
@@ -2486,7 +2491,7 @@
                       #if (USE_MQTT > OFF)
                           valPhoto[0] = tmpval16;
                               //SVAL(topLicht1, valPhoto[0]);
-                          errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valPhoto[0].c_str(), valPhoto[0].length());
+                          errMQTT = (int8_t) mqtt.publish(topPhoto1.c_str(), (uint8_t*) valPhoto[0].c_str(), valPhoto[0].length());
                               //soutMQTTerr(" MQTT publish Licht1", errMQTT);
                         #endif
                     #endif
@@ -4157,16 +4162,6 @@
                 topMQ3alk = topDevice + topMQ3alk;
                 errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
                     soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
-              #endif
-            #if (USE_PHOTO_SENS_ANA > OFF)
-                topLicht1 = topDevice + topLicht1;
-                errMQTT = (int8_t) mqtt.subscribe(topLicht1.c_str());
-                    soutMQTTerr(" MQTT subscribe Licht1", errMQTT);
-              #endif
-            #if (USE_POTI_ANA > OFF)
-                topPoti1 = topDevice + topPoti1;
-                errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
-                    soutMQTTerr(" MQTT subscribe poti1", errMQTT);
               #endif
             #if (USE_VCC50_ANA > OFF)
                 topVCC50 = topDevice + topVCC50;
