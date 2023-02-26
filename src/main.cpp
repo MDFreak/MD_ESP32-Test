@@ -652,11 +652,12 @@
       #endif
     #if (USE_PHOTO_SENS_ANA > OFF) // 7
         //md_val   photoVal[USE_PHOTO_SENS_ANA];
-        md_scale   photoScal[USE_PHOTO_SENS_ANA];
-        float      bright[USE_PHOTO_SENS_ANA];
-        float      brightOld[USE_PHOTO_SENS_ANA];
+        static md_scale   photoScal[USE_PHOTO_SENS_ANA];
+        static float      photof[USE_PHOTO_SENS_ANA];
+        static float      photofold[USE_PHOTO_SENS_ANA];
+        static uint8_t    pubPhoto[USE_PHOTO_SENS_ANA];
+        static String     valPhoto[USE_PHOTO_SENS_ANA];
         #if (USE_MQTT > OFF)
-            static String valLicht[USE_PHOTO_SENS_ANA];
             static String topLicht1 = MQTT_PHOTO1;
             #if (USE_MQTT > 1)
                 static String topLicht2 = MQTT_PHOTO2;
@@ -1843,6 +1844,16 @@
                         #if (USE_PHOTO_SENS_ANA > OFF)
                             #if (PHOTO1_ADC > OFF)
                                 //photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
+                                photof[0] = analogRead(PIN_PHOTO1_SENS);
+                                    //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
+                                //vcc33f = vcc33fScal.scale(vcc33f);
+                                if (photof[0] != photofold[0])
+                                  {
+                                    valPhoto[0]  = photof[0];
+                                    pubPhoto[0]  = TRUE;
+                                    photofold[0] = photof[0];
+                                        SVAL(" photo1  new ", photof[0]);
+                                  }
                               #endif
                             #if (PHOTO1_1115 > OFF)
                               #endif
@@ -2471,9 +2482,9 @@
                           pmdServ->updateAll(tmpStr);
                         #endif
                       #if (USE_MQTT > OFF)
-                          valLicht[0] = tmpval16;
-                              //SVAL(topLicht1, valLicht[0]);
-                          errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valLicht[0].c_str(), valLicht[0].length());
+                          valPhoto[0] = tmpval16;
+                              //SVAL(topLicht1, valPhoto[0]);
+                          errMQTT = (int8_t) mqtt.publish(topLicht1.c_str(), (uint8_t*) valPhoto[0].c_str(), valPhoto[0].length());
                               //soutMQTTerr(" MQTT publish Licht1", errMQTT);
                         #endif
                     #endif

@@ -800,7 +800,7 @@
             #define PWM_LEDS_FREQ  4000u
             #define PWM_LEDS_RES   8
             #define BRI_RGBLED_1   15
-            #define COL24_RGBLED_1 0xBE2727u   // photo 10 + red 10 + green 10 + blue 10
+            #define COL24_RGBLED_1 0xBE2727u   // bright 10 + red 10 + green 10 + blue 10
           #endif
         #if (USE_FAN_PWM > OFF)
             #ifndef USE_OUTPUT_CYCLE
