@@ -1270,7 +1270,7 @@
         {
           SVAL("loop task running on core ", xPortGetCoreID());
           usLast = micros();
-          firstrun = false;
+          //firstrun = false;
         }
       //uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
       // --- network ---
@@ -1770,11 +1770,11 @@
                                     valPhoto[0]  = photof[0];
                                     pubPhoto[0]  = TRUE;
                                     photofold[0] = photof[0];
-                                        SVAL(" photo1  scal ", photof[0]);
+                                        SVAL(" photo1  new ", photof[0]);
                                     #if (USE_MQTT > OFF)
                                         errMQTT = (int8_t) mqtt.publish(topPhoto1.c_str(), (uint8_t*) valPhoto[0].c_str(), valPhoto[0].length());
                                         soutMQTTerr(topPhoto1.c_str(), errMQTT);
-                                            //SVAL(topBME280p, valBME280p);
+                                            //SVAL(topPhoto1, valPhoto[0]);
                                       #endif
                                   }
                               #endif
@@ -1825,9 +1825,14 @@
                                     pubVCC50  = TRUE;
                                     vcc50fold = vcc50f;
                                         SVAL(" VCC 5.0  new ", vcc50f);
+                                    #if (USE_MQTT > OFF)
+                                        errMQTT = (int8_t) mqtt.publish(topVCC50.c_str(),
+                                                                        (uint8_t*) valVCC50.c_str(),
+                                                                        valVCC50.length());
+                                        soutMQTTerr(topVCC50.c_str(), errMQTT);
+                                            //SVAL(topVCC50.c_str(), valVCC50);
+                                      #endif
                                   }
-                                    //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
-                                    //vcc50Val.doVal(vcc50);
                               #endif
                           #endif
                       break;
@@ -1847,6 +1852,13 @@
                                     pubVCC33  = TRUE;
                                     vcc33fold = vcc33f;
                                         SVAL(" VCC 3.3  new ", vcc33f);
+                                    #if (USE_MQTT > OFF)
+                                        errMQTT = (int8_t) mqtt.publish(topVCC33.c_str(),
+                                                                        (uint8_t*) valVCC33.c_str(),
+                                                                        valVCC33.length());
+                                        soutMQTTerr(topVCC33.c_str(), errMQTT);
+                                            //SVAL(topVCC33.c_str(), valVCC33);
+                                      #endif
                                   }
                                     //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
                                     //vcc33Val.doVal(vcc33);
@@ -1866,6 +1878,14 @@
                                     pubi712[0]  = TRUE;
                                     i712fold[0] = i712f[0];
                                         SVAL(" 712 Isup new ", i712f[0]);
+
+                                    #if (USE_MQTT > OFF)
+                                        errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(),
+                                                                        (uint8_t*) valPoti[0].c_str(),
+                                                                        valPoti[0].length());
+                                        soutMQTTerr(topPoti1.c_str(), errMQTT);
+                                            //SVAL(topINA32211u[1].c_str(), valINA3221u[0][1]);
+                                      #endif
                                   }
                                     //S3VAL(" ACS712 I supply new ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
                                     //vcc33Val.doVal(vcc33);
@@ -3725,39 +3745,39 @@
               STXT(" current sensors ready");
             }
         #endif
-// --- memory --------------------------
+  // --- memory --------------------------
     // --- flash
       void testFlash()
-      {
-        STXT(" mounting SPIFFS ... ");
-        if(!SPIFFS.begin(true))
-          {
-           STXT(" ERROR");
-            return;
-          }
+        {
+          STXT(" mounting SPIFFS ... ");
+          if(!SPIFFS.begin(true))
+            {
+             STXT(" ERROR");
+              return;
+            }
 
-        uint32_t bFree = SPIFFS.totalBytes();
-        SVAL(" found bytes free ", bFree);
-        //*
-        STXT(" dir: test_example.txt ");
-        File file = SPIFFS.open("/test_example.txt");
-        if(!file)
-          {
-            STXT("   Failed to open file for reading");
-            return;
-          }
+          uint32_t bFree = SPIFFS.totalBytes();
+          SVAL(" found bytes free ", bFree);
+          //*
+          STXT(" dir: test_example.txt ");
+          File file = SPIFFS.open("/test_example.txt");
+          if(!file)
+            {
+              STXT("   Failed to open file for reading");
+              return;
+            }
 
-        STXT("   File Content: ");
-        int8_t n = 0;
-        while(n >= 0)
-          {
-            n = file.read();
-            if (n > 0) SOUT((char) n);
-          }
-        SOUTLN();
-        file.close();
-        //*/
-      }
+          STXT("   File Content: ");
+          int8_t n = 0;
+          while(n >= 0)
+            {
+              n = file.read();
+              if (n > 0) SOUT((char) n);
+            }
+          SOUTLN();
+          file.close();
+          //*/
+        }
 
   // --- network -------------------------
     // --- WIFI
