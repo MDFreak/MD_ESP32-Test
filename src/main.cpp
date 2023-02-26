@@ -658,7 +658,7 @@
         static uint8_t    pubPhoto[USE_PHOTO_SENS_ANA];
         static String     valPhoto[USE_PHOTO_SENS_ANA];
         #if (USE_MQTT > OFF)
-            static String topLicht1 = MQTT_PHOTO1;
+            static String topPhoto1 = MQTT_PHOTO1;
             #if (USE_MQTT > 1)
                 static String topLicht2 = MQTT_PHOTO2;
               #endif
@@ -1845,10 +1845,10 @@
                             #if (PHOTO1_ADC > OFF)
                                 //photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
                                 photof[0] = (float) analogRead(PIN_PHOTO1_SENS);
-                                        SVAL(" photo1  new ", photof[0]);
+                                        //SVAL(" photo1  new ", photof[0]);
                                 //photof[0] = photof[0];
                                         //SVAL(" photo1  new ", photof[0]);
-                                //photof[0] = photoScal[0].scale(photof[0]);
+                                photof[0] = photoScal[0].scale(photof[0]);
                                 //if (photof[0] != photofold[0])
                                   {
                                     valPhoto[0]  = photof[0];

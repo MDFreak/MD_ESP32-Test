@@ -719,7 +719,7 @@
             #if (PHOTO1_ADC > OFF)
                 #define PHOTO1_ADC_ATT        ADC_ATTEN_DB_11
                 #define PHOTO1_SCAL_OFFRAW    0
-                #define PHOTO1_SCAL_GAIN      1
+                #define PHOTO1_SCAL_GAIN      0.02442
                 #define PHOTO1_SCAL_OFFREAL   0
               #endif
             #define PHOTO1_1115               OFF
@@ -732,7 +732,7 @@
                   #define PHOTO1_SCAL_OFFREAL 0
                 #endif
             #if (USE_MQTT > OFF)
-                #define MQTT_PHOTO1           "licht1"
+                #define MQTT_PHOTO1           "photo1"
               #endif
             #if (USE_PHOTO_SENS_ANA > 1)
                 #define PHOTO2_FILT           7
