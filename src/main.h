@@ -311,14 +311,20 @@
           #if (USE_PHOTO_SENS_ANA > OFF)
               void initPhoto();
             #endif
+        // poti measure
+          #if (USE_POTI_ANA > OFF)
+              void initPoti();
+            #endif
+        // vcc measure
           #if (USE_VCC50_ANA > OFF)
               void initVCC50();
             #endif
           #if (USE_VCC50_ANA > OFF)
               void initVCC33();
             #endif
+        // ACS712 current measurement
           #if (USE_ACS712_ANA > OFF)
-              void initACS712()
+              void initACS712();
             #endif
     // ----- memory ---------------------------
           #if (USE_FLASH_MEM > OFF)
