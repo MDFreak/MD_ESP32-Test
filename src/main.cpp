@@ -1846,9 +1846,9 @@
                                 //photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
                                 photof[0] = (float) analogRead(PIN_PHOTO1_SENS);
                                         SVAL(" photo1  new ", photof[0]);
-                                photof[0] = 4096/photof[0];
-                                        SVAL(" photo1  new ", photof[0]);
-                                photof[0] = photoScal[0].scale(photof[0]);
+                                //photof[0] = photof[0];
+                                        //SVAL(" photo1  new ", photof[0]);
+                                //photof[0] = photoScal[0].scale(photof[0]);
                                 //if (photof[0] != photofold[0])
                                   {
                                     valPhoto[0]  = photof[0];
