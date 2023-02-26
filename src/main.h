@@ -227,6 +227,10 @@
           void dispText(String msg, uint8_t col, uint8_t row, uint8_t len);
           void startDisp();
 
+        // --- LED output
+          #if (USE_RGBLED_PWM > OFF)
+              void initRGBLED();
+            #endif
         // --- passive buzzer
           #ifdef PLAY_MUSIC
               void playSong(int8_t songIdx);
@@ -303,7 +307,19 @@
             #endif
 
         // --- T-element type K
-
+        // --- photo sensor
+          #if (USE_PHOTO_SENS_ANA > OFF)
+              void initPhoto();
+            #endif
+          #if (USE_VCC50_ANA > OFF)
+              void initVCC50();
+            #endif
+          #if (USE_VCC50_ANA > OFF)
+              void initVCC33();
+            #endif
+          #if (USE_ACS712_ANA > OFF)
+              void initACS712()
+            #endif
     // ----- memory ---------------------------
           #if (USE_FLASH_MEM > OFF)
               void testFlash();

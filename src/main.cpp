@@ -250,11 +250,11 @@
         outRGBVal_t  outValRGB[USE_RGBLED_PWM];
         md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1), new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
         uint8_t      LEDout    = FALSE;
+        static String valRGBBright = "";
+        static String valRGBCol    = "";
         #if (USE_MQTT > OFF)
             static String topRGBBright = MQTT_RGB_BRIGHT;
             static String topRGBCol    = MQTT_RGB_COLPICK;
-            static String valRGBBright = "";
-            static String valRGBCol    = "";
           #endif
         #if (TEST_RGBLED_PWM > OFF)
             //uint8_t  colRGBLED = 0;
@@ -932,7 +932,16 @@
               initWS2812Line();
               sleep(1);
             #endif
+        // RGB LED
+          #if (USE_RGBLED_PWM > OFF)
+              topRGBBright = topDevice + topRGBBright;
+              errMQTT = (int8_t) mqtt.subscribe(topRGBBright.c_str());
+                  soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
 
+              topRGBCol = topDevice + topRGBCol;
+              errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
+                  soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
+            #endif
         // start buzzer (task)
           #if (USE_BUZZER_PWM > OFF)
               pinMode(PIN_BUZZ, OUTPUT);                                                                               // Setting pin 11 as output
@@ -1069,115 +1078,22 @@
             #endif
         // photo sensor
           #if (USE_PHOTO_SENS_ANA > OFF)
-              STXT(" init photo sensors ...");
-              #if (PHOTO1_FILT > OFF)
-                  //photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
-                #endif
-              photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
-              #if (PHOTO1_ADC > OFF)
-                  pinMode(PIN_PHOTO1_SENS, INPUT);
-                  adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO1_SENS,
-                                            (adc_atten_t)    PHOTO1_ADC_ATT);
-                #endif
-              #if (PHOTO1_1115 > OFF)
-                #endif
-              #if (USE_MQTT > OFF)
-                  topPhoto1 = topDevice + topPhoto1;
-                  errMQTT = (int8_t) mqtt.subscribe(topPhoto1.c_str());
-                      soutMQTTerr(" MQTT subscribe Photo1 ", errMQTT);
-                #endif
-              STXT(" photo sensors  ready");
+              initPhoto();
             #endif
         // poti measure
           #if (USE_POTI_ANA > OFF)
-              STXT(" init poti ... ");
-              #if (POTI1_FILT > OFF)
-                  //potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
-                #endif
-              potifScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
-              #if (USE_MQTT)
-                  topPoti1 = topDevice + topPoti1;
-                  errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
-                      soutMQTTerr(" MQTT subscribe Poti1", errMQTT);
-                #endif
-              STXT(" poti ready");
+              initPoti();
             #endif
         // vcc measure
           #if (USE_VCC50_ANA > OFF)
-              STXT(" init vcc measure ... ");
-              #if (VCC_FILT > OFF)
-                  vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
-                #endif
-              vcc50fScal.setScale(VCC50_OFFRAW, VCC50_GAIN, VCC50_OFFREAL);
-              #if (USE_MQTT > OFF)
-                  topVCC50 = topDevice + topVCC50;
-                  errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
-                      soutMQTTerr(" MQTT subscribe VCC50", errMQTT);
-                #endif
-              STXT(" vcc measure ready");
+              initVCC50();
             #endif
           #if (USE_VCC33_ANA > OFF)
-              STXT(" init vcc measure ... ");
-              #if (VCC_FILT > OFF)
-                  vcc33Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
-                #endif
-              vcc33fScal.setScale(VCC33_OFFRAW, VCC33_GAIN, VCC33_OFFREAL);
-              #if (USE_MQTT > OFF)
-                  topVCC33 = topDevice + topVCC33;
-                  errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
-                      soutMQTTerr(" MQTT subscribe VCC33", errMQTT);
-                #endif
-              STXT(" vcc measure ready");
+              initVCC33();
             #endif
         // ACS712 current measurement
           #if (USE_ACS712_ANA > OFF)
-              STXT("init current sensors ... ");
-              i712Scal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
-              #if (I712_FILT > OFF)
-                  //i712Val[0].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
-                #endif
-              #if (USE_ACS712_ANA > 1)
-                  STXT("init current sensors ... ");
-                  i712Scal[1].setScale(I712_2_SCAL_OFFRAW, I712_2_SCAL_GAIN, I712_2_SCAL_OFFREAL);
-                  #if (I712_FILT > OFF)
-                      //i712Val[1].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
-                    #endif
-                  #if (USE_ACS712_ANA > 2)
-                      STXT("init current sensors ... ");
-                      i712Scal[2].setScale(I712_3_SCAL_OFFRAW, I712_3_SCAL_GAIN, I712_3_SCAL_OFFREAL);
-                      #if (I712_FILT > OFF)
-                          //i712Val[2].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
-                        #endif
-                      #if (USE_ACS712_ANA > 3)
-                          STXT("init current sensors ... ");
-                          i712Scal[3].setScale(I712_4_SCAL_OFFRAW, I712_4_SCAL_GAIN, I712_4_SCAL_OFFREAL);
-                          #if (I712_FILT > OFF)
-                              //i712Val[3].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
-                            #endif
-                        #endif
-                    #endif
-                  #endif
-              #if (USE_MQTT > OFF)
-                  topi7121 = topDevice + topi7121;
-                  errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
-                      soutMQTTerr(" MQTT subscribe i7121", errMQTT);
-                  #if (USE_ACS712_ANA > 1)
-                      topi7122 = topDevice + topi7122;
-                      errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
-                          soutMQTTerr(" MQTT subscribe i7122", errMQTT);
-                      #if (USE_ACS712_ANA > 2)
-                          topi7123 = topDevice + topi7123;
-                          errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
-                              soutMQTTerr(" MQTT subscribe i7123", errMQTT);
-                          #if (USE_ACS712_ANA > 3)
-                              topi7124 = topDevice + topi7124;
-                              errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
-                                  soutMQTTerr(" MQTT subscribe i7124", errMQTT);
-                            #endif
-                        #endif
-                    #endif
-                #endif
-              STXT(" current sensors ready");
+              initACS712();
             #endif
         // K-type thermoelementation
           #if ( USE_TYPE_K_SPI > 0)
@@ -3041,6 +2957,19 @@
               matrix_1.start_scroll_matrix(  (scroll2812_t*) outM2812, &posM2812, - tmp);
             }
         #endif
+    // --- RGB LED
+      #if (USE_RGBLED_PWM > OFF)
+          void initRGBLED()
+            {
+              topRGBBright = topDevice + topRGBBright;
+              errMQTT = (int8_t) mqtt.subscribe(topRGBBright.c_str());
+                  soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
+
+              topRGBCol = topDevice + topRGBCol;
+              errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
+                  soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
+            }
+        #endif
     // --- passive buzzer
       #ifdef PLAY_MUSIC
           void playSong(int8_t songIdx)
@@ -3670,8 +3599,135 @@
         }
     // --- T-element type K
     // --- photo sensor
-  // --- memory --------------------------
-    void testFlash()
+      #if (USE_PHOTO_SENS_ANA > OFF)
+          void initPhoto()
+            {
+              STXT(" init photo sensors ...");
+              #if (PHOTO1_FILT > OFF)
+                  //photoVal[0].begin(PHOTO1_FILT, PHOTO1_DROP, FILT_FL_MEAN);
+                #endif
+              photoScal[0].setScale(PHOTO1_SCAL_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
+              #if (PHOTO1_ADC > OFF)
+                  pinMode(PIN_PHOTO1_SENS, INPUT);
+                  adc1_config_channel_atten((adc1_channel_t) ADC_PHOTO1_SENS,
+                                            (adc_atten_t)    PHOTO1_ADC_ATT);
+                #endif
+              #if (PHOTO1_1115 > OFF)
+                #endif
+              #if (USE_MQTT > OFF)
+                  topPhoto1 = topDevice + topPhoto1;
+                  errMQTT = (int8_t) mqtt.subscribe(topPhoto1.c_str());
+                      soutMQTTerr(" MQTT subscribe Photo1 ", errMQTT);
+                #endif
+              STXT(" photo sensors  ready");
+            }
+        #endif
+    // poti measure
+      #if (USE_POTI_ANA > OFF)
+          void initPoti()
+            {
+              STXT(" init poti ... ");
+              #if (POTI1_FILT > OFF)
+                  //potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
+                #endif
+              potifScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
+              #if (USE_MQTT)
+                  topPoti1 = topDevice + topPoti1;
+                  errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
+                      soutMQTTerr(" MQTT subscribe poti1", errMQTT);
+                #endif
+              STXT(" poti ready");
+            }
+        #endif
+    // vcc measure
+      #if (USE_VCC50_ANA > OFF)
+          void initVCC50()
+            {
+              STXT(" init vcc measure ... ");
+              #if (VCC_FILT > OFF)
+                  vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+                #endif
+              vcc50fScal.setScale(VCC50_OFFRAW, VCC50_GAIN, VCC50_OFFREAL);
+              #if (USE_MQTT > OFF)
+                  topVCC50 = topDevice + topVCC50;
+                  errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
+                      soutMQTTerr(" MQTT subscribe VCC50", errMQTT);
+                #endif
+              STXT(" vcc measure ready");
+            }
+        #endif
+      #if (USE_VCC33_ANA > OFF)
+          void initVCC33()
+            {
+              STXT(" init vcc measure ... ");
+              #if (VCC_FILT > OFF)
+                  vcc33Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
+                #endif
+              vcc33fScal.setScale(VCC33_OFFRAW, VCC33_GAIN, VCC33_OFFREAL);
+              #if (USE_MQTT > OFF)
+                  topVCC33 = topDevice + topVCC33;
+                  errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
+                      soutMQTTerr(" MQTT subscribe VCC33", errMQTT);
+                #endif
+              STXT(" vcc measure ready");
+            }
+        #endif
+
+      #if (USE_ACS712_ANA > OFF)
+          void initACS712()
+            {
+              STXT("init current sensors ... ");
+              i712Scal[0].setScale(I712_1_SCAL_OFFRAW, I712_1_SCAL_GAIN, I712_1_SCAL_OFFREAL);
+              #if (I712_FILT > OFF)
+                  //i712Val[0].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
+                #endif
+              #if (USE_ACS712_ANA > 1)
+                  STXT("init current sensors ... ");
+                  i712Scal[1].setScale(I712_2_SCAL_OFFRAW, I712_2_SCAL_GAIN, I712_2_SCAL_OFFREAL);
+                  #if (I712_FILT > OFF)
+                      //i712Val[1].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
+                    #endif
+                  #if (USE_ACS712_ANA > 2)
+                      STXT("init current sensors ... ");
+                      i712Scal[2].setScale(I712_3_SCAL_OFFRAW, I712_3_SCAL_GAIN, I712_3_SCAL_OFFREAL);
+                      #if (I712_FILT > OFF)
+                          //i712Val[2].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
+                        #endif
+                      #if (USE_ACS712_ANA > 3)
+                          STXT("init current sensors ... ");
+                          i712Scal[3].setScale(I712_4_SCAL_OFFRAW, I712_4_SCAL_GAIN, I712_4_SCAL_OFFREAL);
+                          #if (I712_FILT > OFF)
+                              //i712Val[3].begin(I712_FILT, I712_DROP, FILT_FL_MEAN);
+                            #endif
+                        #endif
+                    #endif
+                  #endif
+              #if (USE_MQTT > OFF)
+                  topi7121 = topDevice + topi7121;
+                  errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
+                      soutMQTTerr(" MQTT subscribe i7121", errMQTT);
+                  #if (USE_ACS712_ANA > 1)
+                      topi7122 = topDevice + topi7122;
+                      errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
+                          soutMQTTerr(" MQTT subscribe i7122", errMQTT);
+                      #if (USE_ACS712_ANA > 2)
+                          topi7123 = topDevice + topi7123;
+                          errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
+                              soutMQTTerr(" MQTT subscribe i7123", errMQTT);
+                          #if (USE_ACS712_ANA > 3)
+                              topi7124 = topDevice + topi7124;
+                              errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
+                                  soutMQTTerr(" MQTT subscribe i7124", errMQTT);
+                            #endif
+                        #endif
+                    #endif
+                #endif
+              STXT(" current sensors ready");
+            }
+        #endif
+// --- memory --------------------------
+    // --- flash
+      void testFlash()
       {
         STXT(" mounting SPIFFS ... ");
         if(!SPIFFS.begin(true))
@@ -4149,50 +4205,6 @@
             STXT("Connecting to MQTT...");
             errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
                 soutMQTTerr(" MQTT connect", errMQTT);
-            #if (USE_RGBLED_PWM > OFF)
-                topRGBBright = topDevice + topRGBBright;
-                errMQTT = (int8_t) mqtt.subscribe(topRGBBright.c_str());
-                    soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
-
-                topRGBCol = topDevice + topRGBCol;
-                errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
-                    soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
-              #endif
-            #if (USE_MQ3_ALK_ANA > OFF)
-                topMQ3alk = topDevice + topMQ3alk;
-                errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
-                    soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
-              #endif
-            #if (USE_VCC50_ANA > OFF)
-                topVCC50 = topDevice + topVCC50;
-                errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
-                    soutMQTTerr(" MQTT subscribe vcc50", errMQTT);
-              #endif
-            #if (USE_VCC33_ANA > OFF)
-                topVCC33 = topDevice + topVCC33;
-                errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
-                    soutMQTTerr(" MQTT subscribe vcc33", errMQTT);
-              #endif
-            #if (USE_ACS712_ANA > OFF)
-                topi7121 = topDevice + topi7121;
-                errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
-                    soutMQTTerr(" MQTT subscribe topi712[0]", errMQTT);
-                #if (USE_ACS712_ANA > 1)
-                    topi7122 = topDevice + topi7122;
-                    errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
-                        soutMQTTerr(" MQTT subscribe topi7122", errMQTT);
-                    #if (USE_ACS712_ANA > 2)
-                        topi7123 = topDevice + topi7123;
-                        errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
-                            soutMQTTerr(" MQTT subscribe topi7123", errMQTT);
-                        #if (USE_ACS712_ANA > 3)
-                            topi7124 = topDevice + topi7124;
-                            errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
-                                soutMQTTerr(" MQTT subscribe topi7124", errMQTT);
-                          #endif
-                      #endif
-                  #endif
-              #endif
           }
         void soutMQTTerr(String text, int8_t errMQTT)
           {
