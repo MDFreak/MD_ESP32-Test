@@ -1872,19 +1872,19 @@
                             #if (I712_1_1115 > OFF)
                                 i712[0]  = ads[I712_1_1115_CHIDX].getResult(VCC33_1115_CHIDX);
                                 i712f[0] = ads[I712_1_1115_CHIDX].getVolts(VCC33_1115_CHIDX);
+                                        SVAL(" 712 Isup     ", i712f[0]);
                                 if (i712f[0] != i712fold[0])
                                   {
                                     vali712[0]  = i712f[0];
                                     pubi712[0]  = TRUE;
                                     i712fold[0] = i712f[0];
                                         SVAL(" 712 Isup new ", i712f[0]);
-
                                     #if (USE_MQTT > OFF)
-                                        errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(),
-                                                                        (uint8_t*) valPoti[0].c_str(),
-                                                                        valPoti[0].length());
-                                        soutMQTTerr(topPoti1.c_str(), errMQTT);
-                                            //SVAL(topINA32211u[1].c_str(), valINA3221u[0][1]);
+                                        errMQTT = (int8_t) mqtt.publish(topi7121.c_str(),
+                                                                        (uint8_t*) topi7121.c_str(),
+                                                                        vali712[0].length());
+                                        soutMQTTerr(topi7121.c_str(), errMQTT);
+                                            SVAL(topi7121.c_str(), vali712[0]);
                                       #endif
                                   }
                                     //S3VAL(" ACS712 I supply new ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
@@ -1965,7 +1965,6 @@
               }
           #endif
       // --- direct output ---
-        //SOUT(" 4");
         #if (USE_WS2812_MATRIX_OUT > OFF)
             //if (ws2812T1.TOut())
               //{
@@ -2443,12 +2442,6 @@
                         outStr.concat("  ");
                         dispText(outStr, 15, 1, outStr.length());
                               //STXT(outStr);
-                        #if (USE_MQTT > OFF)
-                            valPoti[0] = tmpval16;
-                                //SVAL(topPoti1, valPoti[0]);
-                            errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(), (uint8_t*) valPoti[0].c_str(), valPoti[0].length());
-                                //soutMQTTerr(" MQTT publish Poti1", errMQTT);
-                          #endif
                       #endif
                     break;
                 case 9:  // voltage 5V
@@ -2460,26 +2453,15 @@
                         outStr.concat("  ");
                         dispText(outStr, 1, 2, outStr.length());
                               //STXT(outStr);
-                        #if (USE_MQTT > OFF)
-                          #endif
                       #endif
                     #if (USE_ACS712_ANA > OFF)
                         //tmpval16 = i712[0];
-                        #if (USE_MQTT > OFF)
-                            //sprintf(tmpMQTT, "%s%s", MQTT_DEVICE, I712_1_MQTT);
-                          #endif
                         outStr = "  I ";
                         outStr.concat(i712[0]);
                         //outStr.concat(tmpval16);
                         outStr.concat("  ");
                         dispText(outStr, 15, 2, outStr.length());
                               //STXT(outStr);
-                        #if (USE_MQTT > OFF)
-                            valVCC50 = tmpval16;
-                                //SVAL(topVCC50, valVCC50);
-                            errMQTT = (int8_t) mqtt.publish(topVCC50.c_str(), (uint8_t*) valVCC50.c_str(), valVCC50.length());
-                                //soutMQTTerr(" MQTT publish VCC50", errMQTT);
-                          #endif
                       #endif
                    	break;
                 case 10: // voltage 3.3V
