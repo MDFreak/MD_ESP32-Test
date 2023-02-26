@@ -1845,14 +1845,14 @@
                             #if (PHOTO1_ADC > OFF)
                                 //photoVal[0].doVal(analogRead(PIN_PHOTO1_SENS));
                                 photof[0] = analogRead(PIN_PHOTO1_SENS);
-                                    //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
-                                //vcc33f = vcc33fScal.scale(vcc33f);
-                                if (photof[0] != photofold[0])
+                                        SVAL(" photo1  new ", photof[0]);
+                                photof[0] = photoScal[0].scale(photof[0]);
+                                //if (photof[0] != photofold[0])
                                   {
                                     valPhoto[0]  = photof[0];
                                     pubPhoto[0]  = TRUE;
                                     photofold[0] = photof[0];
-                                        SVAL(" photo1  new ", photof[0]);
+                                        SVAL(" photo1  scal ", photof[0]);
                                   }
                               #endif
                             #if (PHOTO1_1115 > OFF)
