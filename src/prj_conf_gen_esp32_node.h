@@ -875,8 +875,8 @@
                     #define ADS12_GAIN            GAIN_TWOTHIRDS
                     #define ADS12_RATE            RATE_ADS1115_128SPS
                     #define ADS12_MUX             ADS1X15_MUX_SINGLE
-                    #define I712_1_SCAL_OFFRAW    0
-                    #define I712_1_SCAL_GAIN      1
+                    #define I712_1_SCAL_OFFRAW    -2.5
+                    #define I712_1_SCAL_GAIN      185
                     #define I712_1_SCAL_OFFREAL   0
                   #endif
                 #if (I712_1_IMAX == 20000)
