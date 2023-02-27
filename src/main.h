@@ -347,14 +347,14 @@
             //             void * arg, uint8_t *data, size_t len);
             //void configWebsite();
             void startWebServer();
-            void readMessage();
+            void readWebMessage();
             void sendMessage();
           #endif
       // --- MQTT
         #if (USE_MQTT > OFF)
             void startMQTT();
             void soutMQTTerr(String text, int8_t errMQTT);
-            void msgHdlMQTT
+            void readMQTTmsg
                   (const Network::Client::MQTTv5::DynamicStringView & topic,
                    const Network::Client::MQTTv5::DynamicBinDataView & payload);
           #endif

@@ -1328,7 +1328,7 @@
         #if (USE_WEBSERVER > OFF)    // run webserver -> restart/run not allowed in loop task
             // read only 1 message / cycle for cycle time
                 //heapFree("webserv +readmsg");
-            readMessage();
+            readWebMessage();
                 //heapFree("webserv -readmsg");
           #endif
       // --- trigger measurement ---
@@ -2236,7 +2236,6 @@
                                           valFanPWM[1] = valFan[INP_CNT_FAN_2];
                                         #endif
                                     #endif
-
                                   ledcWrite(PWM_FAN_1, valFanPWM[0]);
                                   #if (USE_FAN_PWM > 1)
                                       ledcWrite(PWM_FAN_2, valFanPWM[1]);
@@ -2245,7 +2244,12 @@
                             }
                         #endif
                       break;
-                    case 19: // WEBSERVER
+                    case 19: // digital output
+                      #if (USE_GEN_DIG_OUTPUT > OFF)
+                          if ()
+                          #if ()
+                        #endif
+                    case 20: // WEBSERVER
                       #if (USE_WEBSERVER > OFF)
                           if (newClient)
                             {
@@ -3950,7 +3954,7 @@
               }
           }
 
-        void readMessage()
+        void readWebMessage()
           {
             md_message *pM   = NULL;
             int         itmp = 0;
@@ -4241,14 +4245,16 @@
             if (errMQTT < 0)
             SVAL(text, cerrMQTT[(-1) * errMQTT]);
           }
-        void msgHdlMQTT
+        void readMQTTmsg
               (const Network::Client::MQTTv5::DynamicStringView & topic,
                const Network::Client::MQTTv5::DynamicBinDataView & payload)
           {
-            if (topic.operator==( toptestLED.c_str())
-              {
-                valtestLED = payload;
-              }
+            if (topic.operator==( toptestLED.c_str()))
+              { valtestLED = payload; testLED = valtestLED.toInt(); }
+            else if (topic.operator==( topRGBBright.c_str()))
+              { valRGBBright = payload; RGBLED[0]->bright(valRGBBright.toInt()); }
+            else if (topic.operator==( topRGBCol.c_str()))
+              { valRGBCol = payload; RGBLED[0]->col24(valRGBBright.toInt()); }
           }
 
 
