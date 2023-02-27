@@ -151,15 +151,13 @@
           #endif
       // --- MQTT Mosquitto client
         #if (USE_MQTT > OFF)
-            //#define MARVIN_ROGER          // library
-            #define X_RYL699              // library
-            #ifdef X_RYL699
-                #define MQTT_HOST         "10.0.0.203"
-              #endif
+            #define MQTT_HOST             "10.0.0.203"
             #define MQTT_PORT             1883
             #define MQTT_SECURE           OFF
             #define MQTT_DEVICE           "esp-24"
             #define MQTT_TOPDEV           "esp-24/"
+            #define MQTT_TOPIC_MAXLEN     30
+            #define MQTT_PAYLOAD_MAXLEN   20
             #if(MQTT_SECURE > OFF)
                 #define MQTT_BROKER_USER  "<user>"
                 #define MQTT_BROKER_PASS  "<pass>"
