@@ -385,7 +385,7 @@
           #endif
       // --- digital out
         #if (USE_GEN_DIG_OUT > OFF)
-            #define DIG_OUT_INV             ON   // Online controlled output
+            #define DIG_OUT1_INV            ON   // Online controlled output
             #if (USE_MQTT > OFF)
                 #define MQTT_TEST_LED       "test-led"
               #endif
@@ -1050,7 +1050,7 @@
             #endif
         // --- user output
           #if (USE_GEN_DIG_OUT > OFF)
-              #define PIN_GEN_DIG_OUT     15   // Online controlled output
+              #define PIN_GEN_DIG_OUT1     15   // Online controlled output
             #endif
           #if (USE_TRAFFIC_LED_OUT > OFF)
               #define PIN_TL_RED          26   // RGB red

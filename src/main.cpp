@@ -990,26 +990,29 @@
             #endif
         // start test-led
           #if (USE_GEN_DIG_OUT > OFF)
-                      #define DIG_OUT_INV             ON   // Online controlled output
-                      #if (USE_MQTT > OFF)
-                          #define MQTT_TEST_LED       "test-led"
-                        #endif
-              STXT(" init testLED ... ");
-              pinMode(PIN_GEN_DIG_OUT, OUTPUT);
-              md
-              #if (USE_MQTT)
-                  toptestLED = topDevice + toptestLED;
-                  errMQTT = (int8_t) mqtt.subscribe(toptestLED.c_str());
-                      soutMQTTerr(" MQTT subscribe testLED", errMQTT);
-                #endif
-              STXT(" testLED ready");
             #endif
         // start freq generator
           #if (USE_BUZZER_PWM > OFF)
             #endif
         // start digital output
           #if (USE_GEN_DIG_OUT > OFF)
-              pinMode(PIN_GEN_DIG_OUT, OUTPUT);
+                      #define DIG_OUT_INV             ON   // Online controlled output
+                      #if (USE_MQTT > OFF)
+                          #define MQTT_TEST_LED       "test-led"
+                        #endif
+              STXT(" init testLED ... ");
+              pinMode(PIN_GEN_DIG_OUT1, OUTPUT);
+              #if (DIG_OUT1_INV == ON)
+                  digitalWrite(PIN_GEN_DIG_OUT1, !testLED);
+                #else
+                  digitalWrite(PIN_GEN_DIG_OUT1, testLED);
+                #endif
+              #if (USE_MQTT)
+                  toptestLED = topDevice + toptestLED;
+                  errMQTT = (int8_t) mqtt.subscribe(toptestLED.c_str());
+                      soutMQTTerr(" MQTT subscribe testLED", errMQTT);
+                #endif
+              STXT(" testLED ready");
             #endif
       // --- user input
         // start digital inputs
