@@ -348,7 +348,7 @@
       #endif
     #if (USE_GEN_DIG_OUT > OFF)
         uint8_t testLED          = OFF;
-        uint8_t testLEDold       = OFF;
+        uint8_t testLEDold       = ON;
         static String valtestLED = "";
         #if (USE_MQTT > OFF)
             static String toptestLED  = MQTT_TEST_LED;
@@ -2455,12 +2455,6 @@
                           tmpStr.concat(tmpval16);
                           pmdServ->updateAll(tmpStr);
                         #endif
-                      #if (USE_MQTT > OFF)
-                          valPhoto[0] = tmpval16;
-                              //SVAL(topLicht1, valPhoto[0]);
-                          errMQTT = (int8_t) mqtt.publish(topPhoto1.c_str(), (uint8_t*) valPhoto[0].c_str(), valPhoto[0].length());
-                              //soutMQTTerr(" MQTT publish Licht1", errMQTT);
-                        #endif
                     #endif
                   break;
                 case 8:  // poti,
@@ -2615,10 +2609,7 @@
                 case 16: // MCPWM
                     dispIdx++;
                   //break;
-                case 17: // MQTT
-                    outpIdx++;
-                  //break;
-                case 18: // RGB-LED
+                case 17: // RGB-LED
                     #if (USE_MQTT > OFF)
                         valRGBBright = (RGBLED[0]->bright());    // RGB-LED col24
                             //SVAL(topRGBBright, valRGBBright);
@@ -2631,9 +2622,12 @@
                             //soutMQTTerr(" MQTT publish RGBCol", errMQTT);
                       #endif
                   break;
-                case 19: // FAN_PWM
+                case 18: // FAN_PWM
                     outpIdx++;
                   //break;
+                case 19: // digital output
+
+                  break;
                 case 20: // webserver nu
                     #if (USE_WIFI > OFF)
                         outStr = WiFi.localIP().toString();
