@@ -343,12 +343,12 @@
         msTimer      fanT   = msTimer(PWM_FAN_CYCLE_MS);
         #if (USE_POTICTRL_FAN > OFF)
           #endif
-        static uint32_t valFanPWM[USE_FAN_PWM];
-        static uint16_t fanIdx = 0;
+        uint32_t valFanPWM[USE_FAN_PWM];
+        uint16_t fanIdx = 0;
       #endif
     #if (USE_GEN_DIG_OUT > OFF)
-        static uint8_t testLED          = OFF;
-        static uint8_t testLEDold       = ON;
+        uint8_t testLED          = OFF;
+        uint8_t testLEDold       = ON;
         static String valtestLED = "";
         #if (USE_MQTT > OFF)
             static String toptestLED  = MQTT_TEST_LED;
@@ -487,11 +487,12 @@
             "NetworkError",     "NotConnected",
             "TranscientPacket", "WaitingForResult"
           };
-        const  String mqttID       = MQTT_DEVICE;
-        const  String topDevice    = MQTT_TOPDEV;
-        static String tmpMQTT      = "";
-        static char   cMQTT[20]    = "";
-        static int8_t errMQTT      = 0;
+        const  String    mqttID       = MQTT_DEVICE;
+        const  String    topDevice    = MQTT_TOPDEV;
+        static char      cMQTT[20]    = "";
+        static String    tmpMQTT      = "";
+        static int8_t    errMQTT      = 0;
+        static MQTTmsg_t MQTTmsgList[]
         struct MessageReceiver : public Network::Client::MessageReceived
           {
             void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic,
@@ -2243,15 +2244,12 @@
                       break;
                     case 19: // digital output
                       #if (USE_GEN_DIG_OUT > OFF)
-                          S2VAL(" testLED DIG_OUT1 ", testLED, testLEDold);
                           if (testLED != testLEDold)
                             {
                               valtestLED = testLED;
                               testLEDold = testLED;
-                              SVAL(" testLED DIG_OUT1 ", testLED);
                               #if (DIG_OUT1_INV > OFF)
                                   digitalWrite(PIN_GEN_DIG_OUT1, !testLED);
-                                  SVAL(" testLED DIG_OUT1 ", testLED);
                               #else
                                   digitalWrite(PIN_GEN_DIG_OUT1, testLED);
                                 #endif
@@ -4263,8 +4261,8 @@
               { if (strcmp(cMQTT,"false") > 0)
                   { testLED = ON; }
                 else
-                  { testLED = OFF; }
-                S2VAL(" readMQTTmsg testLED ", cMQTT, testLED);
+                  { testLED = OFF; }//; testLED = valtestLED.toInt();
+                //S2VAL(" readMQTTmsg testLED ", cMQTT, testLED);
               }
             else if (topic.operator==( topRGBBright.c_str()))
               { //valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt());

@@ -184,12 +184,7 @@
         #include <md_webserver.h>
         #include <ip_list.hpp>
         #if (USE_MQTT > OFF)
-            #ifdef MARVIN_ROGER
-                #include <espMqttClient.h>
-              #endif
-            #ifdef X_RYL699
-                #include <Network/Clients/MQTT.hpp>
-              #endif
+            #include <Network/Clients/MQTT.hpp>
           #endif
       #endif
   // --- sensors
@@ -354,9 +349,7 @@
         #if (USE_MQTT > OFF)
             void startMQTT();
             void soutMQTTerr(String text, int8_t errMQTT);
-            void readMQTTmsg
-                  (const Network::Client::MQTTv5::DynamicStringView & topic,
-                   const Network::Client::MQTTv5::DynamicBinDataView & payload);
+            void readMQTTmsg(const Network::Client::MQTTv5::DynamicStringView & topic, const Network::Client::MQTTv5::DynamicBinDataView & payload);
           #endif
     // -------------------------
 
