@@ -346,6 +346,14 @@
         uint32_t valFanPWM[USE_FAN_PWM];
         uint16_t fanIdx = 0;
       #endif
+    #if (USE_GEN_DIG_OUT > OFF)
+        uint8_t testLED          = OFF;
+        uint8_t testLEDold       = OFF;
+        static String valtestLED = "";
+        #if (USE_MQTT > OFF)
+            static String toptestLED  = MQTT_TEST_LED
+          #endif
+      #endif
 
     #if (OLED1_I2C > OFF)
         #if (OLED1_I2C > OFF)
@@ -979,7 +987,22 @@
                     sleep(1);
                     ledcWrite(PWM_FAN_2, 0);
                   #endif
-
+            #endif
+        // start test-led
+          #if (USE_GEN_DIG_OUT > OFF)
+                      #define DIG_OUT_INV             ON   // Online controlled output
+                      #if (USE_MQTT > OFF)
+                          #define MQTT_TEST_LED       "test-led"
+                        #endif
+              STXT(" init testLED ... ");
+              pinMode(PIN_GEN_DIG_OUT, OUTPUT);
+              md
+              #if (USE_MQTT)
+                  toptestLED = topDevice + toptestLED;
+                  errMQTT = (int8_t) mqtt.subscribe(toptestLED.c_str());
+                      soutMQTTerr(" MQTT subscribe testLED", errMQTT);
+                #endif
+              STXT(" testLED ready");
             #endif
         // start freq generator
           #if (USE_BUZZER_PWM > OFF)
