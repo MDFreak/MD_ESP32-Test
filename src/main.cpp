@@ -343,12 +343,12 @@
         msTimer      fanT   = msTimer(PWM_FAN_CYCLE_MS);
         #if (USE_POTICTRL_FAN > OFF)
           #endif
-        uint32_t valFanPWM[USE_FAN_PWM];
-        uint16_t fanIdx = 0;
+        static uint32_t valFanPWM[USE_FAN_PWM];
+        static uint16_t fanIdx = 0;
       #endif
     #if (USE_GEN_DIG_OUT > OFF)
-        uint8_t testLED          = OFF;
-        uint8_t testLEDold       = ON;
+        static uint8_t testLED          = OFF;
+        static uint8_t testLEDold       = ON;
         static String valtestLED = "";
         #if (USE_MQTT > OFF)
             static String toptestLED  = MQTT_TEST_LED;
