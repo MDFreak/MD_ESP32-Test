@@ -502,6 +502,7 @@
                 fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
                 fprintf(stdout, "  Topic: %.*s\n", topic.length, topic.data);
                 fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
+                readMQTTmsg(topic, payload);
               }
           };
         MessageReceiver msgHdl;
@@ -4247,14 +4248,20 @@
         void readMQTTmsg(const Network::Client::MQTTv5::DynamicStringView & topic,
                          const Network::Client::MQTTv5::DynamicBinDataView & payload)
           {
+            sprintf( cMQTT , "%.*s\n", topic.length, topic.data);
             if (topic.operator==( toptestLED.c_str()))
-              { payload.copyInto((uint8_t*) valtestLED.c_str()); testLED = valtestLED.toInt();
-                SVAL(" readMQTTmsg testLED ", testLED);
+              { if (tmpMQTT == "false")
+                  { testLED = OFF; }
+                else
+                  { testLED = ON; }//; testLED = valtestLED.toInt();
+                S2VAL(" readMQTTmsg testLED ", tmpMQTT, testLED);
               }
             else if (topic.operator==( topRGBBright.c_str()))
-              { valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt()); }
+              { //valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt());
+              }
             else if (topic.operator==( topRGBCol.c_str()))
-              { valRGBCol = payload; RGBLED[0]->col24(valRGBBright.toInt()); }
+              { //valRGBCol = payload; RGBLED[0]->col24(valRGBBright.toInt());
+              }
             else
               {}
           }
