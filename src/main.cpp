@@ -4248,14 +4248,16 @@
         void readMQTTmsg(const Network::Client::MQTTv5::DynamicStringView & topic,
                          const Network::Client::MQTTv5::DynamicBinDataView & payload)
           {
-            sprintf( cMQTT , "'%.*s'\n", payload.length, payload.data);
-            //tmpMQTT = cMQTT;
+            //sprintf( cMQTT , "'%.*s'\n", payload.length, payload.data);
+            //tmpMQTT = (char*) payload.data;
+            strncpy(cMQTT, (char*) payload.data, payload.length);
+            cMQTT[payload.length] = 0;
             if (topic.operator==( toptestLED.c_str()))
-              { if (strcmp(cMQTT,"false"))
-                  { testLED = OFF; }
+              { if (strcmp(cMQTT,"false") > 0)
+                  { testLED = ON; }
                 else
-                  { testLED = ON; }//; testLED = valtestLED.toInt();
-                S3VAL(" readMQTTmsg testLED ", cMQTT, tmpMQTT, testLED);
+                  { testLED = OFF; }//; testLED = valtestLED.toInt();
+                //S2VAL(" readMQTTmsg testLED ", cMQTT, testLED);
               }
             else if (topic.operator==( topRGBBright.c_str()))
               { //valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt());
