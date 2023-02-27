@@ -2243,11 +2243,15 @@
                       break;
                     case 19: // digital output
                       #if (USE_GEN_DIG_OUT > OFF)
+                          S2VAL(" testLED DIG_OUT1 ", testLED, testLEDold);
                           if (testLED != testLEDold)
                             {
                               valtestLED = testLED;
+                              testLEDold = testLED;
+                              SVAL(" testLED DIG_OUT1 ", testLED);
                               #if (DIG_OUT1_INV > OFF)
                                   digitalWrite(PIN_GEN_DIG_OUT1, !testLED);
+                                  SVAL(" testLED DIG_OUT1 ", testLED);
                               #else
                                   digitalWrite(PIN_GEN_DIG_OUT1, testLED);
                                 #endif
@@ -4259,8 +4263,8 @@
               { if (strcmp(cMQTT,"false") > 0)
                   { testLED = ON; }
                 else
-                  { testLED = OFF; }//; testLED = valtestLED.toInt();
-                //S2VAL(" readMQTTmsg testLED ", cMQTT, testLED);
+                  { testLED = OFF; }
+                S2VAL(" readMQTTmsg testLED ", cMQTT, testLED);
               }
             else if (topic.operator==( topRGBBright.c_str()))
               { //valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt());
