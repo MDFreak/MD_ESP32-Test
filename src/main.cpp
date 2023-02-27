@@ -1881,7 +1881,7 @@
                                         SVAL(" 712 Isup new ", i712f[0]);
                                     #if (USE_MQTT > OFF)
                                         errMQTT = (int8_t) mqtt.publish(topi7121.c_str(),
-                                                                        (uint8_t*) topi7121.c_str(),
+                                                                        (uint8_t*) vali712[0].c_str(),
                                                                         vali712[0].length());
                                         soutMQTTerr(topi7121.c_str(), errMQTT);
                                             SVAL(topi7121.c_str(), vali712[0]);
