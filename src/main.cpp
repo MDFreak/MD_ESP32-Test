@@ -1872,7 +1872,7 @@
                             #if (I712_1_1115 > OFF)
                                 i712[0]  = ads[I712_1_1115_CHIDX].getResult(VCC33_1115_CHIDX);
                                 i712f[0] = ads[I712_1_1115_CHIDX].getVolts(VCC33_1115_CHIDX);
-                                        SVAL(" 712 Isup     ", i712f[0]);
+                                        S2VAL(" 712 Isup     ", i712[0], i712f[0]);
                                 if (i712f[0] != i712fold[0])
                                   {
                                     vali712[0]  = i712f[0];

@@ -159,7 +159,7 @@
             #define MQTT_PORT             1883
             #define MQTT_SECURE           OFF
             #define MQTT_DEVICE           "esp-24"
-712            #define MQTT_TOPDEV           "esp-24/"
+            #define MQTT_TOPDEV           "esp-24/"
             #if(MQTT_SECURE > OFF)
                 #define MQTT_BROKER_USER  "<user>"
                 #define MQTT_BROKER_PASS  "<pass>"
@@ -624,38 +624,38 @@
               #define USE_INPUT_CYCLE
             #endif
         #endif
-      /* analog channels
-        ADC channels
-          ***_ADC_RES 12                    --> resolution 12 bit (def)
-          ***_ADC_ATT  ADC_ATTEN_DB_0   -->  range 0 -  800 mV
-          ***_ADC_ATT  ADC_ATTEN_DB_2_5 -->  range 0 - 1100 mV
-          ***_ADC_ATT  ADC_ATTEN_DB_6   -->  range 0 - 1350 mV
-          ***_ADC_ATT  ADC_ATTEN_DB_11  -->  range 0 - 2600 mV (def)
+        /* analog channels
+          ADC channels
+            ***_ADC_RES 12                    --> resolution 12 bit (def)
+            ***_ADC_ATT  ADC_ATTEN_DB_0   -->  range 0 -  800 mV
+            ***_ADC_ATT  ADC_ATTEN_DB_2_5 -->  range 0 - 1100 mV
+            ***_ADC_ATT  ADC_ATTEN_DB_6   -->  range 0 - 1350 mV
+            ***_ADC_ATT  ADC_ATTEN_DB_11  -->  range 0 - 2600 mV (def)
 
-        ADS1115 channels
-          ***_1115_ATT GAIN_TWOTHIRDS --> range +/-6144mV - 187.5    uV/bit
-          ***_1115_ATT GAIN_ONE       --> range +/-4096mV - 125      uV/bit
-          ***_1115_ATT GAIN_TWO (def) --> range +/-2048mV -  62.5    uV/bit
-          ***_1115_ATT GAIN_FOUR      --> range +/-1024mV -  31.25   uV/bit
-          ***_1115_ATT GAIN_EIGHT     --> range +/- 512mV -  15.625  uV/bit
-          ***_1115_ATT GAIN_SIXTEEN   --> range +/- 256mV -   7.8125 uV/bit
+          ADS1115 channels
+            ***_1115_ATT GAIN_TWOTHIRDS --> range +/-6144mV - 187.5    uV/bit
+            ***_1115_ATT GAIN_ONE       --> range +/-4096mV - 125      uV/bit
+            ***_1115_ATT GAIN_TWO (def) --> range +/-2048mV -  62.5    uV/bit
+            ***_1115_ATT GAIN_FOUR      --> range +/-1024mV -  31.25   uV/bit
+            ***_1115_ATT GAIN_EIGHT     --> range +/- 512mV -  15.625  uV/bit
+            ***_1115_ATT GAIN_SIXTEEN   --> range +/- 256mV -   7.8125 uV/bit
 
-        ADS1115 datarates
-          RATE_ADS1115_8SPS         8 samples per second
-          RATE_ADS1115_16SPS       16 samples per second
-          RATE_ADS1115_32SPS       32 samples per second
-          RATE_ADS1115_64SPS       64 samples per second
-          RATE_ADS1115_128SPS      128 samples per second (default)
-          RATE_ADS1115_250SPS      250 samples per second
-          RATE_ADS1115_475SPS      475 samples per second
-          RATE_ADS1115_860SPS      860 samples per second
+          ADS1115 datarates
+            RATE_ADS1115_8SPS         8 samples per second
+            RATE_ADS1115_16SPS       16 samples per second
+            RATE_ADS1115_32SPS       32 samples per second
+            RATE_ADS1115_64SPS       64 samples per second
+            RATE_ADS1115_128SPS      128 samples per second (default)
+            RATE_ADS1115_250SPS      250 samples per second
+            RATE_ADS1115_475SPS      475 samples per second
+            RATE_ADS1115_860SPS      860 samples per second
 
-        scaling parameters and calculation
-        *pValue = (  (*pValue + (double) *_SCAL_OFFRAW)
-                   * (double)*_SCAL_GAIN
-                   + (double) *_SCAL_OFFRREAL
-                  )
-        */
+          scaling parameters and calculation
+          *pValue = (  (*pValue + (double) *_SCAL_OFFRAW)
+                     * (double)*_SCAL_GAIN
+                     + (double) *_SCAL_OFFRREAL
+                    )
+          */
 
         #if (USE_MQ135_GAS_ANA > OFF)
             #define MQ135_GAS_ADC             ON
