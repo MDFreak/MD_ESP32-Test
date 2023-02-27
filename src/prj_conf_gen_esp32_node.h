@@ -383,7 +383,13 @@
                 #define MQTT_LIN_COLPICK    "lin-colpick"
               #endif
           #endif
-
+      // --- digital out
+        #if (USE_GEN_DIG_OUT > OFF)
+            #define DIG_OUT_INV             ON   // Online controlled output
+            #if (USE_MQTT > OFF)
+                #define MQTT_TEST_LED       "test-led"
+              #endif
+          #endif
       // --- PWM
         #if (USE_RGBLED_PWM > OFF)
             #ifndef USE_OUTPUT_CYCLE
@@ -1058,7 +1064,9 @@
             #endif
           #if (USE_FAN_PWM > OFF)
               #define PIN_PWM_FAN_1       0
-              #define PIN_PWM_FAN_2       4
+              #if (USE_FAN_PWM > 1)
+                  #define PIN_PWM_FAN_2   4
+                #endif
             #endif
           #if (USE_OUT_FREQ_PWM > OFF)
               #define PIN_FREQ_1          26
