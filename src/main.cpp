@@ -492,8 +492,8 @@
         static char       cMQTT[20]    = "";
         static String     tmpMQTT      = "";
         static MQTTmsg_t  MQTTmsgs[MQTT_MSG_MAXANZ];
-        static MQTTmsg_t* pWr          = &MQTTmsgs[0];
-        static MQTTmsg_t* pRd          = &MQTTmsgs[0];
+        static MQTTmsg_t* pMQTTWr      = &MQTTmsgs[0];
+        static MQTTmsg_t* pMQTTRd      = &MQTTmsgs[0];
         static uint8_t    anzMQTTmsg   = 0;
         static int8_t     errMQTT      = 0;
         struct MessageReceiver : public Network::Client::MessageReceived
@@ -503,16 +503,17 @@
                                  const uint16 packetIdentifier,
                                  const Network::Client::MQTTv5::PropertiesView & properties)
               {
+                fprintf(stdout, "  Topic: %.*s ", topic.length, topic.data);
+                fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
                 if (anzMQTTmsg < (MQTT_MSG_MAXANZ - 1))
                   {
-                    strncpy( (char*) pWr->topic,   (char*) &topic.data,   topic.length);
-                    strncpy( (char*) pWr->payload, (char*) &payload.data, topic.length);
-                    pWr = (MQTTmsg_t*) pWr->pNext;
+                    strncpy( (char*) pMQTTWr->topic,   (char*) &topic.data,   topic.length);
+                    strncpy( (char*) pMQTTWr->payload, (char*) &payload.data, topic.length);
+                        S2VAL(" topic payload ", pMQTTWr->topic, pMQTTWr->payload);
+                    pMQTTWr = (MQTTmsg_t*) pMQTTWr->pNext;
                     anzMQTTmsg++;
                   }
                 //fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
-                //fprintf(stdout, "  Topic: %.*s\n", topic.length, topic.data);
-                //fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
                 //readMQTTmsg(topic, payload);
               }
           };
@@ -4263,28 +4264,25 @@
             if (errMQTT < 0)
             SVAL(text, cerrMQTT[(-1) * errMQTT]);
           }
-        void readMQTTmsg(const Network::Client::MQTTv5::DynamicStringView & topic,
-                         const Network::Client::MQTTv5::DynamicBinDataView & payload)
+        void readMQTTmsg()
           {
-            //sprintf( cMQTT , "'%.*s'\n", payload.length, payload.data);
-            //tmpMQTT = (char*) payload.data;
-            strncpy(cMQTT, (char*) payload.data, payload.length);
-            cMQTT[payload.length] = 0;
-            if (topic.operator==( toptestLED.c_str()))
-              { if (strcmp(cMQTT,"false") > 0)
-                  { testLED = ON; }
-                else
-                  { testLED = OFF; }//; testLED = valtestLED.toInt();
-                //S2VAL(" readMQTTmsg testLED ", cMQTT, testLED);
+            if (anzMQTTmsg > 0)
+              {
+                // testLED
+                if (strcmp( (pMQTTWr->topic), (char*) toptestLED.c_str()) == 0)
+                  { if (strcmp((pMQTTWr->payload), "false") == 0)
+                      { testLED = ON; }
+                    else
+                      { testLED = OFF; }
+                    S2VAL(" readMQTTmsg testLED ", pMQTTWr->payload, testLED);
+                  }
+                  { //valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt());
+                  }
+                  { //valRGBCol = payload; RGBLED[0]->col24(valRGBBright.toInt());
+                  }
+
+                  {}
               }
-            else if (topic.operator==( topRGBBright.c_str()))
-              { //valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt());
-              }
-            else if (topic.operator==( topRGBCol.c_str()))
-              { //valRGBCol = payload; RGBLED[0]->col24(valRGBBright.toInt());
-              }
-            else
-              {}
           }
         #endif
   // --- error ESP -------------------------

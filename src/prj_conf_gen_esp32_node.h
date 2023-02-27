@@ -161,9 +161,9 @@
             #define MQTT_MSG_MAXANZ       20
             typedef struct MQTT_MSG
               {
-                uint8_t topic[MQTT_TOPIC_MAXLEN];
-                uint8_t payload[MQTT_PAYLOAD_MAXLEN];
-                void*   pNext;
+                char  topic[MQTT_TOPIC_MAXLEN];
+                char  payload[MQTT_PAYLOAD_MAXLEN];
+                void* pNext;
               } MQTTmsg_t;
             #if(MQTT_SECURE > OFF)
                 #define MQTT_BROKER_USER  "<user>"
