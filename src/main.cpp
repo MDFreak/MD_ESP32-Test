@@ -1872,6 +1872,8 @@
                             #if (I712_1_1115 > OFF)
                                 i712[0]  = ads[I712_1_1115_UNIDX].getResult(VCC33_1115_CHIDX);
                                 i712f[0] = ads[I712_1_1115_UNIDX].getVolts(VCC33_1115_CHIDX);
+                                i712f[0] -= vcc50f/2;
+                                i712f[0] *= 185;
                                         //S2VAL(" 712 Isup     ", i712[0], i712f[0]);
                                 if (i712f[0] != i712fold[0])
                                   {
@@ -1884,7 +1886,7 @@
                                                                         (uint8_t*) vali712[0].c_str(),
                                                                         vali712[0].length());
                                         soutMQTTerr(topi7121.c_str(), errMQTT);
-                                            SVAL(topi7121.c_str(), vali712[0]);
+                                            //SVAL(topi7121.c_str(), vali712[0]);
                                       #endif
                                   }
                                     //S3VAL(" ACS712 I supply new ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
