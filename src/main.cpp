@@ -351,7 +351,7 @@
         uint8_t testLEDold       = OFF;
         static String valtestLED = "";
         #if (USE_MQTT > OFF)
-            static String toptestLED  = MQTT_TEST_LED
+            static String toptestLED  = MQTT_TEST_LED;
           #endif
       #endif
 
@@ -4241,6 +4241,19 @@
             if (errMQTT < 0)
             SVAL(text, cerrMQTT[(-1) * errMQTT]);
           }
+        void msgHdlMQTT
+              (const Network::Client::MQTTv5::DynamicStringView & topic,
+               const Network::Client::MQTTv5::DynamicBinDataView & payload)
+          {
+            if (topic.operator==( toptestLED.c_str())
+              {
+                valtestLED = payload;
+              }
+          }
+
+
+
+
         #endif
   // --- error ESP -------------------------
     void logESP(const esp_err_t _err, const char *_msg, uint8_t nr, bool _stop)
