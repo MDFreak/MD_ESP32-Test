@@ -487,12 +487,6 @@
             "NetworkError",     "NotConnected",
             "TranscientPacket", "WaitingForResult"
           };
-            typedef struct msgMQTT
-              {
-                uint8_t topic[MQTT_TOPIC_MAXLEN];
-                uint8_t payload[MQTT_PAYLOAD_MAXLEN];
-                void*   pNext      = NULL;
-              } msgMQTT_t;
         const  String mqttID       = MQTT_DEVICE;
         const  String topDevice    = MQTT_TOPDEV;
         static String tmpMQTT      = "";
