@@ -988,13 +988,10 @@
                     ledcWrite(PWM_FAN_2, 0);
                   #endif
             #endif
-        // start test-led
-          #if (USE_GEN_DIG_OUT > OFF)
-            #endif
         // start freq generator
           #if (USE_BUZZER_PWM > OFF)
             #endif
-        // start digital output
+        // start digital output (test-led)
           #if (USE_GEN_DIG_OUT > OFF)
                       #define DIG_OUT_INV             ON   // Online controlled output
                       #if (USE_MQTT > OFF)
@@ -2247,7 +2244,9 @@
                     case 19: // digital output
                       #if (USE_GEN_DIG_OUTPUT > OFF)
                           if ()
+                            {}
                           #if ()
+                            #endif
                         #endif
                     case 20: // WEBSERVER
                       #if (USE_WEBSERVER > OFF)
@@ -4245,21 +4244,20 @@
             if (errMQTT < 0)
             SVAL(text, cerrMQTT[(-1) * errMQTT]);
           }
-        void readMQTTmsg
-              (const Network::Client::MQTTv5::DynamicStringView & topic,
-               const Network::Client::MQTTv5::DynamicBinDataView & payload)
+        void readMQTTmsg(const Network::Client::MQTTv5::DynamicStringView & topic,
+                         const Network::Client::MQTTv5::DynamicBinDataView & payload)
           {
             if (topic.operator==( toptestLED.c_str()))
-              { valtestLED = payload; testLED = valtestLED.toInt(); }
+              { payload.copyInto((uint8_t*) valtestLED.c_str()); testLED = valtestLED.toInt();
+                SVAL(" readMQTTmsg testLED ", testLED);
+              }
             else if (topic.operator==( topRGBBright.c_str()))
-              { valRGBBright = payload; RGBLED[0]->bright(valRGBBright.toInt()); }
+              { valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt()); }
             else if (topic.operator==( topRGBCol.c_str()))
               { valRGBCol = payload; RGBLED[0]->col24(valRGBBright.toInt()); }
+            else
+              {}
           }
-
-
-
-
         #endif
   // --- error ESP -------------------------
     void logESP(const esp_err_t _err, const char *_msg, uint8_t nr, bool _stop)
