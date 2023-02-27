@@ -487,12 +487,15 @@
             "NetworkError",     "NotConnected",
             "TranscientPacket", "WaitingForResult"
           };
-        const  String    mqttID       = MQTT_DEVICE;
-        const  String    topDevice    = MQTT_TOPDEV;
-        static char      cMQTT[20]    = "";
-        static String    tmpMQTT      = "";
-        static int8_t    errMQTT      = 0;
-        static MQTTmsg_t MQTTmsgList[]
+        const  String     mqttID       = MQTT_DEVICE;
+        const  String     topDevice    = MQTT_TOPDEV;
+        static char       cMQTT[20]    = "";
+        static String     tmpMQTT      = "";
+        static MQTTmsg_t  MQTTmsgs[MQTT_MSG_MAXANZ];
+        static MQTTmsg_t* pWr          = &MQTTmsgs[0];
+        static MQTTmsg_t* pRd          = &MQTTmsgs[0];
+        static uint8_t    anzMQTTmsg   = 0;
+        static int8_t     errMQTT      = 0;
         struct MessageReceiver : public Network::Client::MessageReceived
           {
             void messageReceived(const Network::Client::MQTTv5::DynamicStringView & topic,
@@ -500,10 +503,17 @@
                                  const uint16 packetIdentifier,
                                  const Network::Client::MQTTv5::PropertiesView & properties)
               {
-                fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
-                fprintf(stdout, "  Topic: %.*s\n", topic.length, topic.data);
-                fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
-                readMQTTmsg(topic, payload);
+                if (anzMQTTmsg < (MQTT_MSG_MAXANZ - 1))
+                  {
+                    strncpy( (char*) pWr->topic,   (char*) &topic.data,   topic.length);
+                    strncpy( (char*) pWr->payload, (char*) &payload.data, topic.length);
+                    pWr = (MQTTmsg_t*) pWr->pNext;
+                    anzMQTTmsg++;
+                  }
+                //fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
+                //fprintf(stdout, "  Topic: %.*s\n", topic.length, topic.data);
+                //fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
+                //readMQTTmsg(topic, payload);
               }
           };
         MessageReceiver msgHdl;
@@ -1470,6 +1480,9 @@
 
             mcpwm_capture_enable(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0, MCPWM_POS_EDGE, 1);
             pwmInVal->highVal = mcpwm_capture_signal_get_value(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0);
+          #endif
+        #if (USE_MQTT > OFF)
+
           #endif
       // --- standard input cycle ---
         //SOUT(" 3");
