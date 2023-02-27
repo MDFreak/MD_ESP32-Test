@@ -159,7 +159,7 @@
             #define MQTT_PORT             1883
             #define MQTT_SECURE           OFF
             #define MQTT_DEVICE           "esp-24"
-            #define MQTT_TOPDEV           "esp-24/"
+712            #define MQTT_TOPDEV           "esp-24/"
             #if(MQTT_SECURE > OFF)
                 #define MQTT_BROKER_USER  "<user>"
                 #define MQTT_BROKER_PASS  "<pass>"
