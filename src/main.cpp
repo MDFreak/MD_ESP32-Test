@@ -2223,7 +2223,6 @@
                                       valFanPWM[i] += 1;
                                       if (valFanPWM[i] >= 255) { valFanPWM[i] = 0; } // -50%
                                     }
-
                                   #if (USE_POTICTRL_FAN > 0)
                                       valFan[INP_CNT_FAN_1] = map((long) -inpValADC[INP_POTI_CTRL], -4095, 0, 0, 255);
                                           //SVAL(" fan poti ", inpValADC[INP_POTI_CTRL]);
@@ -2243,11 +2242,21 @@
                         #endif
                       break;
                     case 19: // digital output
-                      #if (USE_GEN_DIG_OUTPUT > OFF)
-                          if ()
-                            {}
-                          #if ()
-                            #endif
+                      #if (USE_GEN_DIG_OUT > OFF)
+                          if (testLED != testLEDold)
+                            {
+                              valtestLED = testLED;
+                              #if (DIG_OUT1_INV > OFF)
+                                  digitalWrite(PIN_GEN_DIG_OUT1, !testLED);
+                              #else
+                                  digitalWrite(PIN_GEN_DIG_OUT1, testLED);
+                                #endif
+                              #if (USE_MQTT)
+                                  toptestLED = topDevice + toptestLED;
+                                  errMQTT = (int8_t) mqtt.publish(toptestLED.c_str(), (uint8_t*) valtestLED.c_str(),  valtestLED.length());
+                                      soutMQTTerr(" MQTT subscribe testLED", errMQTT);
+                                #endif
+                            }
                         #endif
                     case 20: // WEBSERVER
                       #if (USE_WEBSERVER > OFF)
