@@ -2985,13 +2985,6 @@
       #if (USE_RGBLED_PWM > OFF)
           void initRGBLED()
             {
-              topRGBBright = topDevice + topRGBBright;
-              errMQTT = (int8_t) mqtt.subscribe(topRGBBright.c_str());
-                  soutMQTTerr(" MQTT subscribe LEDBright ", errMQTT);
-
-              topRGBCol = topDevice + topRGBCol;
-              errMQTT = (int8_t) mqtt.subscribe(topRGBCol.c_str());
-                  soutMQTTerr(" MQTT subscribe LEDCol ", errMQTT);
             }
         #endif
     // --- passive buzzer
@@ -4316,7 +4309,9 @@
               {
                 ptopic = pMQTTRd->topic + strlen(MQTT_TOPDEV); // remove device ID
                     S3VAL(" readMQTT pMQTTRd ptopic payload ", (uint32_t) pMQTTRd->topic, ptopic, pMQTTRd->payload);
-                    SVAL(" strcmp result ", topRGBBright.equals(ptopic));
+                    S3VAL(" readMQTT Bright  result ", topRGBBright, pMQTTRd->topic, topRGBBright.equals(ptopic));
+                    S3VAL(" readMQTT Color   result ", topRGBCol,    pMQTTRd->topic, topRGBCol.equals(ptopic));
+                    S3VAL(" readMQTT testLED result ", toptestLED,   pMQTTRd->topic, toptestLED.equals(ptopic));
 
                 //if (strcmp(ptopic, topRGBBright.c_str())) // RGB LED bright
                 if (topRGBBright.equals(ptopic)) // RGB LED bright
