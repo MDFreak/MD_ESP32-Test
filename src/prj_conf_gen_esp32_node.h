@@ -156,9 +156,9 @@
             #define MQTT_SECURE           OFF
             #define MQTT_DEVICE           "esp-24"
             #define MQTT_TOPDEV           "esp-24/"
-            #define MQTT_TOPIC_MAXLEN     30
+            #define MQTT_TOPIC_MAXLEN     20
             #define MQTT_PAYLOAD_MAXLEN   20
-            #define MQTT_MSG_MAXANZ       20
+            #define MQTT_MSG_MAXANZ       10
             typedef struct MQTT_MSG
               {
                 char  topic[MQTT_TOPIC_MAXLEN];

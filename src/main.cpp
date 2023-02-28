@@ -4274,6 +4274,32 @@
                 soutMQTTerr(" MQTT connect", errMQTT);
             if (errMQTT == MD_OK)
               {
+                #if (USE_BME280_I2C > OFF) // 1
+                  #endif
+                #if (USE_CCS811_I2C > OFF)
+                  #endif
+                #if (USE_INA3221_I2C > OFF)
+                  #endif
+                #if (USE_DS18B20_1W_IO > OFF)
+                  #endif
+                #if (USE_MQ135_GAS_ANA > OFF)
+                  #endif
+                #if (USE_MQ3_ALK_ANA > OFF)
+                  #endif
+                #if (USE_PHOTO_SENS_ANA > OFF)
+                  #endif
+                  #endif
+                  #endif
+                  #endif
+                  #endif
+                  #endif
+                  #endif
+                  #endif
+                  #endif
+                  #endif
+                  #endif
+                  #endif
+                  #endif
 
               }
           }
@@ -4287,17 +4313,17 @@
             char* ptopic = NULL;
             while (anzMQTTmsg > 0)
               {
-                ptopic = pMQTTRd->topic + strlen(MQTT_TOPDEV);
-                S3VAL(" readMQTT pMQTTWr->ppayload ptopic payload ", (uint32_t) pMQTTRd->topic, ptopic, pMQTTRd->payload);
-                    //if (strcmp( (pMQTTWr->topic), (char*) toptestLED.c_str()) == 0)
-                if (strcmp( (ptopic), (char*) toptestLED.c_str()) == 0) // test-led
+                ptopic = pMQTTRd->topic + strlen(MQTT_TOPDEV); // remove device ID
+                    //S3VAL(" readMQTT pMQTTRd ptopic payload ", (uint32_t) pMQTTRd->topic, ptopic, pMQTTRd->payload);
+                    //SVAL(" strcmp result ", strcmp(ptopic, toptestLED.c_str()));
+
+                if (strcmp(ptopic, toptestLED.c_str())) // test-led
                   {
-                    SVAL(" readMQTT testLED value ", pMQTTRd->payload);
-                    if (strcmp((pMQTTRd->payload), "false") == 0)
-                      { testLED = ON; }
+                    if (strcmp(pMQTTRd->payload, "false") == 0)
+                      { testLED = OFF;}
                     else
-                      { testLED = OFF; }
-                    S2VAL(" readMQTT testLED value ", pMQTTRd->payload, testLED);
+                      { testLED = ON; }
+                    SVAL(" readMQTT testLED new val ", testLED);
                   }
                   { //valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt());
                   }
