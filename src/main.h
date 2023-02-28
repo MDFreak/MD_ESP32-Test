@@ -349,7 +349,7 @@
         #if (USE_MQTT > OFF)
             void startMQTT();
             void soutMQTTerr(String text, int8_t errMQTT);
-            void readMQTTmsg(const Network::Client::MQTTv5::DynamicStringView & topic, const Network::Client::MQTTv5::DynamicBinDataView & payload);
+            void readMQTTmsg();
           #endif
     // -------------------------
 

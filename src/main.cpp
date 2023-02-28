@@ -507,8 +507,12 @@
                 fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
                 if (anzMQTTmsg < (MQTT_MSG_MAXANZ - 1))
                   {
-                    strncpy( (char*) pMQTTWr->topic,   (char*) &topic.data,   topic.length);
-                    strncpy( (char*) pMQTTWr->payload, (char*) &payload.data, topic.length);
+                    sprintf(pMQTTWr->topic,   "  Topic: %.*s ",    topic.length, topic.data);
+                    sprintf(pMQTTWr->payload, "  Payload: %.*s\n", payload.length, payload.data);
+                    //strncpy( (char*) pMQTTWr->topic,   (char*) &topic.data,   topic.length);
+                    //pMQTTWr->topic[topic.length] = 0;
+                    //strncpy( (char*) pMQTTWr->payload, (char*) &payload.data, topic.length);
+                    //pMQTTWr->payload[payload.length] = 0;
                         S2VAL(" topic payload ", pMQTTWr->topic, pMQTTWr->payload);
                     pMQTTWr = (MQTTmsg_t*) pMQTTWr->pNext;
                     anzMQTTmsg++;
@@ -1483,7 +1487,7 @@
             pwmInVal->highVal = mcpwm_capture_signal_get_value(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0);
           #endif
         #if (USE_MQTT > OFF)
-
+            readMQTTmsg();
           #endif
       // --- standard input cycle ---
         //SOUT(" 3");
@@ -4256,6 +4260,11 @@
         void startMQTT()
           {
             STXT("Connecting to MQTT...");
+            for ( uint8_t i=0 ; i < MQTT_MSG_MAXANZ - 1; i++)
+              {
+                MQTTmsgs[i].pNext = (void*) &MQTTmsgs[i+1];
+              }
+            MQTTmsgs[MQTT_MSG_MAXANZ-1].pNext = (void*) &MQTTmsgs[0];
             errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
                 soutMQTTerr(" MQTT connect", errMQTT);
           }
@@ -4266,7 +4275,7 @@
           }
         void readMQTTmsg()
           {
-            if (anzMQTTmsg > 0)
+            while (anzMQTTmsg > 0)
               {
                 // testLED
                 if (strcmp( (pMQTTWr->topic), (char*) toptestLED.c_str()) == 0)
@@ -4280,8 +4289,8 @@
                   }
                   { //valRGBCol = payload; RGBLED[0]->col24(valRGBBright.toInt());
                   }
-
-                  {}
+                pMQTTRd = (MQTTmsg_t*) pMQTTRd->pNext;
+                anzMQTTmsg--;
               }
           }
         #endif
