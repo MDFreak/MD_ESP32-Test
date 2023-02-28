@@ -246,13 +246,14 @@
       #endif
   // ------ user output ---------------
     #if (USE_RGBLED_PWM > OFF)
-        msTimer      rgbledT   = msTimer(PWM_LEDS_CYCLE_MS);
-        outRGBVal_t  outValRGB[USE_RGBLED_PWM];
-        md_LEDPix24* RGBLED        = new md_LEDPix24((uint32_t) COL24_RGBLED_1);
-        md_LEDPix24* RGBLEDold     = new md_LEDPix24((uint32_t) COL24_RGBLED_1);
-        //uint8_t       LEDout       = FALSE;
-        static String valRGBBright = "";
-        static String valRGBCol    = "";
+        msTimer       rgbledT   = msTimer(PWM_LEDS_CYCLE_MS);
+        outRGBVal_t   outValRGB[USE_RGBLED_PWM];
+        md_LEDPix24*  RGBLED        = new md_LEDPix24((uint32_t) COL24_RGBLED_1);
+        md_LEDPix24*  RGBLEDold     = new md_LEDPix24((uint32_t) COL24_RGBLED_1);
+        static char   ctmp8[8]      = "";
+        uint8_t       LEDout        = FALSE;
+        static String valRGBBright  = "";
+        static String valRGBCol     = "";
         #if (USE_MQTT > OFF)
             static String topRGBBright = MQTT_RGB_BRIGHT;
             static String topRGBCol    = MQTT_RGB_COLPICK;
@@ -476,8 +477,9 @@
             md_server*   pmdServ   = new md_server();
             static bool  newClient = false;
           #endif
-        msTimer   servT  = msTimer(WEBSERVER_CYCLE);
-        uint8_t   webOn  = OFF;
+        static msTimer   servT  = msTimer(WEBSERVER_CYCLE);
+        static uint8_t   pubWeb = TRUE;
+        static uint8_t   webOn  = OFF;
       #endif // USE_WEBSERVER
     #if (USE_MQTT > OFF)
         const char cerrMQTT[10][20]  =
@@ -496,6 +498,7 @@
         static MQTTmsg_t* pMQTTWr      = &MQTTmsgs[0];
         static MQTTmsg_t* pMQTTRd      = &MQTTmsgs[0];
         static uint8_t    anzMQTTmsg   = 0;
+        static uint8_t    pubMQTT      = TRUE;
         static int8_t     errMQTT      = 0;
         struct MessageReceiver : public Network::Client::MessageReceived
           {
@@ -2168,8 +2171,23 @@
                                     ledcWrite(PWM_RGB_BLUE, LEDout);
                                     LEDout = FALSE;
                                   // update MQTT
-                                    #if (USE_MQTT > OFF)
-                                      MQTT
+                                    #if (RGBLED->bright() != RGBLEDold->bright())
+                                        #if (USE_MQTT > OFF)
+                                          MQTT;
+                                          #endif
+                                        #if (USE_WEBSERVER > OFF)
+                                            outStr = "SVB1";
+                                            outStr.concat(RGBLED->bright());    // RGB-LED col24
+                                            pmdServ->updateAll(outStr);
+                                            //STXT(outStr);
+                                          #endif
+                                      #endif
+                                    #if (RGBLED->col24() != RGBLEDold->bright())
+                                        outStr = "SVC1";
+                                        colToHexStr(ctmp8, RGBLED->col24());
+                                        outStr.concat(ctmp8);    // RGB-LED col24
+                                        pmdServ->updateAll(outStr);
+                                        //STXT(outStr);
                                       #endif
                                 }
                             }
@@ -2228,14 +2246,7 @@
                       #if (USE_WEBSERVER > OFF)
                           if (newClient)
                             {
-                              char ctmp[8] = "";
                               // EL_TSLIDER
-                              #if (USE_RGBLED_PWM > OFF)
-                                  outStr = "SVB1";
-                                  outStr.concat(RGBLED[0]->bright());    // RGB-LED col24
-                                  pmdServ->updateAll(outStr);
-                                  //STXT(outStr);
-                                #endif
                               #if (USE_WS2812_LINE_OUT > OFF)
                                   outStr = "SVB2";
                                   outStr.concat(line2812[0]->bright());    // RGB-LED col24
@@ -2254,13 +2265,6 @@
                                   //pmdServ->updateAll(tmpStr);
 
                               // EL_TCOLOR
-                              #if (USE_RGBLED_PWM > OFF)
-                                  outStr = "SVC1";
-                                  colToHexStr(ctmp, RGBLED[0]->col24());
-                                  outStr.concat(ctmp);    // RGB-LED col24
-                                  pmdServ->updateAll(outStr);
-                                  //STXT(outStr);
-                                #endif
                               #if (USE_WS2812_LINE_OUT > OFF)
                                   outStr = "SVC2";
                                   colToHexStr(ctmp, line2812[0]->col24());
