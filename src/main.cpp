@@ -507,15 +507,13 @@
                 fprintf(stdout, "  Payload: %.*s\n", payload.length, payload.data);
                 if (anzMQTTmsg < (MQTT_MSG_MAXANZ - 1))
                   {
-                    sprintf(pMQTTWr->topic,   "  Topic: %.*s ",    topic.length, topic.data);
-                    sprintf(pMQTTWr->payload, "  Payload: %.*s\n", payload.length, payload.data);
-                    //strncpy( (char*) pMQTTWr->topic,   (char*) &topic.data,   topic.length);
-                    //pMQTTWr->topic[topic.length] = 0;
-                    //strncpy( (char*) pMQTTWr->payload, (char*) &payload.data, topic.length);
-                    //pMQTTWr->payload[payload.length] = 0;
-                        S2VAL(" topic payload ", pMQTTWr->topic, pMQTTWr->payload);
-                    pMQTTWr = (MQTTmsg_t*) pMQTTWr->pNext;
+                    sprintf(pMQTTWr->topic,   "%.*s", topic.length,   topic.data);
+                    sprintf(pMQTTWr->payload, "%.*s", payload.length, payload.data);
+                    pMQTTWr->topic[topic.length] = 0;
+                    pMQTTWr->payload[payload.length] = 0;
                     anzMQTTmsg++;
+                        S3VAL(" topic payload count", pMQTTWr->topic, pMQTTWr->payload, anzMQTTmsg);
+                    pMQTTWr = (MQTTmsg_t*) pMQTTWr->pNext;
                   }
                 //fprintf(stdout, "Msg received: (%04X)\n", packetIdentifier);
                 //readMQTTmsg(topic, payload);
@@ -4271,18 +4269,26 @@
           {
             errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
                 soutMQTTerr(" MQTT connect", errMQTT);
+            if (errMQTT == MD_OK)
+              {
+
+              }
           }
         void soutMQTTerr(String text, int8_t errMQTT)
           {
-            if (errMQTT < 0)
+            if (errMQTT < MD_OK)
             SVAL(text, cerrMQTT[(-1) * errMQTT]);
           }
         void readMQTTmsg()
           {
+            char* ptopic = NULL;
             while (anzMQTTmsg > 0)
               {
                 // testLED
-                if (strcmp( (pMQTTWr->topic), (char*) toptestLED.c_str()) == 0)
+                ptopic = pMQTTWr->topic + strlen(MQTT_TOPDEV);
+                S3VAL(" readMQTT topic payload count", ptopic, pMQTTWr->payload, anzMQTTmsg);
+                //if (strcmp( (pMQTTWr->topic), (char*) toptestLED.c_str()) == 0)
+                if (strcmp( (ptopic), (char*) toptestLED.c_str()) == 0)
                   { if (strcmp((pMQTTWr->payload), "false") == 0)
                       { testLED = ON; }
                     else

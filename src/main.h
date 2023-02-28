@@ -348,6 +348,7 @@
       // --- MQTT
         #if (USE_MQTT > OFF)
             void startMQTT();
+            void connectMQTT();
             void soutMQTTerr(String text, int8_t errMQTT);
             void readMQTTmsg();
           #endif
