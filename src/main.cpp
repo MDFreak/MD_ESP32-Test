@@ -2996,6 +2996,11 @@
                 STXT(" LED blau");
                 usleep(5000);
                 ledcWrite(PWM_RGB_BLUE, 0);
+              // init LED
+                RGBLED->bright(BRI_RGBLED_1);
+                RGBLED->col24 (COL24_RGBLED_1);
+                RGBLEDold->bright(0);
+                RGBLEDold->col24 (0);
             }
         #endif
     // --- passive buzzer
