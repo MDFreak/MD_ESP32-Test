@@ -1345,6 +1345,9 @@
             readWebMessage();
                 //heapFree("webserv -readmsg");
           #endif
+        #if (USE_MQTT > OFF)
+            readMQTTmsg();
+          #endif
       // --- trigger measurement ---
         #if (USE_ADC1115_I2C > OFF)
             md_ADS1115_run();
@@ -1485,9 +1488,6 @@
 
             mcpwm_capture_enable(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0, MCPWM_POS_EDGE, 1);
             pwmInVal->highVal = mcpwm_capture_signal_get_value(MCPWM_UNIDX_0, MCPWM_SELECT_CAP0);
-          #endif
-        #if (USE_MQTT > OFF)
-            readMQTTmsg();
           #endif
       // --- standard input cycle ---
         //SOUT(" 3");
@@ -4265,6 +4265,10 @@
                 MQTTmsgs[i].pNext = (void*) &MQTTmsgs[i+1];
               }
             MQTTmsgs[MQTT_MSG_MAXANZ-1].pNext = (void*) &MQTTmsgs[0];
+            connectMQTT();
+          }
+        void connectMQTT() // TODO: move all subcribes to here -> reconnect
+          {
             errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
                 soutMQTTerr(" MQTT connect", errMQTT);
           }
