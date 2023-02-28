@@ -250,7 +250,7 @@
         outRGBVal_t  outValRGB[USE_RGBLED_PWM];
         md_LEDPix24* RGBLED        = new md_LEDPix24((uint32_t) COL24_RGBLED_1);
         md_LEDPix24* RGBLEDold     = new md_LEDPix24((uint32_t) COL24_RGBLED_1);
-        uint8_t       LEDout       = FALSE;
+        //uint8_t       LEDout       = FALSE;
         static String valRGBBright = "";
         static String valRGBCol    = "";
         #if (USE_MQTT > OFF)
@@ -2156,19 +2156,21 @@
                                       ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
                                     }
                                 #endif
-                              // update changes from webserver
-                              if (LEDout)
+                              // update HW
+                              if (RGBLED != RGBLEDold)
                                 {
-                                  LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
-                                                         0, Green(RGBLED[1]->col24()));
-                                  ledcWrite(PWM_RGB_GREEN, LEDout);
-                                  LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
-                                                         0, Red(RGBLED[1]->col24()));
-                                  ledcWrite(PWM_RGB_RED, LEDout);
-                                  LEDout = (uint8_t) map(RGBLED[1]->bright(), 0, 255,
-                                                         0, Blue(RGBLED[1]->col24()));
-                                  ledcWrite(PWM_RGB_BLUE, LEDout);
-                                  LEDout = FALSE;
+                                  // update HW
+                                    LEDout = (uint8_t) map(RGBLED->bright(), 0, 255, 0, Green(RGBLED->col24()));
+                                    ledcWrite(PWM_RGB_GREEN, LEDout);
+                                    LEDout = (uint8_t) map(RGBLED->bright(), 0, 255, 0, Red(RGBLED->col24()));
+                                    ledcWrite(PWM_RGB_RED, LEDout);
+                                    LEDout = (uint8_t) map(RGBLED->bright(), 0, 255, 0, Blue(RGBLED->col24()));
+                                    ledcWrite(PWM_RGB_BLUE, LEDout);
+                                    LEDout = FALSE;
+                                  // update MQTT
+                                    #if (USE_MQTT > OFF)
+                                      MQTT
+                                      #endif
                                 }
                             }
                         #endif
@@ -3857,10 +3859,9 @@
                                     {
                                       case 1: // RGB-LED col24
                                         #if (USE_RGBLED_PWM > OFF)
-                                            //SVAL("  -- RGBLED bright old ", RGBLED[1]->bright());
-                                            RGBLED[1]->bright(itmp);
-                                            LEDout = TRUE;
-                                            //SVAL("  -- RGBLED bright new ", RGBLED[1]->bright());
+                                            RGBLED->bright(itmp);
+                                            //LEDout = TRUE;
+                                            //S2VAL("  -- rgbLED bright old new ", RGBLEDold->bright(), RGBLED->bright());
                                           #endif
                                         break;
                                       case 2: // 2821 line col24
