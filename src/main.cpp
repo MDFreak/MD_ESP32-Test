@@ -248,8 +248,9 @@
     #if (USE_RGBLED_PWM > OFF)
         msTimer      rgbledT   = msTimer(PWM_LEDS_CYCLE_MS);
         outRGBVal_t  outValRGB[USE_RGBLED_PWM];
-        md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1), new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
-        uint8_t      LEDout    = FALSE;
+        md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1),
+                                   new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
+        uint8_t       LEDout       = FALSE;
         static String valRGBBright = "";
         static String valRGBCol    = "";
         #if (USE_MQTT > OFF)
@@ -862,31 +863,7 @@
               digitalWrite(PIN_TL_YELLOW, OFF);
             #endif
           #if (USE_RGBLED_PWM > 0)
-
-              // RGB red
-                pinMode(PIN_RGB_RED, OUTPUT);
-                ledcSetup(PWM_RGB_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcAttachPin(PIN_RGB_RED,   PWM_RGB_RED);
-                ledcWrite(PWM_RGB_RED, 255);
-                STXT(" LED rot");
-                usleep(50000);
-                ledcWrite(PWM_RGB_RED, 0);
-              // RGB green
-                pinMode(PIN_RGB_GREEN, OUTPUT);
-                ledcSetup(PWM_RGB_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcAttachPin(PIN_RGB_GREEN, PWM_RGB_GREEN);
-                ledcWrite(PWM_RGB_GREEN, 255);
-                STXT(" LED gruen");
-                usleep(50000);
-                ledcWrite(PWM_RGB_GREEN, 0);
-              // RGB blue
-                pinMode(PIN_RGB_BLUE, OUTPUT);
-                ledcSetup(PWM_RGB_BLUE,   PWM_LEDS_FREQ, PWM_LEDS_RES);
-                ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
-                ledcWrite(PWM_RGB_BLUE, 255);
-                STXT(" LED blau");
-                usleep(50000);
-                ledcWrite(PWM_RGB_BLUE, 0);
+              initRGBLED();
             #endif
           startDisp();
           dispStatus("setup start ...", true);
@@ -2983,6 +2960,30 @@
       #if (USE_RGBLED_PWM > OFF)
           void initRGBLED()
             {
+              // RGB red
+                pinMode(PIN_RGB_RED, OUTPUT);
+                ledcSetup(PWM_RGB_RED,    PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcAttachPin(PIN_RGB_RED,   PWM_RGB_RED);
+                ledcWrite(PWM_RGB_RED, 255);
+                STXT(" LED rot");
+                usleep(30000);
+                ledcWrite(PWM_RGB_RED, 0);
+              // RGB green
+                pinMode(PIN_RGB_GREEN, OUTPUT);
+                ledcSetup(PWM_RGB_GREEN,  PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcAttachPin(PIN_RGB_GREEN, PWM_RGB_GREEN);
+                ledcWrite(PWM_RGB_GREEN, 255);
+                STXT(" LED gruen");
+                usleep(30000);
+                ledcWrite(PWM_RGB_GREEN, 0);
+              // RGB blue
+                pinMode(PIN_RGB_BLUE, OUTPUT);
+                ledcSetup(PWM_RGB_BLUE,   PWM_LEDS_FREQ, PWM_LEDS_RES);
+                ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
+                ledcWrite(PWM_RGB_BLUE, 255);
+                STXT(" LED blau");
+                usleep(30000);
+                ledcWrite(PWM_RGB_BLUE, 0);
             }
         #endif
     // --- passive buzzer
@@ -3235,17 +3236,6 @@
                 {
                   STXT(" BME280(1) nicht gefunden");
                 }
-              #if (USE_MQTT > OFF)
-                  topBME280t = topDevice + topBME280t;
-                  errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
-                      soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
-                  topBME280p = topDevice + topBME280p;
-                  errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
-                      soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
-                  topBME280h = topDevice + topBME280h;
-                  errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
-                      soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
-                #endif
             }
         #endif
     // --- 4x analog input ADS1115
@@ -3612,26 +3602,6 @@
                         #endif
                     #endif
                   #endif
-              #if (USE_MQTT > OFF)
-                  topi7121 = topDevice + topi7121;
-                  errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
-                      soutMQTTerr(" MQTT subscribe i7121", errMQTT);
-                  #if (USE_ACS712_ANA > 1)
-                      topi7122 = topDevice + topi7122;
-                      errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
-                          soutMQTTerr(" MQTT subscribe i7122", errMQTT);
-                      #if (USE_ACS712_ANA > 2)
-                          topi7123 = topDevice + topi7123;
-                          errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
-                              soutMQTTerr(" MQTT subscribe i7123", errMQTT);
-                          #if (USE_ACS712_ANA > 3)
-                              topi7124 = topDevice + topi7124;
-                              errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
-                                  soutMQTTerr(" MQTT subscribe i7124", errMQTT);
-                            #endif
-                        #endif
-                    #endif
-                #endif
               STXT(" current sensors ready");
             }
         #endif
@@ -4127,10 +4097,19 @@
           void connectMQTT() // TODO: move all subcribes to here -> reconnect
             {
               errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
-                  soutMQTTerr(" MQTT connect", errMQTT);
+              soutMQTTerr(" MQTT connect", errMQTT);
               if (errMQTT == MD_OK)
                 {
                   #if (USE_BME280_I2C > OFF) // 1
+                      topBME280t = topDevice + topBME280t;
+                      errMQTT = (int8_t) mqtt.subscribe(topBME280t.c_str());
+                          soutMQTTerr(" MQTT subscribe BME280t", errMQTT);
+                      topBME280p = topDevice + topBME280p;
+                      errMQTT = (int8_t) mqtt.subscribe(topBME280p.c_str());
+                          soutMQTTerr(" MQTT subscribe BME280p", errMQTT);
+                      topBME280h = topDevice + topBME280h;
+                      errMQTT = (int8_t) mqtt.subscribe(topBME280h.c_str());
+                          soutMQTTerr(" MQTT subscribe BME280h", errMQTT);
                     #endif
                   #if (USE_CCS811_I2C > OFF)
                           topCCS811t = topDevice + topCCS811t;
@@ -4260,6 +4239,24 @@
                           soutMQTTerr(" MQTT subscribe VCC33", errMQTT);
                     #endif
                   #if (USE_ACS712_ANA > OFF)
+                      topi7121 = topDevice + topi7121;
+                      errMQTT = (int8_t) mqtt.subscribe(topi7121.c_str());
+                          soutMQTTerr(" MQTT subscribe i7121", errMQTT);
+                      #if (USE_ACS712_ANA > 1)
+                          topi7122 = topDevice + topi7122;
+                          errMQTT = (int8_t) mqtt.subscribe(topi7122.c_str());
+                              soutMQTTerr(" MQTT subscribe i7122", errMQTT);
+                          #if (USE_ACS712_ANA > 2)
+                              topi7123 = topDevice + topi7123;
+                              errMQTT = (int8_t) mqtt.subscribe(topi7123.c_str());
+                                  soutMQTTerr(" MQTT subscribe i7123", errMQTT);
+                              #if (USE_ACS712_ANA > 3)
+                                  topi7124 = topDevice + topi7124;
+                                  errMQTT = (int8_t) mqtt.subscribe(topi7124.c_str());
+                                      soutMQTTerr(" MQTT subscribe i7124", errMQTT);
+                                #endif
+                            #endif
+                        #endif
                     #endif
                   #if (USE_TYPE_K_SPI > 0)
                     #endif
