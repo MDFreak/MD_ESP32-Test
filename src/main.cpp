@@ -1073,18 +1073,6 @@
               #if (USE_DS18B20_1W_IO > OFF)
                   ds2Sensors.begin();
                 #endif
-                  #if (USE_DS18B20_1W_IO > OFF)
-                      #if (USE_MQTT > OFF)
-                          topDS18B201 = topDevice + topDS18B201;
-                          errMQTT = (int8_t) mqtt.subscribe(topDS18B201.c_str());
-                              soutMQTTerr(" MQTT subscribe DS18B201 ", errMQTT);
-                          #if (USE_DS18B20_1W_IO > 1)
-                              topDS18B202 = topDevice + topDS18B202;
-                              errMQTT = (int8_t) mqtt.subscribe(topDS18B202.c_str());
-                                  soutMQTTerr(" MQTT subscribe DS18B202 ", errMQTT);
-                            #endif
-                        #endif
-                    #endif
               dispStatus(DS18Str);
                   SVAL(" DS18D20 ... ", DS18Str);
             #endif
@@ -1093,11 +1081,6 @@
               STXT(" init alc sensors ... ");
               alkVal.begin(MQ3_FILT, MQ3_DROP, FILT_FL_MEAN);
               alkScal.setScale(MQ3_OFFRAW, PHOTO1_SCAL_GAIN, PHOTO1_SCAL_OFFREAL);
-              #if (USE_MQTT > OFF)
-                  topMQ3alk = topDevice + topMQ3alk;
-                  errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
-                      soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
-                #endif
               STXT(" alc sensors ready");
             #endif
         // photo sensor
@@ -3518,8 +3501,6 @@
                           pubINA3221i[2][i] = OFF;
                           pubINA3221u[2][i] = OFF;
                         }
-                      #if (USE_MQTT > OFF)
-                        #endif
                     #endif
                 #endif
 
@@ -3572,11 +3553,6 @@
                 #endif
               #if (PHOTO1_1115 > OFF)
                 #endif
-              #if (USE_MQTT > OFF)
-                  topPhoto1 = topDevice + topPhoto1;
-                  errMQTT = (int8_t) mqtt.subscribe(topPhoto1.c_str());
-                      soutMQTTerr(" MQTT subscribe Photo1 ", errMQTT);
-                #endif
               STXT(" photo sensors  ready");
             }
         #endif
@@ -3589,11 +3565,6 @@
                   //potiVal[0].begin(POTI1_FILT, POTI1_DROP, FILT_FL_MEAN);
                 #endif
               potifScal[0].setScale(POTI1_OFFRAW, POTI1_GAIN, POTI1_OFFREAL);
-              #if (USE_MQTT)
-                  topPoti1 = topDevice + topPoti1;
-                  errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
-                      soutMQTTerr(" MQTT subscribe poti1", errMQTT);
-                #endif
               STXT(" poti ready");
             }
         #endif
@@ -3606,11 +3577,6 @@
                   vcc50Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
                 #endif
               vcc50fScal.setScale(VCC50_OFFRAW, VCC50_GAIN, VCC50_OFFREAL);
-              #if (USE_MQTT > OFF)
-                  topVCC50 = topDevice + topVCC50;
-                  errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
-                      soutMQTTerr(" MQTT subscribe VCC50", errMQTT);
-                #endif
               STXT(" vcc measure ready");
             }
         #endif
@@ -3622,11 +3588,6 @@
                   vcc33Val.begin(VCC_FILT, VCC_DROP, FILT_FL_MEAN);
                 #endif
               vcc33fScal.setScale(VCC33_OFFRAW, VCC33_GAIN, VCC33_OFFREAL);
-              #if (USE_MQTT > OFF)
-                  topVCC33 = topDevice + topVCC33;
-                  errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
-                      soutMQTTerr(" MQTT subscribe VCC33", errMQTT);
-                #endif
               STXT(" vcc measure ready");
             }
         #endif
@@ -4223,24 +4184,88 @@
                       errMQTT = (int8_t) mqtt.subscribe(topINA32211p[2].c_str());
                           soutMQTTerr(" MQTT subscribe topINA32211p[2]", errMQTT);
                     #if (USE_INA3221_I2C > 1)  // unit 2
-
-
-
+                        // channel 1
+                          topINA32212i[0] = topDevice + topINA32212i[0];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32212i[0].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32212i[0]", errMQTT);
+                          topINA32212u[0] = topDevice + topINA32212u[0];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32212u[0].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32212u[0]", errMQTT);
+                        // channel 2
+                          topINA32212i[1] = topDevice + topINA32212i[1];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32212i[1].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32212i[1]", errMQTT);
+                          topINA32212u[1] = topDevice + topINA32212u[1];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32212u[1].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32212u[1]", errMQTT);
+                        // channel 3
+                          topINA32212i[2] = topDevice + topINA32212i[2];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32212i[2].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32212i[2]", errMQTT);
+                          topINA32212u[2] = topDevice + topINA32212u[2];
+                          errMQTT = (int8_t) mqtt.subscribe(topINA32212u[2].c_str());
+                              soutMQTTerr(" MQTT subscribe topINA32212u[2]", errMQTT);
+                        #if (USE_INA3221_I2C > 2)  // unit 3
+                            // channel 1
+                              topINA32213i[0] = topDevice + topINA32213i[0];
+                              errMQTT = (int8_t) mqtt.subscribe(topINA32213i[0].c_str());
+                                  soutMQTTerr(" MQTT subscribe topINA32213i[0]", errMQTT);
+                              topINA32213u[0] = topDevice + topINA32212u[0];
+                              errMQTT = (int8_t) mqtt.subscribe(topINA32213u[0].c_str());
+                                  soutMQTTerr(" MQTT subscribe topINA32213u[0]", errMQTT);
+                            // channel 2
+                              topINA32213i[1] = topDevice + topINA32213i[1];
+                              errMQTT = (int8_t) mqtt.subscribe(topINA32213i[1].c_str());
+                                  soutMQTTerr(" MQTT subscribe topINA32213i[1]", errMQTT);
+                              topINA32213u[1] = topDevice + topINA32213u[1];
+                              errMQTT = (int8_t) mqtt.subscribe(topINA32213u[1].c_str());
+                                  soutMQTTerr(" MQTT subscribe topINA32213u[1]", errMQTT);
+                            // channel 3
+                              topINA32213i[2] = topDevice + topINA32213i[2];
+                              errMQTT = (int8_t) mqtt.subscribe(topINA32213i[2].c_str());
+                                  soutMQTTerr(" MQTT subscribe topINA32213i[2]", errMQTT);
+                              topINA32213u[2] = topDevice + topINA32213u[2];
+                              errMQTT = (int8_t) mqtt.subscribe(topINA32213u[2].c_str());
+                                  soutMQTTerr(" MQTT subscribe topINA32213u[2]", errMQTT);
+                          #endif
                       #endif
                   #endif
                 #if (USE_DS18B20_1W_IO > OFF)
+                    topDS18B201 = topDevice + topDS18B201;
+                    errMQTT = (int8_t) mqtt.subscribe(topDS18B201.c_str());
+                        soutMQTTerr(" MQTT subscribe DS18B201 ", errMQTT);
+                    #if (USE_DS18B20_1W_IO > 1)
+                        topDS18B202 = topDevice + topDS18B202;
+                        errMQTT = (int8_t) mqtt.subscribe(topDS18B202.c_str());
+                            soutMQTTerr(" MQTT subscribe DS18B202 ", errMQTT);
+                      #endif
                   #endif
                 #if (USE_MQ135_GAS_ANA > OFF)
                   #endif
                 #if (USE_MQ3_ALK_ANA > OFF)
+                    topMQ3alk = topDevice + topMQ3alk;
+                    errMQTT = (int8_t) mqtt.subscribe(topMQ3alk.c_str());
+                        soutMQTTerr(" MQTT subscribe MQ3alk", errMQTT);
                   #endif
                 #if (USE_PHOTO_SENS_ANA > OFF)
+                    topPhoto1 = topDevice + topPhoto1;
+                    errMQTT = (int8_t) mqtt.subscribe(topPhoto1.c_str());
+                        soutMQTTerr(" MQTT subscribe Photo1 ", errMQTT);
                   #endif
                 #if (USE_POTI_ANA > OFF)
+                    topPoti1 = topDevice + topPoti1;
+                    errMQTT = (int8_t) mqtt.subscribe(topPoti1.c_str());
+                        soutMQTTerr(" MQTT subscribe poti1", errMQTT);
                   #endif
                 #if (USE_VCC50_ANA > OFF)
+                    topVCC50 = topDevice + topVCC50;
+                    errMQTT = (int8_t) mqtt.subscribe(topVCC50.c_str());
+                        soutMQTTerr(" MQTT subscribe VCC50", errMQTT);
                   #endif
                 #if (USE_VCC33_ANA > OFF)
+                    topVCC33 = topDevice + topVCC33;
+                    errMQTT = (int8_t) mqtt.subscribe(topVCC33.c_str());
+                        soutMQTTerr(" MQTT subscribe VCC33", errMQTT);
                   #endif
                 #if (USE_ACS712_ANA > OFF)
                   #endif
