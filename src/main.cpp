@@ -4287,19 +4287,17 @@
             char* ptopic = NULL;
             while (anzMQTTmsg > 0)
               {
-                // testLED
                 ptopic = pMQTTRd->topic + strlen(MQTT_TOPDEV);
-                S3VAL(" readMQTT ptopic pMQTTWr pMQTTWr->topic", (uint32_t) ptopic,
-                                                                 (uint32_t) pMQTTRd,
-                                                                 (uint32_t) pMQTTRd->topic);
-                S3VAL(" readMQTT ptopic ppayload count", (uint32_t) &ptopic[0], (uint32_t) &pMQTTRd->payload[0], anzMQTTmsg);
-                //if (strcmp( (pMQTTWr->topic), (char*) toptestLED.c_str()) == 0)
-                if (strcmp( (ptopic), (char*) toptestLED.c_str()) == 0)
-                  { if (strcmp((pMQTTRd->payload), "false") == 0)
+                S3VAL(" readMQTT pMQTTWr->ppayload ptopic payload ", (uint32_t) pMQTTRd->topic, ptopic, pMQTTRd->payload);
+                    //if (strcmp( (pMQTTWr->topic), (char*) toptestLED.c_str()) == 0)
+                if (strcmp( (ptopic), (char*) toptestLED.c_str()) == 0) // test-led
+                  {
+                    SVAL(" readMQTT testLED value ", pMQTTRd->payload);
+                    if (strcmp((pMQTTRd->payload), "false") == 0)
                       { testLED = ON; }
                     else
                       { testLED = OFF; }
-                    S2VAL(" readMQTTmsg testLED ", pMQTTRd->payload, testLED);
+                    S2VAL(" readMQTT testLED value ", pMQTTRd->payload, testLED);
                   }
                   { //valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt());
                   }
