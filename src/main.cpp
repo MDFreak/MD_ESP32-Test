@@ -4316,19 +4316,20 @@
               {
                 ptopic = pMQTTRd->topic + strlen(MQTT_TOPDEV); // remove device ID
                     S3VAL(" readMQTT pMQTTRd ptopic payload ", (uint32_t) pMQTTRd->topic, ptopic, pMQTTRd->payload);
-                    SVAL(" strcmp result ", strcmp(ptopic, toptestLED.c_str()));
+                    SVAL(" strcmp result ", topRGBBright.equals(ptopic));
 
-                if (strcmp(ptopic, topRGBBright.c_str())) // RGB LED bright
+                //if (strcmp(ptopic, topRGBBright.c_str())) // RGB LED bright
+                if (topRGBBright.equals(ptopic)) // RGB LED bright
                   {
                     RGBLED[0]->bright(atoi(pMQTTRd->payload));
                     S2VAL(" readMQTT RGBLED new bright payload ", RGBLED[0]->bright(), pMQTTRd->payload);
                   }
-                else if (strcmp(ptopic, topRGBBright.c_str())) // RGB LED bright
+                else if (topRGBCol.equals(ptopic)) // RGB LED bright
                   {
                     RGBLED[0]->col24(atoi(pMQTTRd->payload));
                     S2VAL(" readMQTT RGBLED new color  payload ", RGBLED[0]->col24(), pMQTTRd->payload);
                   }
-                else if (strcmp(ptopic, toptestLED.c_str())) // test-led
+                else if (toptestLED.equals(ptopic)) // test-led
                   {
                     if (strcmp(pMQTTRd->payload, "false") == 0)
                       { testLED = OFF;}
