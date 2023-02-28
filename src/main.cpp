@@ -4258,13 +4258,16 @@
         void startMQTT()
           {
             STXT("Connecting to MQTT...");
+                S2VAL(" startMQTT msgs-len &msgs[0]", sizeof(MQTTmsg_t), (uint32_t) &MQTTmsgs[0]);
             for ( uint8_t i=0 ; i < MQTT_MSG_MAXANZ - 1; i++)
               {
                 MQTTmsgs[i].pNext = (void*) &MQTTmsgs[i+1];
+                    //S3VAL(" startMQTT i msgs[i] pNext", i, (uint32_t) &MQTTmsgs[i], (uint32_t) MQTTmsgs[i].pNext);
               }
             MQTTmsgs[MQTT_MSG_MAXANZ-1].pNext = (void*) &MQTTmsgs[0];
+                //S3VAL(" startMQTT i msgs[i] pNext", MQTT_MSG_MAXANZ-1, (uint32_t) &MQTTmsgs[MQTT_MSG_MAXANZ-1], (uint32_t) MQTTmsgs[MQTT_MSG_MAXANZ-1].pNext);
             connectMQTT();
-          }
+          } // tested -> ok
         void connectMQTT() // TODO: move all subcribes to here -> reconnect
           {
             errMQTT = (int8_t) mqtt.connectTo(MQTT_HOST, MQTT_PORT);
@@ -4285,15 +4288,18 @@
             while (anzMQTTmsg > 0)
               {
                 // testLED
-                ptopic = pMQTTWr->topic + strlen(MQTT_TOPDEV);
-                S3VAL(" readMQTT topic payload count", ptopic, pMQTTWr->payload, anzMQTTmsg);
+                ptopic = pMQTTRd->topic + strlen(MQTT_TOPDEV);
+                S3VAL(" readMQTT ptopic pMQTTWr pMQTTWr->topic", (uint32_t) ptopic,
+                                                                 (uint32_t) pMQTTRd,
+                                                                 (uint32_t) pMQTTRd->topic);
+                S3VAL(" readMQTT ptopic ppayload count", (uint32_t) &ptopic[0], (uint32_t) &pMQTTRd->payload[0], anzMQTTmsg);
                 //if (strcmp( (pMQTTWr->topic), (char*) toptestLED.c_str()) == 0)
                 if (strcmp( (ptopic), (char*) toptestLED.c_str()) == 0)
-                  { if (strcmp((pMQTTWr->payload), "false") == 0)
+                  { if (strcmp((pMQTTRd->payload), "false") == 0)
                       { testLED = ON; }
                     else
                       { testLED = OFF; }
-                    S2VAL(" readMQTTmsg testLED ", pMQTTWr->payload, testLED);
+                    S2VAL(" readMQTTmsg testLED ", pMQTTRd->payload, testLED);
                   }
                   { //valRGBBright.operator=(payload); RGBLED[0]->bright(valRGBBright.toInt());
                   }
