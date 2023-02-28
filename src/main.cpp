@@ -2978,7 +2978,7 @@
                 ledcAttachPin(PIN_RGB_RED,   PWM_RGB_RED);
                 ledcWrite(PWM_RGB_RED, 255);
                 STXT(" LED rot");
-                usleep(30000);
+                usleep(5000);
                 ledcWrite(PWM_RGB_RED, 0);
               // RGB green
                 pinMode(PIN_RGB_GREEN, OUTPUT);
@@ -2986,7 +2986,7 @@
                 ledcAttachPin(PIN_RGB_GREEN, PWM_RGB_GREEN);
                 ledcWrite(PWM_RGB_GREEN, 255);
                 STXT(" LED gruen");
-                usleep(30000);
+                usleep(5000);
                 ledcWrite(PWM_RGB_GREEN, 0);
               // RGB blue
                 pinMode(PIN_RGB_BLUE, OUTPUT);
@@ -2994,7 +2994,7 @@
                 ledcAttachPin(PIN_RGB_BLUE,  PWM_RGB_BLUE);
                 ledcWrite(PWM_RGB_BLUE, 255);
                 STXT(" LED blau");
-                usleep(30000);
+                usleep(5000);
                 ledcWrite(PWM_RGB_BLUE, 0);
             }
         #endif
@@ -4303,7 +4303,11 @@
           void soutMQTTerr(String text, int8_t errMQTT)
             {
               if (errMQTT < MD_OK)
-              SVAL(text, cerrMQTT[(-1) * errMQTT]);
+                {
+                  SVAL(text, cerrMQTT[(-1) * errMQTT]);
+                  if (errMQTT != -7) // not connected stays
+                    { errMQTT = MD_OK; }
+                }
             }
 
           void readMQTTmsg()
