@@ -248,8 +248,8 @@
     #if (USE_RGBLED_PWM > OFF)
         msTimer      rgbledT   = msTimer(PWM_LEDS_CYCLE_MS);
         outRGBVal_t  outValRGB[USE_RGBLED_PWM];
-        md_LEDPix24* RGBLED[2] = { new md_LEDPix24((uint32_t) COL24_RGBLED_1),
-                                   new md_LEDPix24((uint32_t) COL24_RGBLED_1) };
+        md_LEDPix24* RGBLED        = new md_LEDPix24((uint32_t) COL24_RGBLED_1);
+        md_LEDPix24* RGBLEDold     = new md_LEDPix24((uint32_t) COL24_RGBLED_1);
         uint8_t       LEDout       = FALSE;
         static String valRGBBright = "";
         static String valRGBCol    = "";
