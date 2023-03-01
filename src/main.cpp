@@ -2387,19 +2387,19 @@
                                   tmpval16 = (int16_t) (bmeT+ 0.5);
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
-                                  outStr.concat("°  ");
+                                  outStr.concat("° ");
                                 break;
                               case 1:  // BME280 air pressure
                                   tmpval16 = (uint16_t) bmeP;
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
-                                  outStr.concat("%  ");
+                                  outStr.concat("mb ");
                                 break;
                               case 2:   // BME280 humidity
                                   tmpval16 = (int16_t) bmeH;
                                   tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
-                                  outStr.concat("mb");
+                                  outStr.concat("% ");
                                 break;
                               default:
                                 break;
@@ -2619,13 +2619,14 @@
                     dispIdx++;
                   //break;
                 case 17: // RGB-LED
-                  break;
+                    dispIdx++;
+                  //break;
                 case 18: // FAN_PWM
                     outpIdx++;
                   //break;
                 case 19: // digital output
-
-                  break;
+                    dispIdx++;
+                  //break;
                 case 20: // webserver nu
                     #if (USE_WIFI > OFF)
                         outStr = WiFi.localIP().toString();
