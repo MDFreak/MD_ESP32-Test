@@ -7,6 +7,7 @@
     #include <Wire.h>
     #include <string.h>
     #include <stdio.h>                                                        // Biblioteca STDIO
+    #include <iostream>
     #include <md_time.hpp>
     #include <md_defines.h>
     #include <md_util.h>

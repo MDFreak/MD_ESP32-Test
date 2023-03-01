@@ -2171,7 +2171,6 @@
                                       ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
                                     }
                                 #endif
-                              // update HW
                               if (RGBLED != RGBLEDold)
                                 {
                                   // update HW
@@ -2191,7 +2190,7 @@
                                                 valRGBBright = (RGBLED->bright());    // RGB-LED col24
                                                     //SVAL(topRGBBright, valRGBBright);
                                                 errMQTT = (int8_t) mqtt.publish(topRGBBright.c_str(), (uint8_t*) valRGBBright.c_str(), valRGBBright.length());
-                                                    //soutMQTTerr(" MQTT publish RGBBright", errMQTT);
+                                                    soutMQTTerr(" MQTT publish RGBBright", errMQTT);
                                               }
                                           #endif
 
@@ -2199,7 +2198,7 @@
                                             outStr = "SVB1";
                                             outStr.concat(RGBLED->bright());    // RGB-LED col24
                                             pmdServ->updateAll(outStr);
-                                            //STXT(outStr);
+                                              STXT(outStr);
                                           #endif
                                       }
                                   // update color
@@ -2208,9 +2207,9 @@
                                         #if (USE_MQTT > OFF)
                                             colToHexStr(cMQTT, RGBLED->col24());
                                             valRGBCol = cMQTT;    // RGB-LED col24
-                                                //SVAL(topRGBCol, valRGBCol);
+                                                SVAL(topRGBCol, valRGBCol);
                                             errMQTT = (int8_t) mqtt.publish(topRGBCol.c_str(), (uint8_t*) valRGBCol.c_str(), valRGBCol.length());
-                                                //soutMQTTerr(" MQTT publish RGBCol", errMQTT);
+                                                soutMQTTerr(" MQTT publish RGBCol", errMQTT);
                                           #endif
 
                                         #if (USE_WEBSERVER > OFF)
@@ -2218,7 +2217,7 @@
                                             colToHexStr(ctmp8, RGBLED->col24());
                                             outStr.concat(ctmp8);    // RGB-LED col24
                                             pmdServ->updateAll(outStr);
-                                            //STXT(outStr);
+                                                STXT(outStr);
                                           #endif
                                       }
                                     RGBLEDold = RGBLED;
@@ -4358,7 +4357,9 @@
                         }
                       else if (topRGBCol.equals(pMQTTRd->topic)) // RGB LED bright
                         {
-                          RGBLED->col24(atoi(pMQTTRd->payload));
+                          tmpMQTT = pMQTTRd->payload;
+                          sscanf(tmpMQTT.c_str(), "%x", &tmpval32);
+                          RGBLED->col24(tmpval32);
                           SHEXVAL(" readMQTT RGBLED new color  payload ", RGBLED->col24());
                         }
                       else if (toptestLED.equals(pMQTTRd->topic)) // test-led
