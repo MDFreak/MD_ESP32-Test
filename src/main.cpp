@@ -4356,14 +4356,14 @@
                       if (topRGBBright.equals(pMQTTRd->topic)) // RGB LED bright
                         {
                           RGBLED->bright(atoi(pMQTTRd->payload));
-                          S2VAL(" readMQTT RGBLED new bright payload ", RGBLED->bright(), pMQTTRd->payload);
+                          //S2VAL(" readMQTT RGBLED new bright payload ", RGBLED->bright(), pMQTTRd->payload);
                         }
                       else if (topRGBCol.equals(pMQTTRd->topic)) // RGB LED bright
                         {
                           tmpMQTT = pMQTTRd->payload;
                           sscanf(tmpMQTT.c_str(), "%x", &tmpval32);
                           RGBLED->col24(tmpval32);
-                          SHEXVAL(" readMQTT RGBLED new color  payload ", RGBLED->col24());
+                          //SHEXVAL(" readMQTT RGBLED new color  payload ", RGBLED->col24());
                         }
                       else if (toptestLED.equals(pMQTTRd->topic)) // test-led
                         {
@@ -4371,7 +4371,7 @@
                             { testLED = OFF;}
                           else
                             { testLED = ON; }
-                          SVAL(" readMQTT testLED new val ", testLED);
+                          //SVAL(" readMQTT testLED new val ", testLED);
                         }
                       pMQTTRd = (MQTTmsg_t*) pMQTTRd->pNext;
                       anzMQTTmsg--;
