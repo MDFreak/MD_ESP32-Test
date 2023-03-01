@@ -2171,6 +2171,7 @@
                                       ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
                                     }
                                 #endif
+                                    //S2HEXVAL(" outcycle vor udate RGBLEDold RGBLED ", RGBLEDold->toInt(), RGBLED->toInt());
                               if (RGBLED->toInt() != RGBLEDold->toInt())
                                 {
                                   // update HW
@@ -2188,7 +2189,7 @@
                                             if (errMQTT == MD_OK)
                                               {
                                                 valRGBBright = (RGBLED->bright());    // RGB-LED col24
-                                                    SVAL(topRGBBright, valRGBBright);
+                                                    //SVAL(topRGBBright, valRGBBright);
                                                 errMQTT = (int8_t) mqtt.publish(topRGBBright.c_str(), (uint8_t*) valRGBBright.c_str(), valRGBBright.length());
                                                     soutMQTTerr(" MQTT publish RGBBright", errMQTT);
                                               }
@@ -2198,7 +2199,7 @@
                                             outStr = "SVB1";
                                             outStr.concat(RGBLED->bright());    // RGB-LED col24
                                             pmdServ->updateAll(outStr);
-                                              STXT(outStr);
+                                              //STXT(outStr);
                                           #endif
                                       }
                                   // update color
@@ -2207,7 +2208,7 @@
                                         #if (USE_MQTT > OFF)
                                             colToHexStr(cMQTT, RGBLED->col24());
                                             valRGBCol = cMQTT;    // RGB-LED col24
-                                                SVAL(topRGBCol, valRGBCol);
+                                                //SVAL(topRGBCol, valRGBCol);
                                             errMQTT = (int8_t) mqtt.publish(topRGBCol.c_str(), (uint8_t*) valRGBCol.c_str(), valRGBCol.length());
                                                 soutMQTTerr(" MQTT publish RGBCol", errMQTT);
                                           #endif
@@ -2217,12 +2218,12 @@
                                             colToHexStr(ctmp8, RGBLED->col24());
                                             outStr.concat(ctmp8);    // RGB-LED col24
                                             pmdServ->updateAll(outStr);
-                                                STXT(outStr);
+                                                //STXT(outStr);
                                           #endif
                                       }
-                                    S2HEXVAL(" outcycle undate RGBLEDold RGBLED ", RGBLEDold->toInt(), RGBLED->toInt());
-                                    RGBLEDold = RGBLED;
-                                    S2HEXVAL(" outcycle undate RGBLEDold RGBLED ", RGBLEDold->toInt(), RGBLED->toInt());
+                                          //S2HEXVAL(" outcycle update RGBLEDold RGBLED ", RGBLEDold->toInt(), RGBLED->toInt());
+                                    RGBLEDold->fromInt(RGBLED->toInt());
+                                          //S2HEXVAL(" outcycle update RGBLEDold RGBLED ", RGBLEDold->toInt(), RGBLED->toInt());
                                 }
                             }
                         #endif
