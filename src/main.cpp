@@ -4357,7 +4357,7 @@
                       else if (topRGBCol.equals(pMQTTRd->topic)) // RGB LED bright
                         {
                           RGBLED->col24(atoi(pMQTTRd->payload));
-                          S2VAL(" readMQTT RGBLED new color  payload ", RGBLED->col24(), pMQTTRd->payload);
+                          SHEXVAL(" readMQTT RGBLED new color  payload ", RGBLED->col24());
                         }
                       else if (toptestLED.equals(pMQTTRd->topic)) // test-led
                         {
