@@ -1459,52 +1459,16 @@
                               #if (BME280T_FILT > 0)
                                   bmeT = bmeTVal.doVal(bmeT);
                                 #endif
-                              if (bmeT != bmeTold)
-                                {
-                                  valBME280t = bmeT;
-                                  pubBME280t = TRUE;
-                                  bmeTold = bmeT;
-                                      //SVAL(" 280readT  new ", bmeT);
-                                  #if (USE_MQTT > OFF)
-                                      errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
-                                      soutMQTTerr(topBME280t.c_str(), errMQTT);
-                                          //SVAL(topBME280t, valBME280t);
-                                    #endif
-                                }
                             // BME280 humidity
                               bmeH = round(bme1.readHumidity() * 10) / 10;
                               #if (BME280H_FILT > 0)
                                   bmeH = bmeHVal[0].doVal( bmeH);
                                 #endif
-                              if (bmeH != bmeHold)
-                                {
-                                  valBME280h = bmeH;
-                                  pubBME280h = TRUE;
-                                  bmeHold = bmeH;
-                                      //SVAL(" 280readH  new ", bmeH);
-                                  #if (USE_MQTT > OFF)
-                                      errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
-                                      soutMQTTerr(topBME280h.c_str(), errMQTT);
-                                          //SVAL(topBME280h, valBME280h);
-                                    #endif
-                                }
                             // BME280 envirement air pressure
                               bmeP = round((bme1.readPressure() / 100) + 0.5);
                               #if (BME280P_FILT > 0)
                                   bmeP = bmePVal[0].doVal(bmeP);
                                 #endif
-                              if (bmeP != bmePold)
-                                {
-                                  valBME280p = bmeP;
-                                  pubBME280p = TRUE;
-                                  bmePold = bmeP;
-                                      //SVAL(" 280readP  new ", bmeP);
-                                  #if (USE_MQTT > OFF)
-                                      errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
-                                      soutMQTTerr(topBME280p.c_str(), errMQTT);
-                                          //SVAL(topBME280p, valBME280p);
-                                    #endif
-                                }
                           #endif
                       break;
                     case 2: // CCS811_I2C
@@ -2042,8 +2006,56 @@
                 switch(outpIdx)
                   {
                     case 1: // BME280_I2C
-                      outpIdx++;
-                      //break;
+                        if (bmeT != bmeTold)
+                          {
+                            bmeTold = bmeT;
+                            valBME280t = bmeT;
+                            pubBME280t = TRUE;
+                                //SVAL(" 280readT  new ", bmeT);
+                            #if (USE_MQTT > OFF)
+                                if (errMQTT == MD_OK)
+                                  {
+                                    errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                    soutMQTTerr(topBME280t.c_str(), errMQTT);
+                                        //SVAL(topBME280t, valBME280t);
+                                  }
+                              #endif
+                            #if (USE_WEBSERVER > OFF)
+                              #endif
+                          }
+                        if (bmeP != bmePold)
+                          {
+                            bmePold = bmeP;
+                            valBME280p = bmeP;
+                                //SVAL(" 280readP  new ", bmeP);
+                            #if (USE_MQTT > OFF)
+                                if (errMQTT == MD_OK)
+                                  {
+                                    errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
+                                    soutMQTTerr(topBME280p.c_str(), errMQTT);
+                                        //SVAL(topBME280p, valBME280p);
+                                  }
+                              #endif
+                            #if (USE_WEBSERVER > OFF)
+                              #endif
+                          }
+                        if (bmeH != bmeHold)
+                          {
+                            bmeHold = bmeH;
+                            #if (USE_MQTT > OFF)
+                                if (errMQTT == MD_OK)
+                                  {
+                                    valBME280h = bmeH;
+                                    errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
+                                    soutMQTTerr(topBME280h.c_str(), errMQTT);
+                                        //SVAL(topBME280h, valBME280h);
+                                  }
+                              #endif
+                            #if (USE_WEBSERVER > OFF)
+                              #endif
+                          }
+                      //outpIdx++;
+                      break;
                     case 2: // CCS811_I2C
                       outpIdx++;
                       //break;
