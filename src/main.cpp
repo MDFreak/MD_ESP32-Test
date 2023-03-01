@@ -537,18 +537,18 @@
         //md_val<float> bmeTVal;
         //md_val<float> bmePVal;
         //md_val<float> bmeHVal;
-        float         bmeT       = MD_F_MAX;
-        float         bmeP       = MD_F_MAX;
-        float         bmeH       = MD_F_MAX;
+        float         bmeT       = 0;
+        float         bmeP       = 0;
+        float         bmeH       = 0;
         float         bmeTold    = MD_F_MAX;
         float         bmePold    = MD_F_MAX;
         float         bmeHold    = MD_F_MAX;
         static String valBME280t = "";
         static String valBME280p = "";
         static String valBME280h = "";
-        static int8_t pubBME280t = OFF;
-        static int8_t pubBME280h = OFF;
-        static int8_t pubBME280p = OFF;
+        //static int8_t pubBME280t = OFF;
+        //static int8_t pubBME280h = OFF;
+        //static int8_t pubBME280p = OFF;
         static int8_t bmeda      = FALSE;
         #if (USE_MQTT > OFF)
             static String topBME280t = MQTT_BME280T;
@@ -1790,7 +1790,6 @@
                     case 1: // BME280_I2C
                         if (bmeT != bmeTold)
                           {
-                            bmeTold = bmeT;
                                 //SVAL(" 280readT  new ", bmeT);
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
@@ -1807,10 +1806,10 @@
                                 tmpStr.concat(tmpval16);
                                 pmdServ->updateAll(tmpStr);
                               #endif
+                            bmeTold = bmeT;
                           }
                         if (bmeP != bmePold)
                           {
-                            bmePold = bmeP;
                             valBME280p = bmeP;
                                 //SVAL(" 280readP  new ", bmeP);
                             #if (USE_MQTT > OFF)
@@ -1827,10 +1826,10 @@
                                 tmpStr.concat(tmpval16);
                                 pmdServ->updateAll(tmpStr);
                               #endif
+                            bmePold = bmeP;
                           }
                         if (bmeH != bmeHold)
                           {
-                            bmeHold = bmeH;
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
                                   {
@@ -1846,6 +1845,7 @@
                                 tmpStr.concat(tmpval16);
                                 pmdServ->updateAll(tmpStr);
                               #endif
+                            bmeHold = bmeH;
                           }
                       //outpIdx++;
                       break;
@@ -2113,6 +2113,7 @@
                                   #endif
                                 #if (USE_WEBSERVER > OFF)
                                     tmpStr = "SVA3";
+                                    tmpval16 = valPhoto[0].toInt();
                                     tmpStr.concat(tmpval16);
                                     pmdServ->updateAll(tmpStr);
                                   #endif
@@ -2631,8 +2632,6 @@
                       outStr.concat("  ");
                       dispText(outStr, 12, 4, outStr.length());
                           //STXT(outStr);
-                      #if (USE_WEBSERVER > OFF)
-                        #endif
                     #endif
                   break;
                 case 8:  // poti,
