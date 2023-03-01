@@ -1574,18 +1574,6 @@
                                 //photof[0] = photof[0];
                                         //SVAL(" photo1  new ", photof[0]);
                                 photof[0] = photoScal[0].scale(photof[0]);
-                                //if (photof[0] != photofold[0])
-                                  {
-                                    valPhoto[0]  = photof[0];
-                                    pubPhoto[0]  = TRUE;
-                                    photofold[0] = photof[0];
-                                        //SVAL(" photo1  new ", photof[0]);
-                                    #if (USE_MQTT > OFF)
-                                        errMQTT = (int8_t) mqtt.publish(topPhoto1.c_str(), (uint8_t*) valPhoto[0].c_str(), valPhoto[0].length());
-                                        soutMQTTerr(topPhoto1.c_str(), errMQTT);
-                                            //SVAL(topPhoto1, valPhoto[0]);
-                                      #endif
-                                  }
                               #endif
                             #if (PHOTO1_1115 > OFF)
                               #endif
@@ -1601,20 +1589,6 @@
                                 potif[0] = ads[POTI1_1115_UNIDX].getVolts(POTI1_1115_CHIDX);
                                     //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
                                 //potif[0] = potifScal[0].scale(potif[0]);
-                                if (potif[0] != potifold[0])
-                                  {
-                                    valPoti[0]  = potif[0];
-                                    pubPoti[0]  = TRUE;
-                                    potifold[0] = potif[0];
-                                        //SVAL(" Poti U  new ", valPoti[0]);
-                                  }
-                                  #if (USE_MQTT > OFF)
-                                      errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(),
-                                                                      (uint8_t*) valPoti[0].c_str(),
-                                                                      valPoti[0].length());
-                                      soutMQTTerr(topPoti1.c_str(), errMQTT);
-                                          //SVAL(topINA32211u[1].c_str(), valINA3221u[0][1]);
-                                    #endif
                               #endif
                           #endif
                       break;
@@ -1628,20 +1602,6 @@
                                 vcc50f = ads[VCC_1115_UNIDX].getVolts(VCC50_1115_CHIDX);
                                     //S3VAL(" main vcc50f unit chan Volts ", VCC_1115_UNIDX, VCC50_1115_CHIDX, vcc50f );
                                 vcc50f = vcc50fScal.scale(vcc50f);
-                                if (vcc50f != vcc50fold)
-                                  {
-                                    valVCC50  = vcc50f;
-                                    pubVCC50  = TRUE;
-                                    vcc50fold = vcc50f;
-                                        //SVAL(" VCC 5.0  new ", vcc50f);
-                                    #if (USE_MQTT > OFF)
-                                        errMQTT = (int8_t) mqtt.publish(topVCC50.c_str(),
-                                                                        (uint8_t*) valVCC50.c_str(),
-                                                                        valVCC50.length());
-                                        soutMQTTerr(topVCC50.c_str(), errMQTT);
-                                            //SVAL(topVCC50.c_str(), valVCC50);
-                                      #endif
-                                  }
                               #endif
                           #endif
                       break;
@@ -1655,22 +1615,6 @@
                                 vcc33f = ads[VCC_1115_UNIDX].getVolts(VCC33_1115_CHIDX);
                                     //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
                                 //vcc33f = vcc33fScal.scale(vcc33f);
-                                if (vcc33f != vcc33fold)
-                                  {
-                                    valVCC33  = vcc33f;
-                                    pubVCC33  = TRUE;
-                                    vcc33fold = vcc33f;
-                                        //SVAL(" VCC 3.3  new ", vcc33f);
-                                    #if (USE_MQTT > OFF)
-                                        errMQTT = (int8_t) mqtt.publish(topVCC33.c_str(),
-                                                                        (uint8_t*) valVCC33.c_str(),
-                                                                        valVCC33.length());
-                                        soutMQTTerr(topVCC33.c_str(), errMQTT);
-                                            //SVAL(topVCC33.c_str(), valVCC33);
-                                      #endif
-                                  }
-                                    //S3VAL(" main vcc33f unit chan Volts ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
-                                    //vcc33Val.doVal(vcc33);
                               #endif
                           #endif
                     case 11: // ACS712_ANA
@@ -1684,22 +1628,6 @@
                                 i712f[0] -= vcc50f/2;
                                 i712f[0] *= 185;
                                         //S2VAL(" 712 Isup     ", i712[0], i712f[0]);
-                                if (i712f[0] != i712fold[0])
-                                  {
-                                    vali712[0]  = i712f[0];
-                                    pubi712[0]  = TRUE;
-                                    i712fold[0] = i712f[0];
-                                        //SVAL(" 712 Isup new ", i712f[0]);
-                                    #if (USE_MQTT > OFF)
-                                        errMQTT = (int8_t) mqtt.publish(topi7121.c_str(),
-                                                                        (uint8_t*) vali712[0].c_str(),
-                                                                        vali712[0].length());
-                                        soutMQTTerr(topi7121.c_str(), errMQTT);
-                                            //SVAL(topi7121.c_str(), vali712[0]);
-                                      #endif
-                                  }
-                                    //S3VAL(" ACS712 I supply new ", VCC_1115_UNIDX, VCC33_1115_CHIDX, vcc33f );
-                                    //vcc33Val.doVal(vcc33);
                               #endif
                           #endif
                       break;
@@ -1951,6 +1879,7 @@
                         outpIdx++;
                       //break;
                     case 3: // INA3221_I2C 3x U+I measures
+                        #if (USE_INA3221_I2C > OFF)
                             // U 3.3V supply
                               if (inaU[0][0] != inaUold[0][0])
                                 {
@@ -2119,9 +2048,11 @@
                                         }
                                     #endif
                                 }
+                          #endif
                       //outpIdx++;
                       break;
                     case 4: // DS18B20_1W temperature
+                        #if (USE_DS18B20_1W_IO > OFF)
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
                                   {
@@ -2129,19 +2060,23 @@
                               #endif
                             #if (USE_WEBSERVER > OFF)
                               #endif
+                          #endif
                       outpIdx++;
                       //break;
                     case 5: // MQ135_GAS_ANA
-                        #if (USE_MQTT > OFF)
-                            if (errMQTT == MD_OK)
-                              {
-                              }
-                          #endif
-                        #if (USE_WEBSERVER > OFF)
+                        #if (USE_MQ135_GAS_ANA > OFF)
+                            #if (USE_MQTT > OFF)
+                                if (errMQTT == MD_OK)
+                                  {
+                                  }
+                              #endif
+                            #if (USE_WEBSERVER > OFF)
+                              #endif
                           #endif
                         outpIdx++;
                       //break;
                     case 6: // MQ3_ALK_ANA
+                        #if (USE_MQ3_ALK_ANA > OFF)
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
                                   {
@@ -2149,59 +2084,120 @@
                               #endif
                             #if (USE_WEBSERVER > OFF)
                               #endif
+                          #endif
                       outpIdx++;
                       //break;
                     case 7: // PHOTO_SENS_ANA
-                            #if (USE_MQTT > OFF)
-                                if (errMQTT == MD_OK)
-                                  {
-                                  }
-                              #endif
-                            #if (USE_WEBSERVER > OFF)
-                              #endif
+                        #if (USE_PHOTO_SENS_ANA > OFF)
+                            if (photof[0] != photofold[0])
+                              {
+                                #if (USE_MQTT > OFF)
+                                    if (errMQTT == MD_OK)
+                                      {
+                                        valPhoto[0]  = photof[0];
+                                        errMQTT = (int8_t) mqtt.publish(topPhoto1.c_str(), (uint8_t*) valPhoto[0].c_str(), valPhoto[0].length());
+                                        soutMQTTerr(topPhoto1.c_str(), errMQTT);
+                                            //SVAL(topPhoto1, valPhoto[0]);
+                                      }
+                                  #endif
+                                #if (USE_WEBSERVER > OFF)
+                                  #endif
+                                photofold[0] = photof[0];
+                                    //SVAL(" photo1  new ", photof[0]);
+                              }
+                          #endif
                       outpIdx++;
                       //break;
                     case 8: // POTI_ANA
-                            #if (USE_MQTT > OFF)
-                                if (errMQTT == MD_OK)
-                                  {
-                                  }
-                              #endif
-                            #if (USE_WEBSERVER > OFF)
-                              #endif
+                        #if (USE_POTI_ANA > OFF)
+                            if (potif[0] != potifold[0])
+                              {
+                                #if (USE_MQTT > OFF)
+                                    if (errMQTT == MD_OK)
+                                      {
+                                        valPoti[0]  = potif[0];
+                                        errMQTT = (int8_t) mqtt.publish(topPoti1.c_str(),
+                                                                        (uint8_t*) valPoti[0].c_str(),
+                                                                        valPoti[0].length());
+                                        soutMQTTerr(topPoti1.c_str(), errMQTT);
+                                            //SVAL(topINA32211u[1].c_str(), valINA3221u[0][1]);
+                                      }
+                                  #endif
+                                #if (USE_WEBSERVER > OFF)
+                                  #endif
+                                potifold[0] = potif[0];
+                              }
+                          #endif
                       outpIdx++;
                       //break;
                     case 9: // VCC50_ANA
-                            #if (USE_MQTT > OFF)
-                                if (errMQTT == MD_OK)
-                                  {
-                                  }
-                              #endif
-                            #if (USE_WEBSERVER > OFF)
-                              #endif
+                        #if (USE_VCC50_ANA > OFF)
+                            if (vcc50f != vcc50fold)
+                              {
+                                #if (USE_MQTT > OFF)
+                                    if (errMQTT == MD_OK)
+                                      {
+                                        valVCC50  = vcc50f;
+                                        errMQTT = (int8_t) mqtt.publish(topVCC50.c_str(),
+                                                                        (uint8_t*) valVCC50.c_str(),
+                                                                        valVCC50.length());
+                                        soutMQTTerr(topVCC50.c_str(), errMQTT);
+                                            //SVAL(topVCC50.c_str(), valVCC50);
+                                      }
+                                  #endif
+                                #if (USE_WEBSERVER > OFF)
+                                  #endif
+                                vcc50fold = vcc50f;
+                              }
+                          #endif
                       outpIdx++;
                       //break;
                     case 10: // VCC33_ANA
-                            #if (USE_MQTT > OFF)
-                                if (errMQTT == MD_OK)
-                                  {
-                                  }
-                              #endif
-                            #if (USE_WEBSERVER > OFF)
-                              #endif
+                        #if (USE_VCC33_ANA > OFF)
+                            if (vcc33f != vcc33fold)
+                              {
+                                #if (USE_MQTT > OFF)
+                                    if (errMQTT == MD_OK)
+                                      {
+                                        valVCC33  = vcc33f;
+                                        errMQTT = (int8_t) mqtt.publish(topVCC33.c_str(),
+                                                                        (uint8_t*) valVCC33.c_str(),
+                                                                        valVCC33.length());
+                                        soutMQTTerr(topVCC33.c_str(), errMQTT);
+                                            //SVAL(topVCC33.c_str(), valVCC33);
+                                      }
+                                  #endif
+                                #if (USE_WEBSERVER > OFF)
+                                  #endif
+                                vcc33fold = vcc33f;
+                              }
+                          #endif
                       outpIdx++;
                       //break;
                     case 11: // ACS712_ANA
-                            #if (USE_MQTT > OFF)
-                                if (errMQTT == MD_OK)
-                                  {
-                                  }
-                              #endif
-                            #if (USE_WEBSERVER > OFF)
-                              #endif
+                        #if (USE_ACS712_ANA > OFF)
+                            if (i712f[0] != i712fold[0])
+                              {
+                                #if (USE_MQTT > OFF)
+                                    if (errMQTT == MD_OK)
+                                      {
+                                        vali712[0]  = i712f[0];
+                                        errMQTT = (int8_t) mqtt.publish(topi7121.c_str(),
+                                                                        (uint8_t*) vali712[0].c_str(),
+                                                                        vali712[0].length());
+                                        soutMQTTerr(topi7121.c_str(), errMQTT);
+                                            //SVAL(topi7121.c_str(), vali712[0]);
+                                      }
+                                  #endif
+                                #if (USE_WEBSERVER > OFF)
+                                  #endif
+                                i712fold[0] = i712f[0];
+                              }
+                          #endif
                       outpIdx++;
                       //break;
                     case 12: // TYPE_K_SPI
+                        #if (USE_TYPE_K_SPI > OFF)
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
                                   {
@@ -2209,9 +2205,11 @@
                               #endif
                             #if (USE_WEBSERVER > OFF)
                               #endif
+                          #endif
                       outpIdx++;
                       //break;
                     case 13: // CNT_INP
+                        #if (USE_CNT_INP > OFF)
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
                                   {
@@ -2219,9 +2217,11 @@
                               #endif
                             #if (USE_WEBSERVER > OFF)
                               #endif
+                          #endif
                       outpIdx++;
                       //break;
                     case 14: // DIG_INP
+                        #if (USE_DIG_INP > OFF)
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
                                   {
@@ -2229,6 +2229,7 @@
                               #endif
                             #if (USE_WEBSERVER > OFF)
                               #endif
+                          #endif
                       outpIdx++;
                       //break;
                     case 15: // ESPHALL
