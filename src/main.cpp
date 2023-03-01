@@ -2171,7 +2171,7 @@
                                       ledcWrite(PWM_RGB_BLUE,  Bright_x_Col(Blue(RGBLED[0]->col24()),  RGBLED[0]->bright()));
                                     }
                                 #endif
-                              if (RGBLED != RGBLEDold)
+                              if (RGBLED->toInt() != RGBLEDold->toInt())
                                 {
                                   // update HW
                                     LEDout = (uint8_t) map(RGBLED->bright(), 0, 255, 0, Green(RGBLED->col24()));
@@ -2188,7 +2188,7 @@
                                             if (errMQTT == MD_OK)
                                               {
                                                 valRGBBright = (RGBLED->bright());    // RGB-LED col24
-                                                    //SVAL(topRGBBright, valRGBBright);
+                                                    SVAL(topRGBBright, valRGBBright);
                                                 errMQTT = (int8_t) mqtt.publish(topRGBBright.c_str(), (uint8_t*) valRGBBright.c_str(), valRGBBright.length());
                                                     soutMQTTerr(" MQTT publish RGBBright", errMQTT);
                                               }
@@ -2220,7 +2220,9 @@
                                                 STXT(outStr);
                                           #endif
                                       }
+                                    S2HEXVAL(" outcycle undate RGBLEDold RGBLED ", RGBLEDold->toInt(), RGBLED->toInt());
                                     RGBLEDold = RGBLED;
+                                    S2HEXVAL(" outcycle undate RGBLEDold RGBLED ", RGBLEDold->toInt(), RGBLED->toInt());
                                 }
                             }
                         #endif
