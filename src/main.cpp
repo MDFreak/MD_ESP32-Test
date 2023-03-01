@@ -1791,18 +1791,21 @@
                         if (bmeT != bmeTold)
                           {
                             bmeTold = bmeT;
-                            valBME280t = bmeT;
-                            pubBME280t = TRUE;
                                 //SVAL(" 280readT  new ", bmeT);
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
                                   {
+                                    valBME280t = bmeT;
                                     errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
                                     soutMQTTerr(topBME280t.c_str(), errMQTT);
                                         //SVAL(topBME280t, valBME280t);
                                   }
                               #endif
                             #if (USE_WEBSERVER > OFF)
+                                tmpStr = "SVA0";
+                                tmpval16 = (int16_t) (bmeT+ 0.5);
+                                tmpStr.concat(tmpval16);
+                                pmdServ->updateAll(tmpStr);
                               #endif
                           }
                         if (bmeP != bmePold)
@@ -1819,6 +1822,10 @@
                                   }
                               #endif
                             #if (USE_WEBSERVER > OFF)
+                                tmpStr = "SVA1";
+                                tmpval16 = (uint16_t) bmeP;
+                                tmpStr.concat(tmpval16);
+                                pmdServ->updateAll(tmpStr);
                               #endif
                           }
                         if (bmeH != bmeHold)
@@ -1834,6 +1841,10 @@
                                   }
                               #endif
                             #if (USE_WEBSERVER > OFF)
+                                tmpStr = "SVA2";
+                                tmpval16 = (int16_t) bmeH;
+                                tmpStr.concat(tmpval16);
+                                pmdServ->updateAll(tmpStr);
                               #endif
                           }
                       //outpIdx++;
@@ -2101,6 +2112,9 @@
                                       }
                                   #endif
                                 #if (USE_WEBSERVER > OFF)
+                                    tmpStr = "SVA3";
+                                    tmpStr.concat(tmpval16);
+                                    pmdServ->updateAll(tmpStr);
                                   #endif
                                 photofold[0] = photof[0];
                                     //SVAL(" photo1  new ", photof[0]);
@@ -2233,6 +2247,7 @@
                       outpIdx++;
                       //break;
                     case 15: // ESPHALL
+                        #if (USE_ESPHALL > OFF)
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
                                   {
@@ -2240,9 +2255,11 @@
                               #endif
                             #if (USE_WEBSERVER > OFF)
                               #endif
+                          #endif
                       outpIdx++;
                       //break;
                     case 16: // MCPWM
+                        #if (USE_MCPWM > OFF)
                             #if (USE_MQTT > OFF)
                                 if (errMQTT == MD_OK)
                                   {
@@ -2250,6 +2267,7 @@
                               #endif
                             #if (USE_WEBSERVER > OFF)
                               #endif
+                          #endif
                       outpIdx++;
                       //break;
                     case 17: // RGBLED_PWM
@@ -2545,52 +2563,40 @@
                       outStr = "";
                       for (uint8_t i = 0; i < 3 ; i++)
                         {
-                          tmpStr = "SVA";
-                          tmpStr.concat(i);
                           switch (i)
                             {
                               case 0:  // BME280 temperature
-                                  tmpval16 = (int16_t) (bmeT+ 0.5);
-                                  tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("° ");
                                 break;
                               case 1:  // BME280 air pressure
-                                  tmpval16 = (uint16_t) bmeP;
-                                  tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("mb ");
                                 break;
                               case 2:   // BME280 humidity
-                                  tmpval16 = (int16_t) bmeH;
-                                  tmpStr.concat(tmpval16);
                                   outStr.concat(tmpval16);
                                   outStr.concat("% ");
                                 break;
                               default:
                                 break;
                             }
-                          // send to websocket
-                          #if (USE_WEBSERVER > OFF)
-                              pmdServ->updateAll(tmpStr);
-                            #endif
                         }
                       dispText(outStr , 0, 3, outStr.length());
                               //STXT(outStr);
                     #endif
                 	break;
                 case 2:  // CCS811_I2C
-                  dispIdx++;
+                    dispIdx++;
                   //break;
                 case 3:  // INA3221_I2C 3x U+I measures
-                  dispIdx++;
+                    dispIdx++;
                   //break;
                 case 4:  // temp sensor
-                  #if (USE_DS18B20_1W_IO > OFF)
-                    outStr = "";
-                    outStr = getDS18D20Str();
-                    dispText(outStr ,  0, 4, outStr.length());
-                    #endif
+                    #if (USE_DS18B20_1W_IO > OFF)
+                        outStr = "";
+                        outStr = getDS18D20Str();
+                        dispText(outStr ,  0, 4, outStr.length());
+                      #endif
                   break;
                 case 5:  // gas sensor MQ135
                   #if (USE_MQ135_GAS_ANA > OFF)
@@ -2626,11 +2632,6 @@
                       dispText(outStr, 12, 4, outStr.length());
                           //STXT(outStr);
                       #if (USE_WEBSERVER > OFF)
-                          //tmpval16 = photoVal[0].getVal();
-                          tmpStr = "SVA";
-                          tmpStr.concat("3");
-                          tmpStr.concat(tmpval16);
-                          pmdServ->updateAll(tmpStr);
                         #endif
                     #endif
                   break;
