@@ -2221,6 +2221,7 @@
                                             //STXT(outStr);
                                           #endif
                                       }
+                                    RGBLEDold = RGBLED;
                                 }
                             }
                         #endif
