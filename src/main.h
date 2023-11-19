@@ -25,9 +25,9 @@
       #if (PROJECT == GEN_ESP32_NODE)
           #include <prj_conf_gen_esp32_node.h>
         #endif
-      //#if (PROJECT == GEN_XIAO_ESP32C3)
-          //#include <prj_conf_gen_xiao_esp32c3.h>
-        #endif
+          //#if (PROJECT == GEN_XIAO_ESP32C3)
+          //    #include <prj_conf_gen_xiao_esp32c3.h>
+          //  #endif
       #if (PROJECT == GEN_ESP32_D1_MINI)
           #include <prj_gen_esp32_d1_mini.h>
         #endif

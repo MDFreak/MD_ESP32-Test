@@ -33,7 +33,7 @@
             #define USE_OLED_I2C    1
           // TFTs
             #define USE_DISP_TFT    OFF
-              // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT2046_AZ_UNO, MC_UO_TXPT2046_AZ_SPI
+              // MC_UO_TFT1602_GPIO_RO, MC_UO_TOUCHXPT 2046_AZ_UNO, MC_UO_TXPT2046_AZ_SPI
               // MC_UO_TFT1602_I2C_XA,  MC_UO_Keypad_ANA0_RO
       // --- acustic output
         #define USE_AOUT              OFF

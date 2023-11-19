@@ -356,7 +356,6 @@
             static String toptestLED  = MQTT_TEST_LED;
           #endif
       #endif
-
     #if (OLED1_I2C > OFF)
         #if (OLED1_I2C > OFF)
             #if !(OLED1_DRV ^ OLED_DRV_1106)
