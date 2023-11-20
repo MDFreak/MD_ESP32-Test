@@ -148,7 +148,6 @@
     #if (USE_WS2812_LINE_OUT > OFF)
         #include <Adafruit_NeoPixel.h>
       #endif
-
     #if (USE_DISP_TFT > OFF)
         #if !(USE_DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
             #include "md_lcd.h"
@@ -157,7 +156,6 @@
             #include <md_touch.h>
           #endif
       #endif
-
     #if (USE_CNT_INP > OFF)
         static void initGenPCNT();
         void getCNTIn();
@@ -170,11 +168,9 @@
         #include <SPIFFS.h>
         #include <md_spiffs.h>
       #endif
-
     #if (USE_FRAM_I2C > OFF)
         #include <md_FRAM.h>
       #endif
-
     #if (USE_SD_SPI > OFF)
         #include <sd.h>
       #endif
@@ -193,12 +189,11 @@
         #include <OneWire.h>
         #include <DallasTemperature.h>
       #endif
-
     #if ( USE_BME280_I2C > OFF )
         #include <Adafruit_Sensor.h>
         #include <Adafruit_BME280.h>
       #endif
-    #if (USE_CCS811_I2C > OFF)
+    #if ( USE_CCS811_I2C > OFF)
         #include <Adafruit_CCS811.h>
       #endif
     #if (USE_INA3221_I2C > OFF)
