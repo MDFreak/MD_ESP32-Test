@@ -31,7 +31,6 @@
       #if (PROJECT == GEN_ESP32_D1_MINI)
           #include <prj_gen_esp32_d1_mini.h>
         #endif
-
     #include <prj_config.h>
         //#include <driver\gpio.h>
         //#include <driver\adc.h>
@@ -46,35 +45,28 @@
     #if (DEV_VSPI > OFF) || (DEV_HSPI > OFF)
         #include "spi.h"
       #endif // USE_TOUCHSCREEN
-
   // --- user inputs
     #if (USE_TOUCHSCREEN > OFF)
         #include "md_touch.h"
       #endif // USE_TOUCHSCREEN
-
     #if (USE_KEYPADSHIELD > OFF)
         #include "md_keypadshield.h"
       #endif // USE_KEYPADSHIELD
-
     #if (USE_CTRL_POTI > OFF)
         // nothing to do
       #endif
-
     #if (USE_DIG_INP > OFF)
         //#include <driver\gpio.h>
       #endif
-
     #if (USE_CNT_INP > OFF)
         #include <freertos/queue.h>
         #include <driver\pcnt.h>
         #include <esp_attr.h>
       #endif
-
     #if (USE_PWM_INP > OFF)
         #include <driver\mcpwm.h>
         #include <esp_attr.h>
       #endif
-
     #if (DEV_ADC_INT > OFF)
         #include <driver\adc.h>
       #endif
