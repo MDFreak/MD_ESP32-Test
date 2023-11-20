@@ -125,7 +125,6 @@
     #if (BUZZER1 > OFF)
         #include "md_buzzer.h"
       #endif // USE_BUZZER_PWM
-
     #if (USE_OLED_I2C > OFF)
         #if !(OLED1_DRV ^ OLED_DRV_1106)
             #include "md_oled_SH1106.h"
@@ -140,11 +139,9 @@
               #endif
           #endif
       #endif
-
     #if (USE_WS2812_MATRIX_OUT > OFF)
         #include <md_leds.h>
       #endif
-
     #if (USE_WS2812_LINE_OUT > OFF)
         #include <Adafruit_NeoPixel.h>
       #endif
@@ -202,7 +199,6 @@
     #if ( USE_TYPE_K_SPI > OFF )
         #include <md_31855_ktype.h>
       #endif
-
   // ---------------------------------------
   // --- prototypes
     // ------ system -------------------------
@@ -227,7 +223,6 @@
               void playSong(int8_t songIdx);
               void playSong();
             #endif
-
         // --- traffic Light of gas sensor
           #if (USE_MQ135_GAS_ANA > OFF)
               int16_t showTrafficLight(int16_t inval, int16_t inthres);
@@ -235,7 +230,6 @@
           #if (USE_MQ3_ALK_ANA > OFF)
               int16_t showTrafficLight(int16_t inval, int16_t inthres);
             #endif
-
         // WS2812 LED
           #if (USE_WS2812_LINE_OUT > OFF)
               void initWS2812Line();
@@ -247,11 +241,9 @@
                   void SetupPurpleAndGreenPalette();
                 #endif
             #endif
-
           #if (USE_WS2812_MATRIX_OUT > OFF)
               void initWS2812Matrix();
             #endif
-
       // --- user input
         // --- keypad
           #if defined(KEYS)
@@ -349,5 +341,4 @@
             void readMQTTmsg();
           #endif
     // -------------------------
-
 #endif // MAIN_H
