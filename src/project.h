@@ -17,8 +17,7 @@
       //#define PROJECT TOUCHTEST_1
       //#define PROJECT MEASFREQ_1
       //#define PROJECT LIGHTSHOW_1
-      #define PROJECT GEN_ESP32_NODE
-      //#define PROJECT GEN_XIAO_ESP32C3   !!!  nicht kompatibel
+      //#define PROJECT GEN_ESP32_NODE
       //#define PROJECT GEN_ESP32_D1_MINI
       //#define PROJECT GEN_ESP32_D1_R32
 
