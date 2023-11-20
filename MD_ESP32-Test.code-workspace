@@ -1,0 +1,34 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+  ],
+  "settings": {
+    "files.associations": {
+      "MLTable": "yaml",
+      "string": "cpp",
+      "cstring": "cpp",
+      "typeinfo": "cpp",
+      "ledc_struct.h": "c",
+      "*.tcc": "cpp",
+      "unordered_map": "cpp",
+      "fstream": "cpp",
+      "istream": "cpp",
+      "ostream": "cpp",
+      "sstream": "cpp",
+      "map": "cpp",
+      "list": "cpp",
+      "bitset": "cpp",
+      "string_view": "cpp",
+      "regex": "cpp",
+      "cmath": "cpp",
+      "chrono": "cpp",
+      "random": "cpp",
+      "limits": "cpp",
+      "functional": "cpp",
+      "atomic": "cpp",
+      "memory_resource": "cpp"
+    }
+  }
+}
