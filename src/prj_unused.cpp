@@ -59,7 +59,7 @@
                     #endif
                        //SOUT("  md_error="); SOUTLN(md_error);
                 #endif
-              #if (USE_TFT > 0)
+              #if (USE_DISP_TFT > 0)
                   mlcd.wrStatus((char*) statOut);
                       #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                           SOUT("  md_error="); SOUTLN(md_error);
@@ -91,7 +91,7 @@
                       SOUT("  md_error="); SOUTLN(md_error);
                     #endif
               #endif
-            #if (USE_TFT > 0)
+            #if (USE_DISP_TFT > 0)
               mlcd.wrText(msg, row, col);
               #endif
           #endif
@@ -110,7 +110,7 @@
               oled2.wrText(msg, col, row, len);
                         //SOUT((uint32_t) millis); SOUT(" dispText oled2 '"); SOUT(msg); SOUTLN("'");
               #endif
-            #if (USE_TFT > 0)
+            #if (USE_DISP_TFT > 0)
               mlcd.wrText(msg, row, col);
               #endif
           #endif
@@ -124,7 +124,7 @@
               statOut[OLED1_MAXCOLS] = 0;  // limit strlen
               #endif
 
-            #if (USE_TFT > 0)
+            #if (USE_DISP_TFT > 0)
               mlcd.start(plcd);
               #endif
 

@@ -2957,7 +2957,7 @@
                           oled2.wrStatus(msg);
                         #endif
                     #endif
-                  #if (USE_TFT > 0)
+                  #if (USE_DISP_TFT > 0)
                       #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                           mlcd.wrStatus((char*) statOut);
                         #endif
@@ -3003,7 +3003,7 @@
                             //SVAL(" dispText oled2 '", msg);
                     #endif
                 #endif
-              #if (USE_TFT > 0)
+              #if (USE_DISP_TFT > 0)
                   #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                       mlcd.wrText(msg, row, col);
                     #endif
@@ -3024,7 +3024,7 @@
                     #if defined(OLED2)
                         oled2.wrText(msg, col, row, len);
                       #endif
-                    #if (USE_TFT > 0)
+                    #if (USE_DISP_TFT > 0)
                         #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                             mlcd.wrText(msg, row, col);
                           #endif
@@ -3043,7 +3043,7 @@
               #ifdef USE_STATUS
                 statOut[OLED1_MAXCOLS] = 0;  // limit strlen
                 #endif
-              #if (USE_TFT > 0)
+              #if (USE_DISP_TFT > 0)
                   #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                       mlcd.start(plcd);
                     #endif

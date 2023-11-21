@@ -114,9 +114,9 @@
                     #define OLED2_GEO    GEO_128_64
                   #endif
 
-              #define USE_TFT        1
+              #define USE_DISP_TFT        1
                 // TFTs
-                #if (USE_TFT > 0)
+                #if (USE_DISP_TFT > 0)
                     //#define DISP_TFT  MC_UO_TFT1602_GPIO_RO
                     #define DISP_TFT  MC_UO_TOUCHXPT2046_AZ
                     //#define DISP_TFT  MC_UO_TFT1602_I2C_XA

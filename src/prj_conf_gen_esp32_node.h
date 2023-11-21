@@ -216,7 +216,7 @@
             #if ( USE_TOUCHSCREEN > 0 )
                 //
               #endif // USE_TOUCHSCREEN
-            #if ( USE_TFT > 0 )
+            #if ( USE_DISP_TFT > 0 )
                 #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
                     #define DISP_ORIENT    3      // 0:USB oben, 1:USB links, 2:USB unten, 3:USB rechts
                     #define DATE_DISP_COL  0

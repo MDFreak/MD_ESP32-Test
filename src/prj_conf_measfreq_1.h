@@ -162,7 +162,7 @@
                 //
               #endif // USE_TOUCHSCREEN
 
-            #if ( USE_TFT > 0 )
+            #if ( USE_DISP_TFT > 0 )
                 #if !(DISP_TFT ^ MC_UO_TOUCHXPT2046_AZ)
                     #define DISP_ORIENT    3      // 0:USB oben, 1:USB links, 2:USB unten, 3:USB rechts
                     #define DATE_DISP_COL  0
@@ -848,7 +848,7 @@
                 //#define PIN_WS2812_L4  x
             #endif
 
-          #if (USE_TFT > OFF)
+          #if (USE_DISP_TFT > OFF)
               #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                   #define LCD_BL      5    // D10/SS  ARDUINO
                   #define LCD_EN      13   // D9
