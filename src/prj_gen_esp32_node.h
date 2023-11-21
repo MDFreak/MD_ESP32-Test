@@ -73,41 +73,41 @@
       //#define USE_VCC33_ANA         1   // ADC or ADS1115
       //#define USE_ADC1115_I2C       1   // ADC 4 channels 16Bit
     // --- network  components
-      #define USE_WIFI              ON  // ON
-      #define USE_NTP_SERVER        ON  // ON
-      #define USE_LOCAL_IP          ON  // ON
-      #define USE_WEBSERVER         ON  // ON
-      #define USE_MQTT              ON
-    // --- memory components
-      #define USE_FLASH_MEM         ON
-      #define USE_FRAM_I2C          1   // 1   // [0, 1, ...] limited by I2C channel/addr
-      #define USE_SD_SPI            OFF
-    // --- test components
-      #define USE_CTRL_POTI         OFF   // [0, 1, ....] limited by analog inputs
-      #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins
+      //  #define USE_WIFI              ON  // ON
+      //  #define USE_NTP_SERVER        ON  // ON
+      //  #define USE_LOCAL_IP          ON  // ON
+      //  #define USE_WEBSERVER         ON  // ON
+      //  #define USE_MQTT              ON
+      //// --- memory components
+      //  #define USE_FLASH_MEM         ON
+      //  #define USE_FRAM_I2C          1   // 1   // [0, 1, ...] limited by I2C channel/addr
+      //  #define USE_SD_SPI            OFF
+      //// --- test components
+      //  #define USE_CTRL_POTI         OFF   // [0, 1, ....] limited by analog inputs
+      //  #define USE_CTRL_SW_INP       OFF // 1   // [0, 1, ....] limited by digital pins
     // usage of peripherals
-      #define USE_PWM_OUT           3 * USE_RGBLED_PWM + USE_FAN_PWM + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
-      #define USE_CNT_INP           USE_GEN_CNT_INP     // max 2 * 8 independent
-      #define USE_PWM_INP           USE_GEN_PWM_INP
-      #define USE_VCC_ANA           USE_VCC50_ANA + USE_VCC33_ANA
-      // #define USE_ADC1              USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
-      // #define USE_ADC2              OFF // not to use
-      #define USE_DIG_INP           USE_GEN_SW_INP + USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
-      #define USE_DIG_OUT           USE_WS2812_LINE_OUT + USE_LED_BLINK_OUT //
-      #define USE_DIG_IO            USE_DS18B20_1W_IO     //
-      #define USED_IOPINS           USE_DIG_INP + USE_DIG_OUT + USE_DIG_IO + (2 * USE_I2C) + USED_SPI_PINS + USE_PWM_OUT + USE_CNT_INP + USE_ADC1
+      #define USE_PWM_OUT   3 * USE_RGBLED_PWM + USE_FAN_PWM + USE_OUT_FREQ_PWM + USE_BUZZER_PWM // max 16
+      #define USE_CNT_INP   USE_GEN_CNT_INP     // max 2 * 8 independent
+      #define USE_PWM_INP   USE_GEN_PWM_INP
+      #define USE_VCC_ANA   USE_VCC50_ANA + USE_VCC33_ANA
+      // #define USE_ADC1      USE_KEYPADSHIELD_ADC + USE_MQ135_GAS_ADC + USE_CTRL_POTI_ADC + USE_PHOTO_SENS
+      // #define USE_ADC2      OFF // not to use
+      #define USE_DIG_INP   USE_GEN_SW_INP + USE_CTRL_SW_INP + USE_WS2812_PWR_IN_SW    //
+      #define USE_DIG_OUT   USE_WS2812_LINE_OUT + USE_LED_BLINK_OUT //
+      #define USE_DIG_IO    USE_DS18B20_1W_IO     //
+      #define USED_IOPINS   USE_DIG_INP + USE_DIG_OUT + USE_DIG_IO + (2 * USE_I2C) + USED_SPI_PINS + USE_PWM_OUT + USE_CNT_INP + USE_ADC1
 
     // to be reorganised
-        #if (USE_KEYPADSHIELD > OFF)
-            #define USE_TFT1602_GPIO_RO_V5  // used by KEYPADSHIELD
-            #define KEYS_Keypad_ANA0_RO_V5        // used by KEYPADSHIELD
-            #define KEYS            ?
-          #endif // USE_KEYPADSHIELD
+      #if (USE_KEYPADSHIELD > OFF)
+          #define USE_TFT1602_GPIO_RO_V5  // used by KEYPADSHIELD
+          #define KEYS_Keypad_ANA0_RO_V5        // used by KEYPADSHIELD
+          #define KEYS            ?
+        #endif // USE_KEYPADSHIELD
 
-        //  #define USE_TOUCHSCREEN     (3 * USE_TRAFFIC_LED_OUT) +USE_TOUCHSCREEN_SPI + USE_TOUCHSCREEN_OUT
-        #if (USE_TOUCHSCREEN > OFF)
-            #define TOUCHSCREEN1     TOUCHXPT2046_AZ_3V3
-            #define TOUCHKEYS1       KEYS_TOUCHXPT2046_AZ_3V3
-          #endif // USE_TOUCHSCREEN
+      //  #define USE_TOUCHSCREEN     (3 * USE_TRAFFIC_LED_OUT) +USE_TOUCHSCREEN_SPI + USE_TOUCHSCREEN_OUT
+      #if (USE_TOUCHSCREEN > OFF)
+          #define TOUCHSCREEN1     TOUCHXPT2046_AZ_3V3
+          #define TOUCHKEYS1       KEYS_TOUCHXPT2046_AZ_3V3
+        #endif // USE_TOUCHSCREEN
 
 #endif // _PRJ_GEN_ESP32_NODE_H_

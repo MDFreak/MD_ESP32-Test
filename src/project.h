@@ -38,16 +38,12 @@
           #define PROJ_TITLE "Generic ESP32-Node"
           //#define PRJ_BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
         #endif
-              //#if (PROJECT == GEN_XIAO_ESP32C3)
-              //    #define PROJ_TITLE "Generic XIAO ESP32C3"
-              //    #define PRJ_BOARD   XIAO_ESP32C3     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
-              //  #endif
       #if (PROJECT == PRJ_GEN_ESP32_D1_MINI)
           #define PROJ_TITLE "Generic ESP32-D1-Mini"
-          #define PRJ_BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+          //#define PRJ_BOARD   MC_ESP32_Node     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
         #endif
       #if (PROJECT == PRJ_GEN_ESP32_D1_R32)
           #define PROJ_TITLE "Generic ESP32-D1-R32"
-          #define PRJ_BOARD   MC_ESP32_D1_R32     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
+          //#define PRJ_BOARD   MC_ESP32_D1_R32     // platform=espressiv32, env=env:esp32dev, az-delivery-devkit-v4
         #endif
 #endif // _PRJ_CONFIG_H_

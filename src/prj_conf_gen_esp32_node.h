@@ -68,28 +68,6 @@
         #if (USE_BME280_I2C > OFF )
             #define BME280_I2C         I2C1
           #endif
-#ifdef UNUSED
-        #if (USE_ADC1115_I2C > OFF)
-            #ifndef USE_INPUT_CYCLE
-                #define USE_INPUT_CYCLE
-              #endif
-            #define ADC1115_I2C          I2C1
-            #define ADC1115_1_ADDR       I2C_ADS1115_48
-            #define ADC1115_1_CHIDXS      4
-            #if (USE_ADC1115_I2C > 1)
-                #define ADC1115_2_ADDR   I2C_ADS1115_48 //I2C_ADS1115_49
-                #define ADC1115_2_CHIDXs  4
-                #if (USE_ADC1115_I2C > 2)
-                    #define ADC1115_3_ADDR   I2C_ADS1115_48 //I2C_ADS1115_4A
-                    #define ADC1115_3_CHIDXs  4
-                    #if (USE_ADC1115_I2C > 3)
-                        #define ADC1115_4_ADDR   I2C_ADS1115_48 //I2C_ADS1115_4B
-                        #define ADC1115_4_CHIDXs  4
-                      #endif
-                  #endif
-              #endif
-          #endif
-#endif
     // --- network
       // --- WIFI
         #if (USE_WIFI > OFF)
@@ -117,13 +95,7 @@
             #define NTPSERVER_CYCLE 1000ul   // Intervallzeit [us]
 
             #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
-            #if !(PRJ_BOARD ^ MC_ESP32_Node)
-                #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
-            #elif !(PRJ_BOARD ^ MC_ESP32_D1_MINI)
-                  #define WIFI_FIXIP0   0x1800000Aul // 10.0.0.24
-            #elif !(PRJ_BOARD ^ MC_ESP32_D1_R32)
-                #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
-              #endif
+            #define WIFI_FIXIP0           0x1800000Aul // 10.0.0.24   lowest first
             #define WIFI_GATEWAY0         0x8B00000Aul // 10.0.0.139 // Moosgraben
             #define WIFI_FIXIP1           0x1800000Aul // 10.0.0.24
             #ifdef USE_LOCAL_IP
@@ -296,8 +268,6 @@
             #define COLBMP_2812             8
             #define ROWBMP_2812             8
             #define UPD_2812_M1_MS          70
-            //#define COL24_2812_M1           0xFF0000u   // 0xB924u   // color r-g-b (5-6-5)
-            //#define COL24_2812_BM1          0x00FF00u   // color r-g-b (5-6-5)
             #define COL24_2812_M1           0xFF0080u   // color r-g-b (5-6-5) = 255,0,128
             #define COL24_2812_BM1          0xF0B63Cu   // color r-g-b (5-6-5) = 240, 182, 56
             #define BRI_2812_M1             255
@@ -515,7 +485,6 @@
                 #define MOD_REED_1          INPUT_PULLUP // INPUT, INPUT_PULLDOWN
               #endif
           #endif
-
     // --- memories
       // --- FRAM
         #if (USE_FRAM_I2C > OFF)
@@ -985,14 +954,6 @@
     #if !(PRJ_BOARD ^ MC_ESP32_Node)
       // --- system
         #define SER_BAUDRATE ESP_SER_BAUD
-        // --- network
-        // --- user output
-          // --- LEDs
-          // --- display
-          // --- acustic output
-        // --- user input
-        // --- sensors
-        // --- memories
       // --- pins, connections
         // --- system
           #if (USE_LED_BLINK_OUT > OFF)
@@ -1160,7 +1121,6 @@
                   #define FRAM2_I2C_SDA   I2C1_SDA
                 #endif
             #endif
-
           #if (USE_SD_SPI > OFF)
               #define SD_SPI              VSPI
               #define SD_MISO             PIN_SPI_MISO
@@ -1176,13 +1136,11 @@
                       #define PWM_BUZZ  0
                     #endif
                 #endif
-
               #if (USE_TRAFFIC_LED_OUT > OFF)
                   #define PWM_TL_GREEN  1
                   #define PWM_TL_YELLOW 2
                   #define PWM_TL_RED    3
                 #endif
-
               #if (USE_RGBLED_PWM > OFF)
                   #define PWM_RGB_RED     1
                   #define PWM_RGB_GREEN   2
@@ -1226,8 +1184,6 @@
                   #define USE_CNT_UNIDX   (CNT_UNIDX_GEN3 + 1)
                 #endif
             #endif
-
-
       #endif
     // ******************************************
 #endif // _PRJ_CONFIG_H_
