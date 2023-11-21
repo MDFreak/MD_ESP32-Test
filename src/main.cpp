@@ -814,7 +814,7 @@
       // --- system
         // disable watchdog
           disableCore0WDT();
-          #if (BOARD ^ XIAO_ESP32C3)
+          #if (PRJ_BOARD ^ XIAO_ESP32C3)
               disableCore1WDT();
             #endif
           disableLoopWDT();

@@ -691,11 +691,11 @@
             #define NTPSERVER_CYCLE 1000ul   // Intervallzeit [us]
 
             #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
-            #if !(BOARD ^ MC_ESP32_Node)
+            #if !(PRJ_BOARD ^ MC_ESP32_Node)
                 #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
-            #elif !(BOARD ^ MC_ESP32_D1_MINI)
+            #elif !(PRJ_BOARD ^ MC_ESP32_D1_MINI)
                   #define WIFI_FIXIP0   0x1800000Aul // 10.0.0.24
-            #elif !(BOARD ^ MC_ESP32_D1_R32)
+            #elif !(PRJ_BOARD ^ MC_ESP32_D1_R32)
                 #define WIFI_FIXIP0     0x1800000Aul // 10.0.0.24   lowest first
               #endif
             #define WIFI_GATEWAY0   0x8B00000Aul // 10.0.0.139 // Moosgraben
@@ -728,7 +728,7 @@
   // ----------------------------------------------------------------
   // --- board management
   // ----------------------------------------------------------------
-    #if !(BOARD ^ MC_ESP32_D1_MINI)
+    #if !(PRJ_BOARD ^ MC_ESP32_D1_MINI)
       // --- system
         #define SER_BAUDRATE ESP_SER_BAUD
         // --- network
