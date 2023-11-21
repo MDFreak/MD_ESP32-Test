@@ -812,9 +812,9 @@
       // --- system
         // disable watchdog
           disableCore0WDT();
-          #if (PRJ_BOARD ^ XIAO_ESP32C3)
+          //#if (PRJ_BOARD ^ XIAO_ESP32C3)
               disableCore1WDT();
-            #endif
+            //#endif
           disableLoopWDT();
         // start system
           Serial.begin(SER_BAUDRATE);
@@ -863,10 +863,16 @@
               digitalWrite(PIN_TL_YELLOW, OFF);
             #endif
           #if (USE_RGBLED_PWM > 0)
+            STXT(" initRGBLED ... ");
               initRGBLED();
+            STXT(" ... initRGBLED");
             #endif
+        STXT(" startDisp ... ");
           startDisp();
+        STXT(" ... startDisp");
+        STXT(" dispStatus ...");
           dispStatus("setup start ...", true);
+        STXT(" ... dispStatus");
       // --- network
         // start WIFI
           #if (USE_WIFI > OFF)
@@ -3049,8 +3055,9 @@
                     #endif
                 #endif
               #if (USE_OLED_I2C > OFF)
+        STXT(" oled1.begin ...");
                   oled1.begin((uint8_t) OLED1_MAXCOLS, (uint8_t) OLED1_MAXROWS);
-                  STXT(" oled2 gestartet");
+                  STXT(" oled1 gestartet");
                   #if (USE_OLED_I2C > 1)
                       oled2.begin((uint8_t) OLED2_MAXCOLS, (uint8_t) OLED2_MAXROWS);
                     #endif

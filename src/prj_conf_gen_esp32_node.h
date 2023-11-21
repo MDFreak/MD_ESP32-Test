@@ -1058,7 +1058,7 @@
                 //#define PIN_WS2812_L4  x
             #endif
 
-          #if (USE_TFT > OFF)
+          #if (USE_DISP_TFT > OFF)
               #if !(DISP_TFT ^ MC_UO_TFT1602_GPIO_RO)
                   #define LCD_BL      5    // D10/SS  ARDUINO
                   #define LCD_EN      13   // D9
