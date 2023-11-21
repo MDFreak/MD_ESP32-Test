@@ -796,11 +796,9 @@
     #if (USE_FLASH_MEM > OFF)
         #include <SPIFFS.h>
       #endif
-
     #if (USE_FRAM_I2C > OFF)
         md_FRAM fram = md_FRAM();
       #endif
-
     #if (USE_SD_SPI > OFF)
         SPIClass psdSPI(VSPI);
         File sdFile;                       // file object that is used to read and write data
