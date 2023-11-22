@@ -130,11 +130,11 @@
 
             #if (USE_TOUCHSCREEN > OFF)
               bool ret = touch.startTouch();
-                    #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                    #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                       SOUT("startTouch ret="); SOUT(ret);
                     #endif
               md_error = setBit(md_error, ERRBIT_TOUCH, ret);
-                    #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                    #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                       SOUT("  md_error="); SOUTLN(md_error);
                     #endif
               #endif

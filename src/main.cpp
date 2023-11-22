@@ -42,7 +42,6 @@
     #if ( USE_DISP > 0 )
         uint32_t      ze     = 1;      // aktuelle Schreibzeile
         char          outBuf[OLED1_MAXCOLS + 1] = "";
-        String        outStr;
       #endif
     String            outStr;
     #ifdef USE_STATUS
@@ -3046,7 +3045,7 @@
                     #endif
                   #if (USE_TOUCHSCREEN_SPI > OFF)
                       touch.start(DISP_ORIENT, DISP_BCOL);
-                          #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                          #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                             STXT(" startTouch ");
                           #endif
                     #endif
@@ -3954,7 +3953,7 @@
         {
           #if (USE_NTP_SERVER > OFF)
               bool ret = wifi.initNTP();
-                    #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                    #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                       Serial.print("initNTPTime ret="); Serial.print(ret);
                     #endif
               if (ret = MD_OK)
@@ -3979,7 +3978,7 @@
                 if (WiFi.status() == WL_CONNECTED)
                   {
                     iret = pmdServ->md_startServer();
-                        #if (DEBUG_MODE >= CFG_DEBUG_DETAIL)
+                        #if (DEBUG_MODE >= CFG_DEBUG_DETAILS)
                             SVAL(" webserver ret ", iret);
                           #endif
                     if (iret == MD_OK)
