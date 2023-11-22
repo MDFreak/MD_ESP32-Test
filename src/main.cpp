@@ -44,6 +44,7 @@
         char          outBuf[OLED1_MAXCOLS + 1] = "";
         String        outStr;
       #endif
+    String            outStr;
     #ifdef USE_STATUS
         msTimer     statT  = msTimer(STAT_DELTIME_MS);
         msTimer     statN  = msTimer(STAT_NEWTIME_MS);
@@ -73,23 +74,19 @@
         static md_touch  touch  =  md_touch(TOUCH_CS, TFT_CS, TFT_DC, TFT_RST, TFT_LED, LED_ON);
         static md_touch* ptouch =  &touch;
       #endif
-
     #if (USE_KEYPADSHIELD > OFF)
         md_kpad kpad(KEYS_ADC);
         uint8_t key;
       #endif // USE_KEYPADSHIELD
-
     #if (USE_CTRL_POTI > OFF)
         uint16_t inpValADC[USE_CTRL_POTI];
       #endif
-
     #if (USE_DIG_INP > OFF)
         uint8_t  valInpDig[USE_DIG_INP];
         uint8_t  pinInpDig[USE_DIG_INP];
         uint8_t  polInpDig[USE_DIG_INP];
         uint8_t  modInpDig[USE_DIG_INP];
       #endif
-
     #if (USE_CNT_INP > OFF)
         const pcnt_config_t config_cnt[USE_CNT_INP] =
           {
