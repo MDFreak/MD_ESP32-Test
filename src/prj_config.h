@@ -37,23 +37,27 @@
   // ******************************************
 
     #if (PROJECT == PRJ_TOUCHTEST_1)
+        #define PROJ_TITLE "Test Toucscreen"
         #include <prj_conf_touchtest_1.h>
       #endif
     #if (PROJECT == PRJ_MEASFREQ_1)
+        #define PROJ_TITLE "Measure Frequency "
         #include <prj_conf_measfreq_1.h>
       #endif
     #if (PROJECT == PRJ_LIGHTSHOW_1)
+        #define PROJ_TITLE "Light Show"
         #include <prj_conf_lightshow_1.h>
       #endif
     #if (PROJECT == PRJ_GEN_ESP32_NODE)
         #define PROJ_TITLE "Generic ESP32-Node"
         #include <prj_conf_gen_esp32_node.h>
       #endif
-            //#if (PROJECT == GEN_XIAO_ESP32C3)
-            //    #include <prj_conf_gen_xiao_esp32c3.h>
-            //  #endif
     #if (PROJECT == PRJ_GEN_ESP32_D1_MINI)
+        #define PROJ_TITLE "Generic ESP32-D1-Mini"
         #include <prj_conf_gen_esp32_d1_mini.h>
       #endif
-
+    #if (PROJECT == PRJ_GEN_ESP32_D1_R32)
+        #define PROJ_TITLE "Generic ESP32-D1-R32"
+        #define PROJ_TITLE "Generic ESP32-D1-R32"
+      #endif
 #endif // _PRJ_CONFIG_H_

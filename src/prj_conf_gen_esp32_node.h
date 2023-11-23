@@ -26,7 +26,7 @@
             #define ERRBIT_WIFI       0x00000004     // WIFI connection
             #define ERRBIT_NTPTIME    0x00000008     // NTP timeserver connection
           // --- generic
-            #define SCAN_I2C          OFF // 128
+            //#define SCAN_I2C          OFF // 128
             #define TEST_NUM_CONVERT  OFF
             #define CHECK_I2C_DEVICES
             //#define UTC_SEASONTIME UTC_WINTERTIME
@@ -101,9 +101,9 @@
                 #define NTPSERVER_CYCLE 1000ul   // Intervallzeit [us]
 
                 #define WIFI_ANZ_LOCIP  WIFI_ANZ_LOGIN
-                #define WIFI_FIXIP0           0x1800000Aul // 10.0.0.24   lowest first
-                #define WIFI_GATEWAY0         0x8B00000Aul // 10.0.0.139 // Moosgraben
-                #define WIFI_FIXIP1           0x1800000Aul // 10.0.0.24
+                //#define WIFI_FIXIP0           0x1800000Aul // 10.0.0.24   lowest first
+                //#define WIFI_GATEWAY0         0x8B00000Aul // 10.0.0.139 // Moosgraben
+                //#define WIFI_FIXIP1           0x1800000Aul // 10.0.0.24
                 //#ifdef USE_LOCAL_IP
                 #if (PIO_FIXIP >0)
                     //#define USE_LOCAL_IP

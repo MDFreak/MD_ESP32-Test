@@ -1787,66 +1787,68 @@
                 switch(outpIdx)
                   {
                     case 1: // BME280_I2C
-                        if (bmeT != bmeTold)
-                          {
-                                //SVAL(" 280readT  new ", bmeT);
-                            #if (USE_MQTT > OFF)
-                                if (errMQTT == MD_OK)
-                                  {
-                                    valBME280t = bmeT;
-                                    errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
-                                    soutMQTTerr(topBME280t.c_str(), errMQTT);
-                                        //SVAL(topBME280t, valBME280t);
-                                  }
-                              #endif
-                            #if (USE_WEBSERVER > OFF)
-                                tmpStr = "SVA0";
-                                tmpval16 = (int16_t) (bmeT+ 0.5);
-                                tmpStr.concat(tmpval16);
-                                pmdServ->updateAll(tmpStr);
-                              #endif
-                            bmeTold = bmeT;
-                          }
-                        if (bmeP != bmePold)
-                          {
-                            valBME280p = bmeP;
-                                //SVAL(" 280readP  new ", bmeP);
-                            #if (USE_MQTT > OFF)
-                                if (errMQTT == MD_OK)
-                                  {
-                                    errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
-                                    soutMQTTerr(topBME280p.c_str(), errMQTT);
-                                        //SVAL(topBME280p, valBME280p);
-                                  }
-                              #endif
-                            #if (USE_WEBSERVER > OFF)
-                                tmpStr = "SVA1";
-                                tmpval16 = (uint16_t) bmeP;
-                                tmpStr.concat(tmpval16);
-                                pmdServ->updateAll(tmpStr);
-                              #endif
-                            bmePold = bmeP;
-                          }
-                        if (bmeH != bmeHold)
-                          {
-                            #if (USE_MQTT > OFF)
-                                if (errMQTT == MD_OK)
-                                  {
-                                    valBME280h = bmeH;
-                                    errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
-                                    soutMQTTerr(topBME280h.c_str(), errMQTT);
-                                        //SVAL(topBME280h, valBME280h);
-                                  }
-                              #endif
-                            #if (USE_WEBSERVER > OFF)
-                                tmpStr = "SVA2";
-                                tmpval16 = (int16_t) bmeH;
-                                tmpStr.concat(tmpval16);
-                                pmdServ->updateAll(tmpStr);
-                              #endif
-                            bmeHold = bmeH;
-                          }
-                      //outpIdx++;
+                        #if (USE_BME280_I2C > OFF)
+                            if (bmeT != bmeTold)
+                              {
+                                    //SVAL(" 280readT  new ", bmeT);
+                                #if (USE_MQTT > OFF)
+                                    if (errMQTT == MD_OK)
+                                      {
+                                        valBME280t = bmeT;
+                                        errMQTT = (int8_t) mqtt.publish(topBME280t.c_str(), (uint8_t*) valBME280t.c_str(), valBME280t.length());
+                                        soutMQTTerr(topBME280t.c_str(), errMQTT);
+                                            //SVAL(topBME280t, valBME280t);
+                                      }
+                                  #endif
+                                #if (USE_WEBSERVER > OFF)
+                                    tmpStr = "SVA0";
+                                    tmpval16 = (int16_t) (bmeT+ 0.5);
+                                    tmpStr.concat(tmpval16);
+                                    pmdServ->updateAll(tmpStr);
+                                  #endif
+                                bmeTold = bmeT;
+                              }
+                            if (bmeP != bmePold)
+                              {
+                                valBME280p = bmeP;
+                                    //SVAL(" 280readP  new ", bmeP);
+                                #if (USE_MQTT > OFF)
+                                    if (errMQTT == MD_OK)
+                                      {
+                                        errMQTT = (int8_t) mqtt.publish(topBME280p.c_str(), (uint8_t*) valBME280p.c_str(), valBME280p.length());
+                                        soutMQTTerr(topBME280p.c_str(), errMQTT);
+                                            //SVAL(topBME280p, valBME280p);
+                                      }
+                                  #endif
+                                #if (USE_WEBSERVER > OFF)
+                                    tmpStr = "SVA1";
+                                    tmpval16 = (uint16_t) bmeP;
+                                    tmpStr.concat(tmpval16);
+                                    pmdServ->updateAll(tmpStr);
+                                  #endif
+                                bmePold = bmeP;
+                              }
+                            if (bmeH != bmeHold)
+                              {
+                                #if (USE_MQTT > OFF)
+                                    if (errMQTT == MD_OK)
+                                      {
+                                        valBME280h = bmeH;
+                                        errMQTT = (int8_t) mqtt.publish(topBME280h.c_str(), (uint8_t*) valBME280h.c_str(), valBME280h.length());
+                                        soutMQTTerr(topBME280h.c_str(), errMQTT);
+                                            //SVAL(topBME280h, valBME280h);
+                                      }
+                                  #endif
+                                #if (USE_WEBSERVER > OFF)
+                                    tmpStr = "SVA2";
+                                    tmpval16 = (int16_t) bmeH;
+                                    tmpStr.concat(tmpval16);
+                                    pmdServ->updateAll(tmpStr);
+                                  #endif
+                                bmeHold = bmeH;
+                              }
+                            //outpIdx++;
+                          #endif
                       break;
                     case 2: // CCS811_I2C
                         #if (USE_CCS811_I2C > OFF)

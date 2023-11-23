@@ -4,7 +4,8 @@
 
       #include <Arduino.h>
       #include <md_defines.h>
-      #include <project.h>
+      //#include <project.h>
+      //#include <prj_config.h>
 
       // ******************************************
         // --- debugging
