@@ -102,7 +102,7 @@
           #if (USE_KEYPADSHIELD > OFF)
               #define USE_TFT1602_GPIO_RO_V5  // used by KEYPADSHIELD
               #define KEYS_Keypad_ANA0_RO_V5        // used by KEYPADSHIELD
-              #define KEYS            ?
+              #define KEYS            //?
             #endif // USE_KEYPADSHIELD
 
           //  #define USE_TOUCHSCREEN     (3 * USE_TRAFFIC_LED_OUT) +USE_TOUCHSCREEN_SPI + USE_TOUCHSCREEN_OUT

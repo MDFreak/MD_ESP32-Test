@@ -193,7 +193,6 @@
                         #define OLED1_GEO             GEO_128_64
                         #define OLED1_DRV             OLED_DRV_1106
                       #endif
-
                     #if ( USE_OLED_I2C > 1 )
                         #define OLED2_I2C_TYP         MC_UO_OLED_130_AZ  // OLED1 on I2C1
                         #define USE_STATUS2           ON
@@ -500,6 +499,8 @@
                   #endif
               #endif
         // --- memories
+          // ---
+            #define FORMAT_SPIFFS_IF_FAILED true
           // --- FRAM
             #if (USE_FRAM_I2C > OFF)
                 #define SIZE_FRAM               0x8000
@@ -616,6 +617,35 @@
                 #endif
               #ifndef USE_INPUT_CYCLE
                   #define USE_INPUT_CYCLE
+                #endif
+              #ifndef USE_OUTPUT_CYCLE
+                  #define USE_OUTPUT_CYCLE
+                #endif
+            #endif
+          #if (USE_BME680_I2C > OFF)
+              #define BME680_I2C               I2C1
+              #define BME680_ADDR              I2C_BME680_77
+              #define BME680_RUNMODE           MD_NORM
+              //#define BME680_RUNMODE           MD_SIM
+              #define BME680T_FILT             0
+              #define BME680T_Drop             0
+              #define BME680P_FILT             0
+              #define BME680P_Drop             0
+              #define BME680H_FILT             0
+              #define BME680H_Drop             0
+              #define BME680G_FILT             0
+              #define BME680G_Drop             0
+              #if (USE_MQTT > OFF)
+                  #define MQTT_BME680T         "bme680t1"
+                  #define MQTT_BME680P         "bme680p1"
+                  #define MQTT_BME680H         "bme680h1"
+                  #define MQTT_BME680G         "bme680g1"
+                #endif
+              #ifndef USE_INPUT_CYCLE
+                  #define USE_INPUT_CYCLE
+                #endif
+              #ifndef USE_OUTPUT_CYCLE
+                  #define USE_OUTPUT_CYCLE
                 #endif
             #endif
             /* analog channels
