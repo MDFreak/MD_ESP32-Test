@@ -26,7 +26,7 @@
             #define ERRBIT_WIFI       0x00000004     // WIFI connection
             #define ERRBIT_NTPTIME    0x00000008     // NTP timeserver connection
           // --- generic
-            //#define SCAN_I2C          ON // 128
+            #define SCAN_I2C          OFF // 128
             #define TEST_NUM_CONVERT  OFF
             #define CHECK_I2C_DEVICES
             //#define UTC_SEASONTIME UTC_WINTERTIME
@@ -40,7 +40,6 @@
                 #define BLINKPWM_FREQ 400
                 #define BLINKPWM_RES  8
               #endif
-
         // --- I2C interface
           // --- address configuration
             #if (USE_OLED_I2C > OFF)
@@ -67,6 +66,9 @@
               #endif
             #if (USE_BME280_I2C > OFF )
                 #define BME280_I2C         I2C1
+              #endif
+            #if (USE_BME680_I2C > OFF )
+                #define BME680_I2C         I2C1
               #endif
         // --- network
           // --- WIFI
