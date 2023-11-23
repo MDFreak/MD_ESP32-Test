@@ -956,7 +956,6 @@
                             #define MQTT_I712_2         "acs7122"
                           #endif
                       #endif
-
                   #endif
               #endif
 
@@ -979,6 +978,12 @@
                       #endif
                   #endif
               #endif
+
+
+
+
+
+
           //#define ANZ_ANASENS  USE_DS18B20_1W_IO + USE_BME280_I2C * 3 + USE_MQ135_GAS_ADC + USE_TYPE_K_SPI
           // --- cycle timing
             #define DISP_CYCLE_MS       100ul   // Intervallzeit [us]

@@ -12,7 +12,7 @@
     #include <md_defines.h>
     #include <md_util.h>
     #include <md_filter.hpp>
-    #include <project.h>
+    #include <prj_config.h>
       #if (PROJECT == PRJ_TOUCHTEST_1)
           #include <prj_touchtest_1.h>
         #endif
@@ -31,7 +31,6 @@
       #if (PROJECT == PRJ_GEN_ESP32_D1_MINI)
           #include <prj_gen_esp32_d1_mini.h>
         #endif
-    #include <prj_config.h>
         //#include <driver\gpio.h>
         //#include <driver\adc.h>
         //#include "freertos/task.h"
