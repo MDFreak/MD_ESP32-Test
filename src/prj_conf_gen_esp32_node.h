@@ -107,15 +107,19 @@
                 //#ifdef USE_LOCAL_IP
                 #if (PIO_FIXIP >0)
                     //#define USE_LOCAL_IP
-                    #define WIFI_GATEWAY0     0x8B00000Aul // 10.0.0.1        // Bauwagen
-                    #define WIFI_GATEWAY1     0x8a00000Aul // 10.0.0.138      // Weltladen
+                    #define WIFI_FIXIP        0x01000000ul * PIO_FIXIP
+                    #define WIFI_GATEWAY0     0x0100000Aul // 10.0.0.1        // Bauwagen
+                    #define WIFI_FIXIP0       0x0000000Aul + WIFI_FIXIP
+                    #define WIFI_GATEWAY1     0x8B00000Aul // 10.0.0.139      // Moosgraben
+                    #define WIFI_FIXIP1       0x0000000Aul + WIFI_FIXIP
                     #define WIFI_GATEWAY2     0x8B00000Aul // 10.0.0.139      // Jungberg
-                    #define WIFI_GATEWAY3     0x8a00000Aul // 10.0.0.138      // Weltladen
+                    #define WIFI_FIXIP2       0x0000000Aul + WIFI_FIXIP
+                    #define WIFI_GATEWAY3     0x8A00000Aul // 10.0.0.138      // Weltladen
                     #define WIFI_FIXIP3       0x1600000Aul // 10.0.0.22
                     #define WIFI_GATEWAY4     0x01250D0Aul // 10.0.0.1        // machquadrat
                     #define WIFI_FIXIP4       0x6F250D0Aul // 10.0.0.22
                     #define WIFI_GATEWAY5     0x012BA8C0ul // 192.168.43.154  // hotspot KingKong
-                    #define WIFI_FIXIP5       0x162BA8C0ul // 192.168.43.22
+                    #define WIFI_FIXIP5       0x002BA8C0ul + WIFI_FIXIP
                     #define WIFI_GATEWAY6     0x0926A8C0ul // 192.168.32.1    // OEBB Railjet
                     #define WIFI_FIXIP6       0x1620A8C0ul // 192.168.32.22
                     #define WIFI_GATEWAY7     0x01AE12ACul // 172.18.0.1    // DB ICE
