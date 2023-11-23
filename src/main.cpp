@@ -382,8 +382,8 @@
     #if (USE_WIFI > OFF)
         md_wifi wifi  = md_wifi();
         msTimer wifiT = msTimer(WIFI_CONN_CYCLE);
-        #if (USE_LOCAL_IP > OFF)
-          #endif // USE_LOCAL_IP
+        #if (PIO_FIXIP >0)
+          #endif // PIO_FIXIP
         #if (USE_NTP_SERVER > OFF)
             msTimer ntpT    = msTimer(NTPSERVER_CYCLE);
             time_t  ntpTime = 0;

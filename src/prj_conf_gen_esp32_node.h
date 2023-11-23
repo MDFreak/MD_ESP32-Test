@@ -104,7 +104,9 @@
                 #define WIFI_FIXIP0           0x1800000Aul // 10.0.0.24   lowest first
                 #define WIFI_GATEWAY0         0x8B00000Aul // 10.0.0.139 // Moosgraben
                 #define WIFI_FIXIP1           0x1800000Aul // 10.0.0.24
-                #ifdef USE_LOCAL_IP
+                //#ifdef USE_LOCAL_IP
+                #if (PIO_FIXIP >0)
+                    //#define USE_LOCAL_IP
                     #define WIFI_GATEWAY0     0x8B00000Aul // 10.0.0.1        // Bauwagen
                     #define WIFI_GATEWAY1     0x8a00000Aul // 10.0.0.138      // Weltladen
                     #define WIFI_GATEWAY2     0x8B00000Aul // 10.0.0.139      // Jungberg
